@@ -1,7 +1,16 @@
+import { useRef } from 'react';
 import { useGameStore } from '../stores/gameStore';
 import VoiceButton from './VoiceButton';
 
 const MAX_INPUT_LENGTH = 300;
+
+const LOADING_MESSAGES = [
+  'The monster is getting ready\u2026',
+  'Setting up the scene\u2026',
+  'This is gonna be good\u2026',
+  'Hold on, something\u2019s happening\u2026',
+  'Mixing up some magic\u2026',
+];
 
 const TASK_PLACEHOLDERS: Record<string, string> = {
   'monster-party': "How would you plan the monster's birthday party? Be specific!",
@@ -24,9 +33,9 @@ const SUCCESS_STYLES = {
     icon: '💡',
   },
   FUNNY_FAIL: {
-    bg: 'bg-quest-card border-quest-accent/50',
-    text: 'text-purple-100',
-    badge: 'bg-quest-accent/20 text-purple-300',
+    bg: 'bg-orange-900/30 border-quest-orange/50',
+    text: 'text-orange-100',
+    badge: 'bg-quest-orange/20 text-orange-300',
     label: 'Oops!',
     icon: '😄',
   },
@@ -44,6 +53,13 @@ export default function PromptInput() {
     error,
     clearError,
   } = useGameStore();
+
+  const loadingMsgRef = useRef(LOADING_MESSAGES[0]);
+  if (isLoading && loadingMsgRef.current === LOADING_MESSAGES[0]) {
+    loadingMsgRef.current = LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)];
+  } else if (!isLoading) {
+    loadingMsgRef.current = LOADING_MESSAGES[0];
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,9 +93,9 @@ export default function PromptInput() {
               </span>
             )}
           </div>
-          <p className="font-heading font-medium text-base leading-relaxed">{lastScript.narration}</p>
+          <p className="font-body font-bold text-lg leading-relaxed">{lastScript.narration}</p>
           {lastScript.prompt_feedback && (
-            <p className="mt-3 text-xs opacity-80 border-t border-white/10 pt-3 leading-relaxed">
+            <p className="mt-3 text-sm text-quest-orange border-t border-white/10 pt-3 leading-relaxed font-semibold">
               {lastScript.prompt_feedback}
             </p>
           )}
@@ -121,7 +137,7 @@ export default function PromptInput() {
             <VoiceButton onTranscript={setInput} disabled={isLoading} />
           </div>
           {userInput.length > MAX_INPUT_LENGTH * 0.8 && (
-            <div className="absolute right-14 bottom-2.5 text-[10px] text-purple-300/50 font-mono">
+            <div className="absolute right-14 bottom-2.5 text-[10px] text-quest-text-dim font-mono">
               {userInput.length}/{MAX_INPUT_LENGTH}
             </div>
           )}
@@ -129,12 +145,12 @@ export default function PromptInput() {
         <button
           type="submit"
           disabled={isLoading || !userInput.trim()}
-          className="btn-game bg-gradient-to-b from-quest-gold to-amber-600 text-quest-bg
-                     border-2 border-yellow-400/50 shadow-glow-gold
-                     hover:from-yellow-300 hover:to-amber-500
+          className="btn-game bg-gradient-to-br from-quest-accent to-quest-purple text-white
+                     border-2 border-quest-accent/50 shadow-glow-purple
+                     hover:from-purple-400 hover:to-purple-600
                      disabled:from-gray-600 disabled:to-gray-700 disabled:border-gray-600 disabled:text-gray-400
                      disabled:shadow-none
-                     text-base px-7 py-4 whitespace-nowrap"
+                     text-lg px-8 py-4 min-w-[160px] whitespace-nowrap"
         >
           {isLoading ? (
             <span className="flex items-center gap-2">
@@ -142,7 +158,7 @@ export default function PromptInput() {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
               </svg>
-              Thinking...
+              {loadingMsgRef.current}
             </span>
           ) : (
             'Try It!'

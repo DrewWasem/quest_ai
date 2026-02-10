@@ -32,10 +32,10 @@ export class RobotPizzaScene extends Phaser.Scene {
       50,
       'Robot Pizza Delivery',
       {
-        fontSize: '28px',
+        fontSize: '32px',
         color: '#ffffff',
-        fontFamily: 'Arial, sans-serif',
-        fontStyle: 'bold',
+        fontFamily: 'Nunito, sans-serif',
+        fontStyle: '800',
       },
     ).setOrigin(0.5);
 
@@ -49,8 +49,8 @@ export class RobotPizzaScene extends Phaser.Scene {
       'Type instructions to help the robot deliver the pizza!',
       {
         fontSize: '16px',
-        color: '#7799bb',
-        fontFamily: 'Arial, sans-serif',
+        color: '#8B7AAE',
+        fontFamily: 'Nunito, sans-serif',
       },
     ).setOrigin(0.5);
 
@@ -152,8 +152,8 @@ export class RobotPizzaScene extends Phaser.Scene {
       // Label
       this.add.text(cx, cy + 60, 'Robot', {
         fontSize: '14px',
-        color: '#7799bb',
-        fontFamily: 'Arial, sans-serif',
+        color: '#B8A9D4',
+        fontFamily: 'Nunito, sans-serif',
       }).setOrigin(0.5);
     }
   }
@@ -195,7 +195,7 @@ export class RobotPizzaScene extends Phaser.Scene {
 
     const color = level === 'FULL_SUCCESS' ? '#34d399'
       : level === 'PARTIAL_SUCCESS' ? '#fbbf24'
-      : '#c084fc';
+      : '#FF8C42';
 
     this.narrationText = this.add.text(
       this.cameras.main.centerX,
@@ -204,7 +204,7 @@ export class RobotPizzaScene extends Phaser.Scene {
       {
         fontSize: '18px',
         color,
-        fontFamily: 'Arial, sans-serif',
+        fontFamily: 'Nunito, sans-serif',
         fontStyle: 'italic',
         wordWrap: { width: 600 },
         align: 'center',

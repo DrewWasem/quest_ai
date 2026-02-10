@@ -41,7 +41,7 @@ export default function App() {
           {/* Subtle bottom glow line */}
           <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-quest-accent/40 to-transparent" />
 
-          <h1 className="font-heading text-2xl font-bold bg-gradient-to-r from-quest-gold via-quest-accent to-quest-cyan bg-clip-text text-transparent drop-shadow-lg">
+          <h1 className="font-heading text-2xl font-extrabold bg-gradient-to-r from-quest-gold via-quest-accent to-quest-blue bg-clip-text text-transparent drop-shadow-lg">
             Prompt Quest
           </h1>
 
@@ -52,8 +52,8 @@ export default function App() {
                 onClick={() => switchTask(id)}
                 className={`btn-game text-sm px-4 py-2 rounded-xl border-2 ${
                   id === currentTask
-                    ? 'bg-gradient-to-b from-quest-accent to-purple-700 text-white border-quest-glow shadow-glow-purple'
-                    : 'bg-quest-card/60 text-purple-200/70 border-quest-border hover:border-quest-accent/50 hover:text-white'
+                    ? 'bg-gradient-to-b from-quest-accent to-quest-purple text-white border-quest-accent shadow-glow-purple'
+                    : 'bg-quest-card/60 text-quest-text-secondary border-quest-border hover:border-quest-orange/50 hover:text-white'
                 }`}
               >
                 <span className="mr-1.5 text-base">{info.emoji}</span>

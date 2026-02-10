@@ -574,7 +574,7 @@ export class SceneScriptPlayer {
         ctx.stroke();
         // Draw label
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 11px Arial';
+        ctx.font = 'bold 11px Nunito, sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         const label = key.length > 10 ? key.slice(0, 9) + '…' : key;

@@ -87,7 +87,7 @@ describe('PromptInput', () => {
   });
 
   // 4. Shows loading state
-  it('shows "Thinking..." and disables textarea when isLoading is true', () => {
+  it('shows a loading message and disables textarea when isLoading is true', () => {
     useGameStore.setState({
       userInput: 'some prompt',
       isLoading: true,
@@ -95,7 +95,7 @@ describe('PromptInput', () => {
 
     render(<PromptInput />);
 
-    expect(screen.getByText(/thinking\.\.\./i)).toBeInTheDocument();
+    expect(screen.getByText(/\.\.\.|…/)).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /try it/i })).not.toBeInTheDocument();
 
     const textarea = screen.getByPlaceholderText(
@@ -139,8 +139,8 @@ describe('PromptInput', () => {
     expect(container?.className).toMatch(/amber/);
   });
 
-  // 7. Shows FUNNY_FAIL narration with purple styling
-  it('renders purple-styled narration for FUNNY_FAIL', () => {
+  // 7. Shows FUNNY_FAIL narration with orange styling
+  it('renders orange-styled narration for FUNNY_FAIL', () => {
     const script = makeScript({
       success_level: 'FUNNY_FAIL',
       narration: 'The monster sneezed fire on the cake!',
@@ -153,7 +153,7 @@ describe('PromptInput', () => {
     expect(narration).toBeInTheDocument();
 
     const container = narration.closest('div');
-    expect(container?.className).toMatch(/purple/);
+    expect(container?.className).toMatch(/orange/);
   });
 
   // 8. Shows error message with red styling

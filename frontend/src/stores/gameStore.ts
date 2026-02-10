@@ -4,6 +4,10 @@ import type { ResponseSource } from '../services/resolver';
 import { resolveResponse } from '../services/resolver';
 import { MONSTER_PARTY_PROMPT } from '../prompts/monster-party';
 import { ROBOT_PIZZA_PROMPT } from '../prompts/robot-pizza';
+import { WIZARD_KITCHEN_PROMPT } from '../prompts/wizard-kitchen';
+import { DINOSAUR_SCHOOL_PROMPT } from '../prompts/dinosaur-school';
+import { DOG_SPACE_PROMPT } from '../prompts/dog-space';
+import { OCTOPUS_BAND_PROMPT } from '../prompts/octopus-band';
 import EventBus from '../game/EventBus';
 
 interface HistoryEntry {
@@ -35,6 +39,10 @@ interface GameState {
 const SYSTEM_PROMPTS: Record<string, string> = {
   'monster-party': MONSTER_PARTY_PROMPT,
   'robot-pizza': ROBOT_PIZZA_PROMPT,
+  'wizard-kitchen': WIZARD_KITCHEN_PROMPT,
+  'dinosaur-school': DINOSAUR_SCHOOL_PROMPT,
+  'dog-space': DOG_SPACE_PROMPT,
+  'octopus-band': OCTOPUS_BAND_PROMPT,
 };
 
 export const useGameStore = create<GameState>((set, get) => ({

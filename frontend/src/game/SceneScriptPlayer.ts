@@ -39,6 +39,9 @@ const SPAWN_SCALE_DURATION = 300;
  *   const player = new SceneScriptPlayer(scene);
  *   await player.play(script);
  */
+const prefersReducedMotion = typeof window !== 'undefined'
+  && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 export class SceneScriptPlayer {
   private scene: Phaser.Scene;
   private sound: SoundManager;
@@ -609,8 +612,23 @@ export class SceneScriptPlayer {
     return `hsl(${hue}, 60%, 45%)`;
   }
 
-  /** Promisified Phaser tween. */
+  /** Promisified Phaser tween. Skips animation if prefers-reduced-motion. */
   private tween(config: Phaser.Types.Tweens.TweenBuilderConfig): Promise<void> {
+    if (prefersReducedMotion) {
+      // Apply final values instantly
+      const targets = Array.isArray(config.targets) ? config.targets : [config.targets];
+      for (const t of targets) {
+        if (t && typeof t === 'object') {
+          if ('x' in config && typeof config.x === 'number') (t as { x: number }).x = config.x;
+          if ('y' in config && typeof config.y === 'number') (t as { y: number }).y = config.y;
+          if ('scaleX' in config && typeof config.scaleX === 'number') (t as { scaleX: number }).scaleX = config.scaleX;
+          if ('scaleY' in config && typeof config.scaleY === 'number') (t as { scaleY: number }).scaleY = config.scaleY;
+          if ('alpha' in config && typeof config.alpha === 'number') (t as { alpha: number }).alpha = config.alpha;
+          if ('angle' in config && typeof config.angle === 'number') (t as { angle: number }).angle = config.angle;
+        }
+      }
+      return Promise.resolve();
+    }
     return new Promise<void>((resolve) => {
       this.scene.tweens.add({
         ...config,

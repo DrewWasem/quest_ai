@@ -2,6 +2,10 @@ import { forwardRef, useLayoutEffect, useRef } from 'react';
 import Phaser from 'phaser';
 import { MonsterPartyScene } from './scenes/MonsterPartyScene';
 import { RobotPizzaScene } from './scenes/RobotPizzaScene';
+import { WizardKitchenScene } from './scenes/WizardKitchenScene';
+import { DinosaurSchoolScene } from './scenes/DinosaurSchoolScene';
+import { DogSpaceScene } from './scenes/DogSpaceScene';
+import { OctopusBandScene } from './scenes/OctopusBandScene';
 import EventBus from './EventBus';
 
 export interface PhaserGameRef {
@@ -26,7 +30,7 @@ const PhaserGame = forwardRef<PhaserGameRef>(function PhaserGame(_props, ref) {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
       },
-      scene: [MonsterPartyScene, RobotPizzaScene],
+      scene: [MonsterPartyScene, RobotPizzaScene, WizardKitchenScene, DinosaurSchoolScene, DogSpaceScene, OctopusBandScene],
     };
 
     const game = new Phaser.Game(config);

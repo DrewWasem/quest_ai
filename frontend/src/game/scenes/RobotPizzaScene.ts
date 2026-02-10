@@ -190,7 +190,6 @@ export class RobotPizzaScene extends Phaser.Scene {
   }
 
   private showNarration(text: string, level: string) {
-    // Remove old narration
     if (this.narrationText) {
       this.narrationText.destroy();
     }
@@ -202,7 +201,7 @@ export class RobotPizzaScene extends Phaser.Scene {
     this.narrationText = this.add.text(
       this.cameras.main.centerX,
       100,
-      text,
+      '',
       {
         fontSize: '18px',
         color,
@@ -211,14 +210,17 @@ export class RobotPizzaScene extends Phaser.Scene {
         wordWrap: { width: 600 },
         align: 'center',
       },
-    ).setOrigin(0.5).setAlpha(0);
+    ).setOrigin(0.5);
 
-    // Fade in
-    this.tweens.add({
-      targets: this.narrationText,
-      alpha: 1,
-      duration: 400,
-      ease: 'Sine.easeOut',
+    // Typewriter effect
+    let charIndex = 0;
+    this.time.addEvent({
+      delay: 35,
+      repeat: text.length - 1,
+      callback: () => {
+        charIndex++;
+        this.narrationText?.setText(text.slice(0, charIndex));
+      },
     });
   }
 

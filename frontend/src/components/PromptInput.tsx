@@ -15,6 +15,10 @@ const LOADING_MESSAGES = [
 const TASK_PLACEHOLDERS: Record<string, string> = {
   'monster-party': "How would you plan the monster's birthday party? Be specific!",
   'robot-pizza': 'How should the robot deliver the pizza? Describe the route and obstacles!',
+  'wizard-kitchen': 'The kitchen is chaos! How do you fix the plates, soup, toaster, and fridge?',
+  'dinosaur-school': 'The T-Rex is too big for school! How can you solve each problem?',
+  'dog-space': 'Plan the dog\'s space mission! What does the dog need to reach the moon?',
+  'octopus-band': 'Help the octopus start a rock band! What instruments, stage, and audience?',
 };
 
 const SUCCESS_STYLES = {

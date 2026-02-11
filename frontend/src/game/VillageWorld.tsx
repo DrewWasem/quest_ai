@@ -262,7 +262,7 @@ function VillageCenter() {
       <Piece model={DECORATION.tree_B} position={[32, 0, -2]} scale={d} />
       <Piece model={DECORATION.trees_small} position={[-30, 0, 12]} scale={d * 0.8} />
       <Piece model={DECORATION.trees_small} position={[30, 0, -10]} scale={d * 0.8} />
-      <Piece model={DECORATION.tree_A} position={[-12, 0, -14]} scale={d * 0.9} />
+      <Piece model={DECORATION.tree_A} position={[-18, 0, -14]} scale={d * 0.9} />
       <Piece model={DECORATION.tree_B} position={[20, 0, 15]} scale={d * 0.9} />
     </group>
   )
@@ -438,89 +438,53 @@ function ImpenetrableForest() {
 }
 
 // ============================================================================
-// CANYON PASS — Walled path + natural cliffs leading to the dungeon (Z=-16 to Z=-48)
+// DUNGEON CLIFFS — Mountain/cliff bowl enclosing the dungeon from all sides
 // ============================================================================
 
-function CanyonPass() {
-  const ws = 5.5 // wall scale (hex walls at 7x village scale, slightly smaller for path width)
+function DungeonCliffs() {
+  // Cliff bowl wraps tight around the dungeon (centered at Z=-55)
+  // Open only at the south (Z≈-45) where the road enters
   return (
-    <group name="canyon-pass">
-      {/* ── Gate entrance (Z=-15) — stone walls with gate opening ── */}
-      <Piece model={BUILDINGS.wall_gate} position={[-3, 0, -15]} scale={ws} />
-      <Piece model={BUILDINGS.wall_gate} position={[3, 0, -15]} scale={ws} />
-      <Piece model={DECORATION.rock_E} position={[-7, 0, -15]} scale={5.0} />
-      <Piece model={DECORATION.rock_B} position={[7, 0, -15]} scale={5.0} />
+    <group name="dungeon-cliffs">
+      {/* ── Back wall (north, behind dungeon Z=-68 to -72) ── */}
+      <Piece model={DECORATION.mountain_A} position={[0, 0, -72]} scale={9.0} />
+      <Piece model={DECORATION.mountain_B} position={[-18, 0, -70]} scale={7.5} />
+      <Piece model={DECORATION.mountain_C} position={[18, 0, -70]} scale={7.5} />
+      <Piece model={DECORATION.hill_C} position={[-9, 0, -68]} scale={6.0} />
+      <Piece model={DECORATION.hill_A} position={[9, 0, -68]} scale={6.0} />
+      <Piece model={DECORATION.rock_C} position={[-4, 0, -67]} scale={5.0} />
+      <Piece model={DECORATION.rock_D} position={[4, 0, -67]} scale={5.0} />
 
-      {/* ── Stone wall corridor (Z=-15 to Z=-26) — civilized approach ── */}
-      {/* Left wall */}
-      <Piece model={BUILDINGS.wall_straight} position={[-5, 0, -18]} rotation={[0, Math.PI / 2, 0]} scale={ws} />
-      <Piece model={BUILDINGS.wall_straight} position={[-5, 0, -21]} rotation={[0, Math.PI / 2, 0]} scale={ws} />
-      <Piece model={BUILDINGS.wall_straight} position={[-5, 0, -24]} rotation={[0, Math.PI / 2, 0]} scale={ws} />
-      {/* Right wall */}
-      <Piece model={BUILDINGS.wall_straight} position={[5, 0, -18]} rotation={[0, Math.PI / 2, 0]} scale={ws} />
-      <Piece model={BUILDINGS.wall_straight} position={[5, 0, -21]} rotation={[0, Math.PI / 2, 0]} scale={ws} />
-      <Piece model={BUILDINGS.wall_straight} position={[5, 0, -24]} rotation={[0, Math.PI / 2, 0]} scale={ws} />
+      {/* ── Left wall (west, X=-18 to -28) ── */}
+      <Piece model={DECORATION.mountain_A} position={[-25, 0, -64]} rotation={[0, Math.PI / 4, 0]} scale={7.5} />
+      <Piece model={DECORATION.mountain_C} position={[-28, 0, -58]} rotation={[0, Math.PI / 3, 0]} scale={7.0} />
+      <Piece model={DECORATION.hill_B} position={[-26, 0, -52]} scale={6.0} />
+      <Piece model={DECORATION.rock_A} position={[-22, 0, -49]} scale={6.0} />
+      <Piece model={DECORATION.hills_trees} position={[-20, 0, -60]} scale={6.0} />
+      <Piece model={DECORATION.rock_E} position={[-18, 0, -46]} scale={5.5} />
 
-      {/* ── Transition zone (Z=-26 to Z=-32) — walls crumble, cliffs begin ── */}
-      <Piece model={BUILDINGS.wall_straight} position={[-6, 0, -27]} rotation={[0, Math.PI / 2, 0]} scale={ws * 0.9} />
-      <Piece model={DECORATION.rock_A} position={[-8, 0, -27]} scale={5.0} />
-      <Piece model={BUILDINGS.wall_straight} position={[6, 0, -27]} rotation={[0, Math.PI / 2, 0]} scale={ws * 0.9} />
-      <Piece model={DECORATION.rock_B} position={[8, 0, -27]} scale={5.0} />
-      <Piece model={DECORATION.rock_C} position={[-7, 0, -30]} scale={6.0} />
-      <Piece model={DECORATION.rock_D} position={[7, 0, -30]} scale={6.0} />
+      {/* ── Right wall (east, X=+18 to +28) ── */}
+      <Piece model={DECORATION.mountain_B} position={[25, 0, -64]} rotation={[0, -Math.PI / 4, 0]} scale={7.5} />
+      <Piece model={DECORATION.mountain_C} position={[28, 0, -58]} rotation={[0, -Math.PI / 3, 0]} scale={7.0} />
+      <Piece model={DECORATION.hill_A} position={[26, 0, -52]} scale={6.0} />
+      <Piece model={DECORATION.rock_B} position={[22, 0, -49]} scale={6.0} />
+      <Piece model={DECORATION.hills_B_trees} position={[20, 0, -60]} scale={6.0} />
+      <Piece model={DECORATION.rock_D} position={[18, 0, -46]} scale={5.5} />
 
-      {/* ── Natural cliff corridor (Z=-32 to Z=-48) — raw rock and mountains ── */}
-      {/* Left cliff wall */}
-      <Piece model={DECORATION.mountain_A} position={[-12, 0, -34]} scale={5.5} />
-      <Piece model={DECORATION.hill_A} position={[-10, 0, -38]} scale={5.0} />
-      <Piece model={DECORATION.rock_A} position={[-9, 0, -42]} scale={6.0} />
-      <Piece model={DECORATION.mountain_C} position={[-13, 0, -46]} scale={5.0} />
-      <Piece model={DECORATION.tree_A} position={[-14, 0, -36]} scale={7.0} />
-      <Piece model={DECORATION.tree_A} position={[-15, 0, -44]} scale={6.5} />
+      {/* ── Entrance narrows (south, Z≈-45) — boulders flanking the opening ── */}
+      <Piece model={DECORATION.rock_A} position={[-12, 0, -45]} scale={6.5} />
+      <Piece model={DECORATION.rock_B} position={[12, 0, -45]} scale={6.5} />
+      <Piece model={DECORATION.hill_C} position={[-16, 0, -46]} scale={5.5} />
+      <Piece model={DECORATION.hill_B} position={[16, 0, -46]} scale={5.5} />
 
-      {/* Right cliff wall */}
-      <Piece model={DECORATION.mountain_B} position={[12, 0, -34]} scale={5.5} />
-      <Piece model={DECORATION.hill_B} position={[10, 0, -38]} scale={5.0} />
-      <Piece model={DECORATION.rock_B} position={[9, 0, -42]} scale={6.0} />
-      <Piece model={DECORATION.mountain_C} position={[13, 0, -46]} rotation={[0, Math.PI, 0]} scale={5.0} />
-      <Piece model={DECORATION.tree_B} position={[14, 0, -36]} scale={7.0} />
-      <Piece model={DECORATION.tree_B} position={[15, 0, -44]} scale={6.5} />
-
-      {/* ── Cliff bowl enclosure around dungeon (Z=-48 to Z=-65) ── */}
-      {/* Blocks access from all sides except the canyon path from the south */}
-
-      {/* Back wall (north, behind dungeon) */}
-      <Piece model={DECORATION.mountain_A} position={[0, 0, -68]} scale={8.0} />
-      <Piece model={DECORATION.mountain_B} position={[-15, 0, -66]} scale={7.0} />
-      <Piece model={DECORATION.mountain_C} position={[15, 0, -66]} scale={7.0} />
-      <Piece model={DECORATION.hill_C} position={[-8, 0, -65]} scale={6.0} />
-      <Piece model={DECORATION.hill_A} position={[8, 0, -65]} scale={6.0} />
-
-      {/* Left arc (northwest) */}
-      <Piece model={DECORATION.mountain_A} position={[-22, 0, -62]} rotation={[0, Math.PI / 4, 0]} scale={7.0} />
-      <Piece model={DECORATION.mountain_C} position={[-26, 0, -56]} rotation={[0, Math.PI / 3, 0]} scale={6.5} />
-      <Piece model={DECORATION.hill_B} position={[-24, 0, -50]} scale={5.5} />
-      <Piece model={DECORATION.rock_C} position={[-20, 0, -48]} scale={6.0} />
-      <Piece model={DECORATION.hills_trees} position={[-18, 0, -58]} scale={5.5} />
-
-      {/* Right arc (northeast) */}
-      <Piece model={DECORATION.mountain_B} position={[22, 0, -62]} rotation={[0, -Math.PI / 4, 0]} scale={7.0} />
-      <Piece model={DECORATION.mountain_C} position={[26, 0, -56]} rotation={[0, -Math.PI / 3, 0]} scale={6.5} />
-      <Piece model={DECORATION.hill_A} position={[24, 0, -50]} scale={5.5} />
-      <Piece model={DECORATION.rock_D} position={[20, 0, -48]} scale={6.0} />
-      <Piece model={DECORATION.hills_B_trees} position={[18, 0, -58]} scale={5.5} />
-
-      {/* Fill gaps — connect canyon walls to bowl edges */}
-      <Piece model={DECORATION.hill_C} position={[-16, 0, -48]} scale={5.0} />
-      <Piece model={DECORATION.rock_E} position={[-14, 0, -50]} scale={5.5} />
-      <Piece model={DECORATION.hill_B} position={[16, 0, -48]} scale={5.0} />
-      <Piece model={DECORATION.rock_A} position={[14, 0, -50]} scale={5.5} />
-
-      {/* Trees on cliff tops for silhouette */}
-      <Piece model={DECORATION.tree_A} position={[-20, 0, -64]} scale={7.0} />
-      <Piece model={DECORATION.tree_B} position={[20, 0, -64]} scale={7.0} />
-      <Piece model={DECORATION.tree_A} position={[-28, 0, -54]} scale={6.5} />
-      <Piece model={DECORATION.tree_B} position={[28, 0, -54]} scale={6.5} />
+      {/* ── Trees on cliff tops for silhouette ── */}
+      <Piece model={DECORATION.tree_A} position={[-22, 0, -66]} scale={7.0} />
+      <Piece model={DECORATION.tree_B} position={[22, 0, -66]} scale={7.0} />
+      <Piece model={DECORATION.tree_A} position={[-30, 0, -56]} scale={6.5} />
+      <Piece model={DECORATION.tree_B} position={[30, 0, -56]} scale={6.5} />
+      <Piece model={DECORATION.tree_A} position={[0, 0, -74]} scale={7.5} />
+      <Piece model={DECORATION.tree_B} position={[-12, 0, -72]} scale={6.5} />
+      <Piece model={DECORATION.tree_A} position={[12, 0, -72]} scale={6.5} />
     </group>
   )
 }
@@ -534,63 +498,81 @@ function DungeonZone() {
 
   return (
     <group name="dungeon-zone" position={center}>
-      {/* Dungeon courtyard built from character-scale dungeon pack pieces */}
+      {/* ── Expanded dungeon courtyard — larger footprint ── */}
 
-      {/* Stone walls (dungeon pack — properly scaled for characters) */}
-      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[-4, 0, -5]} />
-      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[-2, 0, -5]} />
-      <Piece model="kaykit/packs/dungeon/wall_doorway.gltf" position={[0, 0, -5]} />
-      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[2, 0, -5]} />
-      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[4, 0, -5]} />
+      {/* Back wall (wider, spanning -8 to +8) */}
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[-8, 0, -8]} />
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[-6, 0, -8]} />
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[-4, 0, -8]} />
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[-2, 0, -8]} />
+      <Piece model="kaykit/packs/dungeon/wall_doorway.gltf" position={[0, 0, -8]} />
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[2, 0, -8]} />
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[4, 0, -8]} />
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[6, 0, -8]} />
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[8, 0, -8]} />
 
-      {/* Side walls */}
-      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[-5, 0, -3]} rotation={[0, Math.PI / 2, 0]} />
-      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[-5, 0, -1]} rotation={[0, Math.PI / 2, 0]} />
-      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[5, 0, -3]} rotation={[0, Math.PI / 2, 0]} />
-      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[5, 0, -1]} rotation={[0, Math.PI / 2, 0]} />
+      {/* Left side wall */}
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[-9, 0, -6]} rotation={[0, Math.PI / 2, 0]} />
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[-9, 0, -4]} rotation={[0, Math.PI / 2, 0]} />
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[-9, 0, -2]} rotation={[0, Math.PI / 2, 0]} />
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[-9, 0, 0]} rotation={[0, Math.PI / 2, 0]} />
 
-      {/* Decorated pillars at entrance and inside */}
-      <Piece model="kaykit/packs/dungeon/pillar_decorated.gltf" position={[-5, 0, 1]} scale={1.2} />
-      <Piece model="kaykit/packs/dungeon/pillar_decorated.gltf" position={[5, 0, 1]} scale={1.2} />
-      <Piece model="kaykit/packs/dungeon/pillar_decorated.gltf" position={[-3, 0, -1]} scale={1.0} />
-      <Piece model="kaykit/packs/dungeon/pillar_decorated.gltf" position={[3, 0, -1]} scale={1.0} />
+      {/* Right side wall */}
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[9, 0, -6]} rotation={[0, Math.PI / 2, 0]} />
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[9, 0, -4]} rotation={[0, Math.PI / 2, 0]} />
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[9, 0, -2]} rotation={[0, Math.PI / 2, 0]} />
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[9, 0, 0]} rotation={[0, Math.PI / 2, 0]} />
 
-      {/* Dungeon floor covering the courtyard */}
-      <Piece model="kaykit/packs/dungeon/floor_tile_large.gltf" position={[0, 0.01, -2]} />
-      <Piece model="kaykit/packs/dungeon/floor_tile_large.gltf" position={[-2, 0.01, -2]} />
-      <Piece model="kaykit/packs/dungeon/floor_tile_large.gltf" position={[2, 0.01, -2]} />
-      <Piece model="kaykit/packs/dungeon/floor_tile_large.gltf" position={[0, 0.01, 0]} />
-      <Piece model="kaykit/packs/dungeon/floor_tile_large.gltf" position={[-2, 0.01, 0]} />
-      <Piece model="kaykit/packs/dungeon/floor_tile_large.gltf" position={[2, 0.01, 0]} />
+      {/* Decorated pillars — entrance and interior */}
+      <Piece model="kaykit/packs/dungeon/pillar_decorated.gltf" position={[-9, 0, 2]} scale={1.3} />
+      <Piece model="kaykit/packs/dungeon/pillar_decorated.gltf" position={[9, 0, 2]} scale={1.3} />
+      <Piece model="kaykit/packs/dungeon/pillar_decorated.gltf" position={[-5, 0, -2]} scale={1.0} />
+      <Piece model="kaykit/packs/dungeon/pillar_decorated.gltf" position={[5, 0, -2]} scale={1.0} />
+      <Piece model="kaykit/packs/dungeon/pillar_decorated.gltf" position={[-5, 0, -6]} scale={1.0} />
+      <Piece model="kaykit/packs/dungeon/pillar_decorated.gltf" position={[5, 0, -6]} scale={1.0} />
 
-      {/* Torches on the walls */}
-      <Piece model="kaykit/packs/dungeon/torch_lit.gltf" position={[-4, 0, -3]} />
-      <Piece model="kaykit/packs/dungeon/torch_lit.gltf" position={[4, 0, -3]} />
-      <Piece model="kaykit/packs/dungeon/torch_lit.gltf" position={[-4, 0, -1]} />
-      <Piece model="kaykit/packs/dungeon/torch_lit.gltf" position={[4, 0, -1]} />
+      {/* Floor tiles — expanded grid covering the full courtyard */}
+      {[-6, -4, -2, 0, 2, 4, 6].map(x =>
+        [-6, -4, -2, 0, 2].map(z => (
+          <Piece key={`floor-${x}-${z}`} model="kaykit/packs/dungeon/floor_tile_large.gltf" position={[x, 0.01, z]} />
+        ))
+      )}
 
-      {/* Props — scaled down (dungeon barrel_large=2.0 native, target ~0.8 = 0.4 scale) */}
-      <Piece model="kaykit/packs/dungeon/barrel_large.gltf" position={[-4.5, 0, 0]} scale={0.4} />
-      <Piece model="kaykit/packs/dungeon/barrel_small.gltf" position={[-4.2, 0, 0.6]} scale={0.5} />
-      <Piece model="kaykit/packs/dungeon/barrel_small.gltf" position={[-3.8, 0, 0.3]} scale={0.5} />
-      <Piece model="kaykit/packs/dungeon/chest_large_gold.gltf" position={[4, 0, -4]} rotation={[0, Math.PI, 0]} scale={0.35} />
-      <Piece model="kaykit/packs/dungeon/chest_gold.gltf" position={[3.5, 0, 0]} scale={0.4} />
+      {/* Torches along the walls */}
+      <Piece model="kaykit/packs/dungeon/torch_lit.gltf" position={[-8, 0, -6]} />
+      <Piece model="kaykit/packs/dungeon/torch_lit.gltf" position={[8, 0, -6]} />
+      <Piece model="kaykit/packs/dungeon/torch_lit.gltf" position={[-8, 0, -2]} />
+      <Piece model="kaykit/packs/dungeon/torch_lit.gltf" position={[8, 0, -2]} />
+      <Piece model="kaykit/packs/dungeon/torch_lit.gltf" position={[-4, 0, -7.5]} />
+      <Piece model="kaykit/packs/dungeon/torch_lit.gltf" position={[4, 0, -7.5]} />
 
-      {/* Banners on the back wall (scale 0.8 — slightly smaller for proportion) */}
-      <Piece model="kaykit/packs/dungeon/banner_patternA_blue.gltf" position={[-2, 1.5, -4.8]} scale={0.7} />
-      <Piece model="kaykit/packs/dungeon/banner_patternB_red.gltf" position={[0, 1.5, -4.8]} scale={0.7} />
-      <Piece model="kaykit/packs/dungeon/banner_patternA_green.gltf" position={[2, 1.5, -4.8]} scale={0.7} />
+      {/* Props — barrels, chests, crates */}
+      <Piece model="kaykit/packs/dungeon/barrel_large.gltf" position={[-8, 0, 0]} scale={0.4} />
+      <Piece model="kaykit/packs/dungeon/barrel_small.gltf" position={[-7.5, 0, 0.8]} scale={0.5} />
+      <Piece model="kaykit/packs/dungeon/barrel_small.gltf" position={[-7, 0, 0.3]} scale={0.5} />
+      <Piece model="kaykit/packs/dungeon/barrel_large.gltf" position={[8, 0, -1]} scale={0.4} />
+      <Piece model="kaykit/packs/dungeon/barrel_small.gltf" position={[7.5, 0, -0.3]} scale={0.5} />
+      <Piece model="kaykit/packs/dungeon/chest_large_gold.gltf" position={[7, 0, -7]} rotation={[0, Math.PI, 0]} scale={0.35} />
+      <Piece model="kaykit/packs/dungeon/chest_gold.gltf" position={[-7, 0, -7]} scale={0.4} />
+      <Piece model="kaykit/packs/dungeon/chest_gold.gltf" position={[6, 0, 1]} scale={0.4} />
+
+      {/* Banners across the back wall */}
+      <Piece model="kaykit/packs/dungeon/banner_patternA_blue.gltf" position={[-6, 1.5, -7.8]} scale={0.7} />
+      <Piece model="kaykit/packs/dungeon/banner_patternB_red.gltf" position={[-2, 1.5, -7.8]} scale={0.7} />
+      <Piece model="kaykit/packs/dungeon/banner_patternA_green.gltf" position={[2, 1.5, -7.8]} scale={0.7} />
+      <Piece model="kaykit/packs/dungeon/banner_patternB_red.gltf" position={[6, 1.5, -7.8]} scale={0.7} />
 
       {/* Torch glow — warm orange light */}
-      <pointLight color="#ff6600" intensity={3} distance={10} decay={2} position={[-4, 3, -3]} />
-      <pointLight color="#ff6600" intensity={3} distance={10} decay={2} position={[4, 3, -3]} />
-      <pointLight color="#ff4400" intensity={2} distance={8} decay={2} position={[0, 2, -4]} />
+      <pointLight color="#ff6600" intensity={3} distance={12} decay={2} position={[-7, 3, -5]} />
+      <pointLight color="#ff6600" intensity={3} distance={12} decay={2} position={[7, 3, -5]} />
+      <pointLight color="#ff4400" intensity={2} distance={10} decay={2} position={[0, 3, -7]} />
+      <pointLight color="#ff6600" intensity={2} distance={10} decay={2} position={[0, 2, 0]} />
 
-      {/* Approach decoration (hex props scaled to match 7x village) */}
-      <Piece model={DECORATION.flag_red} position={[-5, 0, 3]} scale={7.0} />
-      <Piece model={DECORATION.flag_red} position={[5, 0, 3]} scale={7.0} />
-      <Piece model={DECORATION.weaponrack} position={[-3, 0, 2]} scale={7.0} />
-      <Piece model={DECORATION.target} position={[3, 0, 2]} scale={7.0} />
+      {/* Approach decoration — entrance markers (hex props at 7x) */}
+      <Piece model={DECORATION.flag_red} position={[-8, 0, 4]} scale={7.0} />
+      <Piece model={DECORATION.flag_red} position={[8, 0, 4]} scale={7.0} />
+      <Piece model={DECORATION.weaponrack} position={[-6, 0, 3]} scale={7.0} />
+      <Piece model={DECORATION.target} position={[6, 0, 3]} scale={7.0} />
     </group>
   )
 }
@@ -825,13 +807,9 @@ function RoadDecoration() {
       <Piece model={DECORATION.trough} position={[-5, 0, 8]} scale={d} />
       <Piece model={DECORATION.barrel} position={[-4, 0, -12]} scale={d} />
 
-      {/* Trees along the road — south only, north approach is walled canyon */}
+      {/* Trees along the road */}
       <Piece model={DECORATION.tree_A} position={[-8, 0, 18]} scale={d} />
       <Piece model={DECORATION.tree_B} position={[8, 0, 22]} scale={d} />
-
-      {/* Torches inside the canyon walls for atmosphere */}
-      <Piece model={DECORATION.flag_red} position={[3.5, 0, -19]} scale={d * 0.8} />
-      <Piece model={DECORATION.flag_red} position={[-3.5, 0, -22]} scale={d * 0.8} />
     </group>
   )
 }
@@ -983,9 +961,9 @@ export function VillageWorld() {
         <ImpenetrableForest />
       </Suspense>
 
-      {/* Canyon pass — cliff walls flanking dungeon approach */}
+      {/* Cliff bowl enclosing the dungeon */}
       <Suspense fallback={null}>
-        <CanyonPass />
+        <DungeonCliffs />
       </Suspense>
 
       {/* Road decoration */}

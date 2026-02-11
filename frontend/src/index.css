@@ -4,44 +4,89 @@
 
 @layer base {
   body {
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     overflow: hidden;
+    -webkit-font-smoothing: antialiased;
   }
 }
 
 @layer components {
-  /* Game-themed button */
+  /* Display text (headings) — Fredoka */
+  .font-display {
+    font-family: 'Fredoka', 'Nunito', system-ui, sans-serif;
+  }
+
+  /* Game-themed button — v2 purple with glow */
   .btn-game {
-    @apply px-6 py-3.5 font-heading font-extrabold rounded-[14px]
+    @apply px-6 py-3.5 font-heading font-bold rounded-[14px]
            transition-all duration-150 transform
            hover:scale-105 active:scale-[0.96]
            disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100;
   }
 
-  /* Glowing input field */
+  /* Glowing input field — dark canvas theme */
   .input-magic {
-    @apply w-full p-4 bg-quest-panel text-white rounded-[14px]
-           border-2 border-quest-border font-body text-base
-           placeholder-[#6B5C8A] resize-none
-           focus:outline-none focus:border-quest-accent focus:shadow-glow-purple
+    @apply w-full p-4 rounded-[14px]
+           font-body text-base
+           resize-none
+           focus:outline-none
            disabled:opacity-40 transition-all duration-300;
     min-height: 100px;
+    background: #1A0F2E;
+    color: #FFFFFF;
+    border: 2px solid #3D2B7A;
+  }
+  .input-magic::placeholder {
+    color: #A99CC8;
+  }
+  .input-magic:focus {
+    border-color: #7C3AED;
+    box-shadow: 0 0 24px rgba(124, 58, 237, 0.15), 0 0 60px rgba(124, 58, 237, 0.08);
   }
 
-  /* Result speech bubble */
+  /* Result speech bubble — light theme */
   .bubble-result {
     @apply px-6 py-5 rounded-[20px] font-body text-sm border backdrop-blur-sm;
   }
+
+  /* Primary CTA button */
+  .btn-primary {
+    @apply btn-game text-white;
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    box-shadow: 0 0 24px rgba(124, 58, 237, 0.15);
+  }
+  .btn-primary:hover {
+    box-shadow: 0 0 30px rgba(124, 58, 237, 0.3);
+  }
+
+  /* Secondary CTA button */
+  .btn-secondary {
+    @apply btn-game;
+    background: linear-gradient(135deg, #FF8C42 0%, #F97316 100%);
+    color: white;
+    box-shadow: 0 0 20px rgba(255, 140, 66, 0.15);
+  }
 }
 
-/* Stars background decoration */
+/* Stars background decoration — light version for UI wrapper */
+.stars-bg-light {
+  background-image:
+    radial-gradient(2px 2px at 20px 30px, rgba(124, 58, 237, 0.08), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(251, 191, 36, 0.06), transparent),
+    radial-gradient(1px 1px at 90px 40px, rgba(56, 189, 248, 0.08), transparent),
+    radial-gradient(1px 1px at 130px 80px, rgba(236, 72, 153, 0.06), transparent),
+    radial-gradient(2px 2px at 160px 30px, rgba(124, 58, 237, 0.06), transparent);
+  background-size: 200px 100px;
+}
+
+/* Stars background decoration — dark version for canvas area */
 .stars-bg {
   background-image:
-    radial-gradient(2px 2px at 20px 30px, rgba(139, 92, 246, 0.3), transparent),
+    radial-gradient(2px 2px at 20px 30px, rgba(124, 58, 237, 0.3), transparent),
     radial-gradient(2px 2px at 40px 70px, rgba(251, 191, 36, 0.2), transparent),
-    radial-gradient(1px 1px at 90px 40px, rgba(96, 165, 250, 0.3), transparent),
-    radial-gradient(1px 1px at 130px 80px, rgba(244, 114, 182, 0.2), transparent),
-    radial-gradient(2px 2px at 160px 30px, rgba(139, 92, 246, 0.2), transparent);
+    radial-gradient(1px 1px at 90px 40px, rgba(56, 189, 248, 0.3), transparent),
+    radial-gradient(1px 1px at 130px 80px, rgba(236, 72, 153, 0.2), transparent),
+    radial-gradient(2px 2px at 160px 30px, rgba(124, 58, 237, 0.2), transparent);
   background-size: 200px 100px;
 }
 
@@ -52,18 +97,54 @@
 }
 
 .animate-shimmer {
-  background: linear-gradient(90deg, transparent 25%, rgba(139, 92, 246, 0.15) 50%, transparent 75%);
+  background: linear-gradient(90deg, transparent 25%, rgba(124, 58, 237, 0.12) 50%, transparent 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
 
 /* Pulsing record button */
 @keyframes pulse-ring {
-  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
-  70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.5); }
+  70% { box-shadow: 0 0 0 10px rgba(236, 72, 153, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0); }
 }
 
 .animate-pulse-ring {
   animation: pulse-ring 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Staggered card entrance delays */
+.stagger-1 { animation-delay: 0ms; }
+.stagger-2 { animation-delay: 60ms; }
+.stagger-3 { animation-delay: 120ms; }
+.stagger-4 { animation-delay: 180ms; }
+.stagger-5 { animation-delay: 240ms; }
+.stagger-6 { animation-delay: 300ms; }
+.stagger-7 { animation-delay: 360ms; }
+.stagger-1, .stagger-2, .stagger-3, .stagger-4, .stagger-5, .stagger-6, .stagger-7 {
+  animation-fill-mode: backwards;
+}
+
+/* Card hover lift effect */
+.card-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+}
+
+/* View transition fade */
+.view-enter {
+  animation: fade-in 0.3s ease-out, slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Loading progress bar fill animation */
+@keyframes progress-fill {
+  0% { width: 0%; }
+  100% { width: var(--progress, 0%); }
+}
+
+.progress-bar-fill {
+  animation: progress-fill 0.3s ease-out forwards;
+  background: linear-gradient(90deg, #7C3AED, #FF8C42, #FBBF24);
 }

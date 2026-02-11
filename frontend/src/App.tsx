@@ -1,124 +1,120 @@
-import { useRef, useCallback, useState } from 'react';
-import PhaserGame from './game/PhaserGame';
-import type { PhaserGameRef } from './game/PhaserGame';
+import { useRef, useState, useEffect } from 'react';
+import R3FGame from './game/R3FGame';
+import type { R3FGameRef } from './game/R3FGame';
+import ScenePlayer3D from './game/ScenePlayer3D';
 import PromptInput from './components/PromptInput';
 import ErrorBoundary from './components/ErrorBoundary';
+import LoadingScreen from './components/LoadingScreen';
 import { useGameStore } from './stores/gameStore';
-
-const TASKS: Record<string, { label: string; emoji: string; scene: string; desc: string }> = {
-  'monster-party': { label: 'Monster Birthday Party', emoji: '🎂', scene: 'MonsterPartyScene', desc: 'Plan the perfect party for a monster who has never had one!' },
-  'robot-pizza': { label: 'Robot Pizza Delivery', emoji: '🤖', scene: 'RobotPizzaScene', desc: 'Help a robot navigate the city to deliver a pizza!' },
-  'wizard-kitchen': { label: "Wizard's Kitchen", emoji: '🧙‍♂️', scene: 'WizardKitchenScene', desc: 'A spell went wrong — the kitchen appliances are alive!' },
-  'dinosaur-school': { label: "Dinosaur's First Day", emoji: '🦕', scene: 'DinosaurSchoolScene', desc: 'Help a T-Rex survive kindergarten when everything is too small!' },
-  'dog-space': { label: 'Dog Space Mission', emoji: '🐕', scene: 'DogSpaceScene', desc: 'Launch a brave dog to the moon — plan the whole mission!' },
-  'octopus-band': { label: 'Octopus Rock Band', emoji: '🐙', scene: 'OctopusBandScene', desc: 'An octopus with 8 arms wants to start a band underwater!' },
-};
+import { preloadAllAnimations } from './game/AnimationController';
 
 export default function App() {
-  const phaserRef = useRef<PhaserGameRef>(null);
+  const r3fRef = useRef<R3FGameRef>(null);
+  const currentZone = useGameStore((s) => s.currentZone);
   const currentTask = useGameStore((s) => s.currentTask);
+  const lastScript = useGameStore((s) => s.lastScript);
   const isMuted = useGameStore((s) => s.isMuted);
   const toggleMute = useGameStore((s) => s.toggleMute);
-  const [showGrid, setShowGrid] = useState(true);
+  const exitZone = useGameStore((s) => s.exitZone);
+  const isTransitioning = useGameStore((s) => s.isTransitioning);
+  const [loading3D, setLoading3D] = useState(true);
 
-  const switchTask = useCallback((taskId: string) => {
-    const store = useGameStore.getState();
-
-    // Update store
-    useGameStore.setState({ currentTask: taskId, lastScript: null, lastSource: null, error: null, userInput: '' });
-
-    // Switch Phaser scene
-    const game = phaserRef.current?.game;
-    const info = TASKS[taskId];
-    if (game && info) {
-      game.scene.start(info.scene);
-      const oldInfo = TASKS[store.currentTask];
-      if (oldInfo && oldInfo.scene !== info.scene) {
-        game.scene.stop(oldInfo.scene);
-      }
+  // Preload shared animations on mount, then dismiss loading screen
+  useEffect(() => {
+    try {
+      preloadAllAnimations();
+    } catch {
+      // Preload is best-effort
     }
-
-    setShowGrid(false);
+    const timer = setTimeout(() => setLoading3D(false), 2000);
+    return () => clearTimeout(timer);
   }, []);
+
+  // Zone labels for display
+  const ZONE_LABELS: Record<string, { label: string; emoji: string }> = {
+    'skeleton-birthday': { label: "Skeleton's Surprise Birthday", emoji: '💀' },
+    'adventurers-picnic': { label: "Adventurers' Picnic", emoji: '🧺' },
+  };
+
+  const zoneInfo = currentZone ? ZONE_LABELS[currentZone] : null;
 
   return (
     <ErrorBoundary>
-      <div className="flex flex-col h-screen bg-quest-bg stars-bg">
+      <div className="flex flex-col h-screen bg-quest-page-bg stars-bg-light">
         {/* Header */}
         <header className="relative px-5 py-3 flex items-center justify-between z-10">
-          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-quest-accent/40 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-quest-purple/30 to-transparent" />
 
-          <button
-            onClick={() => setShowGrid(true)}
-            className="font-heading text-2xl font-extrabold bg-gradient-to-r from-quest-gold via-quest-accent to-quest-blue bg-clip-text text-transparent drop-shadow-lg hover:opacity-80 transition-opacity"
-          >
-            Prompt Quest
-          </button>
+          <div className="font-display text-2xl font-bold flex items-center gap-2">
+            <span className="text-xl animate-sparkle">✨</span>
+            <span className="bg-gradient-to-r from-quest-purple via-quest-orange to-quest-yellow bg-clip-text text-transparent">
+              Prompt Quest
+            </span>
+          </div>
 
           <div className="flex items-center gap-3">
             <button
               onClick={toggleMute}
               className="btn-game text-sm px-3 py-2 rounded-xl border-2
-                         bg-quest-card/60 text-quest-text-secondary border-quest-border
-                         hover:border-quest-accent/50 hover:text-white"
+                bg-white/60 text-quest-text-mid border-quest-border hover:border-quest-purple/50 hover:text-quest-text-dark"
               title={isMuted ? 'Unmute' : 'Mute'}
             >
               {isMuted ? '🔇' : '🔊'}
             </button>
-            {!showGrid && (
+
+            {currentZone && !isTransitioning && (
               <button
-                onClick={() => setShowGrid(true)}
+                onClick={exitZone}
                 className="btn-game text-sm px-4 py-2 rounded-xl border-2
-                           bg-quest-card/60 text-quest-text-secondary border-quest-border
-                           hover:border-quest-orange/50 hover:text-white"
+                  bg-white/60 text-quest-text-mid border-quest-border hover:border-quest-orange/50 hover:text-quest-text-dark hover:bg-quest-panel-bg"
               >
-                All Tasks
+                🏘️ Village
               </button>
+            )}
+
+            {zoneInfo && (
+              <span className="text-sm font-heading font-bold text-quest-text-dark bg-white/80 px-3 py-1.5 rounded-xl border border-quest-purple/20">
+                {zoneInfo.emoji} {zoneInfo.label}
+              </span>
             )}
           </div>
         </header>
 
-        {showGrid ? (
-          /* Task Selector Grid */
-          <div className="flex-1 min-h-0 flex items-center justify-center p-6">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl w-full">
-              {Object.entries(TASKS).map(([id, info]) => (
-                <button
-                  key={id}
-                  onClick={() => switchTask(id)}
-                  className={`group relative flex flex-col items-center gap-3 p-5 rounded-2xl border-2
-                    transition-all duration-200 cursor-pointer
-                    ${id === currentTask
-                      ? 'bg-gradient-to-b from-quest-surface to-quest-card border-quest-accent shadow-glow-purple'
-                      : 'bg-quest-card/60 border-quest-border hover:border-quest-accent/50 hover:shadow-glow-purple/30'
-                    }
-                    active:scale-[0.97]`}
-                >
-                  <span className="text-4xl group-hover:scale-110 transition-transform duration-200">
-                    {info.emoji}
-                  </span>
-                  <span className="font-heading font-bold text-sm text-quest-text-primary text-center leading-tight">
-                    {info.label}
-                  </span>
-                  <span className="text-xs text-quest-text-dim text-center leading-snug">
-                    {info.desc}
-                  </span>
-                </button>
-              ))}
+        <div className="flex-1 min-h-0 flex flex-col">
+          {/* Game Canvas — full village always visible */}
+          <div className="flex-1 min-h-0 flex items-center justify-center px-4 py-2">
+            <div className="relative rounded-game-lg overflow-hidden border-2 border-quest-canvas-border/50 shadow-glow-purple/30"
+                 style={{ width: 1024, height: 576, maxWidth: '100%', maxHeight: '60vh' }}>
+              <R3FGame ref={r3fRef}>
+                <ScenePlayer3D
+                  script={lastScript}
+                  taskId={currentTask}
+                  onComplete={() => console.log('[App] Scene complete')}
+                />
+              </R3FGame>
             </div>
           </div>
-        ) : (
-          <>
-            {/* Phaser Game Canvas */}
-            <div className="flex-1 min-h-0 flex items-center justify-center">
-              <PhaserGame ref={phaserRef} />
-            </div>
 
-            {/* Prompt Input */}
-            <PromptInput />
-          </>
-        )}
+          {/* Prompt Input — only visible when in a zone */}
+          {currentZone && !isTransitioning ? (
+            <div className="transition-opacity duration-500">
+              <PromptInput />
+            </div>
+          ) : (
+            <div className="px-5 py-4 text-center">
+              <p className="font-heading font-bold text-lg text-quest-text-dark">
+                {isTransitioning ? 'Traveling...' : 'Click a glowing marker to start a quest!'}
+              </p>
+              <p className="text-sm text-quest-text-light mt-1">
+                {isTransitioning ? '' : 'Explore the village and find quest zones'}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Loading overlay */}
+      {loading3D && <LoadingScreen />}
     </ErrorBoundary>
   );
 }

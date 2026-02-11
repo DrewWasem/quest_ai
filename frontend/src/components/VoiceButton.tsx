@@ -116,8 +116,8 @@ export default function VoiceButton({ onTranscript, disabled }: VoiceButtonProps
       title={isListening ? 'Stop listening' : 'Speak your prompt'}
       className={`p-2 rounded-xl transition-all duration-200 ${
         isListening
-          ? 'bg-red-500 text-white shadow-lg animate-pulse-ring'
-          : 'bg-quest-accent/20 text-quest-glow hover:bg-quest-accent/30 hover:text-white'
+          ? 'bg-quest-orange text-white shadow-lg shadow-quest-orange/30 animate-pulse'
+          : 'bg-quest-purple/15 text-quest-purple hover:bg-quest-purple/25 hover:text-quest-purple'
       } disabled:opacity-40 disabled:cursor-not-allowed`}
     >
       {isListening ? (

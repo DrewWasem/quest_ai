@@ -117,9 +117,9 @@ describe('PromptInput', () => {
     const narration = screen.getByText('Party was a smash hit!');
     expect(narration).toBeInTheDocument();
 
-    // The container div should carry the green class names
+    // The container div should carry the success class names (quest-success)
     const container = narration.closest('div');
-    expect(container?.className).toMatch(/emerald/);
+    expect(container?.className).toMatch(/quest-success/);
   });
 
   // 6. Shows PARTIAL_SUCCESS narration with yellow styling
@@ -136,7 +136,7 @@ describe('PromptInput', () => {
     expect(narration).toBeInTheDocument();
 
     const container = narration.closest('div');
-    expect(container?.className).toMatch(/amber/);
+    expect(container?.className).toMatch(/quest-yellow/);
   });
 
   // 7. Shows FUNNY_FAIL narration with orange styling
@@ -156,8 +156,8 @@ describe('PromptInput', () => {
     expect(container?.className).toMatch(/orange/);
   });
 
-  // 8. Shows error message with red styling
-  it('displays a red error banner when error is set', () => {
+  // 8. Shows error message with orange styling (brand rule: never red for failure)
+  it('displays an orange error banner when error is set', () => {
     useGameStore.setState({ error: 'Something went wrong' });
 
     render(<PromptInput />);
@@ -166,7 +166,7 @@ describe('PromptInput', () => {
     expect(errorText).toBeInTheDocument();
 
     const container = errorText.closest('div');
-    expect(container?.className).toMatch(/red/);
+    expect(container?.className).toMatch(/quest-orange/);
   });
 
   // 9. Dismiss error — clicking the close button calls clearError

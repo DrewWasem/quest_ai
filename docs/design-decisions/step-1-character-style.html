@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Step 1: Character Art Style — Prompt Quest Design</title>
+  <style>
+    :root {
+      --bg: #0F0A1A;
+      --panel: #1A0F2E;
+      --card: #231546;
+      --surface: #2D1B69;
+      --border: #3D2B7A;
+      --accent: #8B5CF6;
+      --gold: #fbbf24;
+      --green: #34D399;
+      --orange: #FF8C42;
+      --text: #FFF;
+      --text-secondary: #B8A9D4;
+      --text-dim: #8B7AAE;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
+
+    /* Header */
+    .step-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .step-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--accent), #6C3FC5);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .step-header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--gold), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+    .step-header p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Current state callout */
+    .current-state {
+      background: rgba(255, 140, 66, 0.1);
+      border: 1px solid rgba(255, 140, 66, 0.3);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 36px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .current-state .label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--orange);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+    .current-state .desc {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    .current-monster-demo {
+      width: 80px;
+      height: 80px;
+      background: #4ade80;
+      border-radius: 16px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      color: white;
+      font-weight: 700;
+    }
+
+    /* Options grid */
+    .options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .option-card {
+      background: var(--panel);
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    .option-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
+      transform: translateY(-4px);
+    }
+    .option-label {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+    .option-a .option-label { background: rgba(52, 211, 153, 0.15); color: var(--green); }
+    .option-b .option-label { background: rgba(251, 191, 36, 0.15); color: var(--gold); }
+    .option-c .option-label { background: rgba(96, 165, 250, 0.15); color: #60A5FA; }
+
+    .option-card h3 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .option-card .desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      min-height: 48px;
+    }
+
+    .svg-preview {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .traits {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 12px;
+    }
+    .trait {
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      background: var(--surface);
+      color: var(--text-dim);
+    }
+
+    /* All characters preview */
+    .all-chars {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      margin-top: 36px;
+    }
+    .all-chars h3 {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .char-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .char-mini {
+      text-align: center;
+    }
+    .char-mini .name {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      margin-top: 6px;
+    }
+
+    /* Instructions */
+    .instructions {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 24px;
+      text-align: center;
+      margin-top: 32px;
+    }
+    .instructions p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    .instructions strong {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="step-header">
+    <div class="step-badge">Step 1 of 5</div>
+    <h1>Character Art Style</h1>
+    <p>Choose the visual style for all 9 game characters. This sets the art direction for the entire game.</p>
+  </div>
+
+  <!-- Current state -->
+  <div class="current-state">
+    <div class="current-monster-demo">monster</div>
+    <div>
+      <div class="label">Current State</div>
+      <div class="desc">Characters are colored rectangles with text labels. The monster is literally a green block. We need to replace all 9 actors with real illustrated characters.</div>
+    </div>
+  </div>
+
+  <!-- Three options -->
+  <div class="options">
+
+    <!-- Option A: Kawaii/Cute -->
+    <div class="option-card option-a">
+      <div class="option-label">Option A</div>
+      <h3>Kawaii / Cute</h3>
+      <p class="desc">Round, soft, adorable. Big sparkly eyes, pastel accents, very huggable.</p>
+      <div class="svg-preview">
+        <svg width="180" height="200" viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Body: round blob -->
+          <ellipse cx="90" cy="120" rx="70" ry="65" fill="#6BCB77"/>
+          <ellipse cx="90" cy="125" rx="60" ry="50" fill="#83D98A"/>
+          <!-- Spots -->
+          <circle cx="60" cy="105" r="8" fill="#5BB867" opacity="0.5"/>
+          <circle cx="115" cy="130" r="6" fill="#5BB867" opacity="0.5"/>
+          <circle cx="80" cy="145" r="5" fill="#5BB867" opacity="0.5"/>
+          <!-- Horns: tiny and cute -->
+          <ellipse cx="60" cy="62" rx="8" ry="16" fill="#FF9F43" transform="rotate(-15, 60, 62)"/>
+          <ellipse cx="120" cy="62" rx="8" ry="16" fill="#FF9F43" transform="rotate(15, 120, 62)"/>
+          <!-- Eyes: big and sparkly -->
+          <ellipse cx="70" cy="105" rx="18" ry="20" fill="white"/>
+          <ellipse cx="110" cy="105" rx="18" ry="20" fill="white"/>
+          <circle cx="74" cy="103" r="10" fill="#2D1B69"/>
+          <circle cx="114" cy="103" r="10" fill="#2D1B69"/>
+          <!-- Sparkle in eyes -->
+          <circle cx="78" cy="98" r="4" fill="white"/>
+          <circle cx="118" cy="98" r="4" fill="white"/>
+          <circle cx="72" cy="106" r="2" fill="white"/>
+          <circle cx="112" cy="106" r="2" fill="white"/>
+          <!-- Blush -->
+          <ellipse cx="50" cy="120" rx="10" ry="6" fill="#FF9F9F" opacity="0.5"/>
+          <ellipse cx="130" cy="120" rx="10" ry="6" fill="#FF9F9F" opacity="0.5"/>
+          <!-- Mouth: happy curve -->
+          <path d="M 75 130 Q 90 148 105 130" stroke="#2D1B69" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <!-- Arms: stubby -->
+          <ellipse cx="25" cy="125" rx="14" ry="10" fill="#6BCB77"/>
+          <ellipse cx="155" cy="125" rx="14" ry="10" fill="#6BCB77"/>
+          <!-- Feet -->
+          <ellipse cx="70" cy="180" rx="18" ry="10" fill="#5BB867"/>
+          <ellipse cx="110" cy="180" rx="18" ry="10" fill="#5BB867"/>
+        </svg>
+      </div>
+      <div class="traits">
+        <span class="trait">Round shapes</span>
+        <span class="trait">Sparkle eyes</span>
+        <span class="trait">Rosy cheeks</span>
+        <span class="trait">Pastel tones</span>
+        <span class="trait">Very friendly</span>
+      </div>
+    </div>
+
+    <!-- Option B: Cartoon/Bold -->
+    <div class="option-card option-b">
+      <div class="option-label">Option B</div>
+      <h3>Cartoon / Bold</h3>
+      <p class="desc">Thick outlines, bright saturated colors, big expressions. Cartoon Network energy.</p>
+      <div class="svg-preview">
+        <svg width="180" height="200" viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Body: chunky with outline -->
+          <ellipse cx="90" cy="118" rx="68" ry="62" fill="#2ECC71" stroke="#1a6b3a" stroke-width="4"/>
+          <!-- Belly -->
+          <ellipse cx="90" cy="130" rx="42" ry="35" fill="#58D68D" stroke="#1a6b3a" stroke-width="2"/>
+          <!-- Horns: bold -->
+          <path d="M 55 65 L 45 25 L 70 60 Z" fill="#FF6B35" stroke="#c44b1c" stroke-width="3"/>
+          <path d="M 125 65 L 135 25 L 110 60 Z" fill="#FF6B35" stroke="#c44b1c" stroke-width="3"/>
+          <!-- Eyes: big comic style -->
+          <ellipse cx="68" cy="100" rx="22" ry="24" fill="white" stroke="#1a6b3a" stroke-width="3"/>
+          <ellipse cx="112" cy="100" rx="22" ry="24" fill="white" stroke="#1a6b3a" stroke-width="3"/>
+          <circle cx="74" cy="98" r="12" fill="#1a1a2e"/>
+          <circle cx="118" cy="98" r="12" fill="#1a1a2e"/>
+          <!-- Highlight -->
+          <circle cx="79" cy="93" r="5" fill="white"/>
+          <circle cx="123" cy="93" r="5" fill="white"/>
+          <!-- Eyebrows: expressive -->
+          <path d="M 50 78 Q 65 70 85 80" stroke="#1a6b3a" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M 130 78 Q 115 70 95 80" stroke="#1a6b3a" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <!-- Mouth: big toothy grin -->
+          <path d="M 62 130 Q 90 165 118 130" fill="white" stroke="#1a6b3a" stroke-width="3"/>
+          <path d="M 62 130 Q 90 140 118 130" fill="#1a6b3a"/>
+          <!-- Teeth -->
+          <rect x="75" y="130" width="10" height="8" rx="2" fill="white" stroke="#1a6b3a" stroke-width="1"/>
+          <rect x="88" y="130" width="10" height="8" rx="2" fill="white" stroke="#1a6b3a" stroke-width="1"/>
+          <rect x="101" y="130" width="10" height="8" rx="2" fill="white" stroke="#1a6b3a" stroke-width="1"/>
+          <!-- Arms: thick -->
+          <ellipse cx="22" cy="120" rx="18" ry="14" fill="#2ECC71" stroke="#1a6b3a" stroke-width="3"/>
+          <ellipse cx="158" cy="120" rx="18" ry="14" fill="#2ECC71" stroke="#1a6b3a" stroke-width="3"/>
+          <!-- Feet -->
+          <ellipse cx="65" cy="178" rx="22" ry="12" fill="#27AE60" stroke="#1a6b3a" stroke-width="3"/>
+          <ellipse cx="115" cy="178" rx="22" ry="12" fill="#27AE60" stroke="#1a6b3a" stroke-width="3"/>
+        </svg>
+      </div>
+      <div class="traits">
+        <span class="trait">Thick outlines</span>
+        <span class="trait">Bold colors</span>
+        <span class="trait">Toothy grin</span>
+        <span class="trait">Expressive brows</span>
+        <span class="trait">High energy</span>
+      </div>
+    </div>
+
+    <!-- Option C: Geometric/Modern -->
+    <div class="option-card option-c">
+      <div class="option-label">Option C</div>
+      <h3>Geometric / Modern</h3>
+      <p class="desc">Clean shapes, flat colors, minimal detail. Modern kids' app aesthetic.</p>
+      <div class="svg-preview">
+        <svg width="180" height="200" viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Body: rounded rectangle -->
+          <rect x="30" y="55" width="120" height="120" rx="30" fill="#4ADE80"/>
+          <!-- Lighter belly panel -->
+          <rect x="50" y="85" width="80" height="65" rx="20" fill="#86EFAC"/>
+          <!-- Horns: simple triangles -->
+          <polygon points="55,58 45,25 65,55" fill="#FBBF24"/>
+          <polygon points="125,58 135,25 115,55" fill="#FBBF24"/>
+          <!-- Eyes: simple circles -->
+          <circle cx="70" cy="100" r="14" fill="white"/>
+          <circle cx="110" cy="100" r="14" fill="white"/>
+          <circle cx="73" cy="98" r="7" fill="#1a1a2e"/>
+          <circle cx="113" cy="98" r="7" fill="#1a1a2e"/>
+          <!-- Simple highlight -->
+          <circle cx="76" cy="95" r="3" fill="white"/>
+          <circle cx="116" cy="95" r="3" fill="white"/>
+          <!-- Mouth: simple arc -->
+          <path d="M 78 128 Q 90 140 102 128" stroke="#166534" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <!-- Arms: circles -->
+          <circle cx="25" cy="115" r="14" fill="#4ADE80"/>
+          <circle cx="155" cy="115" r="14" fill="#4ADE80"/>
+          <!-- Feet: rounded rects -->
+          <rect x="52" y="170" width="28" height="16" rx="8" fill="#22C55E"/>
+          <rect x="100" y="170" width="28" height="16" rx="8" fill="#22C55E"/>
+        </svg>
+      </div>
+      <div class="traits">
+        <span class="trait">Clean shapes</span>
+        <span class="trait">Flat colors</span>
+        <span class="trait">No outlines</span>
+        <span class="trait">Minimalist</span>
+        <span class="trait">App-like</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview: what all chars would look like in each style -->
+  <div class="all-chars">
+    <h3>All 9 characters will be created in the chosen style</h3>
+    <div class="char-row">
+      <div class="char-mini">
+        <svg width="48" height="48" viewBox="0 0 48 48"><ellipse cx="24" cy="26" rx="18" ry="16" fill="#6BCB77"/><circle cx="18" cy="23" r="4" fill="white"/><circle cx="30" cy="23" r="4" fill="white"/><circle cx="19" cy="22" r="2" fill="#1a1a2e"/><circle cx="31" cy="22" r="2" fill="#1a1a2e"/><path d="M19 32 Q24 37 29 32" stroke="#1a6b3a" stroke-width="1.5" fill="none"/></svg>
+        <div class="name">Monster</div>
+      </div>
+      <div class="char-mini">
+        <svg width="48" height="48" viewBox="0 0 48 48"><ellipse cx="24" cy="26" rx="16" ry="16" fill="#D4A574"/><ellipse cx="14" cy="14" rx="8" ry="10" fill="#C4956A" transform="rotate(-20,14,14)"/><ellipse cx="34" cy="14" rx="8" ry="10" fill="#C4956A" transform="rotate(20,34,14)"/><circle cx="18" cy="24" r="4" fill="white"/><circle cx="30" cy="24" r="4" fill="white"/><circle cx="19" cy="23" r="2" fill="#1a1a2e"/><circle cx="31" cy="23" r="2" fill="#1a1a2e"/><ellipse cx="24" cy="32" rx="4" ry="3" fill="#1a1a2e"/><path d="M20 35 Q24 39 28 35" stroke="#c4846a" stroke-width="1.5" fill="#FF9F9F"/></svg>
+        <div class="name">Dog</div>
+      </div>
+      <div class="char-mini">
+        <svg width="48" height="48" viewBox="0 0 48 48"><ellipse cx="24" cy="28" rx="14" ry="16" fill="#34D399"/><ellipse cx="24" cy="24" rx="16" ry="12" fill="#6EE7B7"/><circle cx="18" cy="22" r="5" fill="white"/><circle cx="30" cy="22" r="3" fill="white"/><circle cx="19" cy="21" r="2.5" fill="#1a1a2e"/><circle cx="31" cy="21" r="1.5" fill="#1a1a2e"/><path d="M18 30 Q24 36 30 30" fill="white" stroke="#166534" stroke-width="1"/><line x1="10" y1="28" x2="6" y2="26" stroke="#34D399" stroke-width="3" stroke-linecap="round"/><line x1="38" y1="28" x2="42" y2="26" stroke="#34D399" stroke-width="3" stroke-linecap="round"/></svg>
+        <div class="name">T-Rex</div>
+      </div>
+      <div class="char-mini">
+        <svg width="48" height="48" viewBox="0 0 48 48"><ellipse cx="24" cy="20" rx="14" ry="12" fill="#C084FC"/><circle cx="18" cy="18" r="4" fill="white"/><circle cx="30" cy="18" r="4" fill="white"/><circle cx="19" cy="17" r="2" fill="#1a1a2e"/><circle cx="31" cy="17" r="2" fill="#1a1a2e"/><path d="M20 24 Q24 28 28 24" stroke="#7C3AED" stroke-width="1.5" fill="none"/><path d="M10 28 Q6 36 10 42" stroke="#C084FC" stroke-width="3" fill="none"/><path d="M16 30 Q12 38 16 44" stroke="#C084FC" stroke-width="3" fill="none"/><path d="M22 32 Q18 40 22 46" stroke="#C084FC" stroke-width="3" fill="none"/><path d="M38 28 Q42 36 38 42" stroke="#C084FC" stroke-width="3" fill="none"/><path d="M32 30 Q36 38 32 44" stroke="#C084FC" stroke-width="3" fill="none"/><path d="M26 32 Q30 40 26 46" stroke="#C084FC" stroke-width="3" fill="none"/></svg>
+        <div class="name">Octopus</div>
+      </div>
+      <div class="char-mini">
+        <svg width="48" height="48" viewBox="0 0 48 48"><rect x="12" y="12" width="24" height="28" rx="4" fill="#94A3B8"/><rect x="14" y="14" width="20" height="12" rx="2" fill="#1E293B"/><circle cx="20" cy="20" r="2.5" fill="#60A5FA"/><circle cx="28" cy="20" r="2.5" fill="#60A5FA"/><rect x="18" y="28" width="12" height="3" rx="1" fill="#60A5FA"/><line x1="24" y1="8" x2="24" y2="12" stroke="#94A3B8" stroke-width="2"/><circle cx="24" cy="6" r="3" fill="#EF4444"/><rect x="8" y="18" width="6" height="3" rx="1.5" fill="#94A3B8"/><rect x="34" y="18" width="6" height="3" rx="1.5" fill="#94A3B8"/><rect x="16" y="40" width="6" height="6" rx="2" fill="#64748B"/><rect x="26" y="40" width="6" height="6" rx="2" fill="#64748B"/></svg>
+        <div class="name">Robot</div>
+      </div>
+      <div class="char-mini">
+        <svg width="48" height="48" viewBox="0 0 48 48"><path d="M14 44 L14 20 Q14 10 24 10 Q34 10 34 20 L34 44 Z" fill="#7C3AED"/><polygon points="24,2 14,16 34,16" fill="#7C3AED"/><circle cx="24" cy="5" r="2" fill="#FBBF24"/><circle cx="18" cy="22" r="3" fill="white"/><circle cx="30" cy="22" r="3" fill="white"/><circle cx="19" cy="21.5" r="1.5" fill="#1a1a2e"/><circle cx="31" cy="21.5" r="1.5" fill="#1a1a2e"/><path d="M20 28 Q24 32 28 28" stroke="white" stroke-width="1.5" fill="none"/><rect x="16" y="34" width="16" height="4" rx="2" fill="#FBBF24" opacity="0.4"/></svg>
+        <div class="name">Wizard</div>
+      </div>
+      <div class="char-mini">
+        <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="16" r="10" fill="#FBBF24"/><rect x="14" y="24" width="20" height="18" rx="4" fill="#60A5FA"/><circle cx="20" cy="14" r="3" fill="white"/><circle cx="28" cy="14" r="3" fill="white"/><circle cx="21" cy="13.5" r="1.5" fill="#1a1a2e"/><circle cx="29" cy="13.5" r="1.5" fill="#1a1a2e"/><path d="M21 19 Q24 22 27 19" stroke="#c4846a" stroke-width="1.5" fill="none"/><rect x="10" y="26" width="6" height="3" rx="1.5" fill="#FBBF24"/><rect x="32" y="26" width="6" height="3" rx="1.5" fill="#FBBF24"/><rect x="16" y="42" width="6" height="4" rx="2" fill="#3B82F6"/><rect x="26" y="42" width="6" height="4" rx="2" fill="#3B82F6"/></svg>
+        <div class="name">Kid</div>
+      </div>
+      <div class="char-mini">
+        <svg width="48" height="48" viewBox="0 0 48 48"><ellipse cx="24" cy="24" rx="16" ry="12" fill="#FB923C"/><ellipse cx="24" cy="24" rx="10" ry="8" fill="#FDBA74"/><circle cx="18" cy="22" r="4" fill="white"/><circle cx="19" cy="21" r="2" fill="#1a1a2e"/><path d="M28 20 L40 16" stroke="#FB923C" stroke-width="2"/><path d="M28 24 L42 24" stroke="#FB923C" stroke-width="2"/><path d="M28 28 L40 32" stroke="#FB923C" stroke-width="2"/><path d="M8 22 Q4 18 8 14" stroke="#FDBA74" stroke-width="2" fill="none"/></svg>
+        <div class="name">Fish</div>
+      </div>
+      <div class="char-mini">
+        <svg width="48" height="48" viewBox="0 0 48 48"><ellipse cx="24" cy="24" rx="12" ry="14" fill="#A0522D"/><ellipse cx="24" cy="26" rx="8" ry="8" fill="#D2B48C"/><circle cx="20" cy="20" r="3" fill="white"/><circle cx="28" cy="20" r="3" fill="white"/><circle cx="21" cy="19.5" r="1.5" fill="#1a1a2e"/><circle cx="29" cy="19.5" r="1.5" fill="#1a1a2e"/><ellipse cx="24" cy="26" rx="2" ry="1.5" fill="#1a1a2e"/><ellipse cx="12" cy="12" rx="6" ry="5" fill="#A0522D"/><ellipse cx="36" cy="12" rx="6" ry="5" fill="#A0522D"/><path d="M38 20 Q44 10 46 18 Q48 26 42 22" fill="#A0522D"/></svg>
+        <div class="name">Squirrel</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instructions -->
+  <div class="instructions">
+    <p>Tell me which style you prefer: <strong>A (Kawaii)</strong>, <strong>B (Cartoon)</strong>, or <strong>C (Geometric)</strong>.<br>
+    You can also say "mix" &mdash; e.g., "A's eyes with B's outlines" &mdash; and I'll combine elements.<br>
+    Or describe something completely different and I'll draft a new option.</p>
+  </div>
+
+</div>
+
+</body>
+</html>

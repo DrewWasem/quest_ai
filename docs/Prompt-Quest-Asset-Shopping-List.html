@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Quest – Pre-Built Asset Shopping List</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  :root {
+    --bg: #0d0f16; --surface: #141722; --surface2: #1a1f2e; --surface3: #222840;
+    --border: #2c3350; --text: #dde0f0; --dim: #6b7298;
+    --purple: #a78bfa; --purple-bg: rgba(167,139,250,.08);
+    --green: #34d399; --green-bg: rgba(52,211,153,.08); --green-border: rgba(52,211,153,.3);
+    --red: #fb7185; --red-bg: rgba(251,113,133,.08); --red-border: rgba(251,113,133,.3);
+    --yellow: #fbbf24; --yellow-bg: rgba(251,191,36,.08); --yellow-border: rgba(251,191,36,.3);
+    --blue: #60a5fa; --blue-bg: rgba(96,165,250,.08); --blue-border: rgba(96,165,250,.3);
+    --orange: #fb923c; --orange-bg: rgba(251,146,60,.08); --orange-border: rgba(251,146,60,.3);
+    --pink: #f472b6; --pink-bg: rgba(244,114,182,.08);
+    --cyan: #22d3ee; --cyan-bg: rgba(34,211,238,.08);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Rubik',sans-serif; background:var(--bg); color:var(--text); line-height:1.6; padding:2rem; max-width:1100px; margin:0 auto; }
+  h1 { font-size:1.8rem; font-weight:700; letter-spacing:-.02em; margin-bottom:.15rem; }
+  .sub { color:var(--dim); font-size:.88rem; margin-bottom:2rem; }
+  h2 { font-size:1.2rem; font-weight:700; margin:2.5rem 0 .75rem; padding-bottom:.4rem; border-bottom:2px solid var(--border); }
+  h3 { font-size:1rem; font-weight:600; margin:1.5rem 0 .5rem; color:var(--purple); }
+  h4 { font-size:.88rem; font-weight:600; margin:1rem 0 .4rem; }
+  p, li { font-size:.88rem; }
+  p { margin-bottom:.5rem; }
+  a { color:var(--blue); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  code { font-family:'JetBrains Mono',monospace; font-size:.78rem; background:var(--surface2); padding:.1em .35em; border-radius:4px; }
+
+  .tag { display:inline-block; font-size:.65rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; padding:.15em .5em; border-radius:3px; margin-right:.3rem; }
+  .tag-free { background:var(--green-bg); color:var(--green); border:1px solid var(--green-border); }
+  .tag-gap { background:var(--red-bg); color:var(--red); border:1px solid var(--red-border); }
+  .tag-partial { background:var(--yellow-bg); color:var(--yellow); border:1px solid var(--yellow-border); }
+  .tag-lottie { background:var(--purple-bg); color:var(--purple); border:1px solid rgba(167,139,250,.3); }
+  .tag-audio { background:var(--cyan-bg); color:var(--cyan); border:1px solid rgba(34,211,238,.3); }
+  .tag-kenney { background:var(--orange-bg); color:var(--orange); border:1px solid var(--orange-border); }
+  .tag-itch { background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-border); }
+  .tag-ai { background:var(--pink-bg); color:var(--pink); border:1px solid rgba(244,114,182,.3); }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:10px; margin:.75rem 0; overflow:hidden; }
+  .card-head { padding:.75rem 1rem; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+  .card-head .emoji { font-size:1.3rem; }
+  .card-head .title { font-weight:600; font-size:.92rem; }
+  .card-body { padding:1rem; }
+  .card-body ul { list-style:none; padding:0; }
+  .card-body li { padding:.35rem 0; border-bottom:1px solid rgba(255,255,255,.04); display:flex; align-items:flex-start; gap:.5rem; font-size:.85rem; }
+  .card-body li:last-child { border-bottom:none; }
+  .item-name { font-weight:500; min-width:160px; flex-shrink:0; }
+  .item-source { color:var(--dim); flex:1; }
+
+  .callout { border-radius:8px; padding:.85rem 1rem; margin:1rem 0; font-size:.85rem; }
+  .callout-red { background:var(--red-bg); border-left:3px solid var(--red); }
+  .callout-green { background:var(--green-bg); border-left:3px solid var(--green); }
+  .callout-yellow { background:var(--yellow-bg); border-left:3px solid var(--yellow); }
+  .callout-blue { background:var(--blue-bg); border-left:3px solid var(--blue); }
+  .callout strong { display:block; margin-bottom:.2rem; }
+
+  table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:.82rem; }
+  th { background:var(--surface2); text-align:left; padding:.55rem .7rem; font-weight:600; font-size:.7rem; text-transform:uppercase; letter-spacing:.04em; color:var(--dim); border-bottom:2px solid var(--border); }
+  td { padding:.55rem .7rem; border-bottom:1px solid var(--border); vertical-align:top; }
+  tr:hover td { background:rgba(255,255,255,.02); }
+
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+  .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:.75rem; }
+  .mini { background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:.65rem .85rem; }
+  .mini h5 { font-size:.68rem; text-transform:uppercase; letter-spacing:.05em; color:var(--dim); margin-bottom:.2rem; }
+  .mini p { font-size:.82rem; margin:0; }
+
+  .divider { height:1px; background:linear-gradient(to right,transparent,var(--border),transparent); margin:2.5rem 0; }
+
+  .checklist { list-style:none; padding:0; }
+  .checklist li { padding:.4rem 0; font-size:.85rem; }
+  .checklist li::before { content:"☐ "; color:var(--dim); }
+
+  @media(max-width:700px) { .grid2,.grid3{grid-template-columns:1fr;} body{padding:1rem;} .item-name{min-width:auto;} }
+</style>
+</head>
+<body>
+
+<h1>🛒 Prompt Quest: Pre-Built Asset Shopping List</h1>
+<p class="sub">Every image, animation, and sound you need — mapped to free sources. What exists vs. what you'll create.</p>
+
+<div class="callout callout-blue">
+  <strong>🎯 The Goal</strong>
+  Phaser assembles, never generates. Every actor, prop, backdrop, and reaction must be pre-loaded before the game starts. This document is your Day 1 download checklist — grab everything that already exists for free, identify the gaps, and plan how to fill them.
+</div>
+
+<!-- ============================================ -->
+<h2>📦 Source Libraries Overview</h2>
+
+<div class="grid3">
+  <div class="mini" style="border-left:3px solid var(--orange);">
+    <h5>Kenney.nl <span class="tag tag-kenney">CC0</span></h5>
+    <p>60,000+ assets. Clean, consistent style. Perfect for props, backgrounds, UI, and audio. The foundation of your asset library.</p>
+  </div>
+  <div class="mini" style="border-left:3px solid var(--blue);">
+    <h5>itch.io <span class="tag tag-itch">Mixed Licenses</span></h5>
+    <p>Thousands of free packs. Best for animated character sprites with multiple animation states. Check license per pack (filter CC0).</p>
+  </div>
+  <div class="mini" style="border-left:3px solid var(--purple);">
+    <h5>LottieFiles <span class="tag tag-lottie">Free Tier</span></h5>
+    <p>Thousands of free JSON animations. Perfect for reactions (confetti, explosions, hearts, stars). Lightweight overlay system.</p>
+  </div>
+</div>
+<div class="grid3">
+  <div class="mini" style="border-left:3px solid var(--green);">
+    <h5>OpenGameArt.org <span class="tag tag-free">CC0/CC-BY</span></h5>
+    <p>Community-contributed sprites. Good for filling gaps. Tiny Creatures pack expands Kenney's style with monsters/animals.</p>
+  </div>
+  <div class="mini" style="border-left:3px solid var(--cyan);">
+    <h5>CraftPix.net <span class="tag tag-free">Free Section</span></h5>
+    <p>High-quality animated monster & creature packs. Free section has octopus, dinosaur, and robot sprites with animation states.</p>
+  </div>
+  <div class="mini" style="border-left:3px solid var(--pink);">
+    <h5>Opus 4.6 SVG Gen <span class="tag tag-ai">AI Generated</span></h5>
+    <p>Fill gaps by generating SVG sprites with Claude. Convert to PNG sprite sheets. Stretch goal for truly custom assets.</p>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ============================================ -->
+<h2>🎭 ACTORS — Animated Character Sprites</h2>
+<p>Each actor needs a sprite atlas (JSON + PNG) with named animation states. The more states, the more expressive the scene scripts can be.</p>
+
+<!-- MONSTER -->
+<div class="card">
+  <div class="card-head">
+    <span class="emoji">👾</span>
+    <span class="title">Monster (Birthday Party)</span>
+    <span class="tag tag-partial">Partial Match</span>
+  </div>
+  <div class="card-body">
+    <p><strong>Needed animations:</strong> idle, happy, sad, eat, dance, cry, sneeze-fire, confused, wave</p>
+    <h4>Available Sources:</h4>
+    <ul>
+      <li>
+        <span class="item-name"><span class="tag tag-kenney">Kenney</span> Monster Builder Pack</span>
+        <span class="item-source">170 body part sprites for building custom monsters. Static only — no animation frames. Good for creating the base design, but you'll need to animate it. <a href="https://kenney.nl/assets/monster-builder-pack">kenney.nl</a></span>
+      </li>
+      <li>
+        <span class="item-name"><span class="tag tag-itch">itch.io</span> Monsters Creatures Fantasy</span>
+        <span class="item-source">Free pack by LuizMelo. Multiple monsters with idle, run, attack, hurt, death animations. Cute pixel style, ~32×32. Could repurpose a large creature as "the monster." <a href="https://luizmelo.itch.io/monsters-creatures-fantasy">itch.io</a></span>
+      </li>
+      <li>
+        <span class="item-name"><span class="tag tag-free">OpenGameArt</span> Tiny Creatures</span>
+        <span class="item-source">180 sprites in Kenney's Tiny style (16×16). Includes monsters but static only — no animation states. <a href="https://opengameart.org/content/tiny-creatures">opengameart.org</a></span>
+      </li>
+      <li>
+        <span class="item-name"><span class="tag tag-free">CraftPix</span> RPG Monster Sprites</span>
+        <span class="item-source">Free pack with mythical creatures. Has idle + attack + death animations. Good starting point. <a href="https://craftpix.net/freebies/free-rpg-monster-sprites-pixel-art/">craftpix.net</a></span>
+      </li>
+    </ul>
+    <div class="callout callout-red">
+      <strong>⚠️ Gap: No pack has eat, dance, cry, sneeze-fire, wave</strong>
+      These are custom "funny" animations unique to your game. You'll need to either: (1) Create simple frame-by-frame sprite edits from a base monster sprite, (2) Use Opus 4.6 to generate SVG frames, or (3) Simplify the vocabulary — use "happy" instead of "dance", show text emotes instead of complex animations.
+    </div>
+    <div class="callout callout-green">
+      <strong>✅ Recommended approach:</strong>
+      Pick one monster design from Monsters Creatures Fantasy (has 4-6 animation states already). For missing states (eat, dance, cry), create simple 2-3 frame variants by color-shifting or adding overlay props (party hat, tears, fire particles). A skilled pixel artist can do this in 1-2 hours; alternatively, keep animations simple (idle + talk + happy + sad covers 80% of scenes).
+    </div>
+  </div>
+</div>
+
+<!-- DOG -->
+<div class="card">
+  <div class="card-head">
+    <span class="emoji">🐕</span>
+    <span class="title">Dog (Space Mission)</span>
+    <span class="tag tag-free">Good Match</span>
+  </div>
+  <div class="card-body">
+    <p><strong>Needed animations:</strong> idle, bark, float, fetch, wag, helmet-on, sit, run</p>
+    <h4>Available Sources:</h4>
+    <ul>
+      <li>
+        <span class="item-name"><span class="tag tag-itch">itch.io</span> Dog Mega Pack</span>
+        <span class="item-source">Multiple dog breeds with idle, walk, run, sit, bark animations. Pixel art, various sizes. Some packs have 8+ animations. <a href="https://itch.io/game-assets/tag-dogs/tag-sprites">Search: Dogs + Sprites</a></span>
+      </li>
+      <li>
+        <span class="item-name"><span class="tag tag-itch">itch.io</span> Animated Welsh Corgi</span>
+        <span class="item-source">Cute corgi with idle, walk, sit, bark, sleep, wag animations. Perfect kid-friendly vibe. <a href="https://itch.io/game-assets/tag-dogs/tag-sprites">itch.io</a></span>
+      </li>
+      <li>
+        <span class="item-name"><span class="tag tag-kenney">Kenney</span> Animal Pack Redux</span>
+        <span class="item-source">240 animal sprites including dogs. Static poses (no animation frames), but clean Kenney style. <a href="https://kenney.nl/assets/animal-pack-redux">kenney.nl</a></span>
+      </li>
+    </ul>
+    <div class="callout callout-yellow">
+      <strong>⚠️ Gap: float, helmet-on, fetch</strong>
+      "Float" = rotate sprite + add floaty tween in Phaser (no new art needed). "Helmet-on" = overlay a helmet prop on top of dog sprite. "Fetch" = reuse run animation with a bone prop attached. These are solvable with scene script tricks, not new art.
+    </div>
+  </div>
+</div>
+
+<!-- T-REX -->
+<div class="card">
+  <div class="card-head">
+    <span class="emoji">🦖</span>
+    <span class="title">T-Rex (Dinosaur School)</span>
+    <span class="tag tag-partial">Partial Match</span>
+  </div>
+  <div class="card-body">
+    <p><strong>Needed animations:</strong> idle, walk, stuck, blush, roar, sit-break, wave, confused</p>
+    <h4>Available Sources:</h4>
+    <ul>
+      <li>
+        <span class="item-name"><span class="tag tag-itch">itch.io</span> Pixel Dinosaurs</span>
+        <span class="item-source">Various dino sprites on OpenGameArt and itch.io. Many have idle + walk + attack. Look for cute/cartoony style, not scary. <a href="https://opengameart.org/content/2dspritesidescroll">OpenGameArt 2D Sidescroll</a></span>
+      </li>
+      <li>
+        <span class="item-name"><span class="tag tag-free">CraftPix</span> Free Dino Characters</span>
+        <span class="item-source">Animated dinosaur sprites with idle, run, attack states. Pixel art style. Free section has basic dinos.</span>
+      </li>
+    </ul>
+    <div class="callout callout-red">
+      <strong>⚠️ Gap: blush, sit-break, stuck, wave</strong>
+      These are comedy-specific. "Stuck" = sprite partially obscured by door prop overlay. "Sit-break" = sprite drops down + "crack" sound + dust particles. "Blush" = red overlay tint on Phaser sprite. These can be achieved with Phaser effects rather than new animation frames.
+    </div>
+  </div>
+</div>
+
+<!-- OCTOPUS -->
+<div class="card">
+  <div class="card-head">
+    <span class="emoji">🐙</span>
+    <span class="title">Octopus (Rock Band)</span>
+    <span class="tag tag-partial">Partial Match</span>
+  </div>
+  <div class="card-body">
+    <p><strong>Needed animations:</strong> idle, play-drums, play-guitar, tangle, rock, wave, dance</p>
+    <h4>Available Sources:</h4>
+    <ul>
+      <li>
+        <span class="item-name"><span class="tag tag-free">CraftPix</span> Octopus Sprite</span>
+        <span class="item-source">Free pack with animated octopus boss (idle, attack, hurt, death). Pixel art. Good base but boss-style, may need reskinning to be cute. <a href="https://craftpix.net/freebies/octopus-jellyfish-shark-and-turtle-free-sprite-pixel-art/">craftpix.net</a></span>
+      </li>
+      <li>
+        <span class="item-name"><span class="tag tag-itch">itch.io</span> Sea creatures packs</span>
+        <span class="item-source">Search "octopus pixel art" on itch.io — several free packs with cute sea creatures, varying animation states.</span>
+      </li>
+    </ul>
+    <div class="callout callout-red">
+      <strong>⚠️ Gap: play-drums, play-guitar, tangle, rock</strong>
+      Instrument-playing animations are extremely niche — you won't find these pre-made. Approach: use base idle sprite + overlay instrument props on the tentacles. "Tangle" = apply Phaser rotation + squish tween to simulate tangling. "Rock" = bounce/shake tween on idle sprite.
+    </div>
+  </div>
+</div>
+
+<!-- ROBOT -->
+<div class="card">
+  <div class="card-head">
+    <span class="emoji">🤖</span>
+    <span class="title">Robot (Pizza Delivery)</span>
+    <span class="tag tag-free">Good Match</span>
+  </div>
+  <div class="card-body">
+    <p><strong>Needed animations:</strong> idle, walk, trip, dance, deliver, short-circuit, wave</p>
+    <h4>Available Sources:</h4>
+    <ul>
+      <li>
+        <span class="item-name"><span class="tag tag-kenney">Kenney</span> Robot Pack</span>
+        <span class="item-source">50 robot sprites. Clean, friendly design. Static poses but multiple variants. CC0. <a href="https://kenney.nl/assets/robot-pack">kenney.nl</a></span>
+      </li>
+      <li>
+        <span class="item-name"><span class="tag tag-itch">itch.io</span> Robot character packs</span>
+        <span class="item-source">Several free animated robot sprite sheets with idle, walk, attack states. Search "robot animated sprite" on itch.io.</span>
+      </li>
+    </ul>
+    <div class="callout callout-yellow">
+      <strong>⚠️ Gap: trip, deliver, short-circuit</strong>
+      "Trip" = rotation tween + fall tween in Phaser. "Deliver" = walk animation + pizza prop attached. "Short-circuit" = flash/blink tween + spark particle effect. All achievable with Phaser tweens + effects on the base sprite.
+    </div>
+  </div>
+</div>
+
+<!-- WIZARD -->
+<div class="card">
+  <div class="card-head">
+    <span class="emoji">🧙</span>
+    <span class="title">Wizard (Kitchen Disaster)</span>
+    <span class="tag tag-free">Good Match</span>
+  </div>
+  <div class="card-body">
+    <p><strong>Needed animations:</strong> idle, cast, surprised, facepalm, wave</p>
+    <h4>Available Sources:</h4>
+    <ul>
+      <li>
+        <span class="item-name"><span class="tag tag-itch">itch.io</span> Wizard/Mage sprite packs</span>
+        <span class="item-source">Multiple free wizard sprites with idle, cast, attack, hurt states. 32×32 or 48×48 pixel art. Widely available — search "wizard pixel sprite animated free." <a href="https://itch.io/game-assets/free/tag-2d/tag-sprites">itch.io</a></span>
+      </li>
+      <li>
+        <span class="item-name"><span class="tag tag-itch">itch.io</span> Pixel-art Witches Pack</span>
+        <span class="item-source">3 witches with multiple animations. Could work for a wizard character.</span>
+      </li>
+    </ul>
+    <div class="callout callout-green">
+      <strong>✅ Best coverage of any actor.</strong>
+      Wizards/mages are the most common RPG sprite type. Idle + cast covers 90% of Wizard Kitchen scenes. "Surprised" and "facepalm" can be static frame variants or emote overlays.
+    </div>
+  </div>
+</div>
+
+<!-- GENERIC NPCs -->
+<div class="card">
+  <div class="card-head">
+    <span class="emoji">👦</span>
+    <span class="title">Generic NPCs (Kids, Fish, Squirrels, etc.)</span>
+    <span class="tag tag-free">Good Match</span>
+  </div>
+  <div class="card-body">
+    <ul>
+      <li>
+        <span class="item-name"><span class="tag tag-kenney">Kenney</span> Character Pack</span>
+        <span class="item-source">Kid characters, modular. Static. CC0. <a href="https://kenney.nl/assets/modular-characters">kenney.nl</a></span>
+      </li>
+      <li>
+        <span class="item-name"><span class="tag tag-kenney">Kenney</span> Fish Pack</span>
+        <span class="item-source">For octopus concert audience. Static fish sprites. CC0. <a href="https://kenney.nl/assets/fish-pack">kenney.nl</a></span>
+      </li>
+      <li>
+        <span class="item-name"><span class="tag tag-kenney">Kenney</span> Animal Pack Redux</span>
+        <span class="item-source">240 animals including squirrels, birds, etc. Static. CC0. <a href="https://kenney.nl/assets/animal-pack-redux">kenney.nl</a></span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ============================================ -->
+<h2>🏞️ BACKDROPS — Scene Backgrounds</h2>
+<p>One static PNG per scene. Loaded at scene start, displayed behind all actors and props.</p>
+
+<table>
+  <thead>
+    <tr><th>Scene</th><th>Backdrop Needed</th><th>Source</th><th>Status</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>🎂 Monster Birthday</td>
+      <td>Party room / decorated hall</td>
+      <td><span class="tag tag-kenney">Kenney</span> Background Elements + community party room BGs on itch.io</td>
+      <td><span class="tag tag-free">Available</span></td>
+    </tr>
+    <tr>
+      <td>🚀 Dog Space Mission</td>
+      <td>Outer space with stars/planets</td>
+      <td><span class="tag tag-itch">itch.io</span> "Seamless Space Backgrounds" (free), Void asset series space BGs, or Kenney Planets pack</td>
+      <td><span class="tag tag-free">Excellent</span></td>
+    </tr>
+    <tr>
+      <td>🧙 Wizard Kitchen</td>
+      <td>Chaotic kitchen interior</td>
+      <td><span class="tag tag-itch">itch.io</span> "Modern Interiors" tileset can compose a kitchen. Or search "pixel kitchen background"</td>
+      <td><span class="tag tag-partial">Compose from tiles</span></td>
+    </tr>
+    <tr>
+      <td>🦖 Dinosaur School</td>
+      <td>Classroom with tiny desks/chairs</td>
+      <td><span class="tag tag-itch">itch.io</span> "Modern Interiors" has classroom furniture tiles. Compose a scene.</td>
+      <td><span class="tag tag-partial">Compose from tiles</span></td>
+    </tr>
+    <tr>
+      <td>🐙 Octopus Rock Band</td>
+      <td>Underwater stage with coral/bubbles</td>
+      <td><span class="tag tag-itch">itch.io</span> Underwater/ocean pixel backgrounds are common. Search "underwater pixel background free"</td>
+      <td><span class="tag tag-free">Available</span></td>
+    </tr>
+    <tr>
+      <td>🤖 Robot Pizza</td>
+      <td>City street with obstacles</td>
+      <td><span class="tag tag-kenney">Kenney</span> City tileset + Background Elements. Many free city/street pixel BGs on itch.io</td>
+      <td><span class="tag tag-free">Available</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout callout-green">
+  <strong>✅ Backdrops are the easiest layer.</strong>
+  Space and underwater backgrounds are the most common free game assets. City streets and party rooms are well-covered by Kenney tilesets. Kitchen and classroom may need composing from tile packs, but the individual furniture/tile assets exist. Budget ~1 hour to compose 2 backgrounds from tiles.
+</div>
+
+<div class="divider"></div>
+
+<!-- ============================================ -->
+<h2>🎁 PROPS — Individual Objects</h2>
+<p>Static PNGs spawned/moved by scene scripts. These are the simplest assets — most already exist.</p>
+
+<table>
+  <thead>
+    <tr><th>Task</th><th>Props Needed</th><th>Source</th><th>Status</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>🎂 Monster Birthday</td>
+      <td>cake, cake-giant, cake-tiny, balloon, present, party-hat, fire-extinguisher, table, chair</td>
+      <td><span class="tag tag-kenney">Kenney</span> Generic Items, Holiday Pack, Food items. itch.io "pixel food" and "pixel party" packs</td>
+      <td><span class="tag tag-free">90% covered</span></td>
+    </tr>
+    <tr>
+      <td>🚀 Dog Space</td>
+      <td>rocket, spacesuit, helmet, bone, treat, flag, asteroid, moon, stars</td>
+      <td><span class="tag tag-kenney">Kenney</span> Space Shooter Redux (ships/asteroids), Planets pack. itch.io Void asset series. Bone/treat from pet packs</td>
+      <td><span class="tag tag-free">85% covered</span></td>
+    </tr>
+    <tr>
+      <td>🧙 Wizard Kitchen</td>
+      <td>flying-plate, soup-pot, toaster, fridge, wand, potion, broom, spoon</td>
+      <td><span class="tag tag-itch">itch.io</span> "Modern Interiors" has kitchen items. <span class="tag tag-kenney">Kenney</span> Generic Items has potions/bottles</td>
+      <td><span class="tag tag-free">80% covered</span></td>
+    </tr>
+    <tr>
+      <td>🦖 Dino School</td>
+      <td>tiny-desk, tiny-chair, pencil, lunch-box, door, backpack, book, fossil</td>
+      <td><span class="tag tag-itch">itch.io</span> Modern Interiors (furniture), school supplies from various pixel item packs</td>
+      <td><span class="tag tag-partial">70% covered</span></td>
+    </tr>
+    <tr>
+      <td>🐙 Octopus Band</td>
+      <td>guitar, drums, bass, microphone, stage-light, speaker, music-notes</td>
+      <td><span class="tag tag-partial">Gap</span> Musical instruments are rare in pixel art game packs. May need to source from icon packs or generate.</td>
+      <td><span class="tag tag-gap">50% covered</span></td>
+    </tr>
+    <tr>
+      <td>🤖 Robot Pizza</td>
+      <td>pizza, pizza-box, river, bridge, pillow-fort, sleeping-giant, squirrel, battery</td>
+      <td><span class="tag tag-kenney">Kenney</span> Generic Items (food), Animal Pack (squirrel). itch.io for bridge/river tiles</td>
+      <td><span class="tag tag-free">75% covered</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout callout-yellow">
+  <strong>⚠️ Main prop gap: Musical instruments for Octopus Rock Band</strong>
+  Guitar, drums, bass, microphone are niche in pixel art game assets. Options: (1) Search "pixel art instruments" on itch.io — a few packs exist, (2) Use icon-style sprites from Kenney's UI packs, (3) Generate simple SVGs with Opus 4.6, (4) Use emoji-style overlays. This is the one task where you might need to create ~5 custom props.
+</div>
+
+<div class="divider"></div>
+
+<!-- ============================================ -->
+<h2>✨ REACTIONS — Lottie Overlay Animations</h2>
+<p>JSON animations overlaid on the Phaser canvas at specific positions. These play once on trigger, then disappear. All available free on LottieFiles.</p>
+
+<table>
+  <thead>
+    <tr><th>Reaction</th><th>Used In</th><th>LottieFiles Search</th><th>Status</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>🎊 confetti-burst</td>
+      <td>All success states</td>
+      <td><a href="https://lottiefiles.com/free-animations/confetti">lottiefiles.com/confetti</a> — hundreds of free options</td>
+      <td><span class="tag tag-free">✅ Abundant</span></td>
+    </tr>
+    <tr>
+      <td>💥 explosion-cartoon</td>
+      <td>Monster sneeze, robot short-circuit</td>
+      <td><a href="https://lottiefiles.com/free-animations/explosion">lottiefiles.com/explosion</a> — many cartoon-style options</td>
+      <td><span class="tag tag-free">✅ Abundant</span></td>
+    </tr>
+    <tr>
+      <td>❤️ hearts-float</td>
+      <td>Happy reactions, dog wag</td>
+      <td>Search "hearts" or "love" on LottieFiles — many floating heart animations</td>
+      <td><span class="tag tag-free">✅ Abundant</span></td>
+    </tr>
+    <tr>
+      <td>⭐ stars-spin</td>
+      <td>Success, badge unlock, dazed</td>
+      <td>Search "stars" or "sparkle" on LottieFiles</td>
+      <td><span class="tag tag-free">✅ Abundant</span></td>
+    </tr>
+    <tr>
+      <td>🔥 fire-sneeze</td>
+      <td>Monster sneezes fire at balloons</td>
+      <td>Search "fire" or "flame" on LottieFiles — many fire burst animations</td>
+      <td><span class="tag tag-free">✅ Available</span></td>
+    </tr>
+    <tr>
+      <td>😢 sad-cloud</td>
+      <td>Fail states, monster crying</td>
+      <td>Search "sad" or "rain cloud" on LottieFiles</td>
+      <td><span class="tag tag-free">✅ Available</span></td>
+    </tr>
+    <tr>
+      <td>❓ question-marks</td>
+      <td>Confused reactions, partial fails</td>
+      <td>Search "question" or "thinking" on LottieFiles</td>
+      <td><span class="tag tag-free">✅ Available</span></td>
+    </tr>
+    <tr>
+      <td>🚀 rocket-launch</td>
+      <td>Dog Space Mission launch</td>
+      <td><a href="https://lottiefiles.com/free-animations/rocket">lottiefiles.com/rocket</a> — multiple free options</td>
+      <td><span class="tag tag-free">✅ Available</span></td>
+    </tr>
+    <tr>
+      <td>🏆 trophy-unlock</td>
+      <td>Badge earned, trophy room</td>
+      <td><a href="https://lottiefiles.com/free-animations/trophy">lottiefiles.com/trophy</a> — celebration trophies</td>
+      <td><span class="tag tag-free">✅ Available</span></td>
+    </tr>
+    <tr>
+      <td>🎵 music-notes</td>
+      <td>Octopus rock band, fridge singing</td>
+      <td>Search "music notes" on LottieFiles</td>
+      <td><span class="tag tag-free">✅ Available</span></td>
+    </tr>
+    <tr>
+      <td>💤 sleep-zzz</td>
+      <td>Sleeping giant in robot pizza</td>
+      <td>Search "sleep" or "zzz" on LottieFiles</td>
+      <td><span class="tag tag-free">✅ Available</span></td>
+    </tr>
+    <tr>
+      <td>⚡ electric-spark</td>
+      <td>Robot short-circuit</td>
+      <td>Search "electric" or "lightning" on LottieFiles</td>
+      <td><span class="tag tag-free">✅ Available</span></td>
+    </tr>
+    <tr>
+      <td>💭 thought-bubble</td>
+      <td>Character thinking, prompt feedback</td>
+      <td>Search "thinking" or "thought bubble" on LottieFiles</td>
+      <td><span class="tag tag-free">✅ Available</span></td>
+    </tr>
+    <tr>
+      <td>🌊 splash</td>
+      <td>Robot falls in river</td>
+      <td>Search "water splash" on LottieFiles</td>
+      <td><span class="tag tag-free">✅ Available</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout callout-green">
+  <strong>✅ Lottie reactions are 100% covered.</strong>
+  LottieFiles has free animations for literally every reaction you need. This is the easiest layer — download ~14 JSON files, done. The only work is previewing options and picking the ones with the right vibe (cartoonish, kid-friendly, not too fast/slow).
+</div>
+
+<div class="divider"></div>
+
+<!-- ============================================ -->
+<h2>🔊 AUDIO — Sound Effects</h2>
+
+<table>
+  <thead>
+    <tr><th>Sound</th><th>Used In</th><th>Source</th><th>Status</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>🎉 celebrate / fanfare</td><td>All success states</td><td><span class="tag tag-kenney">Kenney</span> RPG Audio, Digital Audio</td><td><span class="tag tag-free">✅</span></td></tr>
+    <tr><td>💥 explosion / boom</td><td>Monster sneeze, cartoon fail</td><td><span class="tag tag-kenney">Kenney</span> Impact Sounds (130 SFX)</td><td><span class="tag tag-free">✅</span></td></tr>
+    <tr><td>😢 sad trombone</td><td>Fail states</td><td><span class="tag tag-kenney">Kenney</span> RPG Audio or freesound.org</td><td><span class="tag tag-free">✅</span></td></tr>
+    <tr><td>🔊 whoosh / swoosh</td><td>Props flying, movement</td><td><span class="tag tag-kenney">Kenney</span> Impact Sounds</td><td><span class="tag tag-free">✅</span></td></tr>
+    <tr><td>🖱️ click / tap</td><td>UI interactions</td><td><span class="tag tag-kenney">Kenney</span> UI Audio (50 SFX), Interface Sounds (100 SFX)</td><td><span class="tag tag-free">✅</span></td></tr>
+    <tr><td>✨ sparkle / magic</td><td>Wizard cast, badge unlock</td><td><span class="tag tag-kenney">Kenney</span> Digital Audio (60 SFX)</td><td><span class="tag tag-free">✅</span></td></tr>
+    <tr><td>💧 splash</td><td>Robot falls in river</td><td><span class="tag tag-kenney">Kenney</span> various packs or freesound.org</td><td><span class="tag tag-free">✅</span></td></tr>
+    <tr><td>🐕 bark</td><td>Dog Space Mission</td><td>freesound.org CC0 dog bark — very common</td><td><span class="tag tag-free">✅</span></td></tr>
+    <tr><td>🎸 guitar riff</td><td>Octopus Rock Band</td><td>freesound.org, Kenney RPG Audio</td><td><span class="tag tag-partial">Available</span></td></tr>
+    <tr><td>🥁 drum hit</td><td>Octopus Rock Band</td><td>freesound.org CC0 drum samples</td><td><span class="tag tag-free">✅</span></td></tr>
+    <tr><td>🚀 rocket launch</td><td>Dog Space Mission</td><td>freesound.org CC0 rocket/thrust sounds</td><td><span class="tag tag-free">✅</span></td></tr>
+  </tbody>
+</table>
+
+<div class="callout callout-green">
+  <strong>✅ Audio is fully covered between Kenney + freesound.org.</strong>
+  Kenney's audio packs alone give you ~390 CC0 sound effects (UI Audio 50 + Interface Sounds 100 + Impact Sounds 130 + RPG Audio 50 + Digital Audio 60). For specific sounds like dog bark or rocket launch, freesound.org has thousands of CC0 options.
+</div>
+
+<div class="divider"></div>
+
+<!-- ============================================ -->
+<h2>📊 Gap Analysis Summary</h2>
+
+<table>
+  <thead>
+    <tr><th>Asset Layer</th><th>Coverage</th><th>Gaps</th><th>Fill Strategy</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Actors (animated sprites)</strong></td>
+      <td style="color:var(--yellow);">60-70%</td>
+      <td>Comedy-specific animations (eat, dance, cry, tangle, trip, blush) don't exist in any free pack</td>
+      <td>Use Phaser tweens + effects + prop overlays to simulate. Reduce vocabulary to available states (idle, walk, attack → happy, sad). Create 2-3 custom frames per character for unique states.</td>
+    </tr>
+    <tr>
+      <td><strong>Backdrops</strong></td>
+      <td style="color:var(--green);">90%</td>
+      <td>Kitchen and classroom may need composing from tilesets</td>
+      <td>Compose from Modern Interiors tileset. 1 hour max.</td>
+    </tr>
+    <tr>
+      <td><strong>Props</strong></td>
+      <td style="color:var(--green);">80%</td>
+      <td>Musical instruments (guitar, drums, bass, mic) for Octopus Rock Band</td>
+      <td>Search itch.io for instrument icon packs. If nothing fits, create 5 simple SVGs or pixel PNGs.</td>
+    </tr>
+    <tr>
+      <td><strong>Reactions (Lottie)</strong></td>
+      <td style="color:var(--green);">100%</td>
+      <td>None</td>
+      <td>N/A — all available free on LottieFiles</td>
+    </tr>
+    <tr>
+      <td><strong>Audio (SFX)</strong></td>
+      <td style="color:var(--green);">95%</td>
+      <td>Very minor — specific instrument sounds</td>
+      <td>freesound.org CC0 fills all remaining gaps</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="divider"></div>
+
+<!-- ============================================ -->
+<h2>🧠 Critical Insight: Reduce the Vocabulary, Not the Comedy</h2>
+
+<div class="callout callout-blue">
+  <strong>The biggest realization from this audit:</strong>
+  You don't need 9 animation states per character. You need 3-4 core states + Phaser effects that SIMULATE the rest. The comedy comes from the scene script narration and the unexpected combinations, not from pixel-perfect custom animations.
+</div>
+
+<h3>Simplified Actor Vocabulary (What You Actually Need to Download)</h3>
+
+<table>
+  <thead>
+    <tr><th>Animation State</th><th>How It's Used</th><th>Exists in Free Packs?</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>idle</code></td><td>Default standing pose</td><td style="color:var(--green);">✅ Every sprite pack has this</td></tr>
+    <tr><td><code>walk</code> / <code>run</code></td><td>Moving across screen</td><td style="color:var(--green);">✅ Most packs have this</td></tr>
+    <tr><td><code>happy</code> / <code>celebrate</code></td><td>Success state</td><td style="color:var(--yellow);">⚠️ Some packs — or use idle + bounce tween + confetti Lottie</td></tr>
+    <tr><td><code>sad</code> / <code>hurt</code></td><td>Fail state</td><td style="color:var(--green);">✅ Most combat packs have "hurt" animation</td></tr>
+    <tr><td><code>action</code> / <code>attack</code></td><td>Doing something (casting, eating, playing)</td><td style="color:var(--green);">✅ "Attack" animation in combat packs works</td></tr>
+  </tbody>
+</table>
+
+<p><strong>Everything else is a Phaser effect on top of these 5 base states:</strong></p>
+
+<table>
+  <thead>
+    <tr><th>"Fancy" State in Script</th><th>Actually Implemented As</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>dance</code></td><td>idle sprite + bounce/rotate tween loop + music-notes Lottie</td></tr>
+    <tr><td><code>eat</code></td><td>action animation + move prop into mouth position + "nom" SFX</td></tr>
+    <tr><td><code>cry</code></td><td>sad animation + sad-cloud Lottie + tear particle emitter</td></tr>
+    <tr><td><code>sneeze-fire</code></td><td>idle → quick squish tween → fire-sneeze Lottie + explosion SFX</td></tr>
+    <tr><td><code>blush</code></td><td>idle sprite + red tint overlay (Phaser setTint)</td></tr>
+    <tr><td><code>stuck</code></td><td>walk animation plays but position doesn't move + shake tween</td></tr>
+    <tr><td><code>float</code></td><td>idle sprite + slow sine-wave Y tween + rotation</td></tr>
+    <tr><td><code>trip</code></td><td>run → quick rotation tween to 90° → impact SFX</td></tr>
+    <tr><td><code>short-circuit</code></td><td>idle + rapid alpha flicker + electric-spark Lottie + buzz SFX</td></tr>
+    <tr><td><code>tangle</code></td><td>idle + scaleX squeeze + rapid rotation + question-marks Lottie</td></tr>
+    <tr><td><code>play-guitar</code></td><td>action animation + guitar prop overlay + music-notes Lottie</td></tr>
+    <tr><td><code>helmet-on</code></td><td>idle + spawn helmet prop at head position</td></tr>
+  </tbody>
+</table>
+
+<div class="callout callout-green">
+  <strong>✅ This means: You only need to download sprites with idle + walk + action + hurt states.</strong>
+  The comedy animations are ALL created by combining those base states with Phaser tweens + Lottie overlays + sound effects + prop positioning. This is a massive simplification that turns your Day 1 from "source 50+ animation states" to "download 6 sprite packs + 14 Lotties + 5 audio packs."
+</div>
+
+<div class="divider"></div>
+
+<!-- ============================================ -->
+<h2>☐ Day 1 Download Checklist (Danielle)</h2>
+
+<h3>Actors — Animated Sprite Packs</h3>
+<ul class="checklist">
+  <li>Monster sprite with 4+ animations (itch.io: Monsters Creatures Fantasy by LuizMelo) — FREE</li>
+  <li>Dog sprite with idle/walk/sit/bark (itch.io: search "animated dog sprite pixel") — FREE</li>
+  <li>Dinosaur sprite with idle/walk/roar (itch.io or CraftPix: search "cute dinosaur pixel sprite") — FREE</li>
+  <li>Octopus sprite with idle/move/attack (CraftPix: Octopus Jellyfish Shark Turtle pack) — FREE</li>
+  <li>Robot sprite with idle/walk (Kenney Robot Pack + itch.io animated robot) — FREE CC0</li>
+  <li>Wizard/Mage sprite with idle/cast (itch.io: search "wizard mage pixel sprite animated free") — FREE</li>
+  <li>Kid character sprite (Kenney Modular Characters or Animated Characters 2) — FREE CC0</li>
+  <li>Fish sprites for octopus audience (Kenney Fish Pack) — FREE CC0</li>
+  <li>Squirrel + bird + pigeon (Kenney Animal Pack Redux) — FREE CC0</li>
+</ul>
+
+<h3>Backdrops</h3>
+<ul class="checklist">
+  <li>Space background (itch.io: "Seamless Space Backgrounds" or Void series) — FREE</li>
+  <li>Underwater/ocean background (itch.io: search "underwater pixel background") — FREE</li>
+  <li>City street background (Kenney city tileset or itch.io urban backgrounds) — FREE</li>
+  <li>Party room — compose from tiles or find on itch.io</li>
+  <li>Kitchen — compose from Modern Interiors tileset</li>
+  <li>Classroom — compose from Modern Interiors tileset</li>
+</ul>
+
+<h3>Props</h3>
+<ul class="checklist">
+  <li>Kenney Generic Items pack (food, potions, tools, misc objects) — FREE CC0</li>
+  <li>Kenney Space Shooter Redux (rockets, asteroids, stars) — FREE CC0</li>
+  <li>Modern Interiors (kitchen items, furniture, school supplies) — check license on itch.io</li>
+  <li>Musical instruments (search itch.io "pixel instruments" or create 5 simple SVGs)</li>
+  <li>Pizza prop (Kenney Generic Items or pixel food packs)</li>
+  <li>Helmet/spacesuit (compose from Kenney Space assets)</li>
+</ul>
+
+<h3>Reactions — Lottie JSONs (all from LottieFiles.com)</h3>
+<ul class="checklist">
+  <li>confetti-burst.json — <a href="https://lottiefiles.com/free-animations/confetti">Search: confetti</a></li>
+  <li>explosion-cartoon.json — <a href="https://lottiefiles.com/free-animations/explosion">Search: explosion</a></li>
+  <li>hearts-float.json — Search: hearts, love</li>
+  <li>stars-spin.json — Search: stars, sparkle</li>
+  <li>fire-sneeze.json — Search: fire, flame burst</li>
+  <li>sad-cloud.json — Search: sad, rain cloud</li>
+  <li>question-marks.json — Search: question, thinking</li>
+  <li>rocket-launch.json — <a href="https://lottiefiles.com/free-animations/rocket">Search: rocket</a></li>
+  <li>trophy-unlock.json — <a href="https://lottiefiles.com/free-animations/trophy">Search: trophy</a></li>
+  <li>music-notes.json — Search: music notes</li>
+  <li>sleep-zzz.json — Search: sleep, zzz</li>
+  <li>electric-spark.json — Search: electric, lightning</li>
+  <li>thought-bubble.json — Search: thinking, thought bubble</li>
+  <li>splash.json — Search: water splash</li>
+</ul>
+
+<h3>Audio — Sound Effects</h3>
+<ul class="checklist">
+  <li>Kenney UI Audio (50 SFX) — <a href="https://kenney.nl/assets/ui-audio">CC0</a></li>
+  <li>Kenney Interface Sounds (100 SFX) — <a href="https://kenney.nl/assets/interface-sounds">CC0</a></li>
+  <li>Kenney Impact Sounds (130 SFX) — <a href="https://kenney.nl/assets/impact-sounds">CC0</a></li>
+  <li>Kenney RPG Audio (50 SFX) — <a href="https://kenney.nl/assets/rpg-audio">CC0</a></li>
+  <li>Kenney Digital Audio (60 SFX) — <a href="https://kenney.nl/assets/digital-audio">CC0</a></li>
+  <li>Dog bark (freesound.org CC0)</li>
+  <li>Rocket thrust (freesound.org CC0)</li>
+  <li>Sad trombone (freesound.org CC0)</li>
+</ul>
+
+<div class="divider"></div>
+
+<h2>⏱️ Estimated Day 1 Time Budget</h2>
+
+<table>
+  <thead><tr><th>Task</th><th>Time</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>Download Kenney packs (5 audio + 4 sprite/item packs)</td><td>20 min</td><td>Batch download, extract, organize</td></tr>
+    <tr><td>Browse itch.io for 6 actor sprites, pick best match</td><td>1.5 hrs</td><td>This is the most time-consuming — preview animations, check licenses, download</td></tr>
+    <tr><td>Browse LottieFiles for 14 reactions</td><td>45 min</td><td>Preview, pick kid-friendly versions, download JSON</td></tr>
+    <tr><td>Compose 2 backgrounds from tiles (kitchen + classroom)</td><td>1 hr</td><td>Use Tiled or Photoshop to arrange tileset into static BG</td></tr>
+    <tr><td>Download 3-4 ready-made backgrounds (space, underwater, city, party)</td><td>20 min</td><td>Quick downloads</td></tr>
+    <tr><td>Organize into folder structure, rename per vocabulary contract</td><td>45 min</td><td>Critical — names must match exactly what scene scripts reference</td></tr>
+    <tr><td>Verify visual consistency across packs</td><td>30 min</td><td>Do the styles clash? Adjust if needed.</td></tr>
+    <tr><td><strong>TOTAL</strong></td><td><strong>~5 hrs</strong></td><td><strong>Full asset library ready for Phaser integration on Day 2</strong></td></tr>
+  </tbody>
+</table>
+
+<div class="callout callout-yellow">
+  <strong>🎨 Style consistency tip:</strong>
+  Kenney assets have a clean, flat, vector-ish style. itch.io pixel art is... pixel art. These WILL look different side by side. Two approaches: (1) Go all-pixel-art for actors/props (itch.io + CraftPix), use Kenney only for UI + audio, or (2) Accept a mixed style and lean into it as "handmade charm." For a hackathon, option 2 is fine — judges care about the AI/UX innovation, not pixel-perfect art direction.
+</div>
+
+<p style="text-align:center; margin-top:2rem; color:var(--dim); font-size:.8rem;">
+  Prompt Quest · Pre-Built Asset Shopping List · Day 1 Checklist · Feb 2026
+</p>
+
+</body>
+</html>

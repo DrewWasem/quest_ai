@@ -1,0 +1,1013 @@
+/**
+ * ScenePlayer3D — Executes Claude-generated scene scripts in the 3D world.
+ *
+ * Core game engine component that:
+ * - Takes SceneScript from Claude API
+ * - Spawns/moves/animates characters and props in 3D space
+ * - Plays effects and emotes as HTML overlays
+ * - Manages sequential action execution with delays
+ * - Handles legacy 2D actor names → 3D character mapping
+ * - Environment backdrop props per task
+ * - Synthesized sound effects via SoundManager3D
+ * - Bullet-proof error tolerance: one bad action never kills the sequence
+ */
+
+import { Component, useEffect, useRef, useState, type ReactNode } from 'react'
+import { useFrame } from '@react-three/fiber'
+import { Html } from '@react-three/drei'
+import { Character3D, type Character3DHandle } from './Character3D'
+import { Prop3D, type Prop3DHandle } from './Prop3D'
+import { SoundManager3D } from './SoundManager3D'
+import type { SceneScript, Action, Position } from '../types/scene-script'
+import { CHARACTERS, type CharacterKey } from '../data/asset-manifest'
+import { useGameStore, ZONE_CENTERS } from '../stores/gameStore'
+
+// Mini error boundary: renders nothing if a child (e.g. GLTF load) throws
+class SafeModel extends Component<{ children: ReactNode }, { hasError: boolean }> {
+  state = { hasError: false }
+  static getDerivedStateFromError() { return { hasError: true } }
+  componentDidCatch(err: Error) { console.warn('[SafeModel] Skipping bad model:', err.message) }
+  render() { return this.state.hasError ? null : this.props.children }
+}
+
+// ============================================================================
+// POSITION MAPPING
+// ============================================================================
+
+const LOCAL_POSITION_MAP: Record<Position, [number, number, number]> = {
+  left: [-3, 0, 0],
+  center: [0, 0, 0],
+  right: [3, 0, 0],
+  top: [0, 2, -2],
+  bottom: [0, 0, 2],
+  'off-left': [-6, 0, 0],
+  'off-right': [6, 0, 0],
+  'off-top': [0, 5, 0],
+}
+
+// Kept for backward compatibility — resolves to zone-relative positions at runtime
+const POSITION_MAP = LOCAL_POSITION_MAP
+
+/** Offset a local position by the current zone center */
+function zonePosition(
+  zoneId: string | null,
+  localPos: [number, number, number]
+): [number, number, number] {
+  if (!zoneId) return localPos
+  const center = ZONE_CENTERS[zoneId]
+  if (!center) return localPos
+  return [center[0] + localPos[0], localPos[1], center[2] + localPos[2]]
+}
+
+// ============================================================================
+// ACTOR MAPPING (legacy 2D → 3D character IDs)
+// ============================================================================
+
+const ACTOR_TO_CHARACTER: Record<string, CharacterKey> = {
+  // Legacy 2D names → 3D characters
+  monster: 'barbarian',
+  dog: 'rogue',
+  trex: 'knight',
+  octopus: 'mage',
+  robot: 'robot',
+  wizard: 'mage',
+  kid: 'ranger',
+  fish: 'ninja',
+  squirrel: 'rogue',
+  // Direct 3D character IDs pass through (handled in resolveCharacter)
+}
+
+function resolveCharacterId(actorId: string): CharacterKey | null {
+  // Check if it's a direct character ID
+  if (actorId in CHARACTERS) {
+    return actorId as CharacterKey
+  }
+  // Map legacy 2D actor names
+  if (actorId in ACTOR_TO_CHARACTER) {
+    return ACTOR_TO_CHARACTER[actorId]
+  }
+  // Unknown actor — return null for error tolerance
+  return null
+}
+
+// ============================================================================
+// PROP PATH MAPPING
+// ============================================================================
+
+const PROP_PATHS: Record<string, string> = {
+  // === Baked Goods (Tiny Treats) — CAKES ===
+  cake: 'tiny-treats/baked-goods/cake_birthday.gltf',
+  cake_birthday: 'tiny-treats/baked-goods/cake_birthday.gltf',
+  cake_chocolate: 'tiny-treats/baked-goods/cake_chocolate.gltf',
+  'cake-giant': 'tiny-treats/baked-goods/cake_birthday.gltf',
+  cupcake: 'tiny-treats/baked-goods/cupcake.gltf',
+  pie: 'tiny-treats/baked-goods/cake_strawberry.gltf',
+  pie_apple: 'tiny-treats/baked-goods/cake_strawberry.gltf',
+  pie_cherry: 'tiny-treats/baked-goods/cake_strawberry.gltf',
+  cookie: 'kaykit/packs/holiday/cookie.gltf',
+
+  // === Holiday Pack — PRESENTS ===
+  present: 'kaykit/packs/holiday/present_A_red.gltf',
+  present_A_red: 'kaykit/packs/holiday/present_A_red.gltf',
+  present_B_blue: 'kaykit/packs/holiday/present_B_blue.gltf',
+  present_C_green: 'kaykit/packs/holiday/present_C_green.gltf',
+  balloon: 'kaykit/packs/holiday/present_sphere_A_red.gltf',
+  candle: 'kaykit/packs/holiday/candycane_small.gltf',
+  stars: 'kaykit/packs/holiday/bell_decorated.gltf',
+
+  // === Dungeon Pack ===
+  bone: 'kaykit/packs/halloween/bone_A.gltf',
+  torch: 'kaykit/packs/dungeon/torch_lit.gltf',
+  barrel: 'kaykit/packs/dungeon/barrel_large.gltf',
+  crate: 'kaykit/packs/dungeon/barrel_small.gltf',
+  chest: 'kaykit/packs/dungeon/barrel_large_decorated.gltf',
+  banner_blue: 'kaykit/packs/dungeon/banner_blue.gltf',
+  banner_red: 'kaykit/packs/dungeon/banner_patternA_red.gltf',
+  table_long: 'kaykit/packs/dungeon/table_long_decorated_A.gltf',
+  book: 'kaykit/packs/dungeon/book_brown.gltf',
+  book_stack: 'kaykit/packs/furniture/book_set.gltf',
+
+  // === Restaurant Pack — PIZZA & FOOD ===
+  pizza: 'kaykit/packs/restaurant/food_pizza_pepperoni_plated.gltf',
+  pizza_pepperoni: 'kaykit/packs/restaurant/food_pizza_pepperoni_plated.gltf',
+  pizza_cheese: 'kaykit/packs/restaurant/food_pizza_cheese_plated.gltf',
+  plate: 'kaykit/packs/restaurant/plate.gltf',
+  plates: 'kaykit/packs/restaurant/dishrack_plates.gltf',
+  'soup-bowl': 'kaykit/packs/restaurant/bowl.gltf',
+  oven: 'kaykit/packs/restaurant/oven.gltf',
+  pan: 'kaykit/packs/restaurant/pan_A.gltf',
+  pot: 'kaykit/packs/restaurant/pot_A.gltf',
+  stove: 'kaykit/packs/restaurant/stove_multi.gltf',
+  chair_restaurant: 'kaykit/packs/restaurant/chair_A.gltf',
+  chair_A: 'kaykit/packs/restaurant/chair_A.gltf',
+  sandwich: 'kaykit/packs/restaurant/food_burger.gltf',
+  fish: 'kaykit/packs/restaurant/food_dinner.gltf',
+  teapot: 'kaykit/packs/restaurant/pot_B.gltf',
+
+  // === Space Base Pack ===
+  rocket: 'kaykit/packs/space_base/basemodule_A.gltf',
+  basemodule_A: 'kaykit/packs/space_base/basemodule_A.gltf',
+  basemodule_B: 'kaykit/packs/space_base/basemodule_B.gltf',
+  basemodule_garage: 'kaykit/packs/space_base/basemodule_garage.gltf',
+  cargo_A: 'kaykit/packs/space_base/cargo_A.gltf',
+  solarpanel: 'kaykit/packs/space_base/solarpanel.gltf',
+  dome: 'kaykit/packs/space_base/dome.gltf',
+  moon: 'kaykit/packs/space_base/dome.gltf',
+  flag: 'kaykit/packs/dungeon/banner_blue.gltf',
+  spacesuit: 'kaykit/packs/space_base/cargo_A.gltf',
+
+  // === Furniture Pack ===
+  desk: 'kaykit/packs/furniture/desk.gltf',
+  table: 'kaykit/packs/furniture/desk.gltf',
+  table_round: 'kaykit/packs/restaurant/chair_stool.gltf',
+  chair: 'kaykit/packs/furniture/chair_A.gltf',
+  fridge: 'tiny-treats/charming-kitchen/fridge.gltf',
+  toaster: 'tiny-treats/charming-kitchen/stove.gltf',
+
+  // === RPG Tools / Instruments ===
+  sword: 'kaykit/packs/dungeon/sword_shield.gltf',
+  shield: 'kaykit/packs/dungeon/banner_shield_blue.gltf',
+  guitar: 'kaykit/packs/rpg_tools/axe.gltf',
+  drums: 'kaykit/packs/dungeon/barrel_small.gltf',
+  keyboard: 'kaykit/packs/furniture/desk.gltf',
+  microphone: 'kaykit/packs/dungeon/torch.gltf',
+  pencil: 'kaykit/packs/rpg_tools/chisel.gltf',
+
+  // === Outdoors (Tiny Treats + Dungeon) ===
+  tree: 'tiny-treats/pretty-park/tree.gltf',
+  tree_large: 'tiny-treats/pretty-park/tree_large.gltf',
+  rock: 'kaykit/packs/dungeon/barrel_small.gltf',
+  bush: 'tiny-treats/pretty-park/bush.gltf',
+  bench: 'tiny-treats/pretty-park/bench.gltf',
+  fountain: 'tiny-treats/pretty-park/bench.gltf',
+  river: 'tiny-treats/pretty-park/bench.gltf',
+  lamp: 'kaykit/packs/dungeon/torch.gltf',
+  fence: 'kaykit/packs/dungeon/barrel_small.gltf',
+  sign: 'kaykit/packs/dungeon/banner_blue.gltf',
+
+  // === Picnic & Food (Tiny Treats) ===
+  apple: 'tiny-treats/pleasant-picnic/apple.gltf',
+  picnic_basket: 'tiny-treats/pleasant-picnic/cooler.gltf',
+  picnic_basket_round: 'tiny-treats/pleasant-picnic/cooler.gltf',
+  picnic_blanket: 'tiny-treats/pleasant-picnic/picnic_blanket_red.gltf',
+  basket: 'tiny-treats/pleasant-picnic/cooler.gltf',
+  blanket: 'tiny-treats/pleasant-picnic/picnic_blanket_red.gltf',
+  bread: 'tiny-treats/pleasant-picnic/cheese_A.gltf',
+  bottle: 'tiny-treats/pleasant-picnic/drink_can.gltf',
+  cup: 'tiny-treats/pleasant-picnic/mug.gltf',
+
+  // === Playground (Tiny Treats) ===
+  slide: 'tiny-treats/fun-playground/slide_A.gltf',
+  swing: 'tiny-treats/fun-playground/swing_A_large.gltf',
+  seesaw: 'tiny-treats/fun-playground/seesaw_large.gltf',
+  sandbox: 'tiny-treats/fun-playground/sandbox_square_decorated.gltf',
+  merry_go_round: 'tiny-treats/fun-playground/merry_go_round.gltf',
+
+  // === Misc ===
+  lunchbox: 'tiny-treats/pleasant-picnic/cooler.gltf',
+  'fire-extinguisher': 'kaykit/packs/restaurant/pot_large.gltf',
+  'pillow-fort': 'kaykit/packs/dungeon/barrel_large.gltf',
+  potion: 'kaykit/packs/dungeon/barrel_small.gltf',
+  scroll: 'kaykit/packs/dungeon/book_tan.gltf',
+  bow: 'kaykit/packs/rpg_tools/fishing_rod.gltf',
+}
+
+function resolvePropPath(propId: string): string | null {
+  // Exact match
+  if (PROP_PATHS[propId]) return PROP_PATHS[propId]
+  // Try stripping underscored suffixes: cake_birthday → cake, present_A_red → present
+  const base = propId.split('_')[0]
+  if (base !== propId && PROP_PATHS[base]) return PROP_PATHS[base]
+  // Try hyphenated version
+  const hyphenated = propId.replace(/_/g, '-')
+  if (PROP_PATHS[hyphenated]) return PROP_PATHS[hyphenated]
+  return null
+}
+
+// ============================================================================
+// ENVIRONMENT BACKDROPS — static props spawned per task
+// ============================================================================
+
+interface EnvironmentProp {
+  id: string
+  path: string
+  position: [number, number, number]
+  rotation?: [number, number, number]
+  scale?: number
+}
+
+const TASK_ENVIRONMENTS: Record<string, EnvironmentProp[]> = {
+  'skeleton-birthday': [
+    { id: 'env-torch-l', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [-5, 0, -3], scale: 2.0 },
+    { id: 'env-torch-r', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [5, 0, -3], scale: 2.0 },
+    { id: 'env-barrel', path: 'kaykit/packs/dungeon/barrel_large.gltf', position: [-4, 0, -2], scale: 0.8 },
+    { id: 'env-banner', path: 'kaykit/packs/dungeon/banner_blue.gltf', position: [0, 0, -4], scale: 0.6 },
+  ],
+  'knight-space': [
+    { id: 'env-module', path: 'kaykit/packs/space_base/basemodule_A.gltf', position: [0, 0, -4], scale: 0.8 },
+    { id: 'env-panel', path: 'kaykit/packs/space_base/solarpanel.gltf', position: [-4, 0, -2], scale: 0.8 },
+    { id: 'env-cargo', path: 'kaykit/packs/space_base/cargo_A.gltf', position: [4, 0, -2], scale: 0.8 },
+  ],
+  'mage-kitchen': [
+    { id: 'env-stove', path: 'tiny-treats/charming-kitchen/stove.gltf', position: [-3, 0, -3], scale: 1.5 },
+    { id: 'env-fridge', path: 'tiny-treats/charming-kitchen/fridge.gltf', position: [3, 0, -3], scale: 1.5 },
+    { id: 'env-cabinet', path: 'tiny-treats/charming-kitchen/wall_cabinet_straight.gltf', position: [0, 0, -4], scale: 1.5 },
+  ],
+  'barbarian-school': [
+    { id: 'env-slide', path: 'tiny-treats/fun-playground/slide_A.gltf', position: [-4, 0, -3], scale: 1.2 },
+    { id: 'env-seesaw', path: 'tiny-treats/fun-playground/seesaw_large.gltf', position: [4, 0, -3], scale: 1.2 },
+    { id: 'env-sandbox', path: 'tiny-treats/fun-playground/sandbox_square_decorated.gltf', position: [0, 0, -4], scale: 1.0 },
+  ],
+  'dungeon-concert': [
+    { id: 'env-torch-l', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [-5, 0, -3], scale: 2.0 },
+    { id: 'env-torch-r', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [5, 0, -3], scale: 2.0 },
+    { id: 'env-table', path: 'kaykit/packs/dungeon/table_long.gltf', position: [0, 0, -4], scale: 0.8 },
+    { id: 'env-barrel-l', path: 'kaykit/packs/dungeon/barrel_large.gltf', position: [-3, 0, -2], scale: 0.8 },
+    { id: 'env-barrel-r', path: 'kaykit/packs/dungeon/barrel_large.gltf', position: [3, 0, -2], scale: 0.8 },
+  ],
+  'skeleton-pizza': [
+    { id: 'env-bench-l', path: 'tiny-treats/pretty-park/bench.gltf', position: [-4, 0, -2], scale: 1.5 },
+    { id: 'env-bench-r', path: 'tiny-treats/pretty-park/bench.gltf', position: [4, 0, -2], scale: 1.5 },
+    { id: 'env-tree', path: 'tiny-treats/pretty-park/tree.gltf', position: [0, 0, -5], scale: 2.0 },
+  ],
+  'adventurers-picnic': [
+    { id: 'env-tree-l', path: 'tiny-treats/pretty-park/tree.gltf', position: [-5, 0, -3], scale: 2.0 },
+    { id: 'env-tree-r', path: 'tiny-treats/pretty-park/tree_large.gltf', position: [5, 0, -4], scale: 2.0 },
+    { id: 'env-blanket', path: 'tiny-treats/pleasant-picnic/picnic_blanket_red.gltf', position: [0, 0.01, -1], scale: 2.0 },
+    { id: 'env-bush', path: 'tiny-treats/pretty-park/bush.gltf', position: [-3, 0, -4], scale: 1.5 },
+  ],
+}
+
+// ============================================================================
+// HERO CHARACTERS — idle characters visible before user submits a prompt
+// ============================================================================
+
+interface HeroCharacter {
+  id: string
+  characterId: CharacterKey
+  position: Position
+}
+
+const TASK_HERO_CHARACTERS: Record<string, HeroCharacter[]> = {
+  'skeleton-birthday': [
+    { id: 'hero-skeleton', characterId: 'skeleton_warrior', position: 'center' },
+  ],
+  'knight-space': [
+    { id: 'hero-knight', characterId: 'knight', position: 'center' },
+  ],
+  'mage-kitchen': [
+    { id: 'hero-mage', characterId: 'mage', position: 'center' },
+  ],
+  'barbarian-school': [
+    { id: 'hero-barbarian', characterId: 'barbarian', position: 'center' },
+  ],
+  'dungeon-concert': [
+    { id: 'hero-skeleton', characterId: 'skeleton_warrior', position: 'left' },
+    { id: 'hero-knight', characterId: 'knight', position: 'right' },
+  ],
+  'skeleton-pizza': [
+    { id: 'hero-skeleton', characterId: 'skeleton_warrior', position: 'center' },
+  ],
+  'adventurers-picnic': [
+    { id: 'hero-knight', characterId: 'knight', position: 'left' },
+    { id: 'hero-ranger', characterId: 'ranger', position: 'right' },
+  ],
+}
+
+// ============================================================================
+// EASING FUNCTIONS (exported for testing)
+// ============================================================================
+
+export function applyEasing(t: number, style: string): number {
+  switch (style) {
+    case 'bounce': return easeOutBounce(t)
+    case 'arc': return easeInOutQuad(t)  // arc Y handled separately
+    case 'float': return easeInOutSine(t)
+    default: return t // linear
+  }
+}
+
+export function easeOutBounce(t: number): number {
+  const n1 = 7.5625, d1 = 2.75
+  if (t < 1 / d1) return n1 * t * t
+  if (t < 2 / d1) return n1 * (t -= 1.5 / d1) * t + 0.75
+  if (t < 2.5 / d1) return n1 * (t -= 2.25 / d1) * t + 0.9375
+  return n1 * (t -= 2.625 / d1) * t + 0.984375
+}
+
+export function easeInOutQuad(t: number): number {
+  return t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2
+}
+
+export function easeInOutSine(t: number): number {
+  return -(Math.cos(Math.PI * t) - 1) / 2
+}
+
+// ============================================================================
+// STATE TYPES
+// ============================================================================
+
+interface ActiveActor {
+  id: string
+  type: 'character' | 'prop'
+  characterId?: CharacterKey
+  modelPath?: string
+  position: [number, number, number]
+  animation?: string
+}
+
+interface ActiveEffect {
+  id: string
+  type: string
+  position: [number, number, number]
+  emojis: string[] // Multiple emojis for particle burst
+  startTime: number
+}
+
+interface ActiveEmote {
+  id: string
+  actorId: string
+  emoji?: string
+  text?: string
+  startTime: number
+}
+
+interface ActiveTween {
+  id: string
+  actorId: string
+  startPos: [number, number, number]
+  endPos: [number, number, number]
+  style: string
+  startTime: number
+  duration: number
+  resolve: () => void
+}
+
+// ============================================================================
+// EFFECT EMOJI PARTICLES
+// ============================================================================
+
+function getEffectEmojis(effect: string): string[] {
+  const emojiMap: Record<string, string[]> = {
+    'confetti-burst': ['🎉', '🎊', '✨', '🌟', '🎉', '🎊', '✨'],
+    'explosion-cartoon': ['💥', '💫', '⭐', '💥', '💫', '⭐', '💥'],
+    'hearts-float': ['💕', '❤️', '💖', '💝', '💕', '❤️', '💖'],
+    'stars-spin': ['✨', '⭐', '🌟', '💫', '✨', '⭐', '🌟'],
+    'question-marks': ['❓', '❔', '🤔', '❓', '❔', '🤔'],
+    'laugh-tears': ['😂', '🤣', '😂', '🤣', '😂', '🤣'],
+    'fire-sneeze': ['🔥', '💨', '🔥', '💨', '🔥', '💨'],
+    splash: ['💦', '🌊', '💧', '💦', '🌊', '💧'],
+    'sparkle-magic': ['✨', '💜', '🔮', '✨', '💜', '🔮', '✨'],
+    'sad-cloud': ['☁️', '💧', '😢', '☁️', '💧', '😢'],
+  }
+  return emojiMap[effect] || ['✨', '⭐', '💫', '✨', '⭐']
+}
+
+// ============================================================================
+// TWEEN RUNNER
+// ============================================================================
+
+function TweenRunner({
+  tweens,
+  setActors,
+  setTweens
+}: {
+  tweens: ActiveTween[]
+  setActors: React.Dispatch<React.SetStateAction<ActiveActor[]>>
+  setTweens: React.Dispatch<React.SetStateAction<ActiveTween[]>>
+}) {
+  useFrame(() => {
+    const now = Date.now()
+    const activeTweens = [...tweens]
+    let changed = false
+
+    for (const tween of activeTweens) {
+      const elapsed = now - tween.startTime
+      const progress = Math.min(elapsed / tween.duration, 1)
+      const eased = applyEasing(progress, tween.style)
+
+      // Interpolate position
+      const x = tween.startPos[0] + (tween.endPos[0] - tween.startPos[0]) * eased
+      let y = tween.startPos[1] + (tween.endPos[1] - tween.startPos[1]) * eased
+      const z = tween.startPos[2] + (tween.endPos[2] - tween.startPos[2]) * eased
+
+      // Arc style: add parabolic Y curve
+      if (tween.style === 'arc') {
+        y += Math.sin(progress * Math.PI) * 2.0
+      }
+
+      // Update actor position
+      setActors(prev => prev.map(a =>
+        a.id === tween.actorId ? { ...a, position: [x, y, z] as [number, number, number] } : a
+      ))
+
+      if (progress >= 1) {
+        tween.resolve()
+        changed = true
+      }
+    }
+
+    if (changed) {
+      setTweens(prev => prev.filter(t => {
+        const elapsed = now - t.startTime
+        return elapsed / t.duration < 1
+      }))
+    }
+  })
+
+  return null
+}
+
+// ============================================================================
+// COMPONENT
+// ============================================================================
+
+export interface ScenePlayer3DProps {
+  script: SceneScript | null
+  taskId: string
+  onComplete?: () => void
+}
+
+export default function ScenePlayer3D({ script, taskId, onComplete }: ScenePlayer3DProps) {
+  const [actors, setActors] = useState<ActiveActor[]>([])
+  const [envProps, setEnvProps] = useState<EnvironmentProp[]>([])
+  const [effects, setEffects] = useState<ActiveEffect[]>([])
+  const [emotes, setEmotes] = useState<ActiveEmote[]>([])
+  const [tweens, setTweens] = useState<ActiveTween[]>([])
+
+  const actorRefs = useRef<Map<string, Character3DHandle | Prop3DHandle>>(new Map())
+  const spawnedIds = useRef<Set<string>>(new Set()) // Track spawned actors (avoids stale closure)
+  const playingRef = useRef(false)
+  const abortControllerRef = useRef<AbortController | null>(null)
+
+  // Current zone for position offsets
+  const currentZone = useGameStore((s) => s.currentZone)
+
+  // Sync mute state with sound manager
+  const isMuted = useGameStore((s) => s.isMuted)
+  useEffect(() => {
+    SoundManager3D.setMuted(isMuted)
+  }, [isMuted])
+
+  // ============================================================================
+  // ENVIRONMENT SETUP — spawn backdrop props + hero characters on task change
+  // ============================================================================
+
+  useEffect(() => {
+    // Only set up environment and heroes when inside a zone
+    if (!currentZone) {
+      setEnvProps([])
+      setActors([])
+      spawnedIds.current.clear()
+      return
+    }
+
+    const env = TASK_ENVIRONMENTS[taskId] || []
+    // Offset environment props to zone center
+    const offsetEnv = env.map((e) => ({
+      ...e,
+      position: zonePosition(currentZone, e.position) as [number, number, number],
+    }))
+    setEnvProps(offsetEnv)
+
+    // Spawn hero characters (idle before prompt) at zone-relative positions
+    const heroes = TASK_HERO_CHARACTERS[taskId] || []
+    const heroActors: ActiveActor[] = heroes.map((hero) => ({
+      id: hero.id,
+      type: 'character' as const,
+      characterId: hero.characterId,
+      position: zonePosition(currentZone, POSITION_MAP[hero.position] || [0, 0, 0]),
+      animation: 'Idle_A',
+    }))
+    setActors(heroActors)
+    spawnedIds.current.clear()
+    heroes.forEach((h) => spawnedIds.current.add(h.id))
+  }, [taskId, currentZone])
+
+  // ============================================================================
+  // SCRIPT EXECUTION
+  // ============================================================================
+
+  useEffect(() => {
+    // When script is null, keep hero actors visible (set by env setup effect)
+    if (!script) {
+      setEffects([])
+      setEmotes([])
+      playingRef.current = false
+      return
+    }
+
+    // Prevent re-execution if already playing
+    if (playingRef.current) return
+    playingRef.current = true
+
+    // Clear previous scene actors (keep env props)
+    setActors([])
+    setEffects([])
+    setEmotes([])
+    spawnedIds.current.clear()
+
+    // Create abort controller for cleanup
+    const abortController = new AbortController()
+    abortControllerRef.current = abortController
+
+    // Play result sound based on success level
+    if (script.success_level === 'FULL_SUCCESS') {
+      SoundManager3D.play('success')
+    } else if (script.success_level === 'PARTIAL_SUCCESS') {
+      SoundManager3D.play('partial')
+    } else if (script.success_level === 'FUNNY_FAIL') {
+      SoundManager3D.play('fail')
+    }
+
+    // Execute action queue
+    executeActions(script.actions, abortController.signal)
+      .then(() => {
+        if (!abortController.signal.aborted) {
+          console.log(`[ScenePlayer3D] Scene complete: ${taskId}`)
+          if (onComplete) onComplete()
+        }
+      })
+      .catch((err) => {
+        if (!abortController.signal.aborted) {
+          console.error('[ScenePlayer3D] Execution error:', err)
+        }
+      })
+      .finally(() => {
+        playingRef.current = false
+      })
+
+    // Cleanup on unmount or script change
+    return () => {
+      abortController.abort()
+      playingRef.current = false
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [script, taskId])
+
+  // ============================================================================
+  // ACTION EXECUTOR (with error tolerance)
+  // ============================================================================
+
+  async function executeActions(actions: Action[], signal: AbortSignal) {
+    for (const action of actions) {
+      if (signal.aborted) break
+
+      // Delay before action
+      const delay = action.delay_ms || 0
+      if (delay > 0) {
+        await sleep(delay, signal)
+      }
+
+      if (signal.aborted) break
+
+      // Execute action with error tolerance — one bad action never kills the sequence
+      try {
+        await executeAction(action, signal)
+      } catch (err) {
+        console.warn('[ScenePlayer3D] Action failed (skipping):', action.type, err)
+      }
+
+      // Duration after action (default 800ms)
+      const duration = 'duration_ms' in action ? action.duration_ms || 800 : 800
+      await sleep(duration, signal)
+    }
+  }
+
+  async function executeAction(action: Action, signal: AbortSignal): Promise<void> {
+    if (signal.aborted) return
+
+    switch (action.type) {
+      case 'spawn':
+        handleSpawn(action.target, action.position)
+        break
+
+      case 'move':
+        await handleMove(action.target, action.to, action.style)
+        break
+
+      case 'animate':
+        handleAnimate(action.target, action.anim)
+        break
+
+      case 'react':
+        handleReact(action.effect, action.position)
+        break
+
+      case 'emote':
+        handleEmote(action.target, action.emoji, action.text)
+        break
+
+      case 'sfx':
+        handleSfx(action.sound)
+        break
+
+      case 'wait':
+        // Already handled by duration_ms
+        break
+
+      case 'remove':
+        handleRemove(action.target)
+        break
+
+      default:
+        console.warn('[ScenePlayer3D] Unknown action type:', action)
+    }
+  }
+
+  // ============================================================================
+  // ACTION HANDLERS (error-tolerant)
+  // ============================================================================
+
+  function handleSpawn(target: string, position: Position) {
+    const localPos = POSITION_MAP[position] || [0, 0, 0]
+    const pos = zonePosition(currentZone, localPos)
+    const actorId = target
+
+    // Check if it's a character or prop
+    const characterId = resolveCharacterId(actorId)
+    const isCharacter = characterId !== null
+    const propPath = !isCharacter ? resolvePropPath(actorId) : null
+
+    // Skip if we can't resolve the target at all
+    if (!isCharacter && !propPath) {
+      console.warn(`[ScenePlayer3D] Unknown target "${actorId}" — skipping spawn`)
+      return
+    }
+
+    const newActor: ActiveActor = isCharacter
+      ? {
+          id: actorId,
+          type: 'character',
+          characterId: characterId!,
+          position: pos,
+          animation: 'Spawn_Ground', // Start with spawn animation
+        }
+      : {
+          id: actorId,
+          type: 'prop',
+          modelPath: propPath!,
+          position: pos,
+        }
+
+    setActors((prev) => {
+      // Replace if already exists
+      const filtered = prev.filter((a) => a.id !== actorId)
+      return [...filtered, newActor]
+    })
+
+    // Sound effect on spawn
+    SoundManager3D.play('spawn')
+
+    // Start with spawn animation for characters, then crossfade to idle
+    if (isCharacter) {
+      setTimeout(() => {
+        handleAnimate(target, 'Idle_A')
+      }, 500)
+    }
+
+    spawnedIds.current.add(actorId)
+    console.log(`[ScenePlayer3D] Spawned ${actorId} at ${position}`)
+  }
+
+  function handleMove(target: string, to: Position, style?: string): Promise<void> {
+    const localPos = POSITION_MAP[to] || [0, 0, 0]
+    const newPos = zonePosition(currentZone, localPos)
+    let currentActor = actors.find(a => a.id === target)
+
+    // Auto-spawn if actor doesn't exist yet
+    if (!currentActor && !spawnedIds.current.has(target)) {
+      const characterId = resolveCharacterId(target)
+      if (characterId) {
+        console.log(`[ScenePlayer3D] Auto-spawning "${target}" for move`)
+        handleSpawn(target, 'center')
+        currentActor = { id: target, type: 'character', characterId, position: zonePosition(currentZone, [0, 0, 0]), animation: 'Idle_A' }
+      }
+    }
+
+    if (!currentActor) {
+      console.warn(`[ScenePlayer3D] Cannot move unknown actor "${target}" — skipping`)
+      return Promise.resolve()
+    }
+
+    const startPos = currentActor.position || [0, 0, 0]
+    const duration = 800 // ms
+
+    // Also trigger walking animation for characters
+    if (currentActor.type === 'character') {
+      handleAnimate(target, 'Walking_A')
+    }
+
+    // Sound effect
+    SoundManager3D.play('move')
+
+    return new Promise<void>((resolve) => {
+      const tween: ActiveTween = {
+        id: `tween-${Date.now()}-${Math.random()}`,
+        actorId: target,
+        startPos: startPos as [number, number, number],
+        endPos: newPos,
+        style: style || 'linear',
+        startTime: Date.now(),
+        duration,
+        resolve: () => {
+          // Return to idle after move
+          if (currentActor.type === 'character') {
+            handleAnimate(target, 'Idle_A')
+          }
+          resolve()
+        },
+      }
+      setTweens(prev => [...prev, tween])
+
+      console.log(`[ScenePlayer3D] Moving ${target} to ${to} (style: ${style || 'linear'})`)
+    })
+  }
+
+  function handleAnimate(target: string, anim: string) {
+    // Auto-spawn if actor doesn't exist yet (scripts may skip spawn)
+    if (!spawnedIds.current.has(target)) {
+      const characterId = resolveCharacterId(target)
+      if (characterId) {
+        console.log(`[ScenePlayer3D] Auto-spawning "${target}" for animate`)
+        handleSpawn(target, 'center')
+      }
+    }
+
+    setActors((prev) =>
+      prev.map((actor) =>
+        actor.id === target && actor.type === 'character'
+          ? { ...actor, animation: anim }
+          : actor,
+      ),
+    )
+
+    // Also try imperative ref API
+    const ref = actorRefs.current.get(target) as Character3DHandle | undefined
+    if (ref && 'play' in ref) {
+      ref.play(anim)
+    }
+
+    console.log(`[ScenePlayer3D] Animated ${target}: ${anim}`)
+  }
+
+  function handleReact(effect: string, position: Position) {
+    const localPos = POSITION_MAP[position] || [0, 0, 0]
+    const pos = zonePosition(currentZone, localPos)
+    const effectId = `effect-${Date.now()}-${Math.random()}`
+
+    const newEffect: ActiveEffect = {
+      id: effectId,
+      type: effect,
+      position: pos,
+      emojis: getEffectEmojis(effect),
+      startTime: Date.now(),
+    }
+
+    setEffects((prev) => [...prev, newEffect])
+
+    // Sound effect
+    SoundManager3D.play('react')
+
+    // Auto-remove after 2s
+    setTimeout(() => {
+      setEffects((prev) => prev.filter((e) => e.id !== effectId))
+    }, 2000)
+
+    console.log(`[ScenePlayer3D] React effect ${effect} at ${position}`)
+  }
+
+  function handleEmote(target: string, emoji?: string, text?: string) {
+    // Auto-spawn if actor doesn't exist yet (scripts may skip spawn)
+    if (!spawnedIds.current.has(target)) {
+      const characterId = resolveCharacterId(target)
+      if (characterId) {
+        console.log(`[ScenePlayer3D] Auto-spawning "${target}" for emote`)
+        handleSpawn(target, 'center')
+      }
+    }
+
+    const emoteId = `emote-${Date.now()}-${Math.random()}`
+
+    const newEmote: ActiveEmote = {
+      id: emoteId,
+      actorId: target,
+      emoji,
+      text,
+      startTime: Date.now(),
+    }
+
+    setEmotes((prev) => [...prev, newEmote])
+
+    // Auto-remove after 2s
+    setTimeout(() => {
+      setEmotes((prev) => prev.filter((e) => e.id !== emoteId))
+    }, 2000)
+
+    console.log(`[ScenePlayer3D] Emote on ${target}: ${emoji || text || '(none)'}`)
+  }
+
+  function handleSfx(sound: string) {
+    // Map SceneScript sound names to SoundManager3D names
+    const sfxMap: Record<string, Parameters<typeof SoundManager3D.play>[0]> = {
+      pop: 'spawn',
+      whoosh: 'move',
+      sparkle: 'react',
+      celebrate: 'success',
+      fail: 'fail',
+      click: 'click',
+    }
+    SoundManager3D.play(sfxMap[sound] || 'click')
+    console.log(`[ScenePlayer3D] SFX: ${sound}`)
+  }
+
+  function handleRemove(target: string) {
+    setActors((prev) => prev.filter((a) => a.id !== target))
+    actorRefs.current.delete(target)
+    SoundManager3D.play('remove')
+    console.log(`[ScenePlayer3D] Removed ${target}`)
+  }
+
+  // ============================================================================
+  // HELPERS
+  // ============================================================================
+
+  function sleep(ms: number, signal: AbortSignal): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(resolve, ms)
+      signal.addEventListener('abort', () => {
+        clearTimeout(timeout)
+        reject(new Error('Aborted'))
+      })
+    })
+  }
+
+  function getActorPosition(actorId: string): [number, number, number] {
+    const actor = actors.find((a) => a.id === actorId)
+    return actor?.position || [0, 0, 0]
+  }
+
+  // ============================================================================
+  // RENDER
+  // ============================================================================
+
+  return (
+    <>
+      {/* Tween Runner (animates moves) */}
+      <TweenRunner tweens={tweens} setActors={setActors} setTweens={setTweens} />
+
+      {/* Environment backdrop props (SafeModel prevents one bad load from crashing) */}
+      {envProps.map((env) => (
+        <SafeModel key={env.id}>
+          <Prop3D
+            modelPath={env.path}
+            position={env.position}
+            rotation={env.rotation}
+            scale={env.scale || 1}
+          />
+        </SafeModel>
+      ))}
+
+      {/* Actors (Characters + Props) — SafeModel prevents one bad model from crashing */}
+      {actors.map((actor) => {
+        if (actor.type === 'character' && actor.characterId) {
+          return (
+            <SafeModel key={actor.id}>
+              <Character3D
+                characterId={actor.characterId}
+                position={actor.position}
+                currentAnimation={actor.animation}
+                ref={(ref) => {
+                  if (ref) actorRefs.current.set(actor.id, ref)
+                }}
+              />
+            </SafeModel>
+          )
+        }
+
+        if (actor.type === 'prop' && actor.modelPath) {
+          return (
+            <SafeModel key={actor.id}>
+              <Prop3D
+                modelPath={actor.modelPath}
+                position={actor.position}
+                animate
+                ref={(ref) => {
+                  if (ref) actorRefs.current.set(actor.id, ref)
+                }}
+              />
+            </SafeModel>
+          )
+        }
+
+        return null
+      })}
+
+      {/* Effects — particle burst emojis */}
+      {effects.map((effect) => (
+        <Html key={effect.id} position={effect.position} center>
+          <div className="particle-burst select-none pointer-events-none" style={{ position: 'relative', width: 120, height: 120 }}>
+            {effect.emojis.map((emoji, i) => {
+              const angle = (i / effect.emojis.length) * 360
+              const distance = 30 + Math.random() * 20
+              const dx = Math.cos((angle * Math.PI) / 180) * distance
+              const dy = -Math.abs(Math.sin((angle * Math.PI) / 180) * distance) - 20
+              const delay = i * 0.05
+              return (
+                <span
+                  key={i}
+                  className="absolute text-3xl"
+                  style={{
+                    left: '50%',
+                    top: '50%',
+                    animation: `particle-float 1.5s ease-out ${delay}s both`,
+                    ['--dx' as string]: `${dx}px`,
+                    ['--dy' as string]: `${dy}px`,
+                  }}
+                >
+                  {emoji}
+                </span>
+              )
+            })}
+          </div>
+          <style>{`
+            @keyframes particle-float {
+              0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+              20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+              100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.5); opacity: 0; }
+            }
+          `}</style>
+        </Html>
+      ))}
+
+      {/* Emotes (speech bubbles above actors) */}
+      {emotes.map((emote) => {
+        const actorPos = getActorPosition(emote.actorId)
+        const emotePos: [number, number, number] = [actorPos[0], actorPos[1] + 2, actorPos[2]]
+
+        return (
+          <Html key={emote.id} position={emotePos} center>
+            <div
+              className="bg-white/90 rounded-full px-4 py-2 shadow-lg text-xl select-none pointer-events-none"
+              style={{ animation: 'emote-pop 0.3s ease-out, emote-fade 2s ease-in-out' }}
+            >
+              {emote.emoji && <span className="text-2xl">{emote.emoji}</span>}
+              {emote.text && <span className="ml-2 text-gray-800 font-semibold">{emote.text}</span>}
+            </div>
+            <style>{`
+              @keyframes emote-pop {
+                0% { transform: scale(0); }
+                70% { transform: scale(1.1); }
+                100% { transform: scale(1); }
+              }
+              @keyframes emote-fade {
+                0%, 70% { opacity: 1; }
+                100% { opacity: 0; }
+              }
+            `}</style>
+          </Html>
+        )
+      })}
+    </>
+  )
+}

@@ -7,28 +7,22 @@ vi.mock('../../services/resolver', () => ({
   resolveResponse: vi.fn(),
 }));
 
-vi.mock('../../game/EventBus', () => ({
-  default: { emit: vi.fn(), on: vi.fn(), off: vi.fn() },
-}));
-
 // Import after mocks are declared so the module picks up mocked dependencies
 import { useGameStore } from '../gameStore';
 import { resolveResponse } from '../../services/resolver';
-import EventBus from '../../game/EventBus';
 
 const mockResolveResponse = vi.mocked(resolveResponse);
-const mockEmit = vi.mocked(EventBus.emit);
 
 const MOCK_SCRIPT: SceneScript = {
   success_level: 'FULL_SUCCESS',
-  narration: 'The monster loves the giant cake!',
+  narration: 'The skeleton loves the birthday cake!',
   actions: [
+    { type: 'spawn', target: 'skeleton_warrior', position: 'center' },
     { type: 'spawn', target: 'cake-giant', position: 'left' },
     { type: 'move', target: 'cake-giant', to: 'center', style: 'arc' },
-    { type: 'animate', target: 'monster', anim: 'eat' },
     { type: 'react', effect: 'confetti-burst', position: 'center' },
   ],
-  prompt_feedback: 'Great job describing the cake!',
+  prompt_feedback: 'Great job planning the party!',
 };
 
 const MOCK_RESOLVED: ResolvedResponse = {
@@ -40,7 +34,7 @@ const MOCK_RESOLVED: ResolvedResponse = {
 describe('useGameStore', () => {
   beforeEach(() => {
     useGameStore.setState({
-      currentTask: 'monster-party',
+      currentTask: 'skeleton-birthday',
       userInput: '',
       isLoading: false,
       lastScript: null,
@@ -54,7 +48,7 @@ describe('useGameStore', () => {
   // ---- 1. Initial state ----
   it('has correct initial state', () => {
     const state = useGameStore.getState();
-    expect(state.currentTask).toBe('monster-party');
+    expect(state.currentTask).toBe('skeleton-birthday');
     expect(state.userInput).toBe('');
     expect(state.isLoading).toBe(false);
     expect(state.lastScript).toBeNull();
@@ -66,9 +60,9 @@ describe('useGameStore', () => {
   // ---- 2. setInput ----
   it('setInput updates userInput', () => {
     act(() => {
-      useGameStore.getState().setInput('Bake a giant cake');
+      useGameStore.getState().setInput('Invite the knight and mage to a party');
     });
-    expect(useGameStore.getState().userInput).toBe('Bake a giant cake');
+    expect(useGameStore.getState().userInput).toBe('Invite the knight and mage to a party');
   });
 
   // ---- 3. clearScript ----
@@ -106,10 +100,10 @@ describe('useGameStore', () => {
     expect(mockResolveResponse).not.toHaveBeenCalled();
   });
 
-  // ---- 6. submitInput with valid input ----
-  it('submitInput calls resolveResponse, sets lastScript/lastSource, adds to history, emits play-script', async () => {
+  // ---- 6. submitInput with valid input (3D pipeline, no EventBus) ----
+  it('submitInput calls resolveResponse, sets lastScript/lastSource, adds to history', async () => {
     mockResolveResponse.mockResolvedValueOnce(MOCK_RESOLVED);
-    useGameStore.setState({ userInput: 'Bake a giant cake for the monster' });
+    useGameStore.setState({ userInput: 'Invite knight and mage with cake and banners' });
 
     await act(async () => {
       await useGameStore.getState().submitInput();
@@ -120,9 +114,9 @@ describe('useGameStore', () => {
     // resolveResponse was called with the task, system prompt, and trimmed user input
     expect(mockResolveResponse).toHaveBeenCalledOnce();
     expect(mockResolveResponse).toHaveBeenCalledWith(
-      'monster-party',
+      'skeleton-birthday',
       expect.any(String),
-      'Bake a giant cake for the monster',
+      'Invite knight and mage with cake and banners',
     );
 
     // State updated correctly
@@ -134,14 +128,13 @@ describe('useGameStore', () => {
     // History appended with source and latency
     expect(state.history).toHaveLength(1);
     expect(state.history[0]).toEqual({
-      input: 'Bake a giant cake for the monster',
+      input: 'Invite knight and mage with cake and banners',
       script: MOCK_SCRIPT,
       source: 'live',
       latencyMs: 42,
     });
 
-    // EventBus emitted the script to Phaser
-    expect(mockEmit).toHaveBeenCalledWith('play-script', MOCK_SCRIPT);
+    // 3D pipeline: ScenePlayer3D reads lastScript from Zustand — no EventBus emit
   });
 
   // ---- 7. submitInput with cache hit ----
@@ -152,7 +145,7 @@ describe('useGameStore', () => {
       latencyMs: 1,
     };
     mockResolveResponse.mockResolvedValueOnce(cachedResponse);
-    useGameStore.setState({ userInput: 'throw a huge cake' });
+    useGameStore.setState({ userInput: 'throw a huge birthday party for the skeleton' });
 
     await act(async () => {
       await useGameStore.getState().submitInput();
@@ -192,5 +185,59 @@ describe('useGameStore', () => {
     expect(state.error).toBe('Unknown task: rocket-launch');
     expect(state.isLoading).toBe(false);
     expect(mockResolveResponse).not.toHaveBeenCalled();
+  });
+
+  // ---- 10. All 7 3D tasks are registered ----
+  it('has system prompts for all 7 3D tasks', async () => {
+    const tasks3D = [
+      'skeleton-birthday', 'knight-space', 'mage-kitchen',
+      'barbarian-school', 'dungeon-concert', 'skeleton-pizza', 'adventurers-picnic',
+    ];
+
+    for (const taskId of tasks3D) {
+      mockResolveResponse.mockResolvedValueOnce(MOCK_RESOLVED);
+      useGameStore.setState({ userInput: 'test input', currentTask: taskId, error: null });
+
+      await act(async () => {
+        await useGameStore.getState().submitInput();
+      });
+
+      // Should NOT get "Unknown task" error
+      expect(useGameStore.getState().error).toBeNull();
+    }
+  });
+
+  // ---- 11. Legacy 2D tasks still work ----
+  it('has system prompts for legacy 2D tasks', async () => {
+    const legacyTasks = [
+      'monster-party', 'robot-pizza', 'wizard-kitchen',
+      'dinosaur-school', 'dog-space', 'octopus-band',
+    ];
+
+    for (const taskId of legacyTasks) {
+      mockResolveResponse.mockResolvedValueOnce(MOCK_RESOLVED);
+      useGameStore.setState({ userInput: 'test input', currentTask: taskId, error: null });
+
+      await act(async () => {
+        await useGameStore.getState().submitInput();
+      });
+
+      expect(useGameStore.getState().error).toBeNull();
+    }
+  });
+
+  // ---- 12. toggleMute ----
+  it('toggleMute flips isMuted state', () => {
+    expect(useGameStore.getState().isMuted).toBe(false);
+
+    act(() => {
+      useGameStore.getState().toggleMute();
+    });
+    expect(useGameStore.getState().isMuted).toBe(true);
+
+    act(() => {
+      useGameStore.getState().toggleMute();
+    });
+    expect(useGameStore.getState().isMuted).toBe(false);
   });
 });

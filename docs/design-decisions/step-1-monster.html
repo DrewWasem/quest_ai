@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step 1: Monster Character — Chibi Style Options</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0F0A1A; color: #E8E0F7; font-family: 'Fredoka', sans-serif; padding: 2rem; }
+  h1 { text-align: center; font-size: 2.2rem; color: #fbbf24; margin-bottom: 0.5rem; }
+  .subtitle { text-align: center; color: #B8A9D4; font-size: 1.1rem; margin-bottom: 2rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1400px; margin: 0 auto; }
+  .card {
+    background: #1A0F2E; border: 2px solid #3D2B7A; border-radius: 20px;
+    padding: 1.5rem; text-align: center; transition: all 0.3s ease;
+    cursor: pointer; position: relative;
+  }
+  .card:hover { border-color: #8B5CF6; transform: translateY(-4px); box-shadow: 0 0 30px rgba(139,92,246,0.3); }
+  .card h2 { color: #fbbf24; font-size: 1.3rem; margin-bottom: 0.3rem; }
+  .card .style-tag { color: #8B5CF6; font-size: 0.85rem; margin-bottom: 1rem; }
+  .card .desc { color: #B8A9D4; font-size: 0.9rem; margin-top: 1rem; line-height: 1.5; }
+  .svg-container { background: #231546; border-radius: 14px; padding: 1rem; display: flex; align-items: center; justify-content: center; min-height: 260px; }
+  .svg-container svg { width: 220px; height: 220px; }
+  .instructions {
+    max-width: 700px; margin: 2.5rem auto 0; text-align: center;
+    background: #231546; border: 1px solid #3D2B7A; border-radius: 16px; padding: 1.5rem;
+  }
+  .instructions p { color: #B8A9D4; line-height: 1.6; }
+  .instructions strong { color: #fbbf24; }
+</style>
+</head>
+<body>
+
+<h1>Step 1: Pick Your Monster</h1>
+<p class="subtitle">5 chibi-style monster designs — tell me A, B, C, D, or E</p>
+
+<div class="grid">
+
+<!-- OPTION A: Round Blob Monster -->
+<div class="card">
+  <h2>Option A</h2>
+  <div class="style-tag">Round Blob — Classic Cute</div>
+  <div class="svg-container">
+    <svg viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <clipPath id="aL"><ellipse cx="100" cy="105" rx="16" ry="19"><animate attributeName="ry" values="19;19;0;0;19;19" keyTimes="0;0.47;0.49;0.51;0.53;1" dur="3s" repeatCount="indefinite"/></ellipse></clipPath>
+        <clipPath id="aR"><ellipse cx="152" cy="105" rx="16" ry="19"><animate attributeName="ry" values="19;19;0;0;19;19" keyTimes="0;0.47;0.49;0.51;0.53;1" dur="3s" repeatCount="indefinite"/></ellipse></clipPath>
+      </defs>
+      <!-- Horns -->
+      <ellipse cx="88" cy="38" rx="11" ry="20" fill="#A5D6A7"/>
+      <ellipse cx="162" cy="38" rx="11" ry="20" fill="#A5D6A7"/>
+      <!-- Body - big round blob -->
+      <ellipse cx="125" cy="140" rx="82" ry="85" fill="#4CAF50"/>
+      <!-- Belly spot -->
+      <ellipse cx="125" cy="165" rx="45" ry="40" fill="#66BB6A" opacity="0.4"/>
+      <!-- Spots -->
+      <circle cx="70" cy="120" r="7" fill="#388E3C" opacity="0.4"/>
+      <circle cx="175" cy="130" r="9" fill="#388E3C" opacity="0.4"/>
+      <circle cx="85" cy="175" r="6" fill="#388E3C" opacity="0.4"/>
+      <!-- Eyes - big chibi eyes -->
+      <ellipse cx="100" cy="105" rx="16" ry="19" fill="#fff"><animate attributeName="ry" values="19;19;0;0;19;19" keyTimes="0;0.47;0.49;0.51;0.53;1" dur="3s" repeatCount="indefinite"/></ellipse>
+      <circle cx="104" cy="108" r="8" fill="#1a1a1a" clip-path="url(#aL)"/>
+      <circle cx="96" cy="100" r="4" fill="#fff" opacity="0.9"/>
+      <ellipse cx="152" cy="105" rx="16" ry="19" fill="#fff"><animate attributeName="ry" values="19;19;0;0;19;19" keyTimes="0;0.47;0.49;0.51;0.53;1" dur="3s" repeatCount="indefinite"/></ellipse>
+      <circle cx="156" cy="108" r="8" fill="#1a1a1a" clip-path="url(#aR)"/>
+      <circle cx="148" cy="100" r="4" fill="#fff" opacity="0.9"/>
+      <!-- Cheeks -->
+      <circle cx="72" cy="128" r="10" fill="#FF8A65" opacity="0.45"/>
+      <circle cx="178" cy="128" r="10" fill="#FF8A65" opacity="0.45"/>
+      <!-- Big smile with teeth -->
+      <path d="M98 140 Q125 170 152 140" stroke="#1a1a1a" stroke-width="3.5" fill="#2E7D32"/>
+      <rect x="109" y="140" width="8" height="7" rx="1" fill="#fff"/>
+      <rect x="121" y="140" width="8" height="7" rx="1" fill="#fff"/>
+      <rect x="133" y="140" width="8" height="7" rx="1" fill="#fff"/>
+    </svg>
+  </div>
+  <p class="desc">Classic friendly blob. Round, squishy, big googly eyes with a toothy grin. Spots on belly. Tiny horns.</p>
+</div>
+
+<!-- OPTION B: Square Boxy Monster -->
+<div class="card">
+  <h2>Option B</h2>
+  <div class="style-tag">Boxy Chibi — Minecraft Vibes</div>
+  <div class="svg-container">
+    <svg viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <clipPath id="bL"><ellipse cx="97" cy="100" rx="15" ry="18"><animate attributeName="ry" values="18;18;0;0;18;18" keyTimes="0;0.47;0.49;0.51;0.53;1" dur="3s" repeatCount="indefinite"/></ellipse></clipPath>
+        <clipPath id="bR"><ellipse cx="153" cy="100" rx="15" ry="18"><animate attributeName="ry" values="18;18;0;0;18;18" keyTimes="0;0.47;0.49;0.51;0.53;1" dur="3s" repeatCount="indefinite"/></ellipse></clipPath>
+      </defs>
+      <!-- Horns - angular -->
+      <polygon points="70,55 82,20 94,55" fill="#81C784"/>
+      <polygon points="156,55 168,20 180,55" fill="#81C784"/>
+      <!-- Body - rounded square -->
+      <rect x="45" y="50" width="160" height="165" rx="20" fill="#43A047"/>
+      <!-- Belly patch -->
+      <rect x="75" y="120" width="100" height="70" rx="12" fill="#66BB6A" opacity="0.35"/>
+      <!-- Eyes -->
+      <ellipse cx="97" cy="100" rx="15" ry="18" fill="#fff"><animate attributeName="ry" values="18;18;0;0;18;18" keyTimes="0;0.47;0.49;0.51;0.53;1" dur="3s" repeatCount="indefinite"/></ellipse>
+      <circle cx="101" cy="103" r="8" fill="#1a1a1a" clip-path="url(#bL)"/>
+      <circle cx="94" cy="95" r="4" fill="#fff" opacity="0.9"/>
+      <ellipse cx="153" cy="100" rx="15" ry="18" fill="#fff"><animate attributeName="ry" values="18;18;0;0;18;18" keyTimes="0;0.47;0.49;0.51;0.53;1" dur="3s" repeatCount="indefinite"/></ellipse>
+      <circle cx="157" cy="103" r="8" fill="#1a1a1a" clip-path="url(#bR)"/>
+      <circle cx="150" cy="95" r="4" fill="#fff" opacity="0.9"/>
+      <!-- Single eyebrow ridge -->
+      <path d="M78 80 Q125 70 172 80" stroke="#2E7D32" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <!-- Cheeks -->
+      <circle cx="68" cy="120" r="9" fill="#FFAB91" opacity="0.5"/>
+      <circle cx="182" cy="120" r="9" fill="#FFAB91" opacity="0.5"/>
+      <!-- Wide rectangle mouth -->
+      <rect x="90" y="135" width="70" height="25" rx="6" fill="#1a1a1a"/>
+      <rect x="97" y="135" width="10" height="12" rx="1" fill="#fff"/>
+      <rect x="113" y="135" width="10" height="12" rx="1" fill="#fff"/>
+      <rect x="129" y="135" width="10" height="12" rx="1" fill="#fff"/>
+      <rect x="145" y="135" width="10" height="12" rx="1" fill="#fff"/>
+      <!-- Tiny feet -->
+      <ellipse cx="95" cy="220" rx="18" ry="8" fill="#388E3C"/>
+      <ellipse cx="155" cy="220" rx="18" ry="8" fill="#388E3C"/>
+    </svg>
+  </div>
+  <p class="desc">Chunky boxy body with angular horns. Four square teeth, thick brow ridge. Sturdy little feet.</p>
+</div>
+
+<!-- OPTION C: Fluffy Round Monster -->
+<div class="card">
+  <h2>Option C</h2>
+  <div class="style-tag">Fluffy Cloud — Soft & Huggable</div>
+  <div class="svg-container">
+    <svg viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <clipPath id="cL"><ellipse cx="100" cy="110" rx="18" ry="21"><animate attributeName="ry" values="21;21;0;0;21;21" keyTimes="0;0.47;0.49;0.51;0.53;1" dur="3s" repeatCount="indefinite"/></ellipse></clipPath>
+        <clipPath id="cR"><ellipse cx="150" cy="110" rx="18" ry="21"><animate attributeName="ry" values="21;21;0;0;21;21" keyTimes="0;0.47;0.49;0.51;0.53;1" dur="3s" repeatCount="indefinite"/></ellipse></clipPath>
+      </defs>
+      <!-- Fluffy body - overlapping circles -->
+      <circle cx="70" cy="130" r="40" fill="#66BB6A"/>
+      <circle cx="125" cy="105" r="50" fill="#4CAF50"/>
+      <circle cx="180" cy="130" r="40" fill="#66BB6A"/>
+      <circle cx="125" cy="155" r="55" fill="#4CAF50"/>
+      <circle cx="85" cy="165" r="35" fill="#66BB6A"/>
+      <circle cx="165" cy="165" r="35" fill="#66BB6A"/>
+      <!-- Main face circle -->
+      <circle cx="125" cy="120" r="55" fill="#4CAF50"/>
+      <!-- Little antenna/horns with balls -->
+      <line x1="100" y1="72" x2="90" y2="40" stroke="#388E3C" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="90" cy="38" r="7" fill="#FFD54F"/>
+      <line x1="150" y1="72" x2="160" y2="40" stroke="#388E3C" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="160" cy="38" r="7" fill="#FFD54F"/>
+      <!-- Big chibi eyes -->
+      <ellipse cx="100" cy="110" rx="18" ry="21" fill="#fff"><animate attributeName="ry" values="21;21;0;0;21;21" keyTimes="0;0.47;0.49;0.51;0.53;1" dur="3s" repeatCount="indefinite"/></ellipse>
+      <circle cx="105" cy="114" r="10" fill="#1a1a1a" clip-path="url(#cL)"/>
+      <circle cx="97" cy="104" r="5" fill="#fff" opacity="0.9"/>
+      <circle cx="103" cy="110" r="2.5" fill="#fff" opacity="0.6"/>
+      <ellipse cx="150" cy="110" rx="18" ry="21" fill="#fff"><animate attributeName="ry" values="21;21;0;0;21;21" keyTimes="0;0.47;0.49;0.51;0.53;1" dur="3s" repeatCount="indefinite"/></ellipse>
+      <circle cx="155" cy="114" r="10" fill="#1a1a1a" clip-path="url(#cR)"/>
+      <circle cx="147" cy="104" r="5" fill="#fff" opacity="0.9"/>
+      <circle cx="153" cy="110" r="2.5" fill="#fff" opacity="0.6"/>
+      <!-- Cheeks -->
+      <circle cx="75" cy="128" r="10" fill="#F48FB1" opacity="0.5"/>
+      <circle cx="175" cy="128" r="10" fill="#F48FB1" opacity="0.5"/>
+      <!-- Cat-like happy mouth -->
+      <path d="M110 140 Q118 148 125 140 Q132 148 140 140" stroke="#1a1a1a" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <p class="desc">Cloud-shaped fluffy monster made of overlapping circles. Antenna bobbles, cat-mouth smile, extra sparkly eyes.</p>
+</div>
+
+<!-- OPTION D: One-Eyed Cyclops Monster -->
+<div class="card">
+  <h2>Option D</h2>
+  <div class="style-tag">Cyclops Chibi — One Big Eye</div>
+  <div class="svg-container">
+    <svg viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <clipPath id="dE"><ellipse cx="125" cy="105" rx="26" ry="28"><animate attributeName="ry" values="28;28;0;0;28;28" keyTimes="0;0.47;0.49;0.51;0.53;1" dur="3s" repeatCount="indefinite"/></ellipse></clipPath>
+      </defs>
+      <!-- Horn -->
+      <ellipse cx="125" cy="25" rx="12" ry="24" fill="#A5D6A7"/>
+      <!-- Body - egg/teardrop -->
+      <ellipse cx="125" cy="145" rx="75" ry="88" fill="#4CAF50"/>
+      <!-- Belly -->
+      <ellipse cx="125" cy="170" rx="42" ry="38" fill="#81C784" opacity="0.4"/>
+      <!-- ONE big eye -->
+      <ellipse cx="125" cy="105" rx="26" ry="28" fill="#fff"><animate attributeName="ry" values="28;28;0;0;28;28" keyTimes="0;0.47;0.49;0.51;0.53;1" dur="3s" repeatCount="indefinite"/></ellipse>
+      <circle cx="130" cy="109" r="13" fill="#1a1a1a" clip-path="url(#dE)"/>
+      <circle cx="121" cy="98" r="6" fill="#fff" opacity="0.9"/>
+      <circle cx="128" cy="104" r="3" fill="#fff" opacity="0.6"/>
+      <!-- Cheeks -->
+      <circle cx="78" cy="130" r="11" fill="#FFAB91" opacity="0.45"/>
+      <circle cx="172" cy="130" r="11" fill="#FFAB91" opacity="0.45"/>
+      <!-- Happy wavy mouth -->
+      <path d="M95 150 Q110 168 125 155 Q140 168 155 150" stroke="#1a1a1a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <!-- Freckles -->
+      <circle cx="90" cy="145" r="3" fill="#388E3C" opacity="0.5"/>
+      <circle cx="160" cy="145" r="3" fill="#388E3C" opacity="0.5"/>
+      <circle cx="100" cy="155" r="2.5" fill="#388E3C" opacity="0.5"/>
+      <circle cx="150" cy="155" r="2.5" fill="#388E3C" opacity="0.5"/>
+      <!-- Tiny feet -->
+      <ellipse cx="100" cy="232" rx="16" ry="7" fill="#388E3C"/>
+      <ellipse cx="150" cy="232" rx="16" ry="7" fill="#388E3C"/>
+    </svg>
+  </div>
+  <p class="desc">Adorable cyclops with ONE huge expressive eye. Egg-shaped body, single horn, freckles, wiggly smile.</p>
+</div>
+
+<!-- OPTION E: Spiky Fun Monster -->
+<div class="card">
+  <h2>Option E</h2>
+  <div class="style-tag">Star Burst — Wild & Energetic</div>
+  <div class="svg-container">
+    <svg viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <clipPath id="eL"><ellipse cx="102" cy="108" rx="15" ry="18"><animate attributeName="ry" values="18;18;0;0;18;18" keyTimes="0;0.47;0.49;0.51;0.53;1" dur="3s" repeatCount="indefinite"/></ellipse></clipPath>
+        <clipPath id="eR"><ellipse cx="148" cy="108" rx="15" ry="18"><animate attributeName="ry" values="18;18;0;0;18;18" keyTimes="0;0.47;0.49;0.51;0.53;1" dur="3s" repeatCount="indefinite"/></ellipse></clipPath>
+      </defs>
+      <!-- Spikes radiating out -->
+      <polygon points="125,15 133,55 125,50 117,55" fill="#81C784"/>
+      <polygon points="200,50 170,75 168,67 162,72" fill="#81C784"/>
+      <polygon points="230,125 185,125 188,117 183,115" fill="#81C784"/>
+      <polygon points="200,200 170,175 168,183 162,178" fill="#81C784"/>
+      <polygon points="50,50 80,75 82,67 88,72" fill="#81C784"/>
+      <polygon points="20,125 65,125 62,117 67,115" fill="#81C784"/>
+      <polygon points="50,200 80,175 82,183 88,178" fill="#81C784"/>
+      <!-- Main round body -->
+      <circle cx="125" cy="130" r="65" fill="#4CAF50"/>
+      <!-- Belly -->
+      <circle cx="125" cy="145" r="35" fill="#81C784" opacity="0.35"/>
+      <!-- Eyes -->
+      <ellipse cx="102" cy="108" rx="15" ry="18" fill="#fff"><animate attributeName="ry" values="18;18;0;0;18;18" keyTimes="0;0.47;0.49;0.51;0.53;1" dur="3s" repeatCount="indefinite"/></ellipse>
+      <circle cx="106" cy="112" r="8" fill="#1a1a1a" clip-path="url(#eL)"/>
+      <circle cx="98" cy="103" r="4" fill="#fff" opacity="0.9"/>
+      <ellipse cx="148" cy="108" rx="15" ry="18" fill="#fff"><animate attributeName="ry" values="18;18;0;0;18;18" keyTimes="0;0.47;0.49;0.51;0.53;1" dur="3s" repeatCount="indefinite"/></ellipse>
+      <circle cx="152" cy="112" r="8" fill="#1a1a1a" clip-path="url(#eR)"/>
+      <circle cx="144" cy="103" r="4" fill="#fff" opacity="0.9"/>
+      <!-- Cheeks -->
+      <circle cx="77" cy="130" r="9" fill="#FFAB91" opacity="0.45"/>
+      <circle cx="173" cy="130" r="9" fill="#FFAB91" opacity="0.45"/>
+      <!-- Big open smile -->
+      <ellipse cx="125" cy="150" rx="20" ry="14" fill="#1a1a1a"/>
+      <ellipse cx="125" cy="146" rx="16" ry="6" fill="#fff"/>
+      <!-- Tongue -->
+      <ellipse cx="125" cy="158" rx="8" ry="5" fill="#E57373"/>
+    </svg>
+  </div>
+  <p class="desc">Spiky starburst monster — round body with wild spikes radiating out. Open mouth showing teeth and tongue. Chaotic energy!</p>
+</div>
+
+</div>
+
+<div class="instructions">
+  <p><strong>Tell me which monster you like: A, B, C, D, or E</strong></p>
+  <p>I'll use that style as the base for all 9 game characters.<br/>You can also say things like "C but with horns instead of antenna" — I'll iterate!</p>
+</div>
+
+</body>
+</html>

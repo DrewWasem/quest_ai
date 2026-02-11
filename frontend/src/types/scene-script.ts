@@ -7,16 +7,30 @@ export type Position = 'left' | 'center' | 'right' | 'top' | 'bottom' | 'off-lef
 export type MoveStyle = 'linear' | 'arc' | 'bounce' | 'float' | 'shake' | 'spin-in' | 'drop-in';
 
 export type ActorKey =
+  // Legacy 2D actors (kept for cache compatibility)
   | 'monster' | 'dog' | 'trex' | 'octopus' | 'robot'
-  | 'wizard' | 'kid' | 'fish' | 'squirrel';
+  | 'wizard' | 'kid' | 'fish' | 'squirrel'
+  // 3D KayKit characters
+  | 'knight' | 'barbarian' | 'mage' | 'ranger' | 'rogue' | 'druid' | 'engineer'
+  | 'skeleton_warrior' | 'skeleton_mage' | 'skeleton_rogue' | 'skeleton_minion' | 'skeleton_golem' | 'necromancer'
+  | 'space_ranger' | 'ninja' | 'clown' | 'witch' | 'vampire' | 'black_knight' | 'superhero' | 'caveman' | 'frost_golem' | 'survivalist';
 
 export type PropKey =
+  // Legacy 2D props
   | 'cake' | 'cake-giant' | 'cake-tiny' | 'rocket' | 'spacesuit'
   | 'moon' | 'flag' | 'plates' | 'soup-bowl' | 'toaster'
   | 'fridge' | 'desk' | 'pencil' | 'chair' | 'lunchbox'
   | 'guitar' | 'drums' | 'keyboard' | 'microphone'
   | 'pizza' | 'pizza-soggy' | 'river' | 'pillow-fort'
-  | 'bone' | 'balloon' | 'present' | 'stars' | 'fire-extinguisher';
+  | 'bone' | 'balloon' | 'present' | 'stars' | 'fire-extinguisher'
+  // 3D props (generic names — resolved to GLTF paths by ScenePlayer3D)
+  | 'torch' | 'barrel' | 'crate' | 'chest' | 'table' | 'bench'
+  | 'tree' | 'rock' | 'bush' | 'fence' | 'sign' | 'lamp'
+  | 'sword' | 'shield' | 'bow' | 'potion' | 'scroll'
+  | 'cake-3d' | 'cupcake' | 'bread' | 'pie'
+  | 'blanket' | 'basket' | 'plate' | 'cup' | 'bottle'
+  | 'candle' | 'book' | 'clock' | 'rug'
+  | 'slide' | 'swing' | 'sandbox';
 
 export type ReactionKey =
   | 'confetti-burst' | 'explosion-cartoon' | 'hearts-float'
@@ -24,8 +38,31 @@ export type ReactionKey =
   | 'fire-sneeze' | 'splash' | 'sparkle-magic' | 'sad-cloud';
 
 export type BackdropKey =
+  // Legacy 2D
   | 'party-room' | 'space' | 'wizard-kitchen'
-  | 'classroom' | 'underwater-stage' | 'city-street';
+  | 'classroom' | 'underwater-stage' | 'city-street'
+  // 3D environments
+  | 'dungeon' | 'space-base' | 'kitchen' | 'playground'
+  | 'park' | 'picnic' | 'restaurant' | 'forest';
+
+export type AnimationName =
+  // General
+  | 'Idle_A' | 'Idle_B' | 'Death_A' | 'Hit_A' | 'Hit_B' | 'Interact' | 'PickUp' | 'Spawn_Ground' | 'Throw'
+  // Movement
+  | 'Walking_A' | 'Walking_B' | 'Walking_C' | 'Walking_Backwards'
+  | 'Running_A' | 'Running_B'
+  | 'Jump_Start' | 'Jump_Idle' | 'Jump_Land' | 'Jump_Full_Short' | 'Jump_Full_Long'
+  // Combat
+  | 'Melee_1H_Attack_Chop' | 'Melee_1H_Attack_Spin'
+  // Simulation
+  | 'Cheering' | 'Waving' | 'Sit_Chair_Down' | 'Sit_Chair_Idle' | 'Lie_Down' | 'Lie_Idle'
+  | 'Push_Ups' | 'Headbutt'
+  // Special
+  | 'Skeletons_Awaken_Floor' | 'Skeletons_Taunt' | 'Skeletons_Death_Resurrect'
+  // Tools
+  | 'Chop' | 'Dig' | 'Hammer' | 'Fishing_Cast' | 'Fishing_Idle'
+  // Generic string fallback for custom anims
+  | string;
 
 export interface SpawnAction {
   type: 'spawn';
@@ -46,7 +83,7 @@ export interface MoveAction {
 export interface AnimateAction {
   type: 'animate';
   target: ActorKey;
-  anim: string;
+  anim: AnimationName;
   delay_ms?: number;
   duration_ms?: number;
 }

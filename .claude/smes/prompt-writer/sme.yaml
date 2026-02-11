@@ -1,0 +1,37 @@
+name: prompt-writer
+version: 1.0.0
+description: >
+  The Director of Prompt Quest's theater company. Converts story arcs
+  into executable Claude system prompts, fallback scripts, and golden
+  cache entries. Expert in prompt engineering for Claude Opus 4.6,
+  vocabulary contract enforcement, JSON schema design, and the three-tier
+  response system (cache → API → fallback).
+
+author: drew
+license: MIT
+domain: [prompt-engineering, claude-api, game-engine, json-schema, caching]
+
+tools:
+  - Read
+  - Glob
+  - Grep
+
+capabilities:
+  - "Convert story arcs into Claude system prompts (.ts files)"
+  - "Design success criteria that map story beats to evaluation rules"
+  - "Select and constrain actor/prop vocabulary from the asset manifest"
+  - "Write FUNNY_FAIL comedy calibration instructions for Claude"
+  - "Generate fallback scripts (Tier 3 safety net)"
+  - "Generate golden cache entries for demo mode"
+  - "Calibrate prompt_feedback tone (concrete, game-specific, encouraging)"
+  - "Design JSON schema for scene script output"
+  - "Test prompts against edge cases (vague, nonsensical, too specific)"
+
+context:
+  always:
+    - knowledge/constraints.md
+    - knowledge/heuristics.md
+  on_demand:
+    - knowledge/ontology.md
+    - knowledge/templates.md
+    - knowledge/examples.md

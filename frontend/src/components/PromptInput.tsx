@@ -1,47 +1,59 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { useGameStore } from '../stores/gameStore';
+import { useTTS } from '../hooks/useTTS';
 import VoiceButton from './VoiceButton';
 
 const MAX_INPUT_LENGTH = 300;
 
 const LOADING_MESSAGES = [
-  'The monster is getting ready\u2026',
+  'The adventurers are getting ready\u2026',
   'Setting up the scene\u2026',
   'This is gonna be good\u2026',
   'Hold on, something\u2019s happening\u2026',
   'Mixing up some magic\u2026',
+  'The skeleton is warming up\u2026',
+  'Loading the props\u2026',
 ];
 
 const TASK_PLACEHOLDERS: Record<string, string> = {
+  // 3D tasks
+  'skeleton-birthday': "Plan the skeleton's birthday! Who comes, what decorations, and what cake?",
+  'knight-space': "The knight is lost in space! How does he survive and what does he do?",
+  'mage-kitchen': "The kitchen is alive! How does the mage tame the stove, pot, and fridge?",
+  'barbarian-school': "The barbarian is at school! How does he fit in, make friends, and learn?",
+  'dungeon-concert': "Start a rock band! Who plays what instrument? What song do they play?",
+  'skeleton-pizza': "Deliver the pizza! How does the skeleton get there without falling apart?",
+  'adventurers-picnic': "Plan the perfect picnic! What food, where to sit, and what activities?",
+  // Legacy 2D tasks
   'monster-party': "How would you plan the monster's birthday party? Be specific!",
   'robot-pizza': 'How should the robot deliver the pizza? Describe the route and obstacles!',
   'wizard-kitchen': 'The kitchen is chaos! How do you fix the plates, soup, toaster, and fridge?',
   'dinosaur-school': 'The T-Rex is too big for school! How can you solve each problem?',
-  'dog-space': 'Plan the dog\'s space mission! What does the dog need to reach the moon?',
+  'dog-space': "Plan the dog's space mission! What does the dog need to reach the moon?",
   'octopus-band': 'Help the octopus start a rock band! What instruments, stage, and audience?',
 };
 
 const SUCCESS_STYLES = {
   FULL_SUCCESS: {
-    bg: 'bg-emerald-900/40 border-emerald-500/50',
-    text: 'text-emerald-100',
-    badge: 'bg-emerald-500/20 text-emerald-300',
+    bg: 'bg-quest-success/10 border-quest-success/40',
+    text: 'text-quest-text-dark',
+    badge: 'bg-quest-success/20 text-quest-success',
     label: 'Amazing!',
-    icon: '🌟',
+    icon: '\u{1F31F}',
   },
   PARTIAL_SUCCESS: {
-    bg: 'bg-amber-900/40 border-amber-500/50',
-    text: 'text-amber-100',
-    badge: 'bg-amber-500/20 text-amber-300',
+    bg: 'bg-quest-yellow/10 border-quest-yellow/40',
+    text: 'text-quest-text-dark',
+    badge: 'bg-quest-yellow/20 text-amber-600',
     label: 'Almost!',
-    icon: '💡',
+    icon: '\u{1F4A1}',
   },
   FUNNY_FAIL: {
-    bg: 'bg-orange-900/30 border-quest-orange/50',
-    text: 'text-orange-100',
-    badge: 'bg-quest-orange/20 text-orange-300',
+    bg: 'bg-quest-orange/10 border-quest-orange/40',
+    text: 'text-quest-text-dark',
+    badge: 'bg-quest-orange/20 text-quest-orange',
     label: 'Oops!',
-    icon: '😄',
+    icon: '\u{1F604}',
   },
 } as const;
 
@@ -57,6 +69,8 @@ export default function PromptInput() {
     error,
     clearError,
   } = useGameStore();
+
+  const { speak } = useTTS();
 
   const loadingMsgRef = useRef(LOADING_MESSAGES[0]);
   if (isLoading && loadingMsgRef.current === LOADING_MESSAGES[0]) {
@@ -77,50 +91,60 @@ export default function PromptInput() {
     }
   };
 
+  // Read narration aloud when a new script arrives
+  useEffect(() => {
+    if (lastScript?.narration) {
+      speak(lastScript.narration);
+    }
+  }, [lastScript, speak]);
+
   const style = lastScript ? SUCCESS_STYLES[lastScript.success_level] ?? SUCCESS_STYLES.FUNNY_FAIL : null;
 
   return (
-    <div className="relative px-5 py-4 bg-quest-panel/90 backdrop-blur-sm">
+    <div className="relative px-5 py-4 bg-quest-panel-bg/90 backdrop-blur-sm">
       {/* Top glow line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-quest-border to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-quest-purple/30 to-transparent" />
 
       {/* Narration result */}
       {lastScript && style && (
-        <div className={`bubble-result mb-4 ${style.bg} ${style.text}`}>
+        <div className={`bubble-result mb-4 animate-slide-up border rounded-game-md p-4 ${style.bg} ${style.text}`}>
           <div className="flex items-center justify-between mb-2">
-            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-heading font-semibold ${style.badge}`}>
+            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-heading font-semibold animate-bounce-in ${style.badge}`}>
               <span>{style.icon}</span> {style.label}
             </span>
             {lastSource && (
-              <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/5 text-white/30">
+              <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-quest-purple/10 text-quest-text-muted">
                 {lastSource}
               </span>
             )}
           </div>
           <p className="font-body font-bold text-lg leading-relaxed">{lastScript.narration}</p>
           {lastScript.prompt_feedback && (
-            <p className="mt-3 text-sm text-quest-orange border-t border-white/10 pt-3 leading-relaxed font-semibold">
+            <p className="mt-3 text-sm text-quest-orange border-t border-quest-purple/10 pt-3 leading-relaxed font-semibold">
               {lastScript.prompt_feedback}
             </p>
           )}
           {lastScript.missing_elements && lastScript.missing_elements.length > 0 && (
             <div className="mt-2 flex flex-wrap items-center gap-1.5">
-              <span className="text-xs font-semibold opacity-70">Try adding:</span>
+              <span className="text-xs font-semibold text-quest-text-light">Try adding:</span>
               {lastScript.missing_elements.map((el: string) => (
-                <span key={el} className="text-xs px-2 py-0.5 rounded-full bg-white/10 font-medium">
+                <span key={el} className="text-xs px-2 py-0.5 rounded-full bg-quest-purple/10 text-quest-purple font-medium animate-scale-in">
                   {el}
                 </span>
               ))}
             </div>
+          )}
+          {lastScript.success_level === 'FUNNY_FAIL' && (
+            <p className="mt-2 text-xs text-quest-text-muted italic">That was funny! Try being more specific this time.</p>
           )}
         </div>
       )}
 
       {/* Error display */}
       {error && (
-        <div className="bubble-result mb-4 bg-red-900/30 border-red-500/40 text-red-200 flex justify-between items-center">
+        <div className="bubble-result mb-4 bg-quest-orange/10 border border-quest-orange/40 text-quest-text-dark rounded-game-md p-4 flex justify-between items-center">
           <p className="text-sm">{error}</p>
-          <button onClick={clearError} className="text-red-400 hover:text-red-200 ml-3 text-lg leading-none">&times;</button>
+          <button onClick={clearError} className="text-quest-orange hover:text-quest-text-dark ml-3 text-lg leading-none">&times;</button>
         </div>
       )}
 
@@ -131,7 +155,7 @@ export default function PromptInput() {
             value={userInput}
             onChange={(e) => setInput(e.target.value.slice(0, MAX_INPUT_LENGTH))}
             onKeyDown={handleKeyDown}
-            placeholder={TASK_PLACEHOLDERS[currentTask] ?? TASK_PLACEHOLDERS['monster-party']}
+            placeholder={TASK_PLACEHOLDERS[currentTask] ?? TASK_PLACEHOLDERS['skeleton-birthday']}
             disabled={isLoading}
             rows={2}
             maxLength={MAX_INPUT_LENGTH}
@@ -141,7 +165,7 @@ export default function PromptInput() {
             <VoiceButton onTranscript={setInput} disabled={isLoading} />
           </div>
           {userInput.length > MAX_INPUT_LENGTH * 0.8 && (
-            <div className="absolute right-14 bottom-2.5 text-[10px] text-quest-text-dim font-mono">
+            <div className="absolute right-14 bottom-2.5 text-[10px] text-quest-text-muted font-mono">
               {userInput.length}/{MAX_INPUT_LENGTH}
             </div>
           )}
@@ -149,12 +173,8 @@ export default function PromptInput() {
         <button
           type="submit"
           disabled={isLoading || !userInput.trim()}
-          className="btn-game bg-gradient-to-br from-quest-accent to-quest-purple text-white
-                     border-2 border-quest-accent/50 shadow-glow-purple
-                     hover:from-purple-400 hover:to-purple-600
-                     disabled:from-gray-600 disabled:to-gray-700 disabled:border-gray-600 disabled:text-gray-400
-                     disabled:shadow-none
-                     text-lg px-8 py-4 min-w-[160px] whitespace-nowrap"
+          className="btn-primary text-lg px-8 py-4 min-w-[160px] whitespace-nowrap
+                     disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
         >
           {isLoading ? (
             <span className="flex items-center gap-2">

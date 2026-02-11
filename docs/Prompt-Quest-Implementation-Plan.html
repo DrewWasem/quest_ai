@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Quest – Complete Implementation Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05060a;--s1:#0c0e17;--s2:#121521;--s3:#191d2d;--border:#252a40;--border2:#353b58;--text:#dde0f0;--dim:#6b7199;--mid:#8e94b8;--gold:#f5c542;--mint:#3ee8b5;--coral:#ff5a7e;--sky:#4da8ff;--violet:#9b7aff;--peach:#ffab6b;--lime:#a8e034;--hot:#ff3366;--cyan:#00d4ff;--teal:#2dd4a8;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);line-height:1.72;-webkit-font-smoothing:antialiased;}
+.hero{position:relative;padding:3.5rem 2rem 2.5rem;text-align:center;overflow:hidden;border-bottom:1px solid var(--border);}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 400px at 25% 60%,rgba(59,232,181,.06),transparent),radial-gradient(ellipse 500px 350px at 75% 40%,rgba(245,197,66,.05),transparent),radial-gradient(ellipse 400px 300px at 50% 20%,rgba(155,122,255,.04),transparent);pointer-events:none;}
+.hero-tag{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.2em;color:var(--mint);display:block;margin-bottom:.5rem;}
+.hero h1{font-family:'Instrument Serif',serif;font-size:2.6rem;font-weight:400;letter-spacing:-.02em;line-height:1.15;background:linear-gradient(135deg,var(--gold) 0%,var(--peach) 40%,var(--coral) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-sub{color:var(--dim);font-size:.82rem;max-width:700px;margin:.6rem auto 0;line-height:1.6;}
+.hero-stats{display:flex;justify-content:center;gap:2rem;margin-top:1.5rem;flex-wrap:wrap;}
+.hs{text-align:center;}.hs-num{font-family:'Geist Mono',monospace;font-size:1.4rem;font-weight:600;color:var(--gold);}.hs-label{font-size:.58rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);display:block;margin-top:.1rem;}
+.content{max-width:1140px;margin:0 auto;padding:2rem;}
+.section{margin:2.5rem 0;}.section-tag{font-size:.54rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--mint);margin-bottom:.15rem;display:block;}
+.section h2{font-family:'Instrument Serif',serif;font-size:1.55rem;font-weight:400;letter-spacing:-.01em;margin-bottom:.6rem;padding-bottom:.45rem;border-bottom:1px solid var(--border);}
+.section h3{font-size:.88rem;font-weight:700;margin:1.3rem 0 .4rem;color:var(--gold);}
+.section h4{font-size:.78rem;font-weight:600;margin:1rem 0 .3rem;color:var(--sky);}
+p,li{font-size:.82rem;margin-bottom:.4rem;}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;margin:.6rem 0;}
+.card-title{font-size:.76rem;font-weight:700;margin-bottom:.35rem;display:flex;align-items:center;gap:.4rem;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;}
+table{width:100%;border-collapse:collapse;margin:.75rem 0;font-size:.74rem;}
+th{background:var(--s2);text-align:left;padding:.5rem .65rem;font-weight:600;font-size:.58rem;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);border-bottom:2px solid var(--border);}
+td{padding:.45rem .65rem;border-bottom:1px solid rgba(37,42,64,.6);vertical-align:top;}
+tr:hover td{background:rgba(255,255,255,.015);}
+.code{background:#080a12;border:1px solid var(--border);border-radius:8px;padding:.8rem 1rem;margin:.6rem 0;font-family:'Geist Mono',monospace;font-size:.68rem;line-height:1.75;overflow-x:auto;white-space:pre-wrap;}
+.code .c{color:#4a5070;}.code .k{color:var(--sky);}.code .s{color:var(--peach);}.code .n{color:var(--mint);}.code .v{color:var(--violet);}
+.pill{display:inline-block;font-size:.52rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.15em .5em;border-radius:99px;margin-right:.15rem;vertical-align:middle;}
+.p-drew{background:rgba(77,168,255,.1);color:var(--sky);border:1px solid rgba(77,168,255,.25);}
+.p-dani{background:rgba(255,171,107,.1);color:var(--peach);border:1px solid rgba(255,171,107,.25);}
+.p-both{background:rgba(155,122,255,.1);color:var(--violet);border:1px solid rgba(155,122,255,.25);}
+.p-crit{background:rgba(255,90,126,.08);color:var(--coral);border:1px solid rgba(255,90,126,.2);}
+.p-new{background:rgba(255,51,102,.1);color:var(--hot);border:1px solid rgba(255,51,102,.25);}
+.p-pack{background:rgba(155,122,255,.08);color:var(--violet);border:1px solid rgba(155,122,255,.2);}
+.callout{border-radius:8px;padding:.75rem 1rem;margin:.75rem 0;font-size:.8rem;}
+.co-gold{background:rgba(245,197,66,.03);border-left:3px solid var(--gold);}
+.co-mint{background:rgba(62,232,181,.03);border-left:3px solid var(--mint);}
+.co-coral{background:rgba(255,90,126,.03);border-left:3px solid var(--coral);}
+.co-sky{background:rgba(77,168,255,.03);border-left:3px solid var(--sky);}
+.tl{position:relative;padding-left:1.5rem;margin:.5rem 0;}
+.tl::before{content:'';position:absolute;left:.35rem;top:.3rem;bottom:.3rem;width:2px;background:var(--border);border-radius:2px;}
+.tl-item{position:relative;margin:.6rem 0;padding-left:.5rem;}
+.tl-item::before{content:'';position:absolute;left:-1.3rem;top:.55rem;width:10px;height:10px;border-radius:50%;border:2px solid var(--gold);background:var(--bg);}
+.tl-day{font-family:'Geist Mono',monospace;font-size:.62rem;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;}
+.tl-title{font-size:.8rem;font-weight:700;margin:.1rem 0;}
+.tl-body{font-size:.74rem;color:var(--dim);}
+.divider{height:1px;background:linear-gradient(to right,transparent,var(--border),transparent);margin:2.5rem 0;}
+.task-mini{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:.65rem .8rem;display:flex;gap:.6rem;align-items:flex-start;}
+.task-mini-emoji{font-size:1.6rem;line-height:1;}
+.task-mini-info{flex:1;}
+.task-mini-title{font-size:.76rem;font-weight:700;}
+.task-mini-desc{font-size:.68rem;color:var(--dim);line-height:1.5;}
+@media(max-width:768px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}.hero h1{font-size:1.8rem;}.content{padding:1rem;}}
+</style>
+</head>
+<body>
+<div class="hero">
+  <span class="hero-tag">Claude Code Hackathon · Feb 10–16, 2026 · $100K Grand Prize</span>
+  <h1>Prompt Quest: Complete Implementation Plan</h1>
+  <p class="hero-sub">A 3D educational game teaching kids aged 5–8 prompt engineering through comedy. Powered by Claude Opus 4.6, rendered with Three.js, built with pre-purchased KayKit + Tiny Treats assets. The single source of truth for building the entire game.</p>
+  <div class="hero-stats">
+    <div class="hs"><span class="hs-num">$119</span><span class="hs-label">Asset Investment</span></div>
+    <div class="hs"><span class="hs-num">34+</span><span class="hs-label">Characters</span></div>
+    <div class="hs"><span class="hs-num">700+</span><span class="hs-label">3D Models</span></div>
+    <div class="hs"><span class="hs-num">161</span><span class="hs-label">Animations</span></div>
+    <div class="hs"><span class="hs-num">7</span><span class="hs-label">Tasks</span></div>
+    <div class="hs"><span class="hs-num">6</span><span class="hs-label">Build Days</span></div>
+  </div>
+</div>
+<div class="content">
+
+<!-- ═══ LAYER 1: ASSET INVENTORY ═══ -->
+<div class="section">
+<span class="section-tag">Layer 1</span>
+<h2>Complete Purchased Asset Inventory</h2>
+<p>Two bundles: <strong>The Complete KayKit</strong> ($99) + <strong>Tiny Treats Collection 1</strong> ($19.95). Every pack includes SOURCE tier (.blend), GLTF/FBX/OBJ exports, CC0 license. Same low-poly style, 1024×1024 gradient atlas, identical scale.</p>
+
+<h3>KayKit Complete — 19 Packs ($99)</h3>
+<div class="grid-3">
+<div class="card"><div class="card-title">🗡️ Adventurers</div><p>5 rigged/animated characters: Rogue, Barbarian, Mage, Knight, Archer. 25+ weapons and accessories.</p></div>
+<div class="card"><div class="card-title">💀 Skeletons</div><p>Rigged/animated skeleton characters with unique Idle_Skeleton, Walk_Skeleton, Attack_Skeleton, Die_Skeleton animations.</p></div>
+<div class="card"><div class="card-title">🎬 Character Animations</div><p><strong>161 skeletal animations</strong> compatible with ALL KayKit humanoid characters. Movement, social, combat, tools, reactions.</p></div>
+<div class="card"><div class="card-title"><span class="pill p-new">Paid</span> Mystery Series 4</div><p><strong>15+ characters</strong>: Orc Raider, Driver+Car, Monster Costume, Werewolf, Animatronic, Action Figure, Space Ranger, Ninja, Survivalist, Paladin, Clown, Robots (×2). All compatible with 161 anims.</p></div>
+<div class="card"><div class="card-title"><span class="pill p-new">Paid</span> Mystery Series 5</div><p><strong>14+ characters</strong>: Combat Mech, Superhero, Black Knight (large), Vampire, Witch, Helpers (×2), Frost Golem (large), Caveman, Clanker (large), Protagonists (×2), Hiker, Tiefling.</p></div>
+<div class="card"><div class="card-title">🏰 Dungeon Remastered</div><p>Modular dungeon: walls, floors, doors, gates, traps, torches, chests, barrels, chains, stairs, pillars.</p></div>
+<div class="card"><div class="card-title">⬡ Medieval Hexagon</div><p>200+ hex tiles, medieval buildings, castle walls, towers, gates, village props.</p></div>
+<div class="card"><div class="card-title">🌲 Forest Nature</div><p>Trees, rocks, grass, flowers, mushrooms, bushes, logs, stumps.</p></div>
+<div class="card"><div class="card-title">🏃 Platformer Pack</div><p>Platforms, ramps, obstacles, traps, springs, coins, checkpoints.</p></div>
+<div class="card"><div class="card-title">🚀 Space Base Bits</div><p>48+ modules: control panels, airlocks, corridors, landing pads, antennas, monitors.</p></div>
+<div class="card"><div class="card-title">🏙️ City Builder Bits</div><p>Buildings, roads, vehicles, traffic lights, street lamps, benches, storefronts.</p></div>
+<div class="card"><div class="card-title">🍽️ Restaurant Bits</div><p>140+ kitchen/food assets: counters, stoves, ovens, plates, cups, raw/cooked/chopped food.</p></div>
+<div class="card"><div class="card-title">🪑 Furniture Bits</div><p>Chairs, tables, sofas, beds, shelves, lamps, rugs, desks, cabinets.</p></div>
+<div class="card"><div class="card-title">⛏️ Resource Bits</div><p>Ores, gems, wood, stone, rope, cloth, ingots, crystals, crafting materials.</p></div>
+<div class="card"><div class="card-title">🧱 Block Bits</div><p>Minecraft-style blocks, terrain cubes, colored blocks, building blocks.</p></div>
+<div class="card"><div class="card-title">🎃 Halloween Bits</div><p>Cemetery, pumpkins, ghosts, coffins, cobwebs, cauldrons, spooky trees, bats.</p></div>
+<div class="card"><div class="card-title">🎄 Holiday Bits</div><p>Presents, garlands, decorations, wreaths, candy canes, stockings.</p></div>
+<div class="card"><div class="card-title">🔨 RPG Tools Bits</div><p>Shovels, pickaxes, fishing rods, hammers, lockpicks, spoons, lanterns.</p></div>
+<div class="card"><div class="card-title">📦 Prototype Bits</div><p>Geometric shapes, primitives, whitebox prototyping assets.</p></div>
+</div>
+
+<h3>Tiny Treats Collection 1 — 12 Packs ($19.95)</h3>
+<div class="grid-3">
+<div class="card"><div class="card-title">🧺 Pleasant Picnic</div><p>34+ models: 3 patterned blankets, 2 baskets, serving trays, food, decorations.</p></div>
+<div class="card"><div class="card-title">🏠 Homely House</div><p>House exterior, door, windows, roof, chimney, garden props, fences, mailbox.</p></div>
+<div class="card"><div class="card-title">🌳 Pretty Park</div><p>Park benches, lamp posts, fences, fountain, pathways, trees, flowerbeds.</p></div>
+<div class="card"><div class="card-title">🎮 Fun Playground</div><p>Swings, slides, sandbox, climbing frames, see-saw, merry-go-round.</p></div>
+<div class="card"><div class="card-title">🧁 Baked Goods</div><p>Cupcakes, donuts, bread, croissants, cakes, cookies, wedding cake.</p></div>
+<div class="card"><div class="card-title">🍳 Charming Kitchen</div><p>Kitchen cabinets, counters, sink, fridge, stove, pots, pans, utensils.</p></div>
+<div class="card"><div class="card-title">🏪 Bakery Building</div><p>Bakery exterior, awning, display window, signage, outdoor seating.</p></div>
+<div class="card"><div class="card-title">🍰 Bakery Interior</div><p>Counters, display cases, bread racks, cash register, shelving.</p></div>
+<div class="card"><div class="card-title">🛁 Bubbly Bathroom</div><p>Bathtub, toilet, sink, mirror, soap, towels, shower, accessories.</p></div>
+<div class="card"><div class="card-title">🪴 House Plants</div><p>Potted plants, succulents, hanging planters, terrariums.</p></div>
+<div class="card"><div class="card-title">🛏️ Playful Bedroom</div><p>Bed, nightstand, toys, wardrobe, desk, rug, kids room items.</p></div>
+<div class="card"><div class="card-title">🛋️ Lovely Living Room</div><p>Sofa, coffee table, bookshelf, TV, rug, lamps, fireplace.</p></div>
+</div>
+
+<div class="callout co-gold">
+<strong>Purchased Bonus:</strong> Mystery Series 4 & 5 unlock 29+ additional characters. Space Ranger for the space task. Witch for magic tasks. Clown for comedy. Robots for sci-fi. Monster Costume — a person in a monster suit, perfect for a kids' game. All use the exact same rig and accept the same 161 animations.
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ LAYER 2: ARCHITECTURE ═══ -->
+<div class="section">
+<span class="section-tag">Layer 2</span>
+<h2>Technical Architecture</h2>
+
+<h3>Core Principle: Assembler, Never Renderer</h3>
+<p>Claude writes scene scripts (JSON). The engine places, animates, and sequences pre-built assets. Claude never generates images or 3D content — it only references assets that exist in the vocabulary contract. This makes the demo reliable.</p>
+
+<h3>Tech Stack</h3>
+<div class="grid-2">
+<div class="card"><div class="card-title">Frontend</div>
+<p><strong>React 18 + TypeScript + Vite</strong> — UI shell, chat, task selector, progress</p>
+<p><strong>Three.js + GLTFLoader</strong> — 3D renderer in React via canvas ref</p>
+<p><strong>Three.js AnimationMixer</strong> — 161 skeletal anims with crossFadeTo</p>
+<p><strong>Zustand</strong> — state (task, stars, badges, mode)</p>
+<p><strong>Lottie-web</strong> — reaction overlays on HTML div over canvas</p>
+</div>
+<div class="card"><div class="card-title">Backend / AI</div>
+<p><strong>Claude Opus 4.6</strong> — scene script generation from child's prompt</p>
+<p><strong>Golden Response Cache</strong> — 20–30 pre-computed responses per task, fuzzy-matched</p>
+<p><strong>Anthropic SDK</strong> — API calls with 8s timeout + fallback chain</p>
+<p><strong>Vercel</strong> — deployment (static React + serverless API proxy)</p>
+<p><strong>pnpm</strong> — package manager. TypeScript strict. 2-space indent.</p>
+</div>
+</div>
+
+<h3>System Flow</h3>
+<div class="code"><span class="c">// Complete request → render pipeline</span>
+
+<span class="k">Child types/speaks prompt</span>
+  → React captures input
+  → <span class="v">ResponseResolver</span> checks Golden Cache (fuzzy match, Levenshtein ≤ 0.3)
+    → <span class="n">HIT</span>: return cached SceneScript instantly (&lt;5ms)
+    → <span class="n">MISS</span>: call Claude Opus 4.6 API (8s timeout)
+      → <span class="n">SUCCESS</span>: parse JSON, validate against VocabularyContract
+      → <span class="n">TIMEOUT/ERROR</span>: return hardcoded funny fallback
+  → SceneScript → <span class="v">SceneScriptPlayer</span> sequences actions:
+    → <span class="k">spawn</span>: load GLB → scene at position
+    → <span class="k">animate</span>: AnimationMixer.clipAction(name).play()
+    → <span class="k">move</span>: tween position over duration
+    → <span class="k">react</span>: trigger Lottie overlay
+    → <span class="k">sound</span>: play audio buffer
+    → <span class="k">camera</span>: tween camera position/lookAt
+  → Display narration text + star rating → Update Zustand state</div>
+
+<h3>Scene Script Schema</h3>
+<div class="code">interface <span class="v">SceneScript</span> {
+  <span class="k">success_level</span>: <span class="s">"FULL_SUCCESS"</span> | <span class="s">"PARTIAL_SUCCESS"</span> | <span class="s">"FUNNY_FAIL"</span>;
+  <span class="k">narration</span>: string;          <span class="c">// ≤25 words, funny, read via TTS</span>
+  <span class="k">stars</span>: <span class="n">1</span> | <span class="n">2</span> | <span class="n">3</span>;
+  <span class="k">actions</span>: <span class="v">SceneAction</span>[];     <span class="c">// max 8 per response</span>
+}
+
+interface <span class="v">SceneAction</span> {
+  <span class="k">type</span>: <span class="s">"spawn"</span>|<span class="s">"animate"</span>|<span class="s">"move"</span>|<span class="s">"remove"</span>|<span class="s">"react"</span>|<span class="s">"sound"</span>|<span class="s">"camera"</span>|<span class="s">"light"</span>;
+  <span class="k">actor</span>?: string;     <span class="c">// must exist in VocabularyContract</span>
+  <span class="k">anim</span>?: string;      <span class="c">// one of 161 named clips</span>
+  <span class="k">position</span>?: string;  <span class="c">// "left"|"center"|"right"|"back-left"|[x,y,z]</span>
+  <span class="k">effect</span>?: string;    <span class="c">// Lottie reaction name</span>
+  <span class="k">delay_ms</span>?: number;  <span class="c">// sequencing delay</span>
+  <span class="k">duration_ms</span>?: number;
+}</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ LAYER 3: THE 7 TASKS ═══ -->
+<div class="section">
+<span class="section-tag">Layer 3</span>
+<h2>The 7 Outrageous Tasks</h2>
+<p>Comedy formula: <strong>Wrong character + Wrong place + Wrong tools = Maximum chaos.</strong></p>
+
+<div class="grid-2">
+<div class="task-mini"><div class="task-mini-emoji">💀🎂</div><div class="task-mini-info"><div class="task-mini-title">1. Skeleton's Surprise Birthday <span class="pill p-dani">Magic 5yo</span></div><div class="task-mini-desc">Dead 300 years. Just learned birthdays exist. Cake falls through ribcage. Guests draw weapons.<br><strong>Packs:</strong> Skeletons, Adventurers, Dungeon Remastered, Holiday, Halloween, Baked Goods, Furniture, Resource</div></div></div>
+<div class="task-mini"><div class="task-mini-emoji">🏰🚀</div><div class="task-mini-info"><div class="task-mini-title">2. Knight's Accidental Space Mission <span class="pill p-dani">Magic 5yo</span></div><div class="task-mini-desc">Knight stumbles through portal to space base. Swings sword at control panel. Shield = space helmet.<br><strong>Packs:</strong> Adventurers, Space Base, Platformer, RPG Tools, Block. <span class="pill p-new">+Space Ranger</span></div></div></div>
+<div class="task-mini"><div class="task-mini-emoji">🧙🧁</div><div class="task-mini-info"><div class="task-mini-title">3. Mage vs. The Cute Kitchen <span class="pill p-drew">Explorer 8yo</span></div><div class="task-mini-desc">Mage banished to kitchen. Must cook WITHOUT magic. Magic leaks — cupcakes multiply, fridge = dungeon portal.<br><strong>Packs:</strong> Adventurers, Skeletons, Charming Kitchen, Bakery Interior, Restaurant, Baked Goods, RPG Tools, Dungeon. <span class="pill p-new">+Witch</span></div></div></div>
+<div class="task-mini"><div class="task-mini-emoji">⚔️🏫</div><div class="task-mini-info"><div class="task-mini-title">4. Barbarian's First Day of School <span class="pill p-drew">Explorer 8yo</span></div><div class="task-mini-desc">7-foot barbarian. Chair broke. Can't hold pencil. Enters through window. Uses chalk on wall.<br><strong>Packs:</strong> Adventurers (all), Fun Playground, Homely House, Furniture, Forest Nature, RPG Tools, Restaurant, Pleasant Picnic, Block, Playful Bedroom</div></div></div>
+<div class="task-mini"><div class="task-mini-emoji">🗡️🎸</div><div class="task-mini-info"><div class="task-mini-title">5. Dungeon Rock Concert <span class="pill p-dani">Magic 5yo</span></div><div class="task-mini-desc">Adventurers start a band. Dungeon venue. Skeleton audience. Mage pyrotechnics (too much).<br><strong>Packs:</strong> All 5 Adventurers, Skeletons, Dungeon Remastered, Block, Resource. <span class="pill p-new">+Clown</span></div></div></div>
+<div class="task-mini"><div class="task-mini-emoji">💀🍕</div><div class="task-mini-info"><div class="task-mini-title">6. Skeleton Pizza Delivery <span class="pill p-drew">Explorer 8yo</span></div><div class="task-mini-desc">Skeleton delivery driver. Keeps falling apart. Arm falls off. Customers scream. Shield = pizza box lid.<br><strong>Packs:</strong> Skeletons, Adventurers, City Builder, Pretty Park, Homely House, Forest Nature, Restaurant, Platformer, Resource</div></div></div>
+<div class="task-mini"><div class="task-mini-emoji">🧺⚔️</div><div class="task-mini-info"><div class="task-mini-title">7. The Adventurers' Disastrous Picnic <span class="pill p-dani">Magic 5yo</span></div><div class="task-mini-desc">5 adventurers try "something normal." Each has a different dysfunction. Knight vs blanket. Barbarian vs basket. Mage vs lemonade.<br><strong>Packs:</strong> All 5 Adventurers, Pleasant Picnic ⭐, Pretty Park, Forest Nature, House Plants, Baked Goods, Restaurant, RPG Tools, Resource</div></div></div>
+</div>
+
+<h3>Asset Cross-Reference Matrix</h3>
+<table>
+<tr><th>Pack</th><th>T1💀🎂</th><th>T2🏰🚀</th><th>T3🧙🧁</th><th>T4⚔️🏫</th><th>T5🗡️🎸</th><th>T6💀🍕</th><th>T7🧺⚔️</th></tr>
+<tr><td>Adventurers</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>—</td><td>✅</td></tr>
+<tr><td>Skeletons</td><td>⭐</td><td>—</td><td>✅</td><td>—</td><td>✅</td><td>⭐</td><td>—</td></tr>
+<tr><td>Series 4/5 Bonus</td><td>—</td><td>✅</td><td>✅</td><td>—</td><td>✅</td><td>—</td><td>—</td></tr>
+<tr><td>Dungeon Remastered</td><td>✅</td><td>—</td><td>✅</td><td>—</td><td>✅</td><td>—</td><td>—</td></tr>
+<tr><td>Space Base</td><td>—</td><td>⭐</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>City Builder</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✅</td><td>—</td></tr>
+<tr><td>Restaurant</td><td>—</td><td>—</td><td>✅</td><td>✅</td><td>—</td><td>✅</td><td>✅</td></tr>
+<tr><td>Forest Nature</td><td>—</td><td>—</td><td>—</td><td>✅</td><td>—</td><td>✅</td><td>✅</td></tr>
+<tr><td>Furniture</td><td>✅</td><td>—</td><td>✅</td><td>✅</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Platformer</td><td>—</td><td>✅</td><td>—</td><td>—</td><td>—</td><td>✅</td><td>—</td></tr>
+<tr><td>Holiday</td><td>✅</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Halloween</td><td>✅</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>RPG Tools</td><td>—</td><td>✅</td><td>✅</td><td>✅</td><td>—</td><td>—</td><td>✅</td></tr>
+<tr><td>Resource</td><td>✅</td><td>—</td><td>—</td><td>—</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>Block</td><td>—</td><td>✅</td><td>—</td><td>✅</td><td>✅</td><td>—</td><td>—</td></tr>
+<tr><td>Pleasant Picnic (TT)</td><td>—</td><td>—</td><td>—</td><td>✅</td><td>—</td><td>—</td><td>⭐</td></tr>
+<tr><td>Charming Kitchen (TT)</td><td>—</td><td>—</td><td>⭐</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Pretty Park (TT)</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✅</td><td>✅</td></tr>
+<tr><td>Fun Playground (TT)</td><td>—</td><td>—</td><td>—</td><td>⭐</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Homely House (TT)</td><td>—</td><td>—</td><td>—</td><td>✅</td><td>—</td><td>✅</td><td>—</td></tr>
+<tr><td>Baked Goods (TT)</td><td>✅</td><td>—</td><td>✅</td><td>—</td><td>—</td><td>—</td><td>✅</td></tr>
+<tr><td>House Plants (TT)</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✅</td></tr>
+<tr><td>Bakery Interior (TT)</td><td>—</td><td>—</td><td>✅</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Playful Bedroom (TT)</td><td>—</td><td>—</td><td>—</td><td>✅</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Lovely Living Room (TT)</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Bakery Building (TT)</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✅</td><td>—</td></tr>
+</table>
+<p style="font-size:.7rem;color:var(--dim);">⭐ = featured star pack. ✅ = used. — = not used. Every KayKit & TT pack is used in at least one task.</p>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ LAYER 4: 3D ENGINE ═══ -->
+<div class="section">
+<span class="section-tag">Layer 4</span>
+<h2>Three.js 3D Engine Implementation</h2>
+
+<h3>Core Modules (4 files, ~600 lines total)</h3>
+<div class="grid-2">
+<div class="card"><div class="card-title">SceneManager.ts</div>
+<p>Three.js Scene, PerspectiveCamera (45° FOV), WebGLRenderer (antialias, shadows, SRGB). Warm lighting rig: AmbientLight(0xffeedd, 0.6) + DirectionalLight(0xffffff, 1.0). Camera at (0, 4, 8) looking at (0, 1, 0). Per-task camera presets in scene configs. Resize handler. Render loop.</p></div>
+<div class="card"><div class="card-title">AssetLoader.ts</div>
+<p>GLTFLoader with Map cache. preloadTask(taskId) loads all characters, props, environments from manifest. Clone-on-use pattern: cache originals, clone() for scene instances. Progress callback for loading bar UI.</p></div>
+<div class="card"><div class="card-title">AnimationController.ts</div>
+<p>AnimationMixer per character. Loads 161 clips from shared animation GLB. play(name, fadeIn=0.25) with crossFadeTo transitions. update(delta) called in render loop. Fallback to Idle if clip not found (never crashes).</p></div>
+<div class="card"><div class="card-title">SceneScriptPlayer.ts</div>
+<p>Takes SceneScript JSON, executes actions sequentially with delay_ms timing. spawn → load + position model. animate → play clip. move → tween position. react → trigger Lottie. sound → play audio. camera → tween camera. Emits "script-complete" event when done.</p></div>
+</div>
+
+<h3>Animation Categories (161 clips)</h3>
+<table>
+<tr><th>Category</th><th>Clips</th><th>Comedy Use</th></tr>
+<tr><td>Movement</td><td>Idle, Walk, Run, Jump, Crawl, Sneak, Dodge, Crouch</td><td>Chase scenes, stealth, comedy stumbles</td></tr>
+<tr><td>Social</td><td>Wave, Cheer, Sit, LieDown, Interact</td><td>Success celebrations, picnic sitting, gift-giving</td></tr>
+<tr><td>Combat</td><td>Melee_OneHand, Melee_TwoHand, Melee_Unarmed, Aim_Bow, Block, MagicCast</td><td>Misused: axe opens basket, shield blocks wind, magic leaks</td></tr>
+<tr><td>Tools</td><td>Dig, Fish, Hammer, Pickaxe</td><td>RPG tool interactions, fishing distraction</td></tr>
+<tr><td>Reactions</td><td>GetHit, Die, Spawn, Respawn</td><td>Chair breaks (Die), cupcake to face (GetHit)</td></tr>
+<tr><td>Skeleton</td><td>Idle_Skeleton, Walk_Skeleton, GetHit_Skeleton, Die_Skeleton</td><td>Falling apart, head spinning, bone drops</td></tr>
+</table>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ LAYER 5: CLAUDE INTEGRATION ═══ -->
+<div class="section">
+<span class="section-tag">Layer 5</span>
+<h2>Claude Opus 4.6 Integration</h2>
+
+<h3>System Prompt Template (Per-Task)</h3>
+<div class="code"><span class="c">// Each task gets its own system prompt with only its available assets</span>
+
+You are the game engine for <span class="s">"Prompt Quest,"</span> a children's educational game.
+A child (age 5-7) is trying to help [TASK DESCRIPTION].
+
+<span class="k">CHARACTERS:</span> [task-specific character list]
+<span class="k">PROPS:</span> [task-specific prop list]
+<span class="k">ANIMATIONS:</span> [task-specific subset of 161 anims]
+<span class="k">REACTIONS:</span> confetti-burst, explosion-cartoon, sparkle-magic, sad-cloud, etc.
+<span class="k">POSITIONS:</span> left, center, right, back-left, back-right
+
+<span class="k">EVALUATION:</span>
+- FUNNY_FAIL: generic prompt, addresses 0-1 problems
+- PARTIAL_SUCCESS: addresses 2-3 problems specifically
+- FULL_SUCCESS: addresses 4-5 problems with creative solutions
+
+<span class="k">RESPOND WITH ONLY A JSON OBJECT. NO OTHER TEXT.</span></div>
+
+<h3>Golden Response Cache Strategy</h3>
+<div class="grid-2">
+<div class="card"><div class="card-title">Per-Task Cache (25 entries × 7 tasks = 175 total)</div>
+<p>5 × FUNNY_FAIL (generic/vague prompts)</p>
+<p>5 × FUNNY_FAIL (specific but wrong approach)</p>
+<p>5 × PARTIAL_SUCCESS (addresses some problems)</p>
+<p>3 × FULL_SUCCESS (creative complete solutions)</p>
+<p>5 × EDGE_CASE (off-topic, silly, meta-prompts)</p>
+<p>2 × DEMO_SCRIPTED (exact prompts from demo script)</p>
+</div>
+<div class="card"><div class="card-title">Resolution Chain</div>
+<p><strong>Tier 1:</strong> Exact cache match → instant (&lt;5ms)</p>
+<p><strong>Tier 2:</strong> Fuzzy match (Levenshtein ≤ 0.3) → instant (&lt;10ms)</p>
+<p><strong>Tier 3:</strong> Live Claude Opus 4.6 → 2–6 seconds</p>
+<p><strong>Tier 4:</strong> Timeout fallback → random funny fail from cache (&lt;5ms)</p>
+<p style="margin-top:.4rem;"><strong>Target: 80%+ demo interactions served from cache.</strong></p>
+</div>
+</div>
+
+<h3>Two Modes</h3>
+<div class="grid-2">
+<div class="card"><div class="card-title">✨ Magic Mode (Ages 5–6)</div>
+<p>Large emoji suggestion buttons. Voice input primary. TTS reads narration. Simpler tasks (T1, T2, T5, T7). Pre-filled prompt starters. More forgiving evaluation. Bigger text and touch targets.</p></div>
+<div class="card"><div class="card-title">🔍 Explorer Mode (Ages 7–8)</div>
+<p>Text input primary. No suggestions (blank slate). Harder tasks (T3, T4, T6). Stricter evaluation. Iteration encouraged: "Try more detail!" Badge system visible.</p></div>
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ LAYER 6: SOUND & LOTTIE ═══ -->
+<div class="section">
+<span class="section-tag">Layer 6</span>
+<h2>Sound Effects & Lottie Reactions</h2>
+
+<h3>Sound — Kenney CC0 + Freesound Gap Fill</h3>
+<table>
+<tr><th>Source</th><th>Pack</th><th>Count</th><th>Use</th></tr>
+<tr><td>kenney.nl</td><td>UI Audio</td><td>50</td><td>Button clicks, mode switches, stars, badges</td></tr>
+<tr><td>kenney.nl</td><td>Interface Sounds</td><td>100</td><td>Chat bubbles, prompt submission, task selection</td></tr>
+<tr><td>kenney.nl</td><td>Impact Sounds</td><td>130</td><td>Chair break, axe chop, crash, splash, bonk</td></tr>
+<tr><td>kenney.nl</td><td>RPG Audio</td><td>50</td><td>Magic cast, spell whoosh, chest open, door creak</td></tr>
+<tr><td>kenney.nl</td><td>Digital Audio</td><td>60</td><td>Space beeps, alarms, portal hum, power up</td></tr>
+<tr><td>freesound.org</td><td>CC0 gap fill</td><td>~10</td><td>Sad trombone, sizzle, crowd cheer, school bell, splash</td></tr>
+</table>
+
+<h3>Lottie Reactions (12 overlays)</h3>
+<table>
+<tr><th>Name</th><th>Visual</th><th>Triggered By</th></tr>
+<tr><td>confetti-burst</td><td>Colorful confetti</td><td>FULL_SUCCESS, Cheer moments</td></tr>
+<tr><td>explosion-cartoon</td><td>Puff cloud</td><td>Things breaking, crashes</td></tr>
+<tr><td>hearts-float</td><td>Hearts drifting up</td><td>Sweet moments, sharing</td></tr>
+<tr><td>stars-spin</td><td>Stars circling</td><td>Discoveries, achievements</td></tr>
+<tr><td>sparkle-magic</td><td>Glittery burst</td><td>Magic leaking, spells</td></tr>
+<tr><td>fire-sneeze</td><td>Flame burst</td><td>Mage sneezing, torch explosions</td></tr>
+<tr><td>sad-cloud</td><td>Dark rain cloud</td><td>Disappointment, lonely</td></tr>
+<tr><td>question-marks</td><td>Floating ?'s</td><td>Confusion, stolen items</td></tr>
+<tr><td>music-notes</td><td>Musical notes</td><td>Concert, singing</td></tr>
+<tr><td>sleep-zzz</td><td>Floating Z's</td><td>Boredom, waiting</td></tr>
+<tr><td>trophy-unlock</td><td>Golden trophy</td><td>Badge earned, 3 stars</td></tr>
+<tr><td>electric-spark</td><td>Electricity crackle</td><td>Space panels, short circuits</td></tr>
+</table>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ LAYER 7: UI ═══ -->
+<div class="section">
+<span class="section-tag">Layer 7</span>
+<h2>UI Layout & Progress System</h2>
+
+<div class="code"><span class="c">// Desktop layout (1280×800 min)</span>
+┌──────────────────────────────────────────────────────┐
+│ <span class="k">Header</span>: Logo · Task name · ⭐⭐☆ · Mode toggle      │
+├──────────────────────────┬───────────────────────────┤
+│                          │ <span class="v">Chat Panel</span> (35%)          │
+│  <span class="n">3D Viewport</span> (65%)       │ 📖 Narration              │
+│  Three.js canvas         │ 💬 Child prompt            │
+│  + Lottie overlay        │ 🤖 Response                │
+│                          │ 📝 Input / 🎤 Voice        │
+├──────────────────────────┴───────────────────────────┤
+│ <span class="k">Tasks</span>: [💀🎂][🏰🚀][🧙🧁][⚔️🏫][🗡️🎸][💀🍕][🧺⚔️] │
+└──────────────────────────────────────────────────────┘</div>
+
+<div class="grid-2">
+<div class="card"><div class="card-title">Stars (Claude evaluates)</div>
+<p>⭐ = Valid prompt, basic scene</p>
+<p>⭐⭐ = Detailed, 2+ elements interacting</p>
+<p>⭐⭐⭐ = Creative, solves multiple problems, uses named assets</p>
+<p>7 tasks × 3 stars = 21 total. Zustand + localStorage.</p></div>
+<div class="card"><div class="card-title">Badges</div>
+<p><strong>First Prompt</strong> — complete any task</p>
+<p><strong>Prompt Wizard</strong> — complete all 7</p>
+<p><strong>Creative Spark</strong> — 20+ word prompt</p>
+<p><strong>Scene Director</strong> — 3+ elements in one prompt</p>
+<p><strong>Comedy Genius</strong> — trigger funniest fail</p>
+<p><strong>Prompt Master</strong> — 3 stars on any task</p></div>
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ LAYER 8: FILE STRUCTURE ═══ -->
+<div class="section">
+<span class="section-tag">Layer 8</span>
+<h2>Project File Structure</h2>
+<div class="code">prompt-quest/
+├── <span class="k">CLAUDE.md</span>                      <span class="c">← Root orchestrator</span>
+├── .claude/
+│   ├── agents/
+│   │   ├── scene-writer.md        <span class="c">← Writes Claude API prompts</span>
+│   │   ├── game-engine.md         <span class="c">← Three.js scenes</span>
+│   │   └── ui-builder.md          <span class="c">← React UI</span>
+│   ├── skills/
+│   │   ├── recall-context/        <span class="c">← Reads vocab contract</span>
+│   │   ├── cache-builder/         <span class="c">← Generates cache</span>
+│   │   └── scene-builder/         <span class="c">← Scene configs</span>
+│   └── commands/
+│       ├── research.md            <span class="c">← /research {topic}</span>
+│       └── pre-demo.md            <span class="c">← /pre-demo checklist</span>
+├── docs/
+│   ├── vocabulary-contract.md     <span class="c">← Source of truth for all assets</span>
+│   ├── architecture.md
+│   ├── stories/ (7 files)         <span class="c">← Task story specs</span>
+│   ├── characters/ (7 files)      <span class="c">← Per-character anim maps</span>
+│   └── scenes/ (7 files)          <span class="c">← Scene configs per task</span>
+├── src/
+│   ├── core/                      <span class="c">← SceneManager, AssetLoader, AnimController, ScriptPlayer</span>
+│   ├── ai/                        <span class="c">← claude-client, response-resolver, fuzzy-match, prompts/</span>
+│   ├── cache/ (7 folders)         <span class="c">← Golden Response Cache JSONs</span>
+│   ├── ui/                        <span class="c">← App, TaskSelector, ChatPanel, ModeToggle, Progress</span>
+│   ├── store/                     <span class="c">← useGameStore.ts (Zustand)</span>
+│   └── audio/                     <span class="c">← SoundManager.ts</span>
+├── assets/
+│   ├── characters/                <span class="c">← .glb (Adventurers, Skeletons, Series 4/5)</span>
+│   ├── animations/                <span class="c">← .glb (161 clips)</span>
+│   ├── environments/              <span class="c">← .glb by pack (dungeon/, space/, kitchen/...)</span>
+│   ├── props/                     <span class="c">← .glb by pack</span>
+│   ├── audio/                     <span class="c">← .mp3/.ogg (Kenney + freesound)</span>
+│   └── lottie/                    <span class="c">← .json (12 reactions)</span>
+├── package.json · tsconfig.json · vite.config.ts · vercel.json
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ LAYER 9: BUILD SCHEDULE ═══ -->
+<div class="section">
+<span class="section-tag">Layer 9</span>
+<h2>6-Day Build Schedule (Feb 10–16)</h2>
+<p><span class="pill p-dani">Danielle</span> = UI, brand, content, prompts, cache. <span class="pill p-drew">Drew</span> = engine, API, infra, deploy. <strong>Bold = critical path.</strong></p>
+
+<div class="tl">
+<div class="tl-item">
+<div class="tl-day">Day 1 — Mon Feb 10 · Foundation</div>
+<div class="tl-title">Asset Pipeline + Project Skeleton</div>
+<div class="tl-body">
+<span class="pill p-drew">Drew</span> Init Vite+React+TS. Install Three.js, @anthropic-ai/sdk, zustand, lottie-web. CLAUDE.md + agents + skills. SceneManager.ts + AssetLoader.ts. <strong>ONE character model rotating on screen by EOD.</strong><br>
+<span class="pill p-dani">Danielle</span> Download KayKit (508MB) + Tiny Treats (110MB). Extract → assets/ folders. Download Kenney audio (5 packs). Download Lottie JSONs (12). Write 7 story specs. Draft vocabulary-contract.md.<br>
+<span class="pill p-crit">Gate</span> 3D character visible. Assets organized. Stories written.
+</div>
+</div>
+
+<div class="tl-item">
+<div class="tl-day">Day 2 — Tue Feb 11 · Engine Core</div>
+<div class="tl-title">Animation System + Scene Script Player</div>
+<div class="tl-body">
+<span class="pill p-drew">Drew</span> AnimationController.ts (161 clips, crossfade). SceneScriptPlayer.ts (parse JSON, sequence actions). LottieOverlay.ts. SoundManager.ts. <strong>Hardcoded scene script plays: character walks in, waves, sits, confetti.</strong><br>
+<span class="pill p-dani">Danielle</span> 7 character docs. 7 scene configs. Finalize vocabulary-contract.md. Write first 2 system prompts. Start UI wireframes.<br>
+<span class="pill p-crit">Gate</span> Scene script plays start-to-finish. Characters animate. Lottie fires. Sound plays.
+</div>
+</div>
+
+<div class="tl-item">
+<div class="tl-day">Day 3 — Wed Feb 12 · Claude Integration</div>
+<div class="tl-title">API Client + Cache + Chat UI</div>
+<div class="tl-body">
+<span class="pill p-drew">Drew</span> claude-client.ts (SDK, 8s timeout, JSON parsing). response-resolver.ts (cache chain). fuzzy-match.ts. <strong>Connect: type prompt → Claude → SceneScriptPlayer.</strong><br>
+<span class="pill p-dani">Danielle</span> Remaining 5 system prompts (7 total). Build ChatPanel, TaskSelector, ModeToggle. Style UI. Test prompts with 10+ inputs each.<br>
+<span class="pill p-crit">Gate</span> Full loop: prompt → Claude → 3D scene → narration. 2+ tasks playable.
+</div>
+</div>
+
+<div class="tl-item">
+<div class="tl-day">Day 4 — Thu Feb 13 · All Tasks + Cache</div>
+<div class="tl-title">7 Complete Tasks + Golden Response Cache</div>
+<div class="tl-body">
+<span class="pill p-drew">Drew</span> Build remaining task environments (3D stages per task). Optimize: frustum culling, LOD, atlas textures.<br>
+<span class="pill p-dani">Danielle</span> <strong>Cache-builder: 25 cached responses × 7 tasks = 175 total. Validate every response. This is THE most important work.</strong><br>
+<span class="pill p-both">Together</span> Playtest every task. Fix bugs. Ensure every fail is funny, every success satisfying.<br>
+<span class="pill p-crit">Gate</span> All 7 tasks playable. 150+ validated cache responses.
+</div>
+</div>
+
+<div class="tl-item">
+<div class="tl-day">Day 5 — Fri Feb 14 · Polish</div>
+<div class="tl-title">Voice + TTS + Progress + UX Polish</div>
+<div class="tl-body">
+<span class="pill p-drew">Drew</span> VoiceInput (Web Speech API, Chrome). TTS narration. Progress system (stars, badges, localStorage). Deploy to Vercel.<br>
+<span class="pill p-dani">Danielle</span> Magic Mode UI (emoji buttons, larger text). Explorer Mode UI (blank input, badges). Polish transitions. Write all UI copy. Add bonus Series 4/5 characters if time.<br>
+<span class="pill p-crit">Gate</span> Voice works. Stars track. Deployed to Vercel.
+</div>
+</div>
+
+<div class="tl-item">
+<div class="tl-day">Day 6 — Sat Feb 15 · Demo Prep</div>
+<div class="tl-title">Bug Bash + Demo Script + Submission</div>
+<div class="tl-body">
+<span class="pill p-both">Together AM</span> Full bug bash. Every task, both modes. Cache hit rate >80%. Test mobile. Test offline fallback.<br>
+<span class="pill p-dani">Danielle PM</span> Demo script (exact tasks, prompts, beats). Record video if needed. Write submission description.<br>
+<span class="pill p-drew">Drew PM</span> /pre-demo: API keys, Vercel, cache, load times. Add analytics. Final deploy.<br>
+<span class="pill p-crit">Gate</span> Ready to demo. Submission materials complete.
+</div>
+</div>
+
+<div class="tl-item">
+<div class="tl-day">Day 7 — Sun Feb 16 · Submit</div>
+<div class="tl-title">Submission + Demo</div>
+<div class="tl-body">
+<span class="pill p-both">Together</span> Submit. Demo if required. Danielle = presentation/story. Drew = technical questions. Cache means demo works even if API goes down.
+</div>
+</div>
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ LAYER 10: BONUS CHARACTERS ═══ -->
+<div class="section">
+<span class="section-tag">Layer 10</span>
+<h2>Mystery Series 4 & 5 — Bonus Character Map</h2>
+<p>29+ additional characters unlocked by the Complete KayKit purchase. Same rig, same 161 animations. Priority integration plan:</p>
+
+<table>
+<tr><th>Character</th><th>Series</th><th>Task Enhancement</th><th>Priority</th></tr>
+<tr><td>🚀 Space Ranger</td><td>S4</td><td><strong>T2:</strong> actual station crew, confused by the medieval knight</td><td><span class="pill p-crit">High</span></td></tr>
+<tr><td>🧙 Witch</td><td>S5</td><td><strong>T3:</strong> banished the Mage to the kitchen as punishment</td><td><span class="pill p-crit">High</span></td></tr>
+<tr><td>🤡 Clown</td><td>S4</td><td><strong>T5:</strong> hype man / MC who introduces the band</td><td><span class="pill p-crit">High</span></td></tr>
+<tr><td>🤖 Robots ×2</td><td>S4</td><td><strong>T2:</strong> space station maintenance bots</td><td>Medium</td></tr>
+<tr><td>🧛 Vampire</td><td>S5</td><td><strong>T1:</strong> fashionably late party guest</td><td>Medium</td></tr>
+<tr><td>🐺 Werewolf</td><td>S4</td><td><strong>T7:</strong> uninvited picnic guest, just wants a sandwich</td><td>Medium</td></tr>
+<tr><td>🥷 Ninja</td><td>S4</td><td><strong>T6:</strong> rival delivery driver (faster but skeleton has heart)</td><td>Fun bonus</td></tr>
+<tr><td>🗡️ Paladin</td><td>S4</td><td><strong>T5:</strong> disapproving authority who ends up headbanging</td><td>Fun bonus</td></tr>
+<tr><td>👹 Monster Costume</td><td>S4</td><td><strong>T1:</strong> person in monster suit, perfect for kids' game</td><td>Fun bonus</td></tr>
+<tr><td>🦸 Superhero</td><td>S5</td><td><strong>T6:</strong> swoops in to help skeleton deliver on time</td><td>Nice-to-have</td></tr>
+<tr><td>🏔️ Caveman</td><td>S5</td><td><strong>T4:</strong> another student even more out-of-place than barbarian</td><td>Nice-to-have</td></tr>
+<tr><td>🧊 Frost Golem</td><td>S5</td><td><strong>T3:</strong> large character, freezes all the food</td><td>Nice-to-have</td></tr>
+</table>
+
+<div class="callout co-mint">
+<strong>Strategy:</strong> Ship with core 5 Adventurers + Skeletons for all 7 tasks. Add 3 "High" bonus characters (Space Ranger, Witch, Clown) if time permits Day 4–5. Each addition = load GLB + add to vocabulary contract + add 1–2 cache responses featuring them. Cosmetic enrichment, not load-bearing.
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ LAYER 11: DEMO STRATEGY ═══ -->
+<div class="section">
+<span class="section-tag">Layer 11</span>
+<h2>Demo & Judging Strategy</h2>
+
+<h3>Demo Script (Recommended Order)</h3>
+<table>
+<tr><th>#</th><th>Action</th><th>Demonstrates</th></tr>
+<tr><td>1</td><td>Show task selector — 7 tasks, stars, modes</td><td>Scope: this is a complete game</td></tr>
+<tr><td>2</td><td>Select T7 (Picnic) in Magic Mode</td><td>Cute Tiny Treats env, all 5 characters, warmest visual</td></tr>
+<tr><td>3</td><td>Type vague: "have a picnic"</td><td>FUNNY_FAIL → Barbarian axe-chops basket, instant comedy</td></tr>
+<tr><td>4</td><td>Type specific: "give the Rogue their own basket"</td><td>PARTIAL_SUCCESS → iterative improvement visible</td></tr>
+<tr><td>5</td><td>Type detailed prompt addressing all 5 problems</td><td>FULL_SUCCESS → sunset picnic, confetti, 3 stars</td></tr>
+<tr><td>6</td><td>Switch to T2 (Knight in Space)</td><td>Different env, same architecture, Space Ranger cameo</td></tr>
+<tr><td>7</td><td>Show badge unlocking, star progress</td><td>Gamification, retention</td></tr>
+<tr><td>8</td><td>Switch to Explorer Mode briefly</td><td>Adaptive difficulty, blank input</td></tr>
+</table>
+
+<h3>Do NOT Build (Temptation Resistance)</h3>
+<div class="grid-2">
+<div class="card"><div class="card-title" style="color:var(--coral);">❌ Skip These</div>
+<p>Character customization / dress-up</p>
+<p>Multiplayer or collaborative mode</p>
+<p>Level editor or custom task creator</p>
+<p>Leaderboard or competitive features</p>
+<p>Custom 3D models or procedural gen</p></div>
+<div class="card"><div class="card-title" style="color:var(--mint);">✅ Focus Here</div>
+<p>Cache hit rate &gt;80%</p>
+<p>Every scene script plays perfectly</p>
+<p>Every funny fail is actually funny</p>
+<p>Voice input works in Chrome</p>
+<p>TTS narration clear and paced</p></div>
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ LAYER 12: RISKS ═══ -->
+<div class="section">
+<span class="section-tag">Layer 12</span>
+<h2>Risk Map & Mitigations</h2>
+<table>
+<tr><th>Risk</th><th>Prob</th><th>Impact</th><th>Mitigation</th></tr>
+<tr><td>Claude API timeout during demo</td><td>Med</td><td>🔴</td><td>Golden Cache serves 80%+ interactions. Fallback returns random funny fail. Demo script uses cached prompts.</td></tr>
+<tr><td>Claude returns invalid JSON</td><td>Med</td><td>🟡</td><td>Strict parsing + regex fallback. System prompt: "ONLY JSON." Tested 20+ inputs per task.</td></tr>
+<tr><td>Claude references missing asset</td><td>Low</td><td>🟡</td><td>Vocabulary validation. Per-task prompts only list available assets. SceneScriptPlayer skips unknowns.</td></tr>
+<tr><td>GLB models fail to load</td><td>Low</td><td>🔴</td><td>Preloaded on task select with loading bar. Cache Map prevents dupes. CDN via Vercel.</td></tr>
+<tr><td>Animation clip name mismatch</td><td>Med</td><td>🟡</td><td>play() logs warning, falls back to Idle. Never crashes.</td></tr>
+<tr><td>Voice input fails</td><td>Med</td><td>🟢</td><td>Text always available. Voice is enhancement. Demo uses text.</td></tr>
+<tr><td>Mobile performance</td><td>Med</td><td>🟡</td><td>Low-poly (~1000 tris). Single 1024 atlas. Max 10 models/scene. Disable shadows on mobile.</td></tr>
+<tr><td>Scope creep</td><td>High</td><td>🔴</td><td>This document IS the scope. 7 tasks, 2 modes, cache, polish. Nothing else.</td></tr>
+</table>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ LAYER 13: WHY THIS WINS ═══ -->
+<div class="section">
+<span class="section-tag">Layer 13</span>
+<h2>Why This Wins the Hackathon</h2>
+<div class="grid-2">
+<div class="card"><div class="card-title" style="color:var(--gold);">🎯 Opus 4.6 Usage</div>
+<p>Claude is the core mechanic — evaluates prompts, generates scene scripts, crafts narrations, rates quality. Without Claude, no game exists. The Golden Cache proves deep understanding of Opus 4.6's capabilities.</p></div>
+<div class="card"><div class="card-title" style="color:var(--mint);">📚 Educational Impact</div>
+<p>Kids learn prompt engineering through play. Vague prompts = comedy disasters (intrinsic feedback). Specific prompts = satisfying results (reinforcement). Two age-appropriate modes. Progressive mastery via stars.</p></div>
+<div class="card"><div class="card-title" style="color:var(--sky);">🎮 Production Quality</div>
+<p>700+ professional 3D models, 161 skeletal animations, 12 Lottie effects, 400+ SFX, 7 complete tasks. Looks like a shipped game, not a hackathon prototype.</p></div>
+<div class="card"><div class="card-title" style="color:var(--violet);">🏗️ Novel Architecture</div>
+<p>"Assembler, Never Renderer" — Claude writes declarative scene scripts against a validated vocabulary. No hallucination. No generation. Pre-computed cache for reliability. Reusable pattern for any AI-driven interactive experience.</p></div>
+</div>
+</div>
+
+<div class="divider"></div>
+<p style="text-align:center;margin:2rem 0;color:var(--dim);font-size:.68rem;">
+Prompt Quest · Complete Implementation Plan · v1.0 · Feb 10, 2026<br>
+Danielle (UI, Brand, Content, Prompts, Cache) + Drew (Engine, API, Infrastructure)<br>
+Assets: The Complete KayKit ($99) + Tiny Treats Collection 1 ($19.95) = $119 · All CC0 Licensed
+</p>
+
+</div>
+</body>
+</html>

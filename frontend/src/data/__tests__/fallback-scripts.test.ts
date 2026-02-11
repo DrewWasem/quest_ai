@@ -9,18 +9,34 @@ const VALID_ACTION_TYPES = [
   'spawn', 'move', 'animate', 'react', 'emote', 'sfx', 'wait', 'remove',
 ] as const;
 
+// Legacy 2D + 3D actor keys (used across all fallback scripts)
 const VALID_ACTOR_KEYS = [
+  // Legacy 2D
   'monster', 'dog', 'trex', 'octopus', 'robot',
   'wizard', 'kid', 'fish', 'squirrel',
+  // 3D KayKit characters
+  'knight', 'barbarian', 'mage', 'ranger', 'rogue',
+  'skeleton_warrior', 'skeleton_mage', 'skeleton_rogue', 'skeleton_minion',
+  'space_ranger', 'ninja', 'clown', 'witch',
 ] as const;
 
+// Legacy 2D + 3D prop keys
 const VALID_PROP_KEYS = [
+  // Legacy 2D
   'cake', 'cake-giant', 'cake-tiny', 'rocket', 'spacesuit',
   'moon', 'flag', 'plates', 'soup-bowl', 'toaster',
   'fridge', 'desk', 'pencil', 'chair', 'lunchbox',
   'guitar', 'drums', 'keyboard', 'microphone',
   'pizza', 'pizza-soggy', 'river', 'pillow-fort',
   'bone', 'balloon', 'present', 'stars', 'fire-extinguisher',
+  // 3D props
+  'torch', 'barrel', 'crate', 'chest', 'table', 'bench',
+  'tree', 'rock', 'bush', 'fence', 'sign', 'lamp',
+  'sword', 'shield', 'bow', 'potion', 'scroll',
+  'cake-3d', 'cupcake', 'bread', 'pie',
+  'blanket', 'basket', 'plate', 'cup', 'bottle',
+  'candle', 'book', 'clock', 'rug',
+  'slide', 'swing', 'sandbox',
 ] as const;
 
 const VALID_SPAWN_TARGETS = [...VALID_ACTOR_KEYS, ...VALID_PROP_KEYS];
@@ -52,10 +68,30 @@ function wordCount(text: string): number {
 // ── Tests ───────────────────────────────────────────────────────────────────
 
 describe('FALLBACK_SCRIPTS', () => {
-  // 1. Has entries for both tasks
-  it('has entries for "monster-party" and "robot-pizza"', () => {
+  // 1. Has entries for legacy tasks
+  it('has entries for legacy 2D tasks', () => {
     expect(FALLBACK_SCRIPTS).toHaveProperty('monster-party');
     expect(FALLBACK_SCRIPTS).toHaveProperty('robot-pizza');
+    expect(FALLBACK_SCRIPTS).toHaveProperty('wizard-kitchen');
+    expect(FALLBACK_SCRIPTS).toHaveProperty('dinosaur-school');
+    expect(FALLBACK_SCRIPTS).toHaveProperty('dog-space');
+    expect(FALLBACK_SCRIPTS).toHaveProperty('octopus-band');
+  });
+
+  // 2. Has entries for all 7 new 3D tasks
+  it('has entries for all 7 new 3D tasks', () => {
+    expect(FALLBACK_SCRIPTS).toHaveProperty('skeleton-birthday');
+    expect(FALLBACK_SCRIPTS).toHaveProperty('knight-space');
+    expect(FALLBACK_SCRIPTS).toHaveProperty('mage-kitchen');
+    expect(FALLBACK_SCRIPTS).toHaveProperty('barbarian-school');
+    expect(FALLBACK_SCRIPTS).toHaveProperty('dungeon-concert');
+    expect(FALLBACK_SCRIPTS).toHaveProperty('skeleton-pizza');
+    expect(FALLBACK_SCRIPTS).toHaveProperty('adventurers-picnic');
+  });
+
+  // 3. Has exactly 13 total tasks
+  it('has 13 total fallback scripts (6 legacy + 7 new)', () => {
+    expect(Object.keys(FALLBACK_SCRIPTS)).toHaveLength(13);
   });
 
   const taskKeys = Object.keys(FALLBACK_SCRIPTS);
@@ -63,12 +99,10 @@ describe('FALLBACK_SCRIPTS', () => {
   describe.each(taskKeys)('script: %s', (taskKey) => {
     const script = FALLBACK_SCRIPTS[taskKey];
 
-    // 2. Valid success_level
     it('has a valid success_level', () => {
       expect(VALID_SUCCESS_LEVELS).toContain(script.success_level);
     });
 
-    // 3. Narration is non-empty and under 25 words
     it('has a non-empty narration under 25 words', () => {
       expect(typeof script.narration).toBe('string');
       expect(script.narration.length).toBeGreaterThan(0);
@@ -77,26 +111,22 @@ describe('FALLBACK_SCRIPTS', () => {
       expect(words).toBeLessThanOrEqual(MAX_NARRATION_WORDS);
     });
 
-    // 4. Non-empty actions array
     it('has a non-empty actions array', () => {
       expect(Array.isArray(script.actions)).toBe(true);
       expect(script.actions.length).toBeGreaterThan(0);
     });
 
-    // 5. Non-empty prompt_feedback
     it('has a non-empty prompt_feedback string', () => {
       expect(typeof script.prompt_feedback).toBe('string');
       expect(script.prompt_feedback.length).toBeGreaterThan(0);
     });
 
-    // 6. Every action has a valid type
     it('all actions have valid types', () => {
       for (const action of script.actions) {
         expect(VALID_ACTION_TYPES).toContain(action.type);
       }
     });
 
-    // 7. Spawn actions reference valid actor/prop keys
     it('spawn actions reference valid actor or prop keys', () => {
       const spawnActions = script.actions.filter((a) => a.type === 'spawn');
       for (const action of spawnActions) {
@@ -109,7 +139,6 @@ describe('FALLBACK_SCRIPTS', () => {
       }
     });
 
-    // 8. Move actions have valid position targets and optional valid move styles
     it('move actions have valid positions and styles', () => {
       const moveActions = script.actions.filter((a) => a.type === 'move');
       for (const action of moveActions) {
@@ -125,7 +154,6 @@ describe('FALLBACK_SCRIPTS', () => {
       }
     });
 
-    // 9. Animate actions reference valid actor keys
     it('animate actions reference valid actor keys', () => {
       const animateActions = script.actions.filter((a) => a.type === 'animate');
       for (const action of animateActions) {
@@ -135,7 +163,6 @@ describe('FALLBACK_SCRIPTS', () => {
       }
     });
 
-    // 10. React actions reference valid reaction keys and positions
     it('react actions reference valid reaction keys and positions', () => {
       const reactActions = script.actions.filter((a) => a.type === 'react');
       for (const action of reactActions) {
@@ -148,12 +175,10 @@ describe('FALLBACK_SCRIPTS', () => {
       }
     });
 
-    // 11. Actions array has <= 8 actions (contract max)
     it(`has at most ${MAX_ACTIONS} actions`, () => {
       expect(script.actions.length).toBeLessThanOrEqual(MAX_ACTIONS);
     });
 
-    // 12. missing_elements is optional, but if present it's an array of strings
     it('missing_elements, if present, is an array of strings', () => {
       if (script.missing_elements !== undefined) {
         expect(Array.isArray(script.missing_elements)).toBe(true);
@@ -161,6 +186,59 @@ describe('FALLBACK_SCRIPTS', () => {
           expect(typeof el).toBe('string');
         }
       }
+    });
+  });
+
+  // ── 3D-specific validation ──────────────────────────────────────────────
+
+  describe('3D fallback scripts use correct 3D vocabulary', () => {
+    const threeDTasks = [
+      'skeleton-birthday', 'knight-space', 'mage-kitchen',
+      'barbarian-school', 'dungeon-concert', 'skeleton-pizza', 'adventurers-picnic',
+    ];
+
+    it.each(threeDTasks)('%s uses 3D character names (not legacy 2D)', (taskKey) => {
+      const script = FALLBACK_SCRIPTS[taskKey];
+      const spawnActions = script.actions.filter((a) => a.type === 'spawn');
+      const animateActions = script.actions.filter((a) => a.type === 'animate');
+
+      const legacy2DOnly = ['monster', 'dog', 'trex', 'octopus', 'wizard', 'kid', 'fish', 'squirrel'];
+
+      // 3D tasks should NOT use legacy 2D-only actor names
+      for (const action of [...spawnActions, ...animateActions]) {
+        if ('target' in action) {
+          const target = action.target as string;
+          // Only check character targets, skip props
+          if (VALID_ACTOR_KEYS.includes(target as typeof VALID_ACTOR_KEYS[number])) {
+            expect(legacy2DOnly).not.toContain(target);
+          }
+        }
+      }
+    });
+
+    it('skeleton-birthday spawns skeleton_warrior', () => {
+      const script = FALLBACK_SCRIPTS['skeleton-birthday'];
+      const spawns = script.actions
+        .filter((a) => a.type === 'spawn')
+        .map((a) => ('target' in a ? a.target : ''));
+      expect(spawns).toContain('skeleton_warrior');
+    });
+
+    it('skeleton-pizza spawns skeleton_warrior and pizza', () => {
+      const script = FALLBACK_SCRIPTS['skeleton-pizza'];
+      const spawns = script.actions
+        .filter((a) => a.type === 'spawn')
+        .map((a) => ('target' in a ? a.target : ''));
+      expect(spawns).toContain('skeleton_warrior');
+      expect(spawns).toContain('pizza');
+    });
+
+    it('adventurers-picnic spawns barbarian', () => {
+      const script = FALLBACK_SCRIPTS['adventurers-picnic'];
+      const spawns = script.actions
+        .filter((a) => a.type === 'spawn')
+        .map((a) => ('target' in a ? a.target : ''));
+      expect(spawns).toContain('barbarian');
     });
   });
 });

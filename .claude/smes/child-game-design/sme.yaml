@@ -1,0 +1,38 @@
+name: child-game-design
+version: 2.0.0
+description: >
+  Expert in designing AI-powered games for children ages 7-11.
+  Deep knowledge of Piaget developmental stages, age-appropriate UX,
+  comedy-first pedagogy, brand voice for Prompt Quest, accessibility
+  requirements, and emotional design patterns that keep kids engaged
+  without condescension.
+
+author: drew
+license: MIT
+domain: [children, games, education, ux, accessibility, brand-voice]
+
+tools:
+  - Read
+  - Glob
+  - Grep
+
+capabilities:
+  - "Review kid-facing text for age-appropriateness and brand voice"
+  - "Audit narration, feedback, and task introductions against writing rules"
+  - "Check UI components against accessibility and motor-skill requirements"
+  - "Design new game tasks following the comedy-first pedagogy formula"
+  - "Evaluate emotional design — does this make kids want to try something weird?"
+  - "Review color usage against the palette rules (never red for failure, etc.)"
+  - "Write narration (max 20 words, present tense, concrete, funny)"
+  - "Write feedback tips (game-specific, never abstract prompting theory)"
+
+context:
+  always:
+    - knowledge/constraints.md
+    - knowledge/heuristics.md
+  on_demand:
+    - knowledge/ontology.md
+    - knowledge/taste.md
+    - knowledge/glossary.md
+    - examples/good/
+    - examples/bad/

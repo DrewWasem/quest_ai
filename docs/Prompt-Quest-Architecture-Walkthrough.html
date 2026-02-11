@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prompt Quest &mdash; Architecture Walkthrough</title>
+  <style>
+    :root {
+      --bg: #0F0A1A;
+      --panel: #1A0F2E;
+      --card: #231546;
+      --surface: #2D1B69;
+      --border: #3D2B7A;
+      --accent: #8B5CF6;
+      --purple: #6C3FC5;
+      --orange: #FF8C42;
+      --green: #34D399;
+      --gold: #fbbf24;
+      --blue: #60A5FA;
+      --text: #FFF;
+      --text-primary: #E8E0F7;
+      --text-secondary: #B8A9D4;
+      --text-dim: #8B7AAE;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.7;
+      padding: 0;
+    }
+
+    /* Starfield background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 70% 80%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 15% 90%, rgba(255,255,255,0.2) 0%, transparent 100%),
+        radial-gradient(1px 1px at 85% 15%, rgba(255,255,255,0.3) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    .hero {
+      text-align: center;
+      padding: 48px 0 40px;
+    }
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--gold), var(--accent), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+    .hero .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+    .hero .version {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    /* Table of Contents */
+    .toc {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 32px;
+      margin-bottom: 40px;
+    }
+    .toc h2 {
+      font-size: 1rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 12px;
+    }
+    .toc ol {
+      padding-left: 20px;
+    }
+    .toc li {
+      margin: 6px 0;
+    }
+    .toc a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .toc a:hover {
+      color: var(--accent);
+    }
+
+    /* Sections */
+    section {
+      margin-bottom: 48px;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    h2 .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin: 24px 0 10px;
+    }
+
+    p, li {
+      color: var(--text-primary);
+      font-size: 0.95rem;
+    }
+
+    ul, ol {
+      padding-left: 24px;
+      margin: 8px 0 16px;
+    }
+    li {
+      margin: 4px 0;
+    }
+
+    /* Code blocks */
+    code {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.85rem;
+      background: var(--surface);
+      padding: 2px 7px;
+      border-radius: 5px;
+      color: var(--gold);
+      border: 1px solid var(--border);
+    }
+    pre {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      overflow-x: auto;
+      margin: 12px 0 20px;
+      font-size: 0.82rem;
+      line-height: 1.6;
+    }
+    pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--text-primary);
+    }
+    .comment { color: var(--text-dim); }
+    .keyword { color: var(--accent); }
+    .string { color: var(--green); }
+    .fn { color: var(--blue); }
+    .num { color: var(--orange); }
+
+    /* Flow diagram */
+    .flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 20px 0 28px;
+    }
+    .flow-step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .flow-line {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 40px;
+    }
+    .flow-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 8px rgba(139, 92, 246, 0.5);
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .flow-dot.green { background: var(--green); box-shadow: 0 0 8px rgba(52, 211, 153, 0.5); }
+    .flow-dot.gold { background: var(--gold); box-shadow: 0 0 8px rgba(251, 191, 36, 0.5); }
+    .flow-dot.orange { background: var(--orange); box-shadow: 0 0 8px rgba(255, 140, 66, 0.5); }
+    .flow-dot.blue { background: var(--blue); box-shadow: 0 0 8px rgba(96, 165, 250, 0.5); }
+    .flow-connector {
+      width: 2px;
+      flex: 1;
+      min-height: 20px;
+      background: linear-gradient(to bottom, var(--border), transparent);
+    }
+    .flow-content {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      flex: 1;
+    }
+    .flow-content strong {
+      color: var(--text);
+    }
+    .flow-content .file-ref {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      font-family: monospace;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin: 16px 0;
+    }
+    .card.highlight {
+      border-color: var(--accent);
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+    }
+    .card.success { border-left: 4px solid var(--green); }
+    .card.warning { border-left: 4px solid var(--gold); }
+    .card.danger { border-left: 4px solid var(--orange); }
+
+    /* Tier badges */
+    .tier-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .tier-1 { background: rgba(52, 211, 153, 0.15); color: var(--green); border: 1px solid rgba(52, 211, 153, 0.3); }
+    .tier-2 { background: rgba(96, 165, 250, 0.15); color: var(--blue); border: 1px solid rgba(96, 165, 250, 0.3); }
+    .tier-3 { background: rgba(255, 140, 66, 0.15); color: var(--orange); border: 1px solid rgba(255, 140, 66, 0.3); }
+
+    /* Action type table */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 16px 0;
+      border: 1px solid var(--border);
+    }
+    th {
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 10px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      border-bottom: 1px solid rgba(61, 43, 122, 0.4);
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:nth-child(even) { background: rgba(35, 21, 70, 0.3); }
+
+    /* Big diagram */
+    .arch-diagram {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin: 20px 0;
+      font-family: monospace;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      overflow-x: auto;
+      white-space: pre;
+      color: var(--text-secondary);
+    }
+    .arch-diagram .hl { color: var(--accent); font-weight: 700; }
+    .arch-diagram .hl-green { color: var(--green); font-weight: 700; }
+    .arch-diagram .hl-gold { color: var(--gold); font-weight: 700; }
+    .arch-diagram .hl-orange { color: var(--orange); font-weight: 700; }
+    .arch-diagram .hl-blue { color: var(--blue); font-weight: 700; }
+
+    /* Key-value label */
+    .kv { display: flex; gap: 8px; margin: 4px 0; }
+    .kv .k { color: var(--text-dim); min-width: 100px; font-size: 0.85rem; }
+    .kv .v { color: var(--text-primary); font-size: 0.85rem; }
+
+    /* Emoji callout */
+    .callout {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      background: var(--card);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin: 16px 0;
+      border: 1px solid var(--border);
+    }
+    .callout .emoji {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    a { color: var(--accent); }
+    strong { color: var(--text); }
+    em { color: var(--text-secondary); font-style: italic; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Prompt Quest</h1>
+    <div class="subtitle">Architecture Walkthrough &mdash; How the Game Works</div>
+    <div class="version">v1.0 &middot; Feb 2026 &middot; Hackathon Build</div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#overview">Overview &amp; Tech Stack</a></li>
+      <li><a href="#boot">App Boot &amp; Phaser Initialization</a></li>
+      <li><a href="#task-select">Task Selection (Card Grid)</a></li>
+      <li><a href="#scene-init">Scene Initialization</a></li>
+      <li><a href="#prompt-submit">Prompt Submission</a></li>
+      <li><a href="#resolver">The Three-Tier Resolver</a></li>
+      <li><a href="#bridge">React &rarr; Phaser Bridge</a></li>
+      <li><a href="#script-player">SceneScriptPlayer &mdash; Action Execution</a></li>
+      <li><a href="#effects">Visual Effects &amp; Sound</a></li>
+      <li><a href="#result-ui">Result Panel (React UI)</a></li>
+      <li><a href="#error-handling">Error Handling &amp; Fallbacks</a></li>
+      <li><a href="#full-diagram">Full Flow Diagram</a></li>
+    </ol>
+  </nav>
+
+  <!-- 1. Overview -->
+  <section id="overview">
+    <h2><span class="step-num">1</span> Overview &amp; Tech Stack</h2>
+
+    <p>Prompt Quest is a kids&rsquo; game (ages 8&ndash;10) that teaches prompt engineering. Children type instructions for animated scenes, and the AI evaluates how specific and complete their prompts are.</p>
+
+    <div class="card">
+      <div class="kv"><span class="k">UI Layer</span><span class="v">React 18 + TypeScript + Vite</span></div>
+      <div class="kv"><span class="k">State</span><span class="v">Zustand (single store)</span></div>
+      <div class="kv"><span class="k">Game Engine</span><span class="v">Phaser 3 (canvas rendering, tweens, sound)</span></div>
+      <div class="kv"><span class="k">AI Model</span><span class="v">Claude Opus 4.6 via Anthropic Messages API</span></div>
+      <div class="kv"><span class="k">Bridge</span><span class="v">EventBus (Phaser.Events.EventEmitter)</span></div>
+      <div class="kv"><span class="k">Canvas</span><span class="v">1024 &times; 576px, scale-to-fit</span></div>
+      <div class="kv"><span class="k">Tasks</span><span class="v">6 playable scenarios with 96 cached responses</span></div>
+    </div>
+
+    <h3>Key Principle: Separation of Concerns</h3>
+    <p><strong>React</strong> owns all UI state (what the user types, loading spinners, result panels). <strong>Phaser</strong> owns all game state (sprites, tweens, canvas). They communicate through a one-way <strong>EventBus</strong>: React sends commands to Phaser, never the reverse.</p>
+  </section>
+
+  <!-- 2. Boot -->
+  <section id="boot">
+    <h2><span class="step-num">2</span> App Boot &amp; Phaser Initialization</h2>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot green"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <strong>main.tsx</strong> &mdash; Entry point<br>
+          <span class="file-ref">frontend/src/main.tsx:5-15</span>
+          <p>Imports the pre-generated <code>demo-cache.json</code> and calls <code>loadDemoCache()</code> to populate the in-memory cache <em>before</em> React renders. Then mounts <code>&lt;App /&gt;</code> into the DOM.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <strong>App.tsx</strong> &mdash; React root component<br>
+          <span class="file-ref">frontend/src/App.tsx:17-22</span>
+          <p>Creates a <code>phaserRef</code> for the game instance. Reads <code>currentTask</code> and <code>isMuted</code> from Zustand. Initializes <code>showGrid = true</code> so the task selector appears first.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot blue"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <strong>PhaserGame.tsx</strong> &mdash; Game engine initialization<br>
+          <span class="file-ref">frontend/src/game/PhaserGame.tsx:20-52</span>
+          <p>Inside a <code>useLayoutEffect</code>, creates a <code>new Phaser.Game(config)</code> with:</p>
+          <ul>
+            <li><code>type: Phaser.AUTO</code> (WebGL preferred, Canvas fallback)</li>
+            <li><code>width: 1024, height: 576</code></li>
+            <li><code>backgroundColor: '#1a0533'</code></li>
+            <li><code>scale.mode: FIT, autoCenter: CENTER_BOTH</code></li>
+            <li><code>scene: [MonsterPartyScene, RobotPizzaScene, WizardKitchenScene, DinosaurSchoolScene, DogSpaceScene, OctopusBandScene]</code></li>
+          </ul>
+          <p>Listens for <code>'scene-ready'</code> on EventBus to track the active scene.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <span class="emoji">&#128161;</span>
+      <div>Phaser is only rendered when <code>showGrid === false</code> (user has selected a task). The card grid and Phaser canvas are never shown simultaneously.</div>
+    </div>
+  </section>
+
+  <!-- 3. Task Selection -->
+  <section id="task-select">
+    <h2><span class="step-num">3</span> Task Selection (Card Grid)</h2>
+
+    <p>When the app loads, the user sees a 2&times;3 card grid with all 6 tasks:</p>
+
+    <table>
+      <tr><th>Task ID</th><th>Label</th><th>Emoji</th><th>Phaser Scene</th></tr>
+      <tr><td><code>monster-party</code></td><td>Monster Birthday Party</td><td>&#127874;</td><td>MonsterPartyScene</td></tr>
+      <tr><td><code>robot-pizza</code></td><td>Robot Pizza Delivery</td><td>&#129302;</td><td>RobotPizzaScene</td></tr>
+      <tr><td><code>wizard-kitchen</code></td><td>Wizard's Kitchen</td><td>&#129497;</td><td>WizardKitchenScene</td></tr>
+      <tr><td><code>dinosaur-school</code></td><td>Dinosaur's First Day</td><td>&#129429;</td><td>DinosaurSchoolScene</td></tr>
+      <tr><td><code>dog-space</code></td><td>Dog Space Mission</td><td>&#128021;</td><td>DogSpaceScene</td></tr>
+      <tr><td><code>octopus-band</code></td><td>Octopus Rock Band</td><td>&#128025;</td><td>OctopusBandScene</td></tr>
+    </table>
+
+    <h3>What happens when a card is clicked</h3>
+    <p><span class="file-ref">App.tsx:24-42 &mdash; switchTask()</span></p>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot gold"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <strong>Reset Zustand store</strong><br>
+          Clears <code>lastScript</code>, <code>lastSource</code>, <code>error</code>, <code>userInput</code>. Sets <code>currentTask</code> to the selected task ID.
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot gold"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <strong>Switch Phaser scene</strong><br>
+          Calls <code>game.scene.start(newScene)</code> and <code>game.scene.stop(oldScene)</code> to swap the active Phaser scene.
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot gold"></div></div>
+        <div class="flow-content">
+          <strong>Hide grid, show game</strong><br>
+          Sets <code>showGrid = false</code> &mdash; the card grid disappears, Phaser canvas + PromptInput appear.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Scene Init -->
+  <section id="scene-init">
+    <h2><span class="step-num">4</span> Scene Initialization</h2>
+
+    <p>When a Phaser scene starts, it goes through three lifecycle methods. Here&rsquo;s <code>MonsterPartyScene</code> as an example (all 6 follow the same pattern):</p>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot blue"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <strong>preload()</strong><br>
+          <span class="file-ref">MonsterPartyScene.ts:17-19</span>
+          <p>Calls the shared <code>preloadGameAssets(this)</code> function from <code>AssetLoader.ts</code>. This loads all 53 game assets (9 actors, 28 props, 6 backdrops, 19 SFX) into Phaser&rsquo;s texture cache. Phaser deduplicates automatically, so it&rsquo;s safe for multiple scenes to call it.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot blue"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <strong>create()</strong><br>
+          <span class="file-ref">MonsterPartyScene.ts:21-66</span>
+          <ol>
+            <li>Set up backdrop image (or solid color fallback if texture missing)</li>
+            <li>Create title text (&ldquo;Monster Birthday Party&rdquo;)</li>
+            <li>Spawn the persistent main character (e.g., the monster)</li>
+            <li>Create instruction text (&ldquo;Type a prompt below&hellip;&rdquo;)</li>
+            <li>Instantiate <code>SceneScriptPlayer</code> (the animation engine)</li>
+            <li>Register <code>EventBus.on('play-script', this.handleScript)</code></li>
+            <li>Emit <code>'scene-ready'</code> back to React</li>
+          </ol>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot blue"></div></div>
+        <div class="flow-content">
+          <strong>Scene is ready</strong><br>
+          <p>The scene is now idle, waiting for a <code>'play-script'</code> event from the EventBus. The user sees the canvas with the backdrop, title, main character, and instruction text.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Prompt Submission -->
+  <section id="prompt-submit">
+    <h2><span class="step-num">5</span> Prompt Submission</h2>
+
+    <p>The user types their prompt in the <code>&lt;PromptInput /&gt;</code> component below the Phaser canvas.</p>
+
+    <div class="card">
+      <div class="kv"><span class="k">Max length</span><span class="v">300 characters (counter at 80%)</span></div>
+      <div class="kv"><span class="k">Submit</span><span class="v">Click &ldquo;Try It!&rdquo; button or press Enter</span></div>
+      <div class="kv"><span class="k">Voice</span><span class="v">Microphone button for speech-to-text (Chrome)</span></div>
+      <div class="kv"><span class="k">Placeholder</span><span class="v">Task-specific hint (e.g., &ldquo;How would you plan the monster&rsquo;s birthday party?&rdquo;)</span></div>
+    </div>
+
+    <h3>Submission Flow</h3>
+    <p><span class="file-ref">PromptInput.tsx:68-71 &rarr; gameStore.ts:60-96</span></p>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <strong>1. Validate input</strong><br>
+          Trim whitespace, return early if empty. Look up system prompt for <code>currentTask</code> from the <code>SYSTEM_PROMPTS</code> map.
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <strong>2. Show loading state</strong><br>
+          Set <code>isLoading: true</code>. The submit button shows a spinner + random loading message (e.g., &ldquo;Mixing up some magic&hellip;&rdquo;).
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot green"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <strong>3. Call the three-tier resolver</strong><br>
+          <code>resolveResponse(taskId, systemPrompt, userInput)</code> &mdash; this is where the magic happens. See next section.
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <strong>4. Update state</strong><br>
+          Store <code>lastScript</code>, <code>lastSource</code>, append to <code>history[]</code>, set <code>isLoading: false</code>.
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot orange"></div></div>
+        <div class="flow-content">
+          <strong>5. Send to Phaser</strong><br>
+          <code>EventBus.emit('play-script', script)</code> &mdash; triggers the Phaser scene to animate the response.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Three-Tier Resolver -->
+  <section id="resolver">
+    <h2><span class="step-num">6</span> The Three-Tier Resolver</h2>
+
+    <p>This is the core decision engine. It determines <em>where</em> the response comes from. The design guarantees the demo <strong>never shows an error screen</strong>.</p>
+
+    <p><span class="file-ref">frontend/src/services/resolver.ts:20-54</span></p>
+
+    <!-- Tier 1 -->
+    <div class="card success">
+      <h3><span class="tier-badge tier-1">&#9889; Tier 1 &mdash; Cache</span></h3>
+      <p><strong>Speed:</strong> Instant (&lt;1ms) &nbsp;&nbsp; <strong>Source label:</strong> <code>cache</code></p>
+      <p>Checks the in-memory cache (96 pre-generated responses loaded at boot from <code>demo-cache.json</code>).</p>
+
+      <p><span class="file-ref">frontend/src/services/cache.ts:65-103</span></p>
+
+      <p>Three levels of matching, tried in order:</p>
+      <ol>
+        <li><strong>Exact match</strong> &mdash; Normalize input (lowercase, strip punctuation, collapse whitespace), direct key lookup.</li>
+        <li><strong>Fallback exact match</strong> &mdash; Iterate all keys, normalize each, check equality (handles pre-normalized keys).</li>
+        <li><strong>Fuzzy match</strong> &mdash; Keyword overlap scoring:
+          <ul>
+            <li>Extract keywords: split by space, remove stopwords (&ldquo;the&rdquo;, &ldquo;a&rdquo;, &ldquo;and&rdquo;&hellip;) and single-character words.</li>
+            <li>Score = <code>matchingKeywords / max(kwA.length, kwB.length)</code> (Jaccard-ish)</li>
+            <li>Accept if score &ge; <strong>0.6</strong> (the <code>FUZZY_THRESHOLD</code>)</li>
+          </ul>
+        </li>
+      </ol>
+      <p>If any match is found, the cached <code>SceneScript</code> is returned immediately.</p>
+    </div>
+
+    <!-- Tier 2 -->
+    <div class="card warning">
+      <h3><span class="tier-badge tier-2">&#127757; Tier 2 &mdash; Live API</span></h3>
+      <p><strong>Speed:</strong> 1&ndash;8 seconds &nbsp;&nbsp; <strong>Source label:</strong> <code>live</code></p>
+      <p>If cache misses, calls the Claude Opus 4.6 API directly from the browser.</p>
+
+      <p><span class="file-ref">frontend/src/services/claude.ts:15-72</span></p>
+
+      <div class="card">
+        <div class="kv"><span class="k">Endpoint</span><span class="v"><code>https://api.anthropic.com/v1/messages</code></span></div>
+        <div class="kv"><span class="k">Model</span><span class="v"><code>claude-opus-4-6</code></span></div>
+        <div class="kv"><span class="k">Max tokens</span><span class="v">400</span></div>
+        <div class="kv"><span class="k">Timeout</span><span class="v">6 seconds (AbortController)</span></div>
+        <div class="kv"><span class="k">System prompt</span><span class="v">Task-specific (e.g., MONSTER_PARTY_PROMPT)</span></div>
+        <div class="kv"><span class="k">User message</span><span class="v">The child&rsquo;s typed input</span></div>
+      </div>
+
+      <p>The raw text response is parsed through <code>parseSceneScript()</code>:</p>
+      <ol>
+        <li>Strip any markdown code fences (<code>```json ... ```</code>)</li>
+        <li>Parse as JSON</li>
+        <li>Validate <code>success_level</code> and <code>actions[]</code> exist</li>
+      </ol>
+      <p>On success, the result is <strong>saved to cache</strong> for future lookups, then returned.</p>
+    </div>
+
+    <!-- Tier 3 -->
+    <div class="card danger">
+      <h3><span class="tier-badge tier-3">&#128737; Tier 3 &mdash; Fallback</span></h3>
+      <p><strong>Speed:</strong> Instant &nbsp;&nbsp; <strong>Source label:</strong> <code>fallback</code></p>
+      <p>If the API fails (timeout, parse error, no API key), returns a hardcoded generic response.</p>
+
+      <p><span class="file-ref">frontend/src/data/fallback-scripts.ts:7-85</span></p>
+
+      <p>One fallback per task, always <code>PARTIAL_SUCCESS</code> with encouraging feedback. Example for Monster Party:</p>
+      <pre><code>{
+  <span class="string">"success_level"</span>: <span class="string">"PARTIAL_SUCCESS"</span>,
+  <span class="string">"narration"</span>: <span class="string">"The monster looks around hopefully..."</span>,
+  <span class="string">"actions"</span>: [
+    { <span class="string">"type"</span>: <span class="string">"spawn"</span>, <span class="string">"target"</span>: <span class="string">"cake"</span>, <span class="string">"position"</span>: <span class="string">"center"</span> },
+    { <span class="string">"type"</span>: <span class="string">"animate"</span>, <span class="string">"target"</span>: <span class="string">"monster"</span>, <span class="string">"anim"</span>: <span class="string">"confused"</span> },
+    ...
+  ],
+  <span class="string">"prompt_feedback"</span>: <span class="string">"Try being more specific..."</span>
+}</code></pre>
+    </div>
+
+    <div class="callout">
+      <span class="emoji">&#128170;</span>
+      <div><strong>The guarantee:</strong> The resolver <em>always</em> returns a valid SceneScript. It never throws. Cache miss &rarr; API fail &rarr; fallback. The user always sees something animate.</div>
+    </div>
+  </section>
+
+  <!-- 7. Bridge -->
+  <section id="bridge">
+    <h2><span class="step-num">7</span> React &rarr; Phaser Bridge</h2>
+
+    <p>React and Phaser live in separate worlds. The <strong>EventBus</strong> (<code>game/EventBus.ts</code>) is a <code>Phaser.Events.EventEmitter</code> that connects them:</p>
+
+    <div class="arch-diagram"><span class="hl-gold">React (Zustand)</span>                            <span class="hl-blue">Phaser (Scene)</span>
+      |                                          |
+      |  <span class="hl">EventBus.emit('play-script', script)</span>   |
+      | ----------------------------------------&gt; |
+      |                                          |
+      |                                  handleScript(script)
+      |                                     showNarration()
+      |                                  scriptPlayer.play()
+      |                                  postScriptEffect()
+      |                                          |
+      |  <span class="hl">EventBus.emit('scene-ready', scene)</span>    |
+      | &lt;---------------------------------------- |
+</div>
+
+    <p><strong>Two events in the system:</strong></p>
+    <ul>
+      <li><code>'play-script'</code> &mdash; React &rarr; Phaser. Sent after the resolver returns a SceneScript. The active scene&rsquo;s <code>handleScript()</code> receives it.</li>
+      <li><code>'scene-ready'</code> &mdash; Phaser &rarr; React. Sent when a scene finishes <code>create()</code>. PhaserGame.tsx updates the ref to track the active scene.</li>
+    </ul>
+  </section>
+
+  <!-- 8. SceneScriptPlayer -->
+  <section id="script-player">
+    <h2><span class="step-num">8</span> SceneScriptPlayer &mdash; Action Execution</h2>
+
+    <p>The core animation engine. When a scene receives a script, its <code>SceneScriptPlayer</code> processes each action sequentially.</p>
+
+    <p><span class="file-ref">frontend/src/game/SceneScriptPlayer.ts:75-113</span></p>
+
+    <h3>Script Processing Loop</h3>
+    <ol>
+      <li><code>clear()</code> &mdash; Remove all actors, emotes, and effects from the previous script</li>
+      <li>For each action in <code>script.actions[]</code>:
+        <ul>
+          <li>Apply per-action delay if <code>action.delay_ms</code> exists</li>
+          <li>Call <code>executeAction(action)</code> (dispatches to handler by type)</li>
+          <li>On error: <strong>log warning, skip to next action</strong> (never crash)</li>
+        </ul>
+      </li>
+    </ol>
+
+    <h3>Action Types</h3>
+    <table>
+      <tr><th>Type</th><th>What it does</th><th>Key behavior</th></tr>
+      <tr>
+        <td><code>spawn</code></td>
+        <td>Create an actor or prop on stage</td>
+        <td>Loads texture (or creates colored placeholder if missing). Scales to ~80px height. Pop-in tween with <code>Back.easeOut</code>. Auto-plays <code>pop</code> SFX.</td>
+      </tr>
+      <tr>
+        <td><code>move</code></td>
+        <td>Tween an actor to a new position</td>
+        <td>7 styles: <code>linear</code>, <code>arc</code> (two-phase up+down), <code>bounce</code>, <code>float</code>, <code>shake</code> (move + wiggle), <code>spin-in</code> (360&deg; rotate), <code>drop-in</code> (fall from above).</td>
+      </tr>
+      <tr>
+        <td><code>animate</code></td>
+        <td>Play a character animation</td>
+        <td>Tween-based (no sprite atlas): <code>happy/dance</code> (bob+tilt), <code>sad/cry</code> (droop), <code>eat</code> (squash-stretch), <code>confused</code> (head-tilt), <code>wave/cheer/clap</code> (bounce), <code>laugh</code> (shake), <code>point</code> (lean).</td>
+      </tr>
+      <tr>
+        <td><code>react</code></td>
+        <td>Spawn visual effects</td>
+        <td>Emoji-based particles: <code>confetti-burst</code> (24 emojis), <code>hearts-float</code>, <code>stars-spin</code>, <code>explosion-cartoon</code>, <code>question-marks</code>, <code>laugh-tears</code>, <code>fire-sneeze</code>, <code>splash</code>, <code>sparkle-magic</code>, <code>sad-cloud</code>.</td>
+      </tr>
+      <tr>
+        <td><code>emote</code></td>
+        <td>Speech bubble above an actor</td>
+        <td>Float-up animation, hold 1s, fade-out. Uses emoji text.</td>
+      </tr>
+      <tr>
+        <td><code>sfx</code></td>
+        <td>Play a sound effect</td>
+        <td>Delegates to SoundManager. Respects mute toggle.</td>
+      </tr>
+      <tr>
+        <td><code>wait</code></td>
+        <td>Pause between actions</td>
+        <td>Phaser timer delay. Used for dramatic timing.</td>
+      </tr>
+      <tr>
+        <td><code>remove</code></td>
+        <td>Remove an actor from stage</td>
+        <td>Shrink-out tween (scale &rarr; 0, alpha &rarr; 0), then destroy.</td>
+      </tr>
+    </table>
+
+    <h3>Position Map</h3>
+    <p>Actions reference named positions, mapped to pixel coordinates on the 1024&times;576 canvas:</p>
+    <table>
+      <tr><th>Name</th><th>X</th><th>Y</th><th>Used for</th></tr>
+      <tr><td><code>left</code></td><td>200</td><td>350</td><td>Stage left</td></tr>
+      <tr><td><code>center</code></td><td>512</td><td>350</td><td>Center stage</td></tr>
+      <tr><td><code>right</code></td><td>824</td><td>350</td><td>Stage right</td></tr>
+      <tr><td><code>top</code></td><td>512</td><td>150</td><td>Above stage</td></tr>
+      <tr><td><code>bottom</code></td><td>512</td><td>500</td><td>Below stage</td></tr>
+      <tr><td><code>off-left</code></td><td>-100</td><td>350</td><td>Off-screen left</td></tr>
+      <tr><td><code>off-right</code></td><td>1124</td><td>350</td><td>Off-screen right</td></tr>
+    </table>
+
+    <h3>Reduced Motion Support</h3>
+    <p><span class="file-ref">SceneScriptPlayer.ts:42-43</span></p>
+    <p>At module load, checks <code>window.matchMedia('(prefers-reduced-motion: reduce)')</code>. If true, all tweens apply their final values instantly (no animation). The game still works, just without motion.</p>
+  </section>
+
+  <!-- 9. Effects & Sound -->
+  <section id="effects">
+    <h2><span class="step-num">9</span> Visual Effects &amp; Sound</h2>
+
+    <h3>Effects System (Emoji Particles)</h3>
+    <p>All visual effects use <strong>emoji text objects</strong>, not Phaser particle emitters. This avoids the need for particle atlas textures.</p>
+
+    <p>Example: <code>confetti-burst</code> creates 24 random emoji characters (&#127881;&#127882;&#11088;&#10024;&#127880;), positions them at the target, then tweens them outward in a circular burst pattern (80&ndash;200px radius) with rotation and fade-out over 800&ndash;1200ms.</p>
+
+    <h3>Sound System</h3>
+    <p><span class="file-ref">frontend/src/game/SoundManager.ts:15-20</span></p>
+    <p>The <code>SoundManager</code> wraps Phaser&rsquo;s sound system with a mute check:</p>
+    <ol>
+      <li>Read <code>isMuted</code> from Zustand store &mdash; if muted, return immediately</li>
+      <li>Check if Phaser sound system exists and audio cache has the key</li>
+      <li>Play via <code>scene.sound.play(key, { volume })</code></li>
+    </ol>
+
+    <p><strong>Auto-SFX triggers:</strong></p>
+    <ul>
+      <li><code>spawn</code> action &rarr; plays <code>pop</code> sound (volume 0.3)</li>
+      <li><code>confetti-burst</code> effect &rarr; plays <code>celebration</code> sound (volume 0.4)</li>
+    </ul>
+
+    <h3>Typewriter Narration</h3>
+    <p><span class="file-ref">MonsterPartyScene.ts:130-163</span></p>
+    <p>The narration text appears character-by-character at <strong>35ms per character</strong> (~28 chars/sec) using <code>scene.time.addEvent</code>. The text color is mapped from the success level:</p>
+    <ul>
+      <li><code>FULL_SUCCESS</code> &rarr; <span style="color: var(--green);">emerald (#34d399)</span></li>
+      <li><code>PARTIAL_SUCCESS</code> &rarr; <span style="color: var(--gold);">gold (#fbbf24)</span></li>
+      <li><code>FUNNY_FAIL</code> &rarr; <span style="color: var(--orange);">orange (#FF8C42)</span></li>
+    </ul>
+
+    <h3>Post-Script Celebrations</h3>
+    <p>After all actions complete, an extra effect plays based on success level:</p>
+    <ul>
+      <li><strong>FULL_SUCCESS:</strong> 30 emoji particles burst from the top of the screen (&#127881;&#127882;&#11088;&#127880;), tweened downward with random rotation</li>
+      <li><strong>FUNNY_FAIL:</strong> Camera shakes for 400ms, a large &#129300; emoji appears center-screen and fades out</li>
+    </ul>
+  </section>
+
+  <!-- 10. Result Panel -->
+  <section id="result-ui">
+    <h2><span class="step-num">10</span> Result Panel (React UI)</h2>
+
+    <p>While Phaser animates the scene, React simultaneously updates the result panel below the canvas.</p>
+
+    <p><span class="file-ref">frontend/src/components/PromptInput.tsx:88-120</span></p>
+
+    <h3>Success Level Styles</h3>
+    <table>
+      <tr><th>Level</th><th>Colors</th><th>Badge</th><th>Icon</th></tr>
+      <tr>
+        <td><code>FULL_SUCCESS</code></td>
+        <td style="color: var(--green);">Emerald background + border</td>
+        <td>&ldquo;Amazing!&rdquo;</td>
+        <td>&#127775;</td>
+      </tr>
+      <tr>
+        <td><code>PARTIAL_SUCCESS</code></td>
+        <td style="color: var(--gold);">Amber background + border</td>
+        <td>&ldquo;Almost!&rdquo;</td>
+        <td>&#128161;</td>
+      </tr>
+      <tr>
+        <td><code>FUNNY_FAIL</code></td>
+        <td style="color: var(--orange);">Orange background + border</td>
+        <td>&ldquo;Oops!&rdquo;</td>
+        <td>&#128516;</td>
+      </tr>
+    </table>
+
+    <h3>Panel Contents</h3>
+    <ol>
+      <li><strong>Badge</strong> &mdash; Icon + label (e.g., &ldquo;&#127775; Amazing!&rdquo;)</li>
+      <li><strong>Source tag</strong> &mdash; Tiny label showing &ldquo;cache&rdquo;, &ldquo;live&rdquo;, or &ldquo;fallback&rdquo; (top-right, 30% opacity)</li>
+      <li><strong>Narration</strong> &mdash; The script&rsquo;s narration text in bold</li>
+      <li><strong>Prompt feedback</strong> &mdash; Concrete tip in orange text (e.g., &ldquo;Try adding decorations like balloons!&rdquo;)</li>
+      <li><strong>Missing elements</strong> &mdash; Pill-shaped chips showing what to add for a better score</li>
+      <li><strong>Funny fail hint</strong> &mdash; Extra encouragement (&ldquo;That was funny! Try being more specific.&rdquo;)</li>
+    </ol>
+  </section>
+
+  <!-- 11. Error Handling -->
+  <section id="error-handling">
+    <h2><span class="step-num">11</span> Error Handling &amp; Fallbacks</h2>
+
+    <p>The system is designed so the <strong>demo never crashes</strong>. Here&rsquo;s how errors are handled at every layer:</p>
+
+    <table>
+      <tr><th>Layer</th><th>What can fail</th><th>How it&rsquo;s handled</th></tr>
+      <tr>
+        <td>Claude API</td>
+        <td>Timeout, network error, bad response</td>
+        <td>6s AbortController timeout. Caught in resolver, falls to Tier 3 fallback.</td>
+      </tr>
+      <tr>
+        <td>JSON parsing</td>
+        <td>API returns non-JSON or malformed JSON</td>
+        <td><code>parseSceneScript()</code> strips code fences, validates structure. Failure falls to Tier 3.</td>
+      </tr>
+      <tr>
+        <td>Resolver</td>
+        <td>All tiers fail (shouldn&rsquo;t happen)</td>
+        <td>gameStore catch block sets <code>error</code> state, shown as red banner in UI.</td>
+      </tr>
+      <tr>
+        <td>Script actions</td>
+        <td>Invalid target, bad position, etc.</td>
+        <td>Each action wrapped in try-catch. Logs warning, <strong>skips to next action</strong>.</td>
+      </tr>
+      <tr>
+        <td>Missing texture</td>
+        <td>Asset not loaded in Phaser cache</td>
+        <td>Creates colored rectangle placeholder with label. Game continues.</td>
+      </tr>
+      <tr>
+        <td>Missing sound</td>
+        <td>Audio file not in cache</td>
+        <td>SoundManager checks <code>cache.audio.exists(key)</code> before playing. Silently skips.</td>
+      </tr>
+      <tr>
+        <td>Scene playback</td>
+        <td>Any error during handleScript()</td>
+        <td>Caught, logged, <code>isPlaying</code> flag reset. Scene recovers for next input.</td>
+      </tr>
+    </table>
+  </section>
+
+  <!-- 12. Full Diagram -->
+  <section id="full-diagram">
+    <h2><span class="step-num">12</span> Full Flow Diagram</h2>
+
+    <div class="arch-diagram">
+<span class="hl-gold">USER</span>
+  |
+  |  clicks task card
+  v
+<span class="hl-gold">App.tsx</span> &mdash; switchTask()
+  |  1. Reset Zustand store
+  |  2. game.scene.start(newScene)
+  |  3. setShowGrid(false)
+  v
+<span class="hl-blue">Phaser Scene</span> &mdash; preload() &rarr; create()
+  |  Load assets (AssetLoader)
+  |  Draw backdrop + title + character
+  |  Create SceneScriptPlayer
+  |  Register EventBus listener
+  |
+  |  <span class="comment">(scene is idle, waiting for input)</span>
+  |
+<span class="hl-gold">USER</span>
+  |
+  |  types prompt, clicks "Try It!"
+  v
+<span class="hl-gold">PromptInput.tsx</span> &rarr; submitInput()
+  v
+<span class="hl">gameStore.ts</span> &mdash; submitInput()
+  |  1. Validate input
+  |  2. Set isLoading = true
+  |  3. resolveResponse()
+  |         |
+  |         v
+  |    <span class="hl-green">TIER 1: Cache</span> &mdash; cache.ts
+  |         |  Exact match?     &rarr; return { source: 'cache' }
+  |         |  Fuzzy match &ge;0.6? &rarr; return { source: 'cache' }
+  |         |  No match &rarr;
+  |         v
+  |    <span class="hl-blue">TIER 2: Live API</span> &mdash; claude.ts
+  |         |  POST /v1/messages (claude-opus-4-6, 6s timeout)
+  |         |  Parse JSON &rarr; validate &rarr; save to cache
+  |         |  Success? &rarr; return { source: 'live' }
+  |         |  Error?   &rarr;
+  |         v
+  |    <span class="hl-orange">TIER 3: Fallback</span> &mdash; fallback-scripts.ts
+  |         |  Hardcoded PARTIAL_SUCCESS response
+  |         |  return { source: 'fallback' }
+  |         v
+  |  4. Update state (lastScript, lastSource)
+  |  5. <span class="hl">EventBus.emit('play-script', script)</span>
+  v
+<span class="hl-blue">Phaser Scene</span> &mdash; handleScript()
+  |  1. showNarration() &mdash; typewriter at 35ms/char
+  |  2. scriptPlayer.play(script)
+  |         |
+  |         |  for each action in script.actions[]:
+  |         |    spawn  &rarr; load texture, pop-in tween, play "pop" sfx
+  |         |    move   &rarr; tween to position (arc/bounce/float/...)
+  |         |    animate&rarr; tween-based animation (dance/eat/sad/...)
+  |         |    react  &rarr; emoji particle effects (confetti/hearts/...)
+  |         |    emote  &rarr; speech bubble above actor
+  |         |    sfx    &rarr; SoundManager.play()
+  |         |    wait   &rarr; timed delay
+  |         |    remove &rarr; shrink-out tween, destroy
+  |         v
+  |  3. postScriptEffect()
+  |         FULL_SUCCESS  &rarr; confetti rain
+  |         FUNNY_FAIL    &rarr; camera shake + thinking emoji
+  v
+<span class="hl-gold">PromptInput.tsx</span> &mdash; React re-renders
+  |  Result bubble appears:
+  |    [badge] + narration + feedback + missing elements
+  |  Submit button resets to "Try It!"
+  v
+<span class="hl-gold">USER</span> reads feedback, tries again with better prompt!
+</div>
+
+    <div class="callout">
+      <span class="emoji">&#127919;</span>
+      <div><strong>The learning loop:</strong> Child types a vague prompt &rarr; sees a funny fail &rarr; reads the specific feedback (&ldquo;Try adding a cake AND balloons AND music&rdquo;) &rarr; tries again with more detail &rarr; sees a better result. This is how the game teaches prompt engineering through play.</div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <div style="text-align: center; margin-top: 60px; padding: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.8rem;">
+    Prompt Quest &middot; Architecture Walkthrough &middot; February 2026<br>
+    Built with React + Phaser 3 + Claude Opus 4.6 for the Claude Code Hackathon
+  </div>
+
+</div>
+</body>
+</html>

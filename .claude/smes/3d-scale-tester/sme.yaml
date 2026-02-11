@@ -1,0 +1,30 @@
+name: 3d-scale-tester
+description: >
+  3D Scale Testing Loop — Measures bounding boxes of characters, buildings, and props
+  in the running Three.js scene, compares to real-world proportions, computes recommended
+  scales, applies adjustments, and verifies visually via screenshots.
+version: 1.0.0
+capabilities:
+  - Measure any 3D object bounding box in the running scene via window.__measureScene()
+  - Compare character height to building/prop heights
+  - Compute recommended scale multipliers based on real-world proportions
+  - Apply scale changes to VillageWorld.tsx / ScenePlayer3D.tsx
+  - Take before/after screenshots for visual verification
+  - Run iterative measure → adjust → verify loops
+
+tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+  - Grep
+  - Glob
+  - mcp__puppeteer__puppeteer_navigate
+  - mcp__puppeteer__puppeteer_screenshot
+  - mcp__puppeteer__puppeteer_evaluate
+  - mcp__puppeteer__puppeteer_click
+
+context:
+  always:
+    - knowledge/scale-reference.md
+    - knowledge/measurement-api.md

@@ -13,11 +13,18 @@ export default class ErrorBoundary extends React.Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex items-center justify-center h-screen bg-gray-50 dark:bg-gray-900">
-          <div className="card max-w-md text-center">
-            <h2 className="text-xl font-bold text-red-600 mb-2">Something went wrong</h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">{this.state.error?.message}</p>
-            <button onClick={() => window.location.reload()} className="btn-primary">Reload Page</button>
+        <div className="flex items-center justify-center h-screen bg-quest-bg stars-bg">
+          <div className="max-w-md text-center p-8 bg-quest-card/80 backdrop-blur-sm rounded-2xl border-2 border-quest-border shadow-glow-purple animate-scale-in">
+            <div className="text-5xl mb-4">🔮</div>
+            <h2 className="font-heading text-xl font-bold text-quest-red mb-2">Oops! A spell went wrong</h2>
+            <p className="text-quest-text-secondary text-sm mb-6">{this.state.error?.message}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="btn-game bg-gradient-to-br from-quest-accent to-quest-purple text-white
+                         border-2 border-quest-accent/50 shadow-glow-purple px-6 py-3"
+            >
+              Try Again
+            </button>
           </div>
         </div>
       );

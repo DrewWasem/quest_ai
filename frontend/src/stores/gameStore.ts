@@ -2,13 +2,23 @@ import { create } from 'zustand';
 import type { SceneScript } from '../types/scene-script';
 import type { ResponseSource } from '../services/resolver';
 import { resolveResponse } from '../services/resolver';
+
+// Legacy 2D prompts (kept for fallback)
 import { MONSTER_PARTY_PROMPT } from '../prompts/monster-party';
 import { ROBOT_PIZZA_PROMPT } from '../prompts/robot-pizza';
 import { WIZARD_KITCHEN_PROMPT } from '../prompts/wizard-kitchen';
 import { DINOSAUR_SCHOOL_PROMPT } from '../prompts/dinosaur-school';
 import { DOG_SPACE_PROMPT } from '../prompts/dog-space';
 import { OCTOPUS_BAND_PROMPT } from '../prompts/octopus-band';
-import EventBus from '../game/EventBus';
+
+// 3D prompts
+import { SKELETON_BIRTHDAY_PROMPT } from '../prompts/skeleton-birthday';
+import { KNIGHT_SPACE_PROMPT } from '../prompts/knight-space';
+import { MAGE_KITCHEN_PROMPT } from '../prompts/mage-kitchen';
+import { BARBARIAN_SCHOOL_PROMPT } from '../prompts/barbarian-school';
+import { DUNGEON_CONCERT_PROMPT } from '../prompts/dungeon-concert';
+import { SKELETON_PIZZA_PROMPT } from '../prompts/skeleton-pizza';
+import { ADVENTURERS_PICNIC_PROMPT } from '../prompts/adventurers-picnic';
 
 interface HistoryEntry {
   input: string;
@@ -28,15 +38,31 @@ interface GameState {
   history: HistoryEntry[];
   isMuted: boolean;
 
+  // Village navigation
+  currentZone: string | null; // null = village center, taskId = in zone
+  cameraTarget: [number, number, number]; // where camera should look
+  isTransitioning: boolean; // true during camera fly
+
   // Actions
   setInput: (input: string) => void;
   submitInput: () => Promise<void>;
   clearScript: () => void;
   clearError: () => void;
   toggleMute: () => void;
+  enterZone: (zoneId: string) => void;
+  exitZone: () => void;
 }
 
 const SYSTEM_PROMPTS: Record<string, string> = {
+  // 3D tasks (primary)
+  'skeleton-birthday': SKELETON_BIRTHDAY_PROMPT,
+  'knight-space': KNIGHT_SPACE_PROMPT,
+  'mage-kitchen': MAGE_KITCHEN_PROMPT,
+  'barbarian-school': BARBARIAN_SCHOOL_PROMPT,
+  'dungeon-concert': DUNGEON_CONCERT_PROMPT,
+  'skeleton-pizza': SKELETON_PIZZA_PROMPT,
+  'adventurers-picnic': ADVENTURERS_PICNIC_PROMPT,
+  // Legacy 2D tasks (kept for fallback)
   'monster-party': MONSTER_PARTY_PROMPT,
   'robot-pizza': ROBOT_PIZZA_PROMPT,
   'wizard-kitchen': WIZARD_KITCHEN_PROMPT,
@@ -45,8 +71,17 @@ const SYSTEM_PROMPTS: Record<string, string> = {
   'octopus-band': OCTOPUS_BAND_PROMPT,
 };
 
+// Zone center positions in world space
+export const ZONE_CENTERS: Record<string, [number, number, number]> = {
+  'skeleton-birthday': [0, 0, -16],
+  'adventurers-picnic': [0, 0, 16],
+};
+
+// Village center camera position
+export const VILLAGE_CENTER: [number, number, number] = [0, 0, 0];
+
 export const useGameStore = create<GameState>((set, get) => ({
-  currentTask: 'monster-party',
+  currentTask: 'skeleton-birthday',
   userInput: '',
   isLoading: false,
   lastScript: null,
@@ -54,6 +89,9 @@ export const useGameStore = create<GameState>((set, get) => ({
   error: null,
   history: [],
   isMuted: false,
+  currentZone: null,
+  cameraTarget: VILLAGE_CENTER,
+  isTransitioning: false,
 
   setInput: (input: string) => set({ userInput: input }),
 
@@ -85,9 +123,8 @@ export const useGameStore = create<GameState>((set, get) => ({
         history: [...state.history, { input: trimmed, script, source, latencyMs }],
       }));
 
-      // Send to Phaser
-      EventBus.emit('play-script', script);
-      console.log(`[GameStore] Script sent to Phaser (${source}, ${latencyMs.toFixed(0)}ms):`, script);
+      // ScenePlayer3D reads lastScript from Zustand directly — no EventBus needed
+      console.log(`[GameStore] Script resolved (${source}, ${latencyMs.toFixed(0)}ms):`, script);
     } catch (err) {
       // This should never happen — resolver always returns fallback
       const message = err instanceof Error ? err.message : 'Something went wrong';
@@ -99,4 +136,31 @@ export const useGameStore = create<GameState>((set, get) => ({
   clearScript: () => set({ lastScript: null, lastSource: null }),
   clearError: () => set({ error: null }),
   toggleMute: () => set((s) => ({ isMuted: !s.isMuted })),
+
+  enterZone: (zoneId: string) => {
+    const center = ZONE_CENTERS[zoneId];
+    if (!center) return;
+    set({
+      currentZone: zoneId,
+      currentTask: zoneId,
+      cameraTarget: center,
+      isTransitioning: true,
+      lastScript: null,
+      lastSource: null,
+      error: null,
+      userInput: '',
+    });
+    // Transition completes after camera arrives (VillageCamera sets isTransitioning=false)
+  },
+
+  exitZone: () => {
+    set({
+      currentZone: null,
+      cameraTarget: VILLAGE_CENTER,
+      isTransitioning: true,
+      lastScript: null,
+      lastSource: null,
+      userInput: '',
+    });
+  },
 }));

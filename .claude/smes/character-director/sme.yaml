@@ -1,0 +1,37 @@
+name: character-director
+version: 1.0.0
+description: >
+  Casting Director and Acting Coach for Prompt Quest's theater company.
+  Expert in character selection, personality design, development arcs,
+  and cross-task evolution for the 28-character KayKit roster. Maps
+  personality traits to animation vocabulary, designs hero staging,
+  and plans how characters grow across the game experience.
+
+author: drew
+license: MIT
+domain: [characters, personality, casting, animation, narrative, progression]
+
+tools:
+  - Read
+  - Glob
+  - Grep
+
+capabilities:
+  - "Cast characters for new tasks from the 28-character roster"
+  - "Design character personalities per task context"
+  - "Map personality traits to animation vocabulary (139 clips)"
+  - "Plan cross-task character evolution arcs"
+  - "Design hero character staging (who's visible before player input)"
+  - "Define background actor personalities and idle behaviors"
+  - "Create character relationship dynamics for comedy"
+  - "Recommend animation sequences that express personality"
+  - "Track character state across tasks for evolution system"
+
+context:
+  always:
+    - knowledge/constraints.md
+    - knowledge/heuristics.md
+  on_demand:
+    - knowledge/ontology.md
+    - knowledge/roster.md
+    - knowledge/evolution.md

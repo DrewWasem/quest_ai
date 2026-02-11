@@ -38,7 +38,7 @@
         }
       ],
       "missing_elements": [],
-      "prompt_feedback": "Amazing job! You included food, decorations, AND entertainment — that's a perfect party plan!"
+      "prompt_feedback": "Amazing job! You included food, decorations, AND entertainment \u2014 that's a perfect party plan!"
     },
     "have a party with huge cake decorations and entertainment": {
       "success_level": "FULL_SUCCESS",
@@ -78,11 +78,11 @@
         }
       ],
       "missing_elements": [],
-      "prompt_feedback": "You nailed it! Cake, decorations, and fun — the monster is having the best day ever!"
+      "prompt_feedback": "You nailed it! Cake, decorations, and fun \u2014 the monster is having the best day ever!"
     },
     "give monster a big party with cake balloons presents": {
       "success_level": "FULL_SUCCESS",
-      "narration": "The monster opens presents while cake and balloons surround it — party perfection!",
+      "narration": "The monster opens presents while cake and balloons surround it \u2014 party perfection!",
       "actions": [
         {
           "type": "spawn",
@@ -118,7 +118,7 @@
         }
       ],
       "missing_elements": [],
-      "prompt_feedback": "Excellent! You described exactly what the party needs — food, decorations, and presents!"
+      "prompt_feedback": "Excellent! You described exactly what the party needs \u2014 food, decorations, and presents!"
     },
     "throw a cake": {
       "success_level": "PARTIAL_SUCCESS",
@@ -180,7 +180,7 @@
         "decorations",
         "entertainment"
       ],
-      "prompt_feedback": "The monster wants to party but doesn't know how! Be specific — what food, decorations, and activities should the party have?"
+      "prompt_feedback": "The monster wants to party but doesn't know how! Be specific \u2014 what food, decorations, and activities should the party have?"
     },
     "give monster cake": {
       "success_level": "PARTIAL_SUCCESS",
@@ -213,7 +213,7 @@
         "decorations",
         "entertainment"
       ],
-      "prompt_feedback": "The monster loves cake! Now try adding decorations and something fun to do — that's what makes a party a PARTY."
+      "prompt_feedback": "The monster loves cake! Now try adding decorations and something fun to do \u2014 that's what makes a party a PARTY."
     },
     "make monster happy": {
       "success_level": "FUNNY_FAIL",
@@ -242,7 +242,7 @@
         "decorations",
         "entertainment"
       ],
-      "prompt_feedback": "The monster WANTS to be happy — help it out! Describe a party with cake, balloons, presents, and fun activities!"
+      "prompt_feedback": "The monster WANTS to be happy \u2014 help it out! Describe a party with cake, balloons, presents, and fun activities!"
     },
     "do something fun": {
       "success_level": "FUNNY_FAIL",
@@ -300,7 +300,7 @@
         "decorations",
         "entertainment"
       ],
-      "prompt_feedback": "The monster is ready to party! But it needs your help — describe what food to serve, how to decorate, and what games to play!"
+      "prompt_feedback": "The monster is ready to party! But it needs your help \u2014 describe what food to serve, how to decorate, and what games to play!"
     },
     "throw the biggest most amazing cake ever with confetti": {
       "success_level": "PARTIAL_SUCCESS",
@@ -337,7 +337,7 @@
       "missing_elements": [
         "entertainment or activities"
       ],
-      "prompt_feedback": "So close to perfect! You've got an amazing cake and decorations — now add some entertainment like music or dancing to make it a FULL party!"
+      "prompt_feedback": "So close to perfect! You've got an amazing cake and decorations \u2014 now add some entertainment like music or dancing to make it a FULL party!"
     },
     "birthday party with a giant chocolate cake and balloons and dancing": {
       "success_level": "FULL_SUCCESS",
@@ -377,11 +377,11 @@
         }
       ],
       "missing_elements": [],
-      "prompt_feedback": "Perfect party plan! Cake, balloons, AND dancing — the monster has never been happier!"
+      "prompt_feedback": "Perfect party plan! Cake, balloons, AND dancing \u2014 the monster has never been happier!"
     },
     "cake and balloons": {
       "success_level": "PARTIAL_SUCCESS",
-      "narration": "A cake appears with some balloons — not bad, but the monster wants MORE!",
+      "narration": "A cake appears with some balloons \u2014 not bad, but the monster wants MORE!",
       "actions": [
         {
           "type": "spawn",
@@ -414,11 +414,11 @@
       "missing_elements": [
         "entertainment or activities"
       ],
-      "prompt_feedback": "Great decorations and food! The monster is smiling — now add some entertainment like music, dancing, or games for a perfect party!"
+      "prompt_feedback": "Great decorations and food! The monster is smiling \u2014 now add some entertainment like music, dancing, or games for a perfect party!"
     },
     "plan a huge birthday celebration with a massive cake presents balloons streamers and a dance floor with music": {
       "success_level": "FULL_SUCCESS",
-      "narration": "The ultimate birthday bash erupts — cake, presents, balloons, and epic dancing!",
+      "narration": "The ultimate birthday bash erupts \u2014 cake, presents, balloons, and epic dancing!",
       "actions": [
         {
           "type": "spawn",
@@ -454,7 +454,7 @@
         }
       ],
       "missing_elements": [],
-      "prompt_feedback": "WOW! That's the most detailed party plan ever! You thought of everything — the monster is SO happy!"
+      "prompt_feedback": "WOW! That's the most detailed party plan ever! You thought of everything \u2014 the monster is SO happy!"
     },
     "give the monster a party": {
       "success_level": "FUNNY_FAIL",
@@ -487,7 +487,7 @@
     },
     "throw a giant cake with balloons": {
       "success_level": "PARTIAL_SUCCESS",
-      "narration": "A giant cake soars through the air while balloons float up — almost there!",
+      "narration": "A giant cake soars through the air while balloons float up \u2014 almost there!",
       "actions": [
         {
           "type": "spawn",
@@ -520,11 +520,11 @@
       "missing_elements": [
         "entertainment or activities"
       ],
-      "prompt_feedback": "Awesome cake and balloons! Now add something fun to DO at the party — like music, dancing, or games — for a perfect score!"
+      "prompt_feedback": "Awesome cake and balloons! Now add something fun to DO at the party \u2014 like music, dancing, or games \u2014 for a perfect score!"
     },
     "make a party with a big cake lots of balloons and a dance contest": {
       "success_level": "FULL_SUCCESS",
-      "narration": "The monster wins the dance contest, then faceplants into the giant cake — best party EVER!",
+      "narration": "The monster wins the dance contest, then faceplants into the giant cake \u2014 best party EVER!",
       "actions": [
         {
           "type": "spawn",
@@ -558,11 +558,11 @@
         }
       ],
       "missing_elements": [],
-      "prompt_feedback": "Amazing prompt! You included food (big cake), decorations (balloons), AND entertainment (dance contest) — that's everything a monster party needs! Try adding even more detail next time, like what flavor the cake is or what music plays during the dance contest."
+      "prompt_feedback": "Amazing prompt! You included food (big cake), decorations (balloons), AND entertainment (dance contest) \u2014 that's everything a monster party needs! Try adding even more detail next time, like what flavor the cake is or what music plays during the dance contest."
     },
     "throw the most epic monster party with cake presents games and confetti": {
       "success_level": "FULL_SUCCESS",
-      "narration": "Monster dances on a giant cake while confetti rains and presents fly everywhere — BEST PARTY EVER!",
+      "narration": "Monster dances on a giant cake while confetti rains and presents fly everywhere \u2014 BEST PARTY EVER!",
       "actions": [
         {
           "type": "spawn",
@@ -596,7 +596,7 @@
         }
       ],
       "missing_elements": [],
-      "prompt_feedback": "Amazing prompt! You included cake (food), presents (decorations), AND games (entertainment) all in one clear sentence. You even added confetti for extra fun — that's how a prompt pro does it!"
+      "prompt_feedback": "Amazing prompt! You included cake (food), presents (decorations), AND games (entertainment) all in one clear sentence. You even added confetti for extra fun \u2014 that's how a prompt pro does it!"
     },
     "balloons and presents for the monster": {
       "success_level": "PARTIAL_SUCCESS",
@@ -639,11 +639,11 @@
         "cake or food",
         "entertainment or activity (like music, dancing, or games)"
       ],
-      "prompt_feedback": "Great job adding decorations AND presents — that's a party starting to take shape! Try also telling the monster about a yummy cake and a fun activity like dancing or games to make the party complete!"
+      "prompt_feedback": "Great job adding decorations AND presents \u2014 that's a party starting to take shape! Try also telling the monster about a yummy cake and a fun activity like dancing or games to make the party complete!"
     },
     "play some music and dance": {
       "success_level": "PARTIAL_SUCCESS",
-      "narration": "The monster hears music and starts wiggling wildly—but where's the cake and decorations?",
+      "narration": "The monster hears music and starts wiggling wildly\u2014but where's the cake and decorations?",
       "actions": [
         {
           "type": "animate",
@@ -670,7 +670,7 @@
         "cake or food",
         "decorations like balloons or presents"
       ],
-      "prompt_feedback": "Great job adding entertainment—dancing is awesome for a party! Try also describing a yummy cake and some colorful decorations like balloons or presents to make it a complete birthday bash."
+      "prompt_feedback": "Great job adding entertainment\u2014dancing is awesome for a party! Try also describing a yummy cake and some colorful decorations like balloons or presents to make it a complete birthday bash."
     },
     "hello": {
       "success_level": "FUNNY_FAIL",
@@ -702,7 +702,7 @@
         "decorations like balloons or presents",
         "entertainment like music or games"
       ],
-      "prompt_feedback": "Great start saying hello! Now try describing the party — tell the monster exactly what you want, like 'Let's have a big cake, colorful balloons, and dance to music!'"
+      "prompt_feedback": "Great start saying hello! Now try describing the party \u2014 tell the monster exactly what you want, like 'Let's have a big cake, colorful balloons, and dance to music!'"
     },
     "pizza": {
       "success_level": "PARTIAL_SUCCESS",
@@ -739,7 +739,7 @@
         "decorations (balloons, streamers, or presents)",
         "entertainment (music, dancing, or games)"
       ],
-      "prompt_feedback": "Nice job picking food — every party needs snacks! Try adding more details like decorations and fun activities. For example: 'Let's have pizza with balloons and play a dancing game!'"
+      "prompt_feedback": "Nice job picking food \u2014 every party needs snacks! Try adding more details like decorations and fun activities. For example: 'Let's have pizza with balloons and play a dancing game!'"
     },
     "throw a huge cake with balloons and have a dance party with music and presents and streamers and confetti": {
       "success_level": "FULL_SUCCESS",
@@ -778,7 +778,7 @@
         }
       ],
       "missing_elements": [],
-      "prompt_feedback": "Amazing prompt! You included food, decorations, AND entertainment all in one go. You were super specific with details like balloons, streamers, confetti, and dancing — that's exactly how great prompt engineers do it! Next time, try adding WHO is invited to make the party even more alive!"
+      "prompt_feedback": "Amazing prompt! You included food, decorations, AND entertainment all in one go. You were super specific with details like balloons, streamers, confetti, and dancing \u2014 that's exactly how great prompt engineers do it! Next time, try adding WHO is invited to make the party even more alive!"
     },
     "i want to give the monster the best birthday ever with everything": {
       "success_level": "FUNNY_FAIL",
@@ -815,7 +815,7 @@
         "decorations",
         "entertainment/activity"
       ],
-      "prompt_feedback": "You're so kind wanting to give the monster the best party! But 'everything' doesn't tell the monster WHAT to prepare. Try listing specific things — like a chocolate cake, colorful balloons, and a dance party!"
+      "prompt_feedback": "You're so kind wanting to give the monster the best party! But 'everything' doesn't tell the monster WHAT to prepare. Try listing specific things \u2014 like a chocolate cake, colorful balloons, and a dance party!"
     },
     "the monster should get cake and all the decorations and music": {
       "success_level": "FULL_SUCCESS",
@@ -854,7 +854,7 @@
         }
       ],
       "missing_elements": [],
-      "prompt_feedback": "Amazing job! You included all three party essentials: food, decorations, AND entertainment. Great prompt! Next time, try being even more specific — like what flavor is the cake, or what kind of music does the monster like? Details make prompts even more powerful!"
+      "prompt_feedback": "Amazing job! You included all three party essentials: food, decorations, AND entertainment. Great prompt! Next time, try being even more specific \u2014 like what flavor is the cake, or what kind of music does the monster like? Details make prompts even more powerful!"
     }
   },
   "robot-pizza": {
@@ -936,7 +936,7 @@
         }
       ],
       "missing_elements": [],
-      "prompt_feedback": "Amazing job! You nailed all three parts: WHERE (the school), HOW (through the park), and WHAT TO AVOID (the dog). Your instructions were super clear — the robot knew exactly what to do. Try adding even more detail next time, like how fast the robot should go!"
+      "prompt_feedback": "Amazing job! You nailed all three parts: WHERE (the school), HOW (through the park), and WHAT TO AVOID (the dog). Your instructions were super clear \u2014 the robot knew exactly what to do. Try adding even more detail next time, like how fast the robot should go!"
     },
     "deliver pizza to the kids house go straight then turn right dodge the puddles and the squirrel": {
       "success_level": "FULL_SUCCESS",
@@ -976,7 +976,7 @@
         }
       ],
       "missing_elements": [],
-      "prompt_feedback": "Amazing job! You nailed all three: destination (kid's house), route (straight then right), AND obstacles to dodge (puddles and squirrel). Your instructions were super clear — the robot knew exactly what to do! Next time, try adding extra details like speed or what to do if the path is blocked for bonus fun."
+      "prompt_feedback": "Amazing job! You nailed all three: destination (kid's house), route (straight then right), AND obstacles to dodge (puddles and squirrel). Your instructions were super clear \u2014 the robot knew exactly what to do! Next time, try adding extra details like speed or what to do if the path is blocked for bonus fun."
     },
     "robot go to elm street use the shortcut past the desk and avoid the river and the dog": {
       "success_level": "FULL_SUCCESS",
@@ -1016,7 +1016,7 @@
         }
       ],
       "missing_elements": [],
-      "prompt_feedback": "Amazing job! You told the robot WHERE to go (Elm Street), HOW to get there (shortcut past the desk), AND what to avoid (river and dog). That's a perfect prompt — you're a prompt engineering pro!"
+      "prompt_feedback": "Amazing job! You told the robot WHERE to go (Elm Street), HOW to get there (shortcut past the desk), AND what to avoid (river and dog). That's a perfect prompt \u2014 you're a prompt engineering pro!"
     },
     "deliver the pizza to the house": {
       "success_level": "PARTIAL_SUCCESS",
@@ -1059,11 +1059,11 @@
         "route/path",
         "obstacle avoidance"
       ],
-      "prompt_feedback": "Nice job telling the robot WHERE to go — a house! Now try adding HOW to get there (like 'go down Main Street') and what to watch out for (like 'avoid the big puddle'). That way the robot won't bump into things!"
+      "prompt_feedback": "Nice job telling the robot WHERE to go \u2014 a house! Now try adding HOW to get there (like 'go down Main Street') and what to watch out for (like 'avoid the big puddle'). That way the robot won't bump into things!"
     },
     "take the pizza and go right": {
       "success_level": "PARTIAL_SUCCESS",
-      "narration": "The robot grabs the pizza and zooms right, but wait—where exactly is it going?",
+      "narration": "The robot grabs the pizza and zooms right, but wait\u2014where exactly is it going?",
       "actions": [
         {
           "type": "spawn",
@@ -1139,7 +1139,7 @@
         "destination/address",
         "route/path"
       ],
-      "prompt_feedback": "Great job telling the robot what obstacles to avoid — that's super important! Now try adding WHERE the pizza should go (like a specific place) and HOW the robot should get there (like which direction to travel)."
+      "prompt_feedback": "Great job telling the robot what obstacles to avoid \u2014 that's super important! Now try adding WHERE the pizza should go (like a specific place) and HOW the robot should get there (like which direction to travel)."
     },
     "go to the school with the pizza": {
       "success_level": "PARTIAL_SUCCESS",
@@ -1177,11 +1177,11 @@
         "route/path (HOW to get there)",
         "obstacle avoidance (what to watch out for)"
       ],
-      "prompt_feedback": "Nice job telling the robot WHERE to go — the school! Now try adding HOW to get there (like which streets to take) and what obstacles to watch out for (like traffic or puddles)."
+      "prompt_feedback": "Nice job telling the robot WHERE to go \u2014 the school! Now try adding HOW to get there (like which streets to take) and what obstacles to watch out for (like traffic or puddles)."
     },
     "drive fast to deliver pizza": {
       "success_level": "PARTIAL_SUCCESS",
-      "narration": "The robot zooms through the city at top speed, but wait—where is it even going?!",
+      "narration": "The robot zooms through the city at top speed, but wait\u2014where is it even going?!",
       "actions": [
         {
           "type": "spawn",
@@ -1209,7 +1209,7 @@
         "destination/address",
         "obstacle avoidance"
       ],
-      "prompt_feedback": "Nice job telling the robot HOW to move—fast! But the robot doesn't know WHERE to go or WHAT to watch out for. Try adding a destination like '123 Oak Street' and obstacles to avoid like 'watch out for the river!'"
+      "prompt_feedback": "Nice job telling the robot HOW to move\u2014fast! But the robot doesn't know WHERE to go or WHAT to watch out for. Try adding a destination like '123 Oak Street' and obstacles to avoid like 'watch out for the river!'"
     },
     "deliver pizza": {
       "success_level": "FUNNY_FAIL",
@@ -1247,7 +1247,7 @@
         "route/path",
         "obstacle avoidance"
       ],
-      "prompt_feedback": "You told the robot its job — nice start! Now try adding WHERE to deliver (like '123 Oak Street'), HOW to get there (like 'go down Main Road'), and WHAT to watch out for (like 'avoid the big puddle')."
+      "prompt_feedback": "You told the robot its job \u2014 nice start! Now try adding WHERE to deliver (like '123 Oak Street'), HOW to get there (like 'go down Main Road'), and WHAT to watch out for (like 'avoid the big puddle')."
     },
     "go": {
       "success_level": "FUNNY_FAIL",
@@ -1280,7 +1280,7 @@
         "route/path",
         "obstacle avoidance"
       ],
-      "prompt_feedback": "You gave a quick command — nice energy! But the robot needs more details. Try telling it WHERE to go, WHICH way to travel, and WHAT to watch out for along the way!"
+      "prompt_feedback": "You gave a quick command \u2014 nice energy! But the robot needs more details. Try telling it WHERE to go, WHICH way to travel, and WHAT to watch out for along the way!"
     },
     "pizza time": {
       "success_level": "FUNNY_FAIL",
@@ -1318,7 +1318,7 @@
         "route/path",
         "obstacle avoidance"
       ],
-      "prompt_feedback": "You've got the pizza spirit! Now try telling the robot WHERE to deliver it, HOW to get there, and what obstacles to WATCH OUT for — like 'Robot, take the pizza to the house on the right, go straight down Main Street, and watch out for the river!'"
+      "prompt_feedback": "You've got the pizza spirit! Now try telling the robot WHERE to deliver it, HOW to get there, and what obstacles to WATCH OUT for \u2014 like 'Robot, take the pizza to the house on the right, go straight down Main Street, and watch out for the river!'"
     },
     "hello robot": {
       "success_level": "FUNNY_FAIL",
@@ -1435,7 +1435,7 @@
         }
       ],
       "missing_elements": [],
-      "prompt_feedback": "Amazing job! You included the address, the route through the park and past the river, AND obstacles to dodge. That's a perfectly clear prompt — you're a prompt engineering pro! Next time, try adding what to do if something unexpected happens, like a backup plan."
+      "prompt_feedback": "Amazing job! You included the address, the route through the park and past the river, AND obstacles to dodge. That's a perfectly clear prompt \u2014 you're a prompt engineering pro! Next time, try adding what to do if something unexpected happens, like a backup plan."
     },
     "robot deliver pizza to school": {
       "success_level": "PARTIAL_SUCCESS",
@@ -1472,7 +1472,4541 @@
         "route/path (HOW to get there)",
         "obstacle avoidance (what to watch out for)"
       ],
-      "prompt_feedback": "Nice job naming the destination — the robot knows WHERE to go! Try adding HOW it should get there (like 'go down Main Street') and what to avoid (like 'watch out for puddles and traffic')."
+      "prompt_feedback": "Nice job naming the destination \u2014 the robot knows WHERE to go! Try adding HOW it should get there (like 'go down Main Street') and what to avoid (like 'watch out for puddles and traffic')."
+    }
+  },
+  "wizard-kitchen": {
+    "cast a freeze spell on the flying plates then plug the soup bowl with a lid then unplug the toaster and tie the fridge shut with a rope": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "The wizard freezes the plates mid-air, corks the soup, silences the toaster, and ropes the fridge shut!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "plates",
+          "position": "top"
+        },
+        {
+          "type": "move",
+          "target": "plates",
+          "to": "center",
+          "style": "float"
+        },
+        {
+          "type": "spawn",
+          "target": "soup-bowl",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "toaster",
+          "position": "right"
+        },
+        {
+          "type": "animate",
+          "target": "wizard",
+          "anim": "wave"
+        },
+        {
+          "type": "react",
+          "effect": "sparkle-magic",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Incredible! You fixed ALL four chaos sources with specific solutions \u2014 freeze, plug, unplug, and tie. That's a master prompt!"
+    },
+    "use a levitation spell to catch the plates put a cork in the soup bowl turn off the toaster and push the fridge door closed": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Plates float gently down, soup stops overflowing, toaster goes quiet, and the fridge slams shut!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "plates",
+          "position": "top"
+        },
+        {
+          "type": "move",
+          "target": "plates",
+          "to": "center",
+          "style": "float"
+        },
+        {
+          "type": "spawn",
+          "target": "soup-bowl",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "toaster",
+          "position": "right"
+        },
+        {
+          "type": "animate",
+          "target": "wizard",
+          "anim": "happy"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Amazing! You gave a specific fix for every single chaos source. Levitation for plates, cork for soup, off-switch for toaster, and push for fridge \u2014 brilliant!"
+    },
+    "wave your wand to stop the plates from flying then freeze the soup then zap the toaster to sleep and lock the fridge with magic": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "The wizard waves the wand and one by one, every appliance calms down \u2014 kitchen saved!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "wizard",
+          "anim": "wave"
+        },
+        {
+          "type": "spawn",
+          "target": "plates",
+          "position": "top"
+        },
+        {
+          "type": "react",
+          "effect": "sparkle-magic",
+          "position": "top"
+        },
+        {
+          "type": "spawn",
+          "target": "soup-bowl",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "fridge",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "stars-spin",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Perfect! You addressed all four problems with creative magical solutions. Wand-wave, freeze, zap, and lock \u2014 the kitchen is saved!"
+    },
+    "grab the plates with a net spell drain the soup into a bucket unplug the dancing toaster and use a shrink spell on the fridge": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "A magic net catches the plates, soup drains away, toaster unplugs, and the fridge shrinks to pocket size!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "plates",
+          "position": "top"
+        },
+        {
+          "type": "move",
+          "target": "plates",
+          "to": "center",
+          "style": "drop-in"
+        },
+        {
+          "type": "spawn",
+          "target": "soup-bowl",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "toaster",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "fridge",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "sparkle-magic",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Wow! Net spell, drain, unplug, AND shrink \u2014 four unique solutions for four problems. You think like a real wizard!"
+    },
+    "stop the flying plates with a spell": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "The wizard catches the plates, but the soup is overflowing and the toaster is doing the cha-cha!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "plates",
+          "position": "top"
+        },
+        {
+          "type": "animate",
+          "target": "wizard",
+          "anim": "wave"
+        },
+        {
+          "type": "move",
+          "target": "plates",
+          "to": "center",
+          "style": "float"
+        },
+        {
+          "type": "react",
+          "effect": "sparkle-magic",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "toaster",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "right"
+        }
+      ],
+      "missing_elements": [
+        "soup bowl fix",
+        "toaster fix",
+        "fridge fix"
+      ],
+      "prompt_feedback": "Great start catching those plates! But the soup, toaster, and fridge are still going wild. Try telling the wizard how to fix each one!"
+    },
+    "freeze the toaster and the fridge": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "The toaster and fridge freeze solid, but plates crash everywhere and soup floods the floor!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "toaster",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "fridge",
+          "position": "right"
+        },
+        {
+          "type": "animate",
+          "target": "wizard",
+          "anim": "wave"
+        },
+        {
+          "type": "react",
+          "effect": "sparkle-magic",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "plates",
+          "position": "top"
+        },
+        {
+          "type": "react",
+          "effect": "explosion-cartoon",
+          "position": "left"
+        }
+      ],
+      "missing_elements": [
+        "flying plates fix",
+        "overflowing soup fix"
+      ],
+      "prompt_feedback": "Nice job freezing two appliances! But the plates are still flying and the soup is overflowing. Add solutions for those too!"
+    },
+    "cast a spell on the soup bowl": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "The soup stops overflowing, but plates crash into the walls and the toaster moonwalks away!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "soup-bowl",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "wizard",
+          "anim": "wave"
+        },
+        {
+          "type": "react",
+          "effect": "sparkle-magic",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "plates",
+          "position": "top"
+        },
+        {
+          "type": "move",
+          "target": "plates",
+          "to": "left",
+          "style": "bounce"
+        },
+        {
+          "type": "react",
+          "effect": "explosion-cartoon",
+          "position": "left"
+        }
+      ],
+      "missing_elements": [
+        "flying plates fix",
+        "toaster fix",
+        "fridge fix"
+      ],
+      "prompt_feedback": "The soup is handled \u2014 great spell! Now try fixing the flying plates, dancing toaster, and rampaging fridge too!"
+    },
+    "use the fire extinguisher on the toaster": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "The toaster gets blasted with foam and stops dancing, but the rest of the kitchen is still chaos!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "fire-extinguisher",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "toaster",
+          "position": "center"
+        },
+        {
+          "type": "move",
+          "target": "fire-extinguisher",
+          "to": "center",
+          "style": "linear"
+        },
+        {
+          "type": "react",
+          "effect": "fire-sneeze",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "wizard",
+          "anim": "laugh"
+        }
+      ],
+      "missing_elements": [
+        "flying plates fix",
+        "overflowing soup fix",
+        "fridge fix"
+      ],
+      "prompt_feedback": "Ha! The fire extinguisher worked on the toaster \u2014 creative thinking! Now add solutions for the plates, soup, and fridge!"
+    },
+    "fix the kitchen": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "The wizard waves vaguely and accidentally makes the plates spin even FASTER!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "wizard",
+          "anim": "confused"
+        },
+        {
+          "type": "spawn",
+          "target": "plates",
+          "position": "top"
+        },
+        {
+          "type": "move",
+          "target": "plates",
+          "to": "center",
+          "style": "spin-in"
+        },
+        {
+          "type": "react",
+          "effect": "explosion-cartoon",
+          "position": "center"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "top"
+        }
+      ],
+      "missing_elements": [
+        "plates fix",
+        "soup fix",
+        "toaster fix",
+        "fridge fix"
+      ],
+      "prompt_feedback": "The wizard needs more specific instructions! Tell it exactly HOW to fix each thing \u2014 the plates, soup, toaster, and fridge."
+    },
+    "use magic": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "The wizard zaps randomly and the soup bowl starts flying too \u2014 now there's MORE chaos!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "wizard",
+          "anim": "wave"
+        },
+        {
+          "type": "spawn",
+          "target": "soup-bowl",
+          "position": "center"
+        },
+        {
+          "type": "move",
+          "target": "soup-bowl",
+          "to": "top",
+          "style": "float"
+        },
+        {
+          "type": "react",
+          "effect": "explosion-cartoon",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "wizard",
+          "anim": "sad"
+        }
+      ],
+      "missing_elements": [
+        "plates fix",
+        "soup fix",
+        "toaster fix",
+        "fridge fix"
+      ],
+      "prompt_feedback": "Oops! 'Use magic' is too vague \u2014 the spell went wrong! Try describing WHICH spell to use on EACH appliance."
+    },
+    "cast a spell": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "The wizard casts a random spell and the toaster starts singing opera! That didn't help!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "wizard",
+          "anim": "wave"
+        },
+        {
+          "type": "spawn",
+          "target": "toaster",
+          "position": "center"
+        },
+        {
+          "type": "move",
+          "target": "toaster",
+          "to": "center",
+          "style": "shake"
+        },
+        {
+          "type": "react",
+          "effect": "laugh-tears",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "wizard",
+          "anim": "confused"
+        }
+      ],
+      "missing_elements": [
+        "plates fix",
+        "soup fix",
+        "toaster fix",
+        "fridge fix"
+      ],
+      "prompt_feedback": "Which spell? On what? The wizard needs details! Try: 'Cast a freeze spell on the plates, then cork the soup bowl...'"
+    },
+    "help the wizard": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "The wizard looks around hopefully but nothing happens \u2014 it needs YOUR specific instructions!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "wizard",
+          "anim": "confused"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "wizard",
+          "anim": "sad"
+        },
+        {
+          "type": "react",
+          "effect": "sad-cloud",
+          "position": "top"
+        }
+      ],
+      "missing_elements": [
+        "plates fix",
+        "soup fix",
+        "toaster fix",
+        "fridge fix"
+      ],
+      "prompt_feedback": "The wizard WANTS help but needs to know HOW! Describe a plan: what to do about the flying plates, overflowing soup, dancing toaster, and rampaging fridge."
+    },
+    "the wizard should wave the wand and fix everything at once with one big spell for all the plates soup toaster and fridge": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "One MEGA spell erupts and every appliance freezes in place \u2014 the kitchen is finally calm!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "wizard",
+          "anim": "wave"
+        },
+        {
+          "type": "spawn",
+          "target": "plates",
+          "position": "top"
+        },
+        {
+          "type": "spawn",
+          "target": "soup-bowl",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "toaster",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "fridge",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "sparkle-magic",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "You mentioned ALL four chaos sources \u2014 great coverage! Next time, try describing a different fix for each appliance for even more creative prompts."
+    },
+    "freeze all the appliances with an ice spell and then clean up the mess": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Ice covers everything \u2014 appliances stop, but the frozen soup shatters and plates are stuck to the ceiling!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "wizard",
+          "anim": "wave"
+        },
+        {
+          "type": "react",
+          "effect": "sparkle-magic",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "toaster",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "fridge",
+          "position": "right"
+        },
+        {
+          "type": "spawn",
+          "target": "plates",
+          "position": "top"
+        },
+        {
+          "type": "react",
+          "effect": "stars-spin",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "specific fix for each appliance"
+      ],
+      "prompt_feedback": "Freezing is a clever idea! But one spell for everything caused side effects. Try giving each appliance its own specific fix!"
+    }
+  },
+  "dinosaur-school": {
+    "the trex should use the gym door to get in then sit on the floor with a big table then hold a giant crayon in its mouth and bring a huge lunchbox from home": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "T-Rex squeezes through the gym door, plops on the floor, grabs a crayon, and opens a GIANT lunchbox!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "trex",
+          "position": "off-left"
+        },
+        {
+          "type": "move",
+          "target": "trex",
+          "to": "left",
+          "style": "bounce"
+        },
+        {
+          "type": "spawn",
+          "target": "desk",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "pencil",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "lunchbox",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Amazing! You solved ALL four problems: gym door to enter, floor seating, giant crayon to write, and huge lunchbox. Perfect prompt!"
+    },
+    "open the double doors for trex to walk through then give him a beanbag chair then tape pencils together to make a big one and pack a dinosaur sized lunch": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "T-Rex struts through double doors, flops on a beanbag, grabs a mega-pencil, and devours a dino-lunch!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "trex",
+          "position": "off-left"
+        },
+        {
+          "type": "move",
+          "target": "trex",
+          "to": "center",
+          "style": "bounce"
+        },
+        {
+          "type": "spawn",
+          "target": "chair",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "pencil",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "lunchbox",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Brilliant! Double doors, beanbag chair, taped pencils, and dino-sized lunch \u2014 you solved every problem with creative thinking!"
+    },
+    "break through the wall to enter then sit on the floor with a low desk then use a paintbrush instead of a pencil and eat from a big bucket lunchbox": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "T-Rex crashes through the wall, sits by a low desk, paints with a brush, and eats from a bucket!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "trex",
+          "position": "off-left"
+        },
+        {
+          "type": "move",
+          "target": "trex",
+          "to": "center",
+          "style": "bounce"
+        },
+        {
+          "type": "react",
+          "effect": "explosion-cartoon",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "desk",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "pencil",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "lunchbox",
+          "position": "right"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Ha! Breaking through the wall is hilarious AND solves the door problem! You covered entering, sitting, writing, and eating. Great job!"
+    },
+    "have the trex use the loading dock door then sit on stacked chairs then hold the pencil in its tiny arms carefully and bring a wagon full of food": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "T-Rex waddles in through the loading dock, stacks chairs, carefully grabs a pencil, and rolls in a food wagon!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "trex",
+          "position": "off-left"
+        },
+        {
+          "type": "move",
+          "target": "trex",
+          "to": "left",
+          "style": "linear"
+        },
+        {
+          "type": "spawn",
+          "target": "chair",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "pencil",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "lunchbox",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "stars-spin",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Perfect! Loading dock for entry, stacked chairs for sitting, careful pencil grip, and a wagon of food. Every problem solved!"
+    },
+    "use the big door to get inside the school": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "T-Rex squeezes through the big door but then stares at the tiny desk, confused!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "trex",
+          "position": "off-left"
+        },
+        {
+          "type": "move",
+          "target": "trex",
+          "to": "center",
+          "style": "bounce"
+        },
+        {
+          "type": "spawn",
+          "target": "desk",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "trex",
+          "anim": "confused"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "seating solution",
+        "writing solution",
+        "lunch solution"
+      ],
+      "prompt_feedback": "Great job getting T-Rex inside! But now it needs a place to sit, something to write with, and lunch. What's your plan?"
+    },
+    "give the trex a big chair to sit on": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "T-Rex plops on a big chair and it creaks \u2014 but how does it get in the building or eat lunch?",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "chair",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "trex",
+          "anim": "happy"
+        },
+        {
+          "type": "react",
+          "effect": "stars-spin",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "trex",
+          "anim": "confused"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "right"
+        }
+      ],
+      "missing_elements": [
+        "entering school",
+        "writing solution",
+        "lunch solution"
+      ],
+      "prompt_feedback": "Nice chair solution! But T-Rex still needs to get INTO school, grab a writing tool, and eat lunch. Add more details!"
+    },
+    "get a giant pencil for the dinosaur": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "T-Rex grabs a giant pencil but accidentally pokes through the desk! Still needs a chair and lunch!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "pencil",
+          "position": "left"
+        },
+        {
+          "type": "move",
+          "target": "pencil",
+          "to": "center",
+          "style": "arc"
+        },
+        {
+          "type": "animate",
+          "target": "trex",
+          "anim": "happy"
+        },
+        {
+          "type": "spawn",
+          "target": "desk",
+          "position": "center"
+        },
+        {
+          "type": "react",
+          "effect": "explosion-cartoon",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "entering school",
+        "seating solution",
+        "lunch solution"
+      ],
+      "prompt_feedback": "A giant pencil \u2014 smart! But T-Rex still can't get in the door, has no seat, and is getting hungry. Solve those too!"
+    },
+    "pack a huge lunch for the trex": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "A massive lunchbox arrives but T-Rex is stuck outside the tiny school door staring at it!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "lunchbox",
+          "position": "right"
+        },
+        {
+          "type": "move",
+          "target": "lunchbox",
+          "to": "center",
+          "style": "bounce"
+        },
+        {
+          "type": "animate",
+          "target": "trex",
+          "anim": "happy"
+        },
+        {
+          "type": "animate",
+          "target": "trex",
+          "anim": "confused"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "left"
+        }
+      ],
+      "missing_elements": [
+        "entering school",
+        "seating solution",
+        "writing solution"
+      ],
+      "prompt_feedback": "Great lunch planning! But T-Rex needs to get inside first, find a seat, and grab something to write with. Add those details!"
+    },
+    "go to school": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "T-Rex stomps up to the school and gets completely stuck in the tiny doorway!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "trex",
+          "position": "off-left"
+        },
+        {
+          "type": "move",
+          "target": "trex",
+          "to": "left",
+          "style": "bounce"
+        },
+        {
+          "type": "animate",
+          "target": "trex",
+          "anim": "confused"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "trex",
+          "anim": "sad"
+        }
+      ],
+      "missing_elements": [
+        "how to enter",
+        "seating plan",
+        "writing tool",
+        "lunch plan"
+      ],
+      "prompt_feedback": "T-Rex is at school but stuck! It needs YOUR help. How should it get through the door? What about sitting, writing, and eating?"
+    },
+    "help the dinosaur": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "T-Rex looks at you hopefully, but without specific instructions it just stomps in circles!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "trex",
+          "anim": "confused"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "trex",
+          "anim": "wave"
+        },
+        {
+          "type": "react",
+          "effect": "sad-cloud",
+          "position": "top"
+        }
+      ],
+      "missing_elements": [
+        "how to enter",
+        "seating plan",
+        "writing tool",
+        "lunch plan"
+      ],
+      "prompt_feedback": "T-Rex WANTS help but needs to know HOW! Describe solutions for the door, the tiny chair, the small pencil, and lunch."
+    },
+    "make it work": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "T-Rex flexes its tiny arms and tries to pick up a pencil \u2014 it shoots across the room!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "pencil",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "trex",
+          "anim": "confused"
+        },
+        {
+          "type": "move",
+          "target": "pencil",
+          "to": "off-right",
+          "style": "bounce"
+        },
+        {
+          "type": "react",
+          "effect": "laugh-tears",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "how to enter",
+        "seating plan",
+        "writing tool",
+        "lunch plan"
+      ],
+      "prompt_feedback": "Make WHAT work? Be specific! Tell T-Rex how to get in the door, where to sit, what to write with, and what to eat."
+    },
+    "the trex should try harder": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "T-Rex tries SO hard it accidentally sits on the desk and crushes it \u2014 oops!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "desk",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "trex",
+          "anim": "confused"
+        },
+        {
+          "type": "react",
+          "effect": "explosion-cartoon",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "trex",
+          "anim": "sad"
+        },
+        {
+          "type": "react",
+          "effect": "laugh-tears",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "how to enter",
+        "seating plan",
+        "writing tool",
+        "lunch plan"
+      ],
+      "prompt_feedback": "Trying harder without a plan just breaks things! Give T-Rex specific solutions for each problem \u2014 door, chair, pencil, and lunch."
+    },
+    "the trex needs to solve every single problem at school including the door the desk the pencil and the lunchbox all at once": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "T-Rex charges through the big door, flattens a beanbag, grabs a crayon, and opens a mega-lunchbox!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "trex",
+          "position": "off-left"
+        },
+        {
+          "type": "move",
+          "target": "trex",
+          "to": "center",
+          "style": "bounce"
+        },
+        {
+          "type": "spawn",
+          "target": "desk",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "pencil",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "lunchbox",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "You listed all four problems! Next time, try describing HOW to solve each one for even more fun. Like: 'Use the gym door, sit on pillows...'"
+    },
+    "dinosaur should squeeze through the door and try to fit in the tiny chair": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "T-Rex squeezes through the door and sits on the chair \u2014 CRACK! It breaks into pieces!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "trex",
+          "position": "off-left"
+        },
+        {
+          "type": "move",
+          "target": "trex",
+          "to": "center",
+          "style": "bounce"
+        },
+        {
+          "type": "spawn",
+          "target": "chair",
+          "position": "center"
+        },
+        {
+          "type": "react",
+          "effect": "explosion-cartoon",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "trex",
+          "anim": "sad"
+        },
+        {
+          "type": "react",
+          "effect": "laugh-tears",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "writing solution",
+        "lunch solution"
+      ],
+      "prompt_feedback": "You solved the door (sort of!) and tried the chair \u2014 but it broke! T-Rex also needs a writing tool and lunch. Try again with solutions for ALL four!"
+    }
+  },
+  "dog-space": {
+    "put the dog in a rocket with a spacesuit and pack lots of bones and water then fly to the moon to plant a flag": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "The dog blasts off in a rocket, wearing a spacesuit, munching bones, and plants a flag on the moon!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "rocket",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "spacesuit",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "bone",
+          "position": "left"
+        },
+        {
+          "type": "move",
+          "target": "rocket",
+          "to": "top",
+          "style": "arc"
+        },
+        {
+          "type": "spawn",
+          "target": "flag",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Perfect mission plan! Rocket for travel, spacesuit for safety, bones for food, and flag-planting as the goal. You're a space commander!"
+    },
+    "build a spaceship for the dog give it a helmet and spacesuit fill the ship with dog food and bones then launch to the moon to collect moon rocks": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "The dog zooms to the moon in a spaceship, suited up and snacking, then digs up moon rocks!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "rocket",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "spacesuit",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "bone",
+          "position": "left"
+        },
+        {
+          "type": "animate",
+          "target": "dog",
+          "anim": "happy"
+        },
+        {
+          "type": "move",
+          "target": "rocket",
+          "to": "top",
+          "style": "arc"
+        },
+        {
+          "type": "react",
+          "effect": "stars-spin",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Amazing! Spaceship, helmet and spacesuit, food supplies, AND a moon mission goal. You planned the complete mission \u2014 NASA would hire you!"
+    },
+    "the dog needs a big red rocket a special dog spacesuit plenty of treats and water then blast off to explore the moon and plant a doggy flag": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "A big red rocket launches with a suited-up dog, packed treats, heading to plant a doggy flag on the moon!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "rocket",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "spacesuit",
+          "position": "left"
+        },
+        {
+          "type": "animate",
+          "target": "dog",
+          "anim": "happy"
+        },
+        {
+          "type": "move",
+          "target": "rocket",
+          "to": "top",
+          "style": "arc"
+        },
+        {
+          "type": "spawn",
+          "target": "flag",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "right"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Incredible detail! Red rocket, dog spacesuit, treats AND water, plus a doggy flag goal. Your prompt covered every mission need!"
+    },
+    "launch the dog in a rocket wearing a spacesuit with bones and kibble packed then land on the moon and let the dog dig for moon bones": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "The dog rockets to the moon in a spacesuit, lands softly, and digs for moon bones \u2014 woof!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "rocket",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "spacesuit",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "bone",
+          "position": "left"
+        },
+        {
+          "type": "move",
+          "target": "rocket",
+          "to": "top",
+          "style": "arc"
+        },
+        {
+          "type": "spawn",
+          "target": "moon",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Perfect! Rocket, spacesuit, packed food, AND a fun goal (digging for moon bones!). Creative and complete \u2014 you're a mission planning expert!"
+    },
+    "put the dog in a rocket to the moon": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "The dog hops in a rocket and zooms toward the moon, but wait \u2014 no spacesuit or snacks!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "rocket",
+          "position": "left"
+        },
+        {
+          "type": "animate",
+          "target": "dog",
+          "anim": "happy"
+        },
+        {
+          "type": "move",
+          "target": "rocket",
+          "to": "top",
+          "style": "arc"
+        },
+        {
+          "type": "spawn",
+          "target": "moon",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "spacesuit/safety gear",
+        "food/supplies",
+        "mission goal"
+      ],
+      "prompt_feedback": "Great start with the rocket and moon! But the dog needs a spacesuit to stay safe, food for the trip, and a goal when it gets there!"
+    },
+    "give the dog a spacesuit and a helmet": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "The dog looks amazing in its spacesuit, but there's no rocket and no food \u2014 how will it get to space?",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "spacesuit",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "dog",
+          "anim": "happy"
+        },
+        {
+          "type": "react",
+          "effect": "stars-spin",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "dog",
+          "anim": "confused"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "right"
+        }
+      ],
+      "missing_elements": [
+        "rocket/transportation",
+        "food/supplies",
+        "mission goal"
+      ],
+      "prompt_feedback": "Safety first \u2014 great thinking with the spacesuit! Now add a rocket to fly in, food for the trip, and a mission goal like planting a flag!"
+    },
+    "pack bones and food for the dog trip": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Bones and food are packed, but the dog has no rocket or spacesuit \u2014 it's just sitting there with snacks!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "bone",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "dog",
+          "anim": "happy"
+        },
+        {
+          "type": "animate",
+          "target": "dog",
+          "anim": "eat"
+        },
+        {
+          "type": "react",
+          "effect": "hearts-float",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "dog",
+          "anim": "confused"
+        }
+      ],
+      "missing_elements": [
+        "rocket/transportation",
+        "spacesuit/safety",
+        "mission goal"
+      ],
+      "prompt_feedback": "Packed snacks \u2014 the dog loves it! But it needs a rocket to fly, a spacesuit for safety, and a goal for when it reaches the moon!"
+    },
+    "fly the rocket to the moon": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "A rocket blasts toward the moon, but the dog inside has no spacesuit and forgot to pack lunch!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "rocket",
+          "position": "left"
+        },
+        {
+          "type": "move",
+          "target": "rocket",
+          "to": "top",
+          "style": "arc"
+        },
+        {
+          "type": "spawn",
+          "target": "moon",
+          "position": "right"
+        },
+        {
+          "type": "animate",
+          "target": "dog",
+          "anim": "confused"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "spacesuit/safety",
+        "food/supplies",
+        "mission goal"
+      ],
+      "prompt_feedback": "The rocket is flying! But the dog needs a spacesuit for safety, food for the trip, and something to do on the moon. Add those!"
+    },
+    "go to space": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "The dog looks up at the sky and barks \u2014 but it has no rocket, no suit, and no plan!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "dog",
+          "anim": "confused"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "dog",
+          "anim": "wave"
+        },
+        {
+          "type": "react",
+          "effect": "sad-cloud",
+          "position": "top"
+        }
+      ],
+      "missing_elements": [
+        "rocket",
+        "spacesuit",
+        "supplies",
+        "mission goal"
+      ],
+      "prompt_feedback": "The dog wants to go but has nothing ready! Describe the rocket, spacesuit, food to pack, and what to do on the moon."
+    },
+    "send the dog up": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "The dog jumps as high as it can, gets about two feet off the ground, and lands with a confused look!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "dog",
+          "anim": "happy"
+        },
+        {
+          "type": "move",
+          "target": "dog",
+          "to": "top",
+          "style": "bounce"
+        },
+        {
+          "type": "move",
+          "target": "dog",
+          "to": "center",
+          "style": "drop-in"
+        },
+        {
+          "type": "animate",
+          "target": "dog",
+          "anim": "confused"
+        },
+        {
+          "type": "react",
+          "effect": "laugh-tears",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "rocket",
+        "spacesuit",
+        "supplies",
+        "mission goal"
+      ],
+      "prompt_feedback": "Ha! The dog tried to jump to space! It needs a rocket, a spacesuit, packed food, and a mission goal. Be more specific!"
+    },
+    "moon": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "The dog howls at the moon but has absolutely no way to get there!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "moon",
+          "position": "top"
+        },
+        {
+          "type": "animate",
+          "target": "dog",
+          "anim": "wave"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "dog",
+          "anim": "sad"
+        }
+      ],
+      "missing_elements": [
+        "rocket",
+        "spacesuit",
+        "supplies",
+        "mission goal"
+      ],
+      "prompt_feedback": "The dog sees the moon but can't reach it! Describe HOW to get there (rocket), what to wear (spacesuit), what to bring (food), and what to DO there."
+    },
+    "the dog wants to fly": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "The dog flaps its ears like wings and spins in a circle \u2014 adorable but not going anywhere!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "dog",
+          "anim": "dance"
+        },
+        {
+          "type": "animate",
+          "target": "dog",
+          "anim": "confused"
+        },
+        {
+          "type": "react",
+          "effect": "laugh-tears",
+          "position": "center"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "top"
+        }
+      ],
+      "missing_elements": [
+        "rocket",
+        "spacesuit",
+        "supplies",
+        "mission goal"
+      ],
+      "prompt_feedback": "Dogs can't fly by flapping their ears! Give the dog a rocket, a spacesuit, pack some bones, and set a goal like planting a flag on the moon."
+    },
+    "the dog should get in a rocket with a spacesuit bones water and treats then fly to the moon plant a flag dig some holes and come back safely": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "The ultimate dog mission \u2014 rocket launch, moon landing, flag planting, hole digging, and a safe return!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "rocket",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "spacesuit",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "bone",
+          "position": "left"
+        },
+        {
+          "type": "move",
+          "target": "rocket",
+          "to": "top",
+          "style": "arc"
+        },
+        {
+          "type": "spawn",
+          "target": "flag",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "WOW! Rocket, spacesuit, snacks, flag, digging, AND coming home safely. That's the most complete space mission plan ever!"
+    },
+    "launch dog to moon with everything it needs": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "The dog gets excited but 'everything' is too vague \u2014 it packs a tennis ball and nothing else!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "dog",
+          "anim": "happy"
+        },
+        {
+          "type": "animate",
+          "target": "dog",
+          "anim": "confused"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "bone",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "rocket",
+        "spacesuit",
+        "supplies list",
+        "mission goal"
+      ],
+      "prompt_feedback": "'Everything' doesn't tell the dog WHAT to pack! List it out: a rocket, a spacesuit, bones and water, and a goal like planting a flag."
+    }
+  },
+  "octopus-band": {
+    "the octopus plays guitar and drums on a coral reef stage singing a rock song called ocean thunder while fish watch and dance": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "The octopus shreds guitar AND drums on a coral stage while fish dance to Ocean Thunder!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "guitar",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "drums",
+          "position": "right"
+        },
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "dance"
+        },
+        {
+          "type": "spawn",
+          "target": "fish",
+          "position": "right"
+        },
+        {
+          "type": "animate",
+          "target": "fish",
+          "anim": "dance"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Amazing! Instruments (guitar + drums), venue (coral reef stage), song name (Ocean Thunder), AND audience (fish). Rock on!"
+    },
+    "set up a big underwater stage with guitar keyboard and drums the octopus plays a pop song and all the fish and seahorses come to watch": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "A massive underwater stage lights up as the octopus jams guitar, keyboard, and drums for a fishy crowd!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "guitar",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "keyboard",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "drums",
+          "position": "right"
+        },
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "dance"
+        },
+        {
+          "type": "spawn",
+          "target": "fish",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "stars-spin",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Perfect! Three instruments, an underwater stage, a pop song, and a sea creature audience. You planned the ultimate underwater concert!"
+    },
+    "octopus grabs guitar drums keyboard and microphone builds a stage from coral sings a song called deep sea rock and fish are the audience": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "The octopus grabs ALL the instruments, belts out 'Deep Sea Rock' on a coral stage for cheering fish!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "guitar",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "drums",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "keyboard",
+          "position": "right"
+        },
+        {
+          "type": "spawn",
+          "target": "microphone",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "dance"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "WOW! Four instruments, coral stage, song name 'Deep Sea Rock', and fish audience. That's the most detailed band setup ever!"
+    },
+    "the octopus uses four arms for guitar drums keyboard and microphone performs on a shipwreck stage playing bubble rock for all the fish fans": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Four arms play four instruments on a shipwreck stage as fish fans go wild for Bubble Rock!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "guitar",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "drums",
+          "position": "right"
+        },
+        {
+          "type": "spawn",
+          "target": "microphone",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "dance"
+        },
+        {
+          "type": "spawn",
+          "target": "fish",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "hearts-float",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Creative genius! Using four arms for four instruments is SO clever. Shipwreck stage, 'Bubble Rock' song, and fish fans \u2014 perfect concert!"
+    },
+    "the octopus plays guitar": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "The octopus strums a guitar alone in the dark ocean \u2014 where's the stage and audience?",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "guitar",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "dance"
+        },
+        {
+          "type": "react",
+          "effect": "stars-spin",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "happy"
+        }
+      ],
+      "missing_elements": [
+        "more instruments",
+        "stage/venue",
+        "song",
+        "audience"
+      ],
+      "prompt_feedback": "The octopus has 8 arms \u2014 it can play MORE instruments! Add a stage, pick a song, and invite some fish to watch!"
+    },
+    "play drums and guitar underwater": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "The octopus rocks drums and guitar, but bubbles muffle the sound \u2014 no stage, no audience!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "drums",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "guitar",
+          "position": "right"
+        },
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "dance"
+        },
+        {
+          "type": "react",
+          "effect": "sparkle-magic",
+          "position": "center"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "right"
+        }
+      ],
+      "missing_elements": [
+        "stage/venue",
+        "song",
+        "audience"
+      ],
+      "prompt_feedback": "Two instruments \u2014 the octopus is rocking! Now set up a stage, pick a song name, and invite fish to be the audience!"
+    },
+    "set up a stage for the octopus": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "A beautiful coral stage appears, but the octopus has no instruments and nobody came to watch!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "confused"
+        },
+        {
+          "type": "react",
+          "effect": "sparkle-magic",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "wave"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "instruments",
+        "song",
+        "audience"
+      ],
+      "prompt_feedback": "Great stage! But a band needs instruments (guitar, drums, keyboard), a song to play, and an audience. Add those!"
+    },
+    "the fish come to watch the octopus": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Fish swim in excitedly, but the octopus has no instruments and there's no stage \u2014 awkward!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "fish",
+          "position": "off-right"
+        },
+        {
+          "type": "move",
+          "target": "fish",
+          "to": "right",
+          "style": "float"
+        },
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "confused"
+        },
+        {
+          "type": "animate",
+          "target": "fish",
+          "anim": "wave"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "instruments",
+        "stage/venue",
+        "song"
+      ],
+      "prompt_feedback": "The fish are here \u2014 great audience! Now give the octopus instruments, set up a stage, and pick a song to play!"
+    },
+    "play music": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "The octopus waves its arms around but there are no instruments \u2014 it's just splashing water!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "dance"
+        },
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "confused"
+        },
+        {
+          "type": "react",
+          "effect": "splash",
+          "position": "center"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "top"
+        }
+      ],
+      "missing_elements": [
+        "instruments",
+        "stage",
+        "song",
+        "audience"
+      ],
+      "prompt_feedback": "Play music with what? The octopus needs instruments (guitar, drums, keyboard), a stage, a song, and an audience of fish!"
+    },
+    "start a band": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "The octopus raises all eight arms and waits \u2014 a band needs more than enthusiasm!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "wave"
+        },
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "confused"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "center"
+        },
+        {
+          "type": "react",
+          "effect": "sad-cloud",
+          "position": "top"
+        }
+      ],
+      "missing_elements": [
+        "instruments",
+        "stage",
+        "song",
+        "audience"
+      ],
+      "prompt_feedback": "Great idea, but HOW? Tell the octopus which instruments to play, where to perform, what song to sing, and who should watch!"
+    },
+    "the octopus wants to rock": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "The octopus air-guitars with all eight arms but there's no actual guitar \u2014 or anything else!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "dance"
+        },
+        {
+          "type": "react",
+          "effect": "laugh-tears",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "happy"
+        },
+        {
+          "type": "react",
+          "effect": "splash",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "instruments",
+        "stage",
+        "song",
+        "audience"
+      ],
+      "prompt_feedback": "The octopus has the spirit! Now give it real instruments, a stage to perform on, a song to play, and invite fish to watch!"
+    },
+    "music time": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "The octopus taps its tentacles on a rock and looks around \u2014 is this a concert or not?",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "confused"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "wave"
+        },
+        {
+          "type": "react",
+          "effect": "sad-cloud",
+          "position": "top"
+        }
+      ],
+      "missing_elements": [
+        "instruments",
+        "stage",
+        "song",
+        "audience"
+      ],
+      "prompt_feedback": "Music time needs a plan! Which instruments should the octopus play? Where's the stage? What's the song? Who's listening?"
+    },
+    "the octopus should play every instrument at once on a huge coral stage with all the fish in the sea watching and dancing to bubble pop music": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "The octopus plays EVERY instrument on a mega coral stage as thousands of fish dance to Bubble Pop!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "guitar",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "drums",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "keyboard",
+          "position": "right"
+        },
+        {
+          "type": "spawn",
+          "target": "microphone",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "dance"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "EPIC! Every instrument, huge coral stage, Bubble Pop music, and all the fish dancing. That's the most incredible underwater concert ever planned!"
+    },
+    "octopus band with guitar singing for fish": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "The octopus strums guitar and sings for a few fish, but needs more instruments and a real stage!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "guitar",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "microphone",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "octopus",
+          "anim": "dance"
+        },
+        {
+          "type": "spawn",
+          "target": "fish",
+          "position": "right"
+        },
+        {
+          "type": "animate",
+          "target": "fish",
+          "anim": "happy"
+        },
+        {
+          "type": "react",
+          "effect": "stars-spin",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "more instruments",
+        "stage/venue",
+        "song name"
+      ],
+      "prompt_feedback": "Good start with guitar, singing, and fish! A band needs more instruments (drums? keyboard?), a stage, and a song name. Add those!"
+    }
+  },
+  "skeleton-birthday": {
+    "skeleton throws a birthday party with cake presents and decorations": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Skeleton lights candles on the birthday cake as presents stack high and banners wave!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "cake_birthday",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "present_A_red",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "banner_blue",
+          "position": "top"
+        },
+        {
+          "type": "animate",
+          "target": "skeleton_warrior",
+          "anim": "Cheering",
+          "duration_ms": 800
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        },
+        {
+          "type": "react",
+          "effect": "hearts-float",
+          "position": "right"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Perfect party plan! You included cake, presents, AND decorations \u2014 skeleton is so happy!"
+    },
+    "make a surprise party with cake gifts and banners for the skeleton": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Skeletons jump out yelling surprise as cake, gifts, and colorful banners appear!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "skeleton_mage",
+          "position": "left"
+        },
+        {
+          "type": "animate",
+          "target": "skeleton_mage",
+          "anim": "Skeletons_Awaken_Floor",
+          "duration_ms": 900
+        },
+        {
+          "type": "spawn",
+          "target": "cake_birthday",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "present_B_blue",
+          "position": "right"
+        },
+        {
+          "type": "spawn",
+          "target": "banner_red",
+          "position": "top"
+        },
+        {
+          "type": "react",
+          "effect": "sparkle-magic",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Amazing! You remembered food, gifts, AND decorations \u2014 that's a complete surprise party!"
+    },
+    "skeleton wants cake and presents": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "A birthday cake and presents arrive, but where are the decorations?",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "cake_birthday",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "present_C_green",
+          "position": "right"
+        },
+        {
+          "type": "animate",
+          "target": "skeleton_warrior",
+          "anim": "Waving",
+          "duration_ms": 700
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "top"
+        }
+      ],
+      "missing_elements": [
+        "decorations"
+      ],
+      "prompt_feedback": "Good start! You have cake and presents, but try adding banners or balloons next time!"
+    },
+    "put a cake on the table": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "A cake appears on the table, but this party needs more!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "table_long",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "cake_birthday",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "skeleton_warrior",
+          "anim": "Interact",
+          "duration_ms": 600
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "right"
+        }
+      ],
+      "missing_elements": [
+        "presents",
+        "decorations"
+      ],
+      "prompt_feedback": "That's a start! Now think about gifts and colorful decorations to complete the party."
+    },
+    "give skeleton some cupcakes": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Delicious cupcakes appear, but where are the presents and party decorations?",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "cupcake",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "skeleton_warrior",
+          "anim": "PickUp",
+          "duration_ms": 700
+        },
+        {
+          "type": "react",
+          "effect": "hearts-float",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "presents",
+        "decorations"
+      ],
+      "prompt_feedback": "Sweet treats are great! Don't forget presents and banners for a complete birthday party."
+    },
+    "skeleton eats pizza": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Pizza arrives, but skeletons prefer birthday cake for parties!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "skeleton_warrior",
+          "anim": "Skeletons_Taunt",
+          "duration_ms": 800
+        },
+        {
+          "type": "emote",
+          "target": "skeleton_warrior",
+          "emoji": "\ud83c\udf55",
+          "text": "wrong food!"
+        },
+        {
+          "type": "react",
+          "effect": "laugh-tears",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "birthday cake",
+        "presents",
+        "decorations"
+      ],
+      "prompt_feedback": "Ha! Skeletons love pizza, but birthdays need cake! Try again with party foods."
+    },
+    "skeleton dances in the dungeon": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Skeleton does a silly dance, but where's the party stuff?",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "skeleton_warrior",
+          "anim": "Skeletons_Taunt",
+          "duration_ms": 900
+        },
+        {
+          "type": "emote",
+          "target": "skeleton_warrior",
+          "emoji": "\ud83d\udc80",
+          "text": "need party!"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "cake",
+        "presents",
+        "decorations"
+      ],
+      "prompt_feedback": "Dancing is fun, but parties need cake, presents, and decorations too!"
+    },
+    "make it rain barrels": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Barrels fall from the sky \u2014 silly but not much of a birthday party!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "barrel",
+          "position": "top"
+        },
+        {
+          "type": "move",
+          "target": "barrel",
+          "to": "center",
+          "style": "bounce"
+        },
+        {
+          "type": "animate",
+          "target": "skeleton_warrior",
+          "anim": "Hit_A",
+          "duration_ms": 600
+        },
+        {
+          "type": "react",
+          "effect": "explosion-cartoon",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "cake",
+        "presents",
+        "decorations"
+      ],
+      "prompt_feedback": "Haha! Barrels are funny but not for birthdays. Think cake, gifts, and banners!"
+    },
+    "surprise party time": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Adventurers jump out with cake and presents while banners wave everywhere!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "knight",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "mage",
+          "position": "right"
+        },
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Cheering",
+          "duration_ms": 800
+        },
+        {
+          "type": "spawn",
+          "target": "cake_birthday",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "present_A_red",
+          "position": "left"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "SURPRISE! You nailed it with helpers, cake, presents, and decorations!"
+    },
+    "skeleton gets the best birthday ever": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "The dungeon transforms into party central with cake, gifts, and cheerful skeletons!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "table_long",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "cake_birthday",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "present_B_blue",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "banner_blue",
+          "position": "top"
+        },
+        {
+          "type": "animate",
+          "target": "skeleton_warrior",
+          "anim": "Cheering",
+          "duration_ms": 900
+        },
+        {
+          "type": "react",
+          "effect": "hearts-float",
+          "position": "right"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "The BEST birthday! You thought of everything \u2014 cake, presents, and decorations!"
+    }
+  },
+  "knight-space": {
+    "knight goes on space mission with spaceship equipment and space ranger": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Knight and Space Ranger blast off with high-tech gear from the space base!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "space_ranger",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "basemodule_garage",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "cargo_A",
+          "position": "right"
+        },
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Waving",
+          "duration_ms": 700
+        },
+        {
+          "type": "animate",
+          "target": "space_ranger",
+          "anim": "Cheering",
+          "duration_ms": 800
+        },
+        {
+          "type": "react",
+          "effect": "stars-spin",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Mission ready! You included equipment, a helper, AND a vehicle \u2014 perfect team!"
+    },
+    "send knight to space with ranger and space base modules": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Knight explores the space base with Space Ranger as modules connect!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "basemodule_A",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "space_ranger",
+          "position": "center"
+        },
+        {
+          "type": "move",
+          "target": "knight",
+          "to": "center",
+          "style": "bounce"
+        },
+        {
+          "type": "spawn",
+          "target": "solarpanel",
+          "position": "top"
+        },
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Jump_Full_Long",
+          "duration_ms": 900
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Stellar job! You brought equipment, a helper, and base modules for a real mission!"
+    },
+    "knight needs space equipment": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Space equipment appears, but where's the ranger to help?",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "cargo_A",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "solarpanel",
+          "position": "right"
+        },
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Interact",
+          "duration_ms": 700
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "left"
+        }
+      ],
+      "missing_elements": [
+        "helper"
+      ],
+      "prompt_feedback": "Good thinking! You have equipment, but space missions need a partner like Space Ranger."
+    },
+    "put knight in a space dome": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Knight stands under the space dome, but needs more mission gear!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "dome",
+          "position": "center"
+        },
+        {
+          "type": "move",
+          "target": "knight",
+          "to": "center",
+          "style": "linear"
+        },
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Idle_A",
+          "duration_ms": 600
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "top"
+        }
+      ],
+      "missing_elements": [
+        "equipment",
+        "helper"
+      ],
+      "prompt_feedback": "You've got shelter! Now add equipment and a space ranger to complete the mission."
+    },
+    "space ranger waves at knight": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Space Ranger waves hello, but they need equipment and a base!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "space_ranger",
+          "position": "left"
+        },
+        {
+          "type": "animate",
+          "target": "space_ranger",
+          "anim": "Waving",
+          "duration_ms": 700
+        },
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Waving",
+          "duration_ms": 700
+        },
+        {
+          "type": "react",
+          "effect": "hearts-float",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "equipment",
+        "base"
+      ],
+      "prompt_feedback": "Great teamwork! Now give them space equipment and a base to work from."
+    },
+    "knight fights aliens": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Knight swings a sword in space, but there are no aliens here!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Melee_1H_Attack_Chop",
+          "duration_ms": 800
+        },
+        {
+          "type": "emote",
+          "target": "knight",
+          "emoji": "\ud83d\udc7d",
+          "text": "no aliens!"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "equipment",
+        "helper",
+        "base"
+      ],
+      "prompt_feedback": "Ha! This is an exploration mission, not a battle. Think equipment and teammates!"
+    },
+    "make the knight jump around": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Knight bounces in zero gravity \u2014 fun but not very productive!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Jump_Full_Short",
+          "duration_ms": 700
+        },
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Jump_Full_Long",
+          "duration_ms": 900
+        },
+        {
+          "type": "react",
+          "effect": "laugh-tears",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "equipment",
+        "helper",
+        "base"
+      ],
+      "prompt_feedback": "Bouncing is fun! But missions need equipment, helpers, and a base to succeed."
+    },
+    "knight eats pizza in space": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Pizza floats by in zero gravity \u2014 silly snack time!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Interact",
+          "duration_ms": 600
+        },
+        {
+          "type": "emote",
+          "target": "knight",
+          "emoji": "\ud83c\udf55",
+          "text": "space pizza!"
+        },
+        {
+          "type": "react",
+          "effect": "explosion-cartoon",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "equipment",
+        "helper",
+        "base"
+      ],
+      "prompt_feedback": "Haha! Space pizza is silly. Focus on mission equipment and your space ranger buddy."
+    },
+    "blast off to the stars": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Knight and Space Ranger prepare the garage module and cargo for liftoff!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "basemodule_garage",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "space_ranger",
+          "position": "right"
+        },
+        {
+          "type": "spawn",
+          "target": "cargo_A",
+          "position": "left"
+        },
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Cheering",
+          "duration_ms": 800
+        },
+        {
+          "type": "react",
+          "effect": "stars-spin",
+          "position": "center"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "top"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Mission accomplished! Equipment, teammate, and launch vehicle \u2014 you're ready for space!"
+    },
+    "space mission with friend and tools": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Knight and Ranger set up base modules with solar panels for energy!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "space_ranger",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "basemodule_B",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "solarpanel",
+          "position": "right"
+        },
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Interact",
+          "duration_ms": 700
+        },
+        {
+          "type": "animate",
+          "target": "space_ranger",
+          "anim": "Interact",
+          "duration_ms": 700
+        },
+        {
+          "type": "react",
+          "effect": "sparkle-magic",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Perfect planning! Helper, equipment, and base modules \u2014 that's a real space mission!"
+    }
+  },
+  "mage-kitchen": {
+    "mage cooks with magic spells food and kitchen tools": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Mage waves her wand as pots bubble, ovens glow, and magical pies appear!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "stove",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "pot",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "mage",
+          "anim": "Ranged_Magic_Spellcasting",
+          "duration_ms": 900
+        },
+        {
+          "type": "spawn",
+          "target": "pie_apple",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "sparkle-magic",
+          "position": "center"
+        },
+        {
+          "type": "react",
+          "effect": "hearts-float",
+          "position": "right"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Magical cooking! You used spells, tools, AND made delicious food \u2014 perfect combo!"
+    },
+    "witch helps mage cook magical food with oven and ingredients": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Witch and Mage team up to bake cake and bread in the enchanted oven!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "witch",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "oven",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "mage",
+          "anim": "Ranged_Magic_Raise",
+          "duration_ms": 700
+        },
+        {
+          "type": "animate",
+          "target": "witch",
+          "anim": "Work_A",
+          "duration_ms": 800
+        },
+        {
+          "type": "spawn",
+          "target": "cake_chocolate",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Teamwork makes the dream work! Helpers, tools, and magic \u2014 the kitchen is amazing!"
+    },
+    "mage uses magic to cook": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Mage casts spells, but where are the cooking tools and ingredients?",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "mage",
+          "anim": "Ranged_Magic_Shoot",
+          "duration_ms": 800
+        },
+        {
+          "type": "react",
+          "effect": "sparkle-magic",
+          "position": "center"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "right"
+        }
+      ],
+      "missing_elements": [
+        "tools",
+        "food"
+      ],
+      "prompt_feedback": "Magic is great! But kitchens need tools like ovens and food ingredients too."
+    },
+    "put a pan on the stove": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Pan sits on the stove, but magic and food are missing!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "stove",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "pan",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "mage",
+          "anim": "Interact",
+          "duration_ms": 600
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "top"
+        }
+      ],
+      "missing_elements": [
+        "magic",
+        "food"
+      ],
+      "prompt_feedback": "Good start with tools! Now add some magic spells and yummy food."
+    },
+    "witch chops vegetables": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Witch chops ingredients, but needs magic and more kitchen gear!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "witch",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "witch",
+          "anim": "Chopping",
+          "duration_ms": 900
+        },
+        {
+          "type": "react",
+          "effect": "hearts-float",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "magic",
+        "tools"
+      ],
+      "prompt_feedback": "Nice chopping! Don't forget to add magical spells and cooking equipment."
+    },
+    "mage summons a skeleton": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "A skeleton pops up in the kitchen \u2014 not very helpful for cooking!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "mage",
+          "anim": "Ranged_Magic_Summon",
+          "duration_ms": 900
+        },
+        {
+          "type": "spawn",
+          "target": "skeleton_minion",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "skeleton_minion",
+          "anim": "Skeletons_Awaken_Floor",
+          "duration_ms": 800
+        },
+        {
+          "type": "react",
+          "effect": "laugh-tears",
+          "position": "right"
+        }
+      ],
+      "missing_elements": [
+        "tools",
+        "food",
+        "helpful magic"
+      ],
+      "prompt_feedback": "Haha! Skeletons are fun but can't cook. Try summoning food instead!"
+    },
+    "make the kitchen explode": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Magic goes wrong and everything explodes \u2014 uh oh!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "mage",
+          "anim": "Ranged_Magic_Shoot",
+          "duration_ms": 700
+        },
+        {
+          "type": "react",
+          "effect": "explosion-cartoon",
+          "position": "center"
+        },
+        {
+          "type": "emote",
+          "target": "mage",
+          "emoji": "\ud83d\udca5",
+          "text": "oops!"
+        },
+        {
+          "type": "react",
+          "effect": "fire-sneeze",
+          "position": "left"
+        }
+      ],
+      "missing_elements": [
+        "tools",
+        "food",
+        "safe magic"
+      ],
+      "prompt_feedback": "Whoops! Too much magic. Try gentle spells with proper tools and ingredients."
+    },
+    "mage runs around the kitchen": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Mage sprints in circles \u2014 not much cooking happening!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "mage",
+          "anim": "Running_A",
+          "duration_ms": 800
+        },
+        {
+          "type": "emote",
+          "target": "mage",
+          "emoji": "\ud83c\udfc3",
+          "text": "too fast!"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "magic",
+        "tools",
+        "food"
+      ],
+      "prompt_feedback": "Slow down! Cooking needs magic spells, tools, and ingredients \u2014 not running!"
+    },
+    "magical feast time": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Mage and Witch create a feast with pies, cakes, and bread using enchanted tools!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "witch",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "oven",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "mage",
+          "anim": "Ranged_Magic_Spellcasting_Long",
+          "duration_ms": 1000
+        },
+        {
+          "type": "spawn",
+          "target": "pie_apple",
+          "position": "right"
+        },
+        {
+          "type": "spawn",
+          "target": "bread",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "WOW! Magic, helpers, tools, and amazing food \u2014 you're a master chef wizard!"
+    },
+    "cook with teamwork and magic": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Witch stirs the pot while Mage enchants the stove to make chocolate cake!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "witch",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "stove",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "pot",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "mage",
+          "anim": "Ranged_Magic_Raise",
+          "duration_ms": 700
+        },
+        {
+          "type": "spawn",
+          "target": "cake_chocolate",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "sparkle-magic",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Perfect recipe! Helpers, magic, tools, and tasty treats \u2014 the kitchen is enchanted!"
+    }
+  },
+  "barbarian-school": {
+    "barbarian goes to school with books desk and friends": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Barbarian sits at a desk with stacked books while friends cheer from the playground!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "desk",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "book_stack",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "barbarian",
+          "anim": "Sit_Chair_Down",
+          "duration_ms": 800
+        },
+        {
+          "type": "spawn",
+          "target": "knight",
+          "position": "right"
+        },
+        {
+          "type": "spawn",
+          "target": "slide",
+          "position": "left"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "A+ work! You brought school supplies, furniture, AND friends \u2014 perfect school day!"
+    },
+    "send barbarian to school with all adventurers and playground": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "All five adventurers gather at the playground with slides and seesaws for recess!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "knight",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "mage",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "slide",
+          "position": "right"
+        },
+        {
+          "type": "spawn",
+          "target": "seesaw",
+          "position": "left"
+        },
+        {
+          "type": "animate",
+          "target": "barbarian",
+          "anim": "Cheering",
+          "duration_ms": 800
+        },
+        {
+          "type": "react",
+          "effect": "hearts-float",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "School's awesome! You included classmates, play equipment, AND school stuff \u2014 best day ever!"
+    },
+    "barbarian brings books to school": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Barbarian carries books, but where are the friends and classroom?",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "book_stack",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "barbarian",
+          "anim": "PickUp",
+          "duration_ms": 700
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "right"
+        }
+      ],
+      "missing_elements": [
+        "friends",
+        "furniture"
+      ],
+      "prompt_feedback": "Books are important! Now add friends to study with and a desk to sit at."
+    },
+    "put barbarian on playground": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Barbarian plays on the slide, but school needs books and friends too!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "slide",
+          "position": "center"
+        },
+        {
+          "type": "move",
+          "target": "barbarian",
+          "to": "center",
+          "style": "bounce"
+        },
+        {
+          "type": "animate",
+          "target": "barbarian",
+          "anim": "Running_A",
+          "duration_ms": 700
+        },
+        {
+          "type": "react",
+          "effect": "stars-spin",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "supplies",
+        "friends"
+      ],
+      "prompt_feedback": "Recess is fun! But don't forget school supplies and classmates to learn with."
+    },
+    "knight waves at barbarian": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Knight says hi to Barbarian, but where's the school stuff?",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "knight",
+          "position": "left"
+        },
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Waving",
+          "duration_ms": 700
+        },
+        {
+          "type": "animate",
+          "target": "barbarian",
+          "anim": "Waving",
+          "duration_ms": 700
+        },
+        {
+          "type": "react",
+          "effect": "hearts-float",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "supplies",
+        "furniture"
+      ],
+      "prompt_feedback": "Friendship is great! Now add books and desks to make it a real school."
+    },
+    "barbarian fights everyone": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Barbarian swings an axe wildly \u2014 not how we behave at school!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "barbarian",
+          "anim": "Melee_2H_Attack_Spin",
+          "duration_ms": 900
+        },
+        {
+          "type": "emote",
+          "target": "barbarian",
+          "emoji": "\u2694\ufe0f",
+          "text": "no fighting!"
+        },
+        {
+          "type": "react",
+          "effect": "explosion-cartoon",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "supplies",
+        "friends",
+        "furniture"
+      ],
+      "prompt_feedback": "Whoa! School is for learning, not fighting. Try books and friendly classmates instead!"
+    },
+    "make barbarian do pushups": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Barbarian does pushups \u2014 great exercise but this is school time!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "barbarian",
+          "anim": "Push_Ups",
+          "duration_ms": 1000
+        },
+        {
+          "type": "emote",
+          "target": "barbarian",
+          "emoji": "\ud83d\udcaa",
+          "text": "gym later!"
+        },
+        {
+          "type": "react",
+          "effect": "laugh-tears",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "supplies",
+        "friends",
+        "furniture"
+      ],
+      "prompt_feedback": "Strong muscles! But school needs books, friends, and desks for learning."
+    },
+    "barbarian slides down the seesaw": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Barbarian uses the seesaw backwards \u2014 hilarious but confused!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "seesaw",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "barbarian",
+          "anim": "Running_A",
+          "duration_ms": 700
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "center"
+        },
+        {
+          "type": "react",
+          "effect": "laugh-tears",
+          "position": "right"
+        }
+      ],
+      "missing_elements": [
+        "supplies",
+        "friends",
+        "furniture"
+      ],
+      "prompt_feedback": "Ha! Seesaws need two people. Bring friends, books, and a desk for school!"
+    },
+    "learning day at school": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Barbarian reads books at a desk while Ranger and Rogue play on the merry-go-round!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "desk",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "book_stack",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "barbarian",
+          "anim": "Sit_Chair_Idle",
+          "duration_ms": 700
+        },
+        {
+          "type": "spawn",
+          "target": "ranger",
+          "position": "right"
+        },
+        {
+          "type": "spawn",
+          "target": "merry_go_round",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "stars-spin",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Perfect school day! Learning time, friends, and play equipment \u2014 you thought of everything!"
+    },
+    "school with all the friends": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "All adventurers gather with books, chairs, and sandbox fun \u2014 best class ever!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "chair_A",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "book_stack",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "ranger",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "rogue",
+          "position": "right"
+        },
+        {
+          "type": "animate",
+          "target": "barbarian",
+          "anim": "Interact",
+          "duration_ms": 700
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Outstanding! Supplies, classmates, and fun equipment \u2014 that's a complete school experience!"
+    }
+  },
+  "dungeon-concert": {
+    "throw a rock concert in the dungeon with band and decorations": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Adventurers and skeletons jam out as torches flicker and banners wave!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "skeleton_warrior",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "knight",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Hammer",
+          "duration_ms": 800
+        },
+        {
+          "type": "spawn",
+          "target": "torch",
+          "position": "top"
+        },
+        {
+          "type": "spawn",
+          "target": "banner_blue",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "stars-spin",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Rock on! You brought performers, instruments, AND decorations \u2014 that's a real concert!"
+    },
+    "skeleton band plays music with adventurers and dungeon decorations": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Skeletons taunt rhythmically while Barbarian hammers drums under glowing torches!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "skeleton_warrior",
+          "position": "left"
+        },
+        {
+          "type": "animate",
+          "target": "skeleton_warrior",
+          "anim": "Skeletons_Taunt",
+          "duration_ms": 900
+        },
+        {
+          "type": "spawn",
+          "target": "barbarian",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "barbarian",
+          "anim": "Hammering",
+          "duration_ms": 900
+        },
+        {
+          "type": "spawn",
+          "target": "torch",
+          "position": "top"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Epic show! Band members, music actions, and atmosphere \u2014 you're a concert master!"
+    },
+    "skeletons play music": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Skeletons dance around, but where are the other musicians and decorations?",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "skeleton_warrior",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "skeleton_warrior",
+          "anim": "Skeletons_Idle",
+          "duration_ms": 700
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "right"
+        }
+      ],
+      "missing_elements": [
+        "band_members",
+        "decorations"
+      ],
+      "prompt_feedback": "Good start! Now add more band members and dungeon decorations for a full concert."
+    },
+    "put torches in the dungeon": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Torches light up the dungeon, but the concert needs musicians!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "torch",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "torch",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "sparkle-magic",
+          "position": "center"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "top"
+        }
+      ],
+      "missing_elements": [
+        "performers",
+        "instruments"
+      ],
+      "prompt_feedback": "Great atmosphere! Now bring in adventurers and skeletons to perform the music."
+    },
+    "knight and barbarian cheer": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Adventurers cheer loudly, but who's playing the music?",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "knight",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "barbarian",
+          "position": "right"
+        },
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Cheering",
+          "duration_ms": 800
+        },
+        {
+          "type": "animate",
+          "target": "barbarian",
+          "anim": "Cheering",
+          "duration_ms": 800
+        },
+        {
+          "type": "react",
+          "effect": "hearts-float",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "performers",
+        "decorations"
+      ],
+      "prompt_feedback": "Awesome energy! But concerts need performers making music and cool decorations."
+    },
+    "skeleton attacks everyone": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Skeleton charges aggressively \u2014 this is a concert, not a battle!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "skeleton_warrior",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "skeleton_warrior",
+          "anim": "Melee_1H_Attack_Chop",
+          "duration_ms": 800
+        },
+        {
+          "type": "emote",
+          "target": "skeleton_warrior",
+          "emoji": "\u2694\ufe0f",
+          "text": "wrong show!"
+        },
+        {
+          "type": "react",
+          "effect": "explosion-cartoon",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "performers",
+        "instruments",
+        "decorations"
+      ],
+      "prompt_feedback": "Whoa! Concerts are for music, not fighting. Try performers and instruments instead!"
+    },
+    "clown jumps around": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Clown bounces everywhere \u2014 entertaining but where's the band?",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "clown",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "clown",
+          "anim": "Jump_Full_Short",
+          "duration_ms": 700
+        },
+        {
+          "type": "emote",
+          "target": "clown",
+          "emoji": "\ud83e\udd21",
+          "text": "need music!"
+        },
+        {
+          "type": "react",
+          "effect": "laugh-tears",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "performers",
+        "instruments",
+        "decorations"
+      ],
+      "prompt_feedback": "Fun clowning! But rock concerts need musicians with instruments and decorations."
+    },
+    "everyone sits on barrels": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Adventurers sit on barrels waiting \u2014 someone needs to start the show!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "barrel",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "barrel",
+          "position": "right"
+        },
+        {
+          "type": "spawn",
+          "target": "knight",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Sit_Chair_Down",
+          "duration_ms": 700
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "performers",
+        "instruments",
+        "decorations"
+      ],
+      "prompt_feedback": "They're waiting! Give them performers, music-making actions, and cool decorations."
+    },
+    "dungeon rock festival": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "All adventurers and skeletons perform together under banners and torchlight \u2014 legendary!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "skeleton_warrior",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "mage",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "ranger",
+          "position": "right"
+        },
+        {
+          "type": "animate",
+          "target": "mage",
+          "anim": "Ranged_Magic_Spellcasting",
+          "duration_ms": 900
+        },
+        {
+          "type": "spawn",
+          "target": "banner_red",
+          "position": "top"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "LEGENDARY SHOW! Full band, magical performance, and atmosphere \u2014 you're a rockstar!"
+    },
+    "best concert ever": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Barbarian hammers, Knight spins, and Skeleton taunts while torches and banners fill the dungeon!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "barbarian",
+          "position": "left"
+        },
+        {
+          "type": "animate",
+          "target": "barbarian",
+          "anim": "Hammering",
+          "duration_ms": 900
+        },
+        {
+          "type": "spawn",
+          "target": "knight",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Melee_2H_Attack_Spin",
+          "duration_ms": 800
+        },
+        {
+          "type": "spawn",
+          "target": "torch",
+          "position": "top"
+        },
+        {
+          "type": "react",
+          "effect": "stars-spin",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "ENCORE! Perfect performers, action-packed music, and decorations \u2014 the crowd goes wild!"
+    }
+  },
+  "skeleton-pizza": {
+    "skeleton delivers pizza to knight and ranger with plates": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Skeleton Warrior carries hot pepperoni pizza to Knight and Ranger at the table!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "pizza_pepperoni",
+          "position": "left"
+        },
+        {
+          "type": "animate",
+          "target": "skeleton_warrior",
+          "anim": "Holding_A",
+          "duration_ms": 800
+        },
+        {
+          "type": "move",
+          "target": "skeleton_warrior",
+          "to": "center",
+          "style": "linear"
+        },
+        {
+          "type": "spawn",
+          "target": "knight",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "table_round",
+          "position": "center"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Perfect delivery! Pizza, customers, AND dining setup \u2014 you're a delivery champion!"
+    },
+    "skeleton brings pepperoni pizza and cheese pizza to hungry customers": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Skeleton Rogue sneaks over with two pizzas as Ranger and Knight cheer at their table!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "pizza_pepperoni",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "pizza_cheese",
+          "position": "left"
+        },
+        {
+          "type": "animate",
+          "target": "skeleton_rogue",
+          "anim": "Sneaking",
+          "duration_ms": 900
+        },
+        {
+          "type": "spawn",
+          "target": "ranger",
+          "position": "right"
+        },
+        {
+          "type": "spawn",
+          "target": "table_round",
+          "position": "center"
+        },
+        {
+          "type": "react",
+          "effect": "hearts-float",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Double delivery! Food, happy customers, and dining area \u2014 excellent service!"
+    },
+    "skeleton carries pizza": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Skeleton holds a pizza, but who's going to eat it?",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "pizza_pepperoni",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "skeleton_warrior",
+          "anim": "PickUp",
+          "duration_ms": 700
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "right"
+        }
+      ],
+      "missing_elements": [
+        "customers",
+        "dining"
+      ],
+      "prompt_feedback": "Good job getting the pizza! Now find customers and a place for them to eat."
+    },
+    "put pizza on table": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Pizza sits on the table, but where are the hungry customers?",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "table_round",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "pizza_cheese",
+          "position": "center"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "top"
+        }
+      ],
+      "missing_elements": [
+        "customers"
+      ],
+      "prompt_feedback": "Table's ready! But deliveries need customers to serve the pizza to."
+    },
+    "knight waves at skeleton": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Knight waves hello, but where's the pizza delivery?",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "knight",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Waving",
+          "duration_ms": 700
+        },
+        {
+          "type": "animate",
+          "target": "skeleton_warrior",
+          "anim": "Waving",
+          "duration_ms": 700
+        },
+        {
+          "type": "react",
+          "effect": "hearts-float",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "pizza",
+        "dining"
+      ],
+      "prompt_feedback": "Friendly service! Now bring the pizza and a table for them to enjoy it."
+    },
+    "skeleton throws pizza at people": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Skeleton tosses pizza like a frisbee \u2014 messy and silly!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "pizza_pepperoni",
+          "position": "left"
+        },
+        {
+          "type": "animate",
+          "target": "skeleton_warrior",
+          "anim": "Throw",
+          "duration_ms": 800
+        },
+        {
+          "type": "react",
+          "effect": "explosion-cartoon",
+          "position": "center"
+        },
+        {
+          "type": "emote",
+          "target": "skeleton_warrior",
+          "emoji": "\ud83c\udf55",
+          "text": "don't throw!"
+        }
+      ],
+      "missing_elements": [
+        "delivery",
+        "customers",
+        "dining"
+      ],
+      "prompt_feedback": "Ha! Pizza is for eating, not throwing. Try a nice delivery to hungry customers."
+    },
+    "skeleton runs away": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Skeleton sprints off without the pizza \u2014 worst delivery ever!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "skeleton_warrior",
+          "anim": "Running_B",
+          "duration_ms": 800
+        },
+        {
+          "type": "emote",
+          "target": "skeleton_warrior",
+          "emoji": "\ud83c\udfc3",
+          "text": "wrong way!"
+        },
+        {
+          "type": "react",
+          "effect": "laugh-tears",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "pizza",
+        "customers",
+        "dining"
+      ],
+      "prompt_feedback": "Come back! Deliveries need pizza, customers, and a place to dine!"
+    },
+    "skeleton fights knight": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Skeleton attacks the customer \u2014 that's not how delivery works!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "knight",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "skeleton_warrior",
+          "anim": "Hit_A",
+          "duration_ms": 700
+        },
+        {
+          "type": "react",
+          "effect": "explosion-cartoon",
+          "position": "center"
+        },
+        {
+          "type": "emote",
+          "target": "knight",
+          "emoji": "\ud83d\ude31",
+          "text": "just pizza!"
+        }
+      ],
+      "missing_elements": [
+        "pizza",
+        "friendly service",
+        "dining"
+      ],
+      "prompt_feedback": "Yikes! Be friendly and bring pizza to hungry customers at a nice table."
+    },
+    "pizza party delivery": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Skeleton delivers both pizzas as Knight and Ranger sit with plates at the restaurant table!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "pizza_pepperoni",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "pizza_cheese",
+          "position": "left"
+        },
+        {
+          "type": "animate",
+          "target": "skeleton_warrior",
+          "anim": "Skeletons_Walking",
+          "duration_ms": 800
+        },
+        {
+          "type": "spawn",
+          "target": "knight",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "chair_restaurant",
+          "position": "center"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "AMAZING! Pizza, happy diners, and restaurant setup \u2014 five-star delivery service!"
+    },
+    "skeleton brings dinner": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Skeleton Rogue sneaks pepperoni pizza to Ranger sitting on a bench with a plate!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "pizza_pepperoni",
+          "position": "left"
+        },
+        {
+          "type": "animate",
+          "target": "skeleton_rogue",
+          "anim": "Sneaking",
+          "duration_ms": 900
+        },
+        {
+          "type": "spawn",
+          "target": "ranger",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "bench",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "plate",
+          "position": "center"
+        },
+        {
+          "type": "react",
+          "effect": "stars-spin",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Stealthy delivery! Food, customer, and dining spot \u2014 you're a pizza delivery ninja!"
+    }
+  },
+  "adventurers-picnic": {
+    "adventurers have picnic with blanket basket food and nature": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "All five adventurers gather on the blanket with basket, sandwiches, and tea under a big tree!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "picnic_blanket",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "picnic_basket",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "sandwich",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "tree_large",
+          "position": "left"
+        },
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Sit_Floor_Down",
+          "duration_ms": 800
+        },
+        {
+          "type": "react",
+          "effect": "hearts-float",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Perfect picnic! Food, friends, picnic gear, AND beautiful nature \u2014 you thought of everything!"
+    },
+    "knight barbarian mage ranger and rogue picnic in the park with food": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "All adventurers sit together eating cake and pie by the fountain with trees!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "barbarian",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "mage",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "picnic_blanket",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "cake_birthday",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "fountain",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Best picnic ever! All friends, yummy food, setup, and nature scenery \u2014 amazing!"
+    },
+    "put food on picnic blanket": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Sandwiches sit on the blanket, but where are the friends and nature?",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "picnic_blanket",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "sandwich",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "apple",
+          "position": "center"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "right"
+        }
+      ],
+      "missing_elements": [
+        "friends",
+        "nature"
+      ],
+      "prompt_feedback": "Good picnic setup! Now invite friends and find a pretty outdoor spot with trees."
+    },
+    "knight and barbarian sit together": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Two friends sit down, but where's the picnic food and outdoor scenery?",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "knight",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "barbarian",
+          "position": "right"
+        },
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Sit_Floor_Idle",
+          "duration_ms": 700
+        },
+        {
+          "type": "animate",
+          "target": "barbarian",
+          "anim": "Sit_Floor_Down",
+          "duration_ms": 800
+        },
+        {
+          "type": "react",
+          "effect": "hearts-float",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "food",
+        "nature"
+      ],
+      "prompt_feedback": "Nice friendship! But picnics need food on a blanket and trees or fountains nearby."
+    },
+    "mage picks up basket": {
+      "success_level": "PARTIAL_SUCCESS",
+      "narration": "Mage grabs the picnic basket, but needs friends and a nice outdoor spot!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "picnic_basket",
+          "position": "center"
+        },
+        {
+          "type": "animate",
+          "target": "mage",
+          "anim": "PickUp",
+          "duration_ms": 700
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "right"
+        }
+      ],
+      "missing_elements": [
+        "friends",
+        "food",
+        "nature"
+      ],
+      "prompt_feedback": "Good start! Now bring friends, spread out food, and find a pretty park setting."
+    },
+    "ranger throws rocks": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Ranger tosses rocks around \u2014 not very peaceful for a picnic!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "rock",
+          "position": "left"
+        },
+        {
+          "type": "animate",
+          "target": "ranger",
+          "anim": "Throw",
+          "duration_ms": 700
+        },
+        {
+          "type": "react",
+          "effect": "explosion-cartoon",
+          "position": "center"
+        },
+        {
+          "type": "emote",
+          "target": "ranger",
+          "emoji": "\ud83e\udea8",
+          "text": "wrong idea!"
+        }
+      ],
+      "missing_elements": [
+        "friends",
+        "food",
+        "picnic gear",
+        "nature"
+      ],
+      "prompt_feedback": "Ha! Picnics are calm. Try food, friends, blankets, and pretty nature spots!"
+    },
+    "knight fights with sword": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Knight swings a sword wildly \u2014 picnics are for relaxing, not battling!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "knight",
+          "anim": "Melee_1H_Attack_Chop",
+          "duration_ms": 800
+        },
+        {
+          "type": "emote",
+          "target": "knight",
+          "emoji": "\u2694\ufe0f",
+          "text": "no fighting!"
+        },
+        {
+          "type": "react",
+          "effect": "explosion-cartoon",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [
+        "friends",
+        "food",
+        "picnic gear",
+        "nature"
+      ],
+      "prompt_feedback": "Whoa! Picnics are peaceful. Bring friends, food, and enjoy nature together!"
+    },
+    "mage casts magic spells": {
+      "success_level": "FUNNY_FAIL",
+      "narration": "Mage shoots magic everywhere \u2014 save spells for later, it's picnic time!",
+      "actions": [
+        {
+          "type": "animate",
+          "target": "mage",
+          "anim": "Ranged_Magic_Shoot",
+          "duration_ms": 800
+        },
+        {
+          "type": "react",
+          "effect": "sparkle-magic",
+          "position": "center"
+        },
+        {
+          "type": "emote",
+          "target": "mage",
+          "emoji": "\u2728",
+          "text": "too much!"
+        },
+        {
+          "type": "react",
+          "effect": "question-marks",
+          "position": "right"
+        }
+      ],
+      "missing_elements": [
+        "friends",
+        "food",
+        "picnic gear",
+        "nature"
+      ],
+      "prompt_feedback": "Cool magic! But picnics need food, friends, blankets, and beautiful nature."
+    },
+    "perfect park picnic": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "All five adventurers relax on blankets with pie, tea, and sandwiches by the fountain!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "picnic_blanket",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "pie_cherry",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "teapot",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "fountain",
+          "position": "right"
+        },
+        {
+          "type": "animate",
+          "target": "ranger",
+          "anim": "Lie_Down",
+          "duration_ms": 800
+        },
+        {
+          "type": "react",
+          "effect": "hearts-float",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "PERFECT DAY! Friends, food, picnic setup, and lovely nature \u2014 you're a picnic pro!"
+    },
+    "friends enjoy nature feast": {
+      "success_level": "FULL_SUCCESS",
+      "narration": "Rogue, Knight, and Mage share cake and apples under a big tree near the bushes!",
+      "actions": [
+        {
+          "type": "spawn",
+          "target": "rogue",
+          "position": "left"
+        },
+        {
+          "type": "spawn",
+          "target": "knight",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "picnic_basket_round",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "cake_birthday",
+          "position": "center"
+        },
+        {
+          "type": "spawn",
+          "target": "tree",
+          "position": "right"
+        },
+        {
+          "type": "react",
+          "effect": "confetti-burst",
+          "position": "center"
+        }
+      ],
+      "missing_elements": [],
+      "prompt_feedback": "Wonderful picnic! Friends together, delicious food, gear, and nature \u2014 you nailed it!"
     }
   }
 }

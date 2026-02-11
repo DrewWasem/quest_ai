@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prompt Quest — Town Asset Picker</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0F0A1A;
+      color: #E8E0F7;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #8B5CF6, #FF8C42);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle {
+      text-align: center;
+      color: #8B7AAE;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+    }
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: #B8A9D4;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .badge-cc0 { background: #22C55E30; color: #22C55E; border: 1px solid #22C55E50; }
+    .badge-free { background: #38BDF830; color: #38BDF8; border: 1px solid #38BDF850; }
+    .badge-owned { background: #8B5CF630; color: #8B5CF6; border: 1px solid #8B5CF650; }
+    .badge-paid { background: #FF8C4230; color: #FF8C42; border: 1px solid #FF8C4250; }
+    .badge-gltf { background: #FBBF2430; color: #FBBF24; border: 1px solid #FBBF2450; }
+
+    .section-title {
+      font-size: 1.6rem;
+      color: #A78BFA;
+      margin: 2.5rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #3D2B7A;
+    }
+    .section-desc {
+      color: #8B7AAE;
+      margin-bottom: 1.5rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background: #1A0F2E;
+      border: 1px solid #3D2B7A;
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+    }
+    .card-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      background: #231546;
+      display: block;
+    }
+    .card-body {
+      padding: 1.2rem;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+    }
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #FFF;
+    }
+    .card-creator {
+      font-size: 0.85rem;
+      color: #8B7AAE;
+      margin-bottom: 0.5rem;
+    }
+    .card-badges {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+    }
+    .card-desc {
+      font-size: 0.9rem;
+      color: #B8A9D4;
+      margin-bottom: 0.75rem;
+    }
+    .card-models {
+      font-size: 0.85rem;
+      color: #8B7AAE;
+      margin-bottom: 0.75rem;
+      padding: 0.5rem;
+      background: #0F0A1A;
+      border-radius: 8px;
+    }
+    .card-models strong { color: #A78BFA; }
+    .card-stats {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: #6B5C8A;
+      margin-bottom: 0.75rem;
+    }
+    .card-stats span { display: flex; align-items: center; gap: 0.3rem; }
+    .card-links {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .card-links a {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .card-links a:hover { opacity: 0.8; }
+    .btn-primary { background: #8B5CF6; color: #FFF; }
+    .btn-secondary { background: #3D2B7A; color: #E8E0F7; }
+    .btn-github { background: #23303A; color: #E8E0F7; }
+
+    .note-box {
+      background: #231546;
+      border: 1px solid #3D2B7A;
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin: 2rem 0;
+      color: #B8A9D4;
+    }
+    .note-box strong { color: #FBBF24; }
+
+    .img-error {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 220px;
+      background: #231546;
+      color: #6B5C8A;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 480px) {
+      .grid { grid-template-columns: 1fr; }
+      body { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>Town Asset Picker</h1>
+<p class="subtitle">Open-source 3D assets for building the Prompt Quest town world. Pre-built scenes first, then individual asset packs.</p>
+
+<div class="legend">
+  <div class="legend-item"><span class="badge badge-cc0">CC0</span> Public domain, no attribution</div>
+  <div class="legend-item"><span class="badge badge-free">FREE</span> Free download</div>
+  <div class="legend-item"><span class="badge badge-owned">OWNED</span> Already downloaded</div>
+  <div class="legend-item"><span class="badge badge-gltf">GLTF</span> Includes GLTF format</div>
+  <div class="legend-item"><span class="badge badge-paid">PAID</span> Requires purchase</div>
+  <div class="legend-item"><span class="badge" style="background:#EC489930;color:#EC4899;border:1px solid #EC489950;">SCENE</span> Complete laid-out world</div>
+</div>
+
+<!-- ============================================== -->
+<!-- SECTION 0: PRE-BUILT COMPLETE WORLDS -->
+<!-- ============================================== -->
+<h2 class="section-title" style="color:#EC4899;">Complete Pre-Built Worlds (Already Laid Out)</h2>
+<p class="section-desc">These are full scenes with buildings, roads, trees, etc. already arranged into a town — not just loose objects. Download one GLB and you get a whole world.</p>
+
+<div class="grid">
+
+  <!-- Sketchfab: Low Poly City by Alessandro Diamanti -->
+  <div class="card" style="border-color:#EC489950;">
+    <a href="https://sketchfab.com/3d-models/low-poly-city-41697300a4c643d089784b8688b2ed2c" target="_blank">
+      <img class="card-img"
+           src="https://media.sketchfab.com/models/41697300a4c643d089784b8688b2ed2c/thumbnails/4e42766a1c7c4bcdb0399b6ddfa3c48b/800x600.jpeg"
+           alt="Low Poly City - Complete Scene"
+           onerror="this.outerHTML='<div class=img-error>Click link below to preview in 3D on Sketchfab</div>'">
+    </a>
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Low Poly City (Full Layout)</span>
+      </div>
+      <div class="card-creator">by Alessandro Diamanti</div>
+      <div class="card-badges">
+        <span class="badge" style="background:#EC489930;color:#EC4899;border:1px solid #EC489950;">SCENE</span>
+        <span class="badge badge-free">FREE</span>
+        <span class="badge badge-gltf">GLTF</span>
+      </div>
+      <p class="card-desc">Complete city scene — shops, pizzeria, townhouses, church, and village buildings all placed and ready. Single color-wheel texture. 15K+ downloads. CC-BY license.</p>
+      <div class="card-models">
+        <strong>Scene contains:</strong> Multiple building types arranged on streets, shops, church, townhouses, signage — all positioned in a walkable layout
+      </div>
+      <div class="card-stats">
+        <span>324K tris</span>
+        <span>CC Attribution</span>
+        <span>15K downloads</span>
+      </div>
+      <div class="card-links">
+        <a href="https://sketchfab.com/3d-models/low-poly-city-41697300a4c643d089784b8688b2ed2c" class="btn-primary">View 3D + Download</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sketchfab: Cartoon Lowpoly Small City by antonmoek -->
+  <div class="card" style="border-color:#EC489950;">
+    <a href="https://sketchfab.com/3d-models/cartoon-lowpoly-small-city-free-pack-edd1c604e1e045a0a2a552ddd9a293e6" target="_blank">
+      <img class="card-img"
+           src="https://media.sketchfab.com/models/edd1c604e1e045a0a2a552ddd9a293e6/thumbnails/fdf55e5c47a54e4a9ff109e61bbd26ab/800x600.jpeg"
+           alt="Cartoon Lowpoly Small City"
+           onerror="this.outerHTML='<div class=img-error>Click link below to preview in 3D on Sketchfab</div>'">
+    </a>
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Cartoon Small City (Full Layout)</span>
+      </div>
+      <div class="card-creator">by antonmoek</div>
+      <div class="card-badges">
+        <span class="badge" style="background:#EC489930;color:#EC4899;border:1px solid #EC489950;">SCENE</span>
+        <span class="badge badge-free">FREE</span>
+        <span class="badge badge-gltf">GLTF</span>
+      </div>
+      <p class="card-desc">Cute cartoon city already laid out — buildings, trees, roads, cars, houses all arranged in a small city. UVW textured, game/AR ready. 22K+ downloads!</p>
+      <div class="card-models">
+        <strong>Scene contains:</strong> Cartoon buildings, roads with intersections, parked cars, trees, houses — complete walkable neighborhood
+      </div>
+      <div class="card-stats">
+        <span>37K tris (very light!)</span>
+        <span>CC Attribution</span>
+        <span>22K downloads</span>
+      </div>
+      <div class="card-links">
+        <a href="https://sketchfab.com/3d-models/cartoon-lowpoly-small-city-free-pack-edd1c604e1e045a0a2a552ddd9a293e6" class="btn-primary">View 3D + Download</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sketchfab: Low Poly City-Pack by Awbmegames (124 prefabs) -->
+  <div class="card" style="border-color:#EC489950;">
+    <a href="https://sketchfab.com/3d-models/low-poly-city-pack-c693dae1fe06403ea1e0bcf4e9db108a" target="_blank">
+      <img class="card-img"
+           src="https://media.sketchfab.com/models/c693dae1fe06403ea1e0bcf4e9db108a/thumbnails/55a2e4e31db342e2a1ed44e10e6e9d1c/800x600.jpeg"
+           alt="Low Poly City Pack - 124 Prefabs"
+           onerror="this.outerHTML='<div class=img-error>Click link below to preview in 3D on Sketchfab</div>'">
+    </a>
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Low Poly City Pack (124 Prefabs)</span>
+      </div>
+      <div class="card-creator">by Awbmegames</div>
+      <div class="card-badges">
+        <span class="badge" style="background:#EC489930;color:#EC4899;border:1px solid #EC489950;">SCENE</span>
+        <span class="badge badge-free">FREE</span>
+        <span class="badge badge-gltf">GLTF</span>
+      </div>
+      <p class="card-desc">Massive city pack — 42 buildings, 36 cars, roads, trees, all laid out as a complete city scene. Download the whole GLB.</p>
+      <div class="card-models">
+        <strong>Scene contains:</strong> 42 buildings, 36 cars, roads, trees, and other city infrastructure — all placed in a full city layout
+      </div>
+      <div class="card-stats">
+        <span>550K tris</span>
+        <span>124 prefabs</span>
+        <span>CC Attribution</span>
+      </div>
+      <div class="card-links">
+        <a href="https://sketchfab.com/3d-models/low-poly-city-pack-c693dae1fe06403ea1e0bcf4e9db108a" class="btn-primary">View 3D + Download</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sketchfab: Low Poly City Game-Ready by costoWRLD -->
+  <div class="card" style="border-color:#EC489950;">
+    <a href="https://sketchfab.com/3d-models/low-poly-city-game-ready-c7e3a158515c4e9da31ae52c30403cef" target="_blank">
+      <img class="card-img"
+           src="https://media.sketchfab.com/models/c7e3a158515c4e9da31ae52c30403cef/thumbnails/d5e9b0cc3e284b83a19daa8b61ec6b2b/800x600.jpeg"
+           alt="Low Poly City Game-Ready"
+           onerror="this.outerHTML='<div class=img-error>Click link below to preview in 3D on Sketchfab</div>'">
+    </a>
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Low Poly City (Game-Ready)</span>
+      </div>
+      <div class="card-creator">by costoWRLD</div>
+      <div class="card-badges">
+        <span class="badge" style="background:#EC489930;color:#EC4899;border:1px solid #EC489950;">SCENE</span>
+        <span class="badge badge-free">FREE</span>
+        <span class="badge badge-gltf">GLTF</span>
+      </div>
+      <p class="card-desc">Fully modular road system with complete city layout. Optimized single color palette, clean topology, baked lighting. Explicitly game-ready and free to use.</p>
+      <div class="card-models">
+        <strong>Scene contains:</strong> Buildings, modular road system, infrastructure. Base Color + Roughness + Metallic + Emission maps. Clean topology.
+      </div>
+      <div class="card-stats">
+        <span>507K tris</span>
+        <span>CC Attribution</span>
+        <span>Oct 2025</span>
+      </div>
+      <div class="card-links">
+        <a href="https://sketchfab.com/3d-models/low-poly-city-game-ready-c7e3a158515c4e9da31ae52c30403cef" class="btn-primary">View 3D + Download</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sketchfab: Low Poly City by kabukidanshii -->
+  <div class="card" style="border-color:#EC489950;">
+    <a href="https://sketchfab.com/3d-models/low-poly-city-579d7493dbbc4cfa9fd50dde3df229bb" target="_blank">
+      <img class="card-img"
+           src="https://media.sketchfab.com/models/579d7493dbbc4cfa9fd50dde3df229bb/thumbnails/0a65064aa9164af69b3acf22b21fd3a1/800x600.jpeg"
+           alt="Low Poly City - kabukidanshii"
+           onerror="this.outerHTML='<div class=img-error>Click link below to preview in 3D on Sketchfab</div>'">
+    </a>
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Low Poly City (20 Buildings + Vehicles)</span>
+      </div>
+      <div class="card-creator">by kabukidanshii</div>
+      <div class="card-badges">
+        <span class="badge" style="background:#EC489930;color:#EC4899;border:1px solid #EC489950;">SCENE</span>
+        <span class="badge badge-free">FREE</span>
+        <span class="badge badge-gltf">GLTF</span>
+      </div>
+      <p class="card-desc">Complete city with 20 specific building types (hospital, fire station, police, school), 21 vehicles, 4 tree types, traffic signs, and 11 road tiles — all laid out.</p>
+      <div class="card-models">
+        <strong>Buildings:</strong> Hospital, fire station, police station, school + 16 others<br>
+        <strong>Vehicles:</strong> 21 (school buses, trucks, patrol cars, fire trucks)<br>
+        <strong>Props:</strong> 4 tree types, 10 traffic signs, street lights, 11 road tiles
+      </div>
+      <div class="card-stats">
+        <span>83K tris</span>
+        <span>CC Attribution</span>
+        <span>4K downloads</span>
+      </div>
+      <div class="card-links">
+        <a href="https://sketchfab.com/3d-models/low-poly-city-579d7493dbbc4cfa9fd50dde3df229bb" class="btn-primary">View 3D + Download</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sketchfab: Medieval Fantasy Town by Katydid -->
+  <div class="card" style="border-color:#EC489950;">
+    <a href="https://sketchfab.com/3d-models/medieval-fantasy-town-7fdfcfb0a211468ca470640be56f2d27" target="_blank">
+      <img class="card-img"
+           src="https://media.sketchfab.com/models/7fdfcfb0a211468ca470640be56f2d27/thumbnails/9f3f9df2ad4a43da972c7e58bc7bcbc1/800x600.jpeg"
+           alt="Medieval Fantasy Town"
+           onerror="this.outerHTML='<div class=img-error>Click link below to preview in 3D on Sketchfab</div>'">
+    </a>
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Medieval Fantasy Town</span>
+      </div>
+      <div class="card-creator">by Katydid</div>
+      <div class="card-badges">
+        <span class="badge" style="background:#EC489930;color:#EC4899;border:1px solid #EC489950;">SCENE</span>
+        <span class="badge badge-free">FREE</span>
+        <span class="badge badge-gltf">GLTF</span>
+      </div>
+      <p class="card-desc">Full medieval fantasy town — buildings, streets, abandoned areas all laid out. Great match for Prompt Quest's fantasy adventure vibe!</p>
+      <div class="card-models">
+        <strong>Scene contains:</strong> Medieval buildings, streets, town square, abandoned areas — complete walkable fantasy town
+      </div>
+      <div class="card-stats">
+        <span>Medieval/Fantasy style</span>
+        <span>Check license on page</span>
+      </div>
+      <div class="card-links">
+        <a href="https://sketchfab.com/3d-models/medieval-fantasy-town-7fdfcfb0a211468ca470640be56f2d27" class="btn-primary">View 3D + Download</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sketchfab: Low Poly Medieval Village by AlexFerrart3D -->
+  <div class="card" style="border-color:#EC489950;">
+    <a href="https://sketchfab.com/3d-models/low-poly-medieval-village-06536378fcdb49ab844ce68da9f26c59" target="_blank">
+      <img class="card-img"
+           src="https://media.sketchfab.com/models/06536378fcdb49ab844ce68da9f26c59/thumbnails/73f1cc2b5eef46bdac10f9f0a8e9bfce/800x600.jpeg"
+           alt="Low Poly Medieval Village"
+           onerror="this.outerHTML='<div class=img-error>Click link below to preview in 3D on Sketchfab</div>'">
+    </a>
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Low Poly Medieval Village</span>
+      </div>
+      <div class="card-creator">by AlexFerrart3D</div>
+      <div class="card-badges">
+        <span class="badge" style="background:#EC489930;color:#EC4899;border:1px solid #EC489950;">SCENE</span>
+        <span class="badge badge-free">FREE</span>
+        <span class="badge badge-gltf">GLTF</span>
+      </div>
+      <p class="card-desc">Complete medieval village scene — houses, paths, fences, and terrain all positioned. Low-poly stylized look.</p>
+      <div class="card-models">
+        <strong>Scene contains:</strong> Medieval houses, village paths, fences, terrain — complete village layout
+      </div>
+      <div class="card-stats">
+        <span>Medieval village style</span>
+        <span>Check license on page</span>
+      </div>
+      <div class="card-links">
+        <a href="https://sketchfab.com/3d-models/low-poly-medieval-village-06536378fcdb49ab844ce68da9f26c59" class="btn-primary">View 3D + Download</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sketchfab: Free Medieval Village Low Poly NPR Pack -->
+  <div class="card" style="border-color:#EC489950;">
+    <a href="https://sketchfab.com/3d-models/free-medieval-village-low-poly-npr-pack-5fff4cb273504cf3b06d2e728cba956f" target="_blank">
+      <img class="card-img"
+           src="https://media.sketchfab.com/models/5fff4cb273504cf3b06d2e728cba956f/thumbnails/9e0fafcdb82a4cabb8de27f7bc7d4a3d/800x600.jpeg"
+           alt="Medieval Village NPR Pack"
+           onerror="this.outerHTML='<div class=img-error>Click link below to preview in 3D on Sketchfab</div>'">
+    </a>
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Medieval Village NPR Pack</span>
+      </div>
+      <div class="card-creator">by Bento (@gostbento)</div>
+      <div class="card-badges">
+        <span class="badge" style="background:#EC489930;color:#EC4899;border:1px solid #EC489950;">SCENE</span>
+        <span class="badge badge-free">FREE</span>
+        <span class="badge badge-gltf">GLTF</span>
+      </div>
+      <p class="card-desc">Stylized NPR (non-photorealistic) medieval village — painterly look with buildings and environment arranged. First official pack from this team.</p>
+      <div class="card-models">
+        <strong>Scene contains:</strong> Medieval village buildings, environment props — stylized NPR/painterly aesthetic
+      </div>
+      <div class="card-stats">
+        <span>NPR style</span>
+        <span>Check license on page</span>
+      </div>
+      <div class="card-links">
+        <a href="https://sketchfab.com/3d-models/free-medieval-village-low-poly-npr-pack-5fff4cb273504cf3b06d2e728cba956f" class="btn-primary">View 3D + Download</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sketchfab: Free Low Poly Medieval Castle Scene -->
+  <div class="card" style="border-color:#EC489950;">
+    <a href="https://sketchfab.com/3d-models/free-low-poly-medieval-castle-scene-c22c57be021740b7990f2a7d89890ae0" target="_blank">
+      <img class="card-img"
+           src="https://media.sketchfab.com/models/c22c57be021740b7990f2a7d89890ae0/thumbnails/f4f86a1e9e1b40f89be2a45e969ae5e5/800x600.jpeg"
+           alt="Medieval Castle Scene"
+           onerror="this.outerHTML='<div class=img-error>Click link below to preview in 3D on Sketchfab</div>'">
+    </a>
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Medieval Castle Scene</span>
+      </div>
+      <div class="card-creator">by Syoma Pozdeev</div>
+      <div class="card-badges">
+        <span class="badge" style="background:#EC489930;color:#EC4899;border:1px solid #EC489950;">SCENE</span>
+        <span class="badge badge-free">FREE</span>
+      </div>
+      <p class="card-desc">Stylized medieval castle and town laid out as a full scene. PC/Mobile/VR-ready. Part of a larger Middle Ages city pack.</p>
+      <div class="card-models">
+        <strong>Scene contains:</strong> Castle, surrounding town buildings, walls, terrain — complete medieval settlement
+      </div>
+      <div class="card-stats">
+        <span>FBX/OBJ/C4D</span>
+        <span>Check license on page</span>
+      </div>
+      <div class="card-links">
+        <a href="https://sketchfab.com/3d-models/free-low-poly-medieval-castle-scene-c22c57be021740b7990f2a7d89890ae0" class="btn-primary">View 3D + Download</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sketchfab: Neighbourhood City Modular by golukumar -->
+  <div class="card" style="border-color:#EC489950;">
+    <a href="https://sketchfab.com/3d-models/neighbourhood-city-modular-lowpoly-6a0e3b97a8a54f2a909d351322916293" target="_blank">
+      <img class="card-img"
+           src="https://media.sketchfab.com/models/6a0e3b97a8a54f2a909d351322916293/thumbnails/fec20aae27a64d08a2c12fd3be12e91f/800x600.jpeg"
+           alt="Neighbourhood City Modular"
+           onerror="this.outerHTML='<div class=img-error>Click link below to preview in 3D on Sketchfab</div>'">
+    </a>
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Neighbourhood City (Anime/Cyberpunk)</span>
+      </div>
+      <div class="card-creator">by golukumar</div>
+      <div class="card-badges">
+        <span class="badge" style="background:#EC489930;color:#EC4899;border:1px solid #EC489950;">SCENE</span>
+        <span class="badge badge-free">FREE</span>
+        <span class="badge badge-gltf">GLTF</span>
+      </div>
+      <p class="card-desc">Anime/cyberpunk-styled neighborhood city — full layout with buildings and streets. 19K downloads, very popular. 4K textures.</p>
+      <div class="card-models">
+        <strong>Scene contains:</strong> Urban buildings, streets, cyberpunk/anime aesthetic — 415K tris, detailed city block
+      </div>
+      <div class="card-stats">
+        <span>415K tris</span>
+        <span>19K downloads</span>
+        <span>NoAI license</span>
+      </div>
+      <div class="card-links">
+        <a href="https://sketchfab.com/3d-models/neighbourhood-city-modular-lowpoly-6a0e3b97a8a54f2a909d351322916293" class="btn-primary">View 3D + Download</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ITHappy Cartoon City Free (with demo scene) -->
+  <div class="card" style="border-color:#EC489950;">
+    <img class="card-img"
+         src="https://ithappystudios.com/wp-content/uploads/2023/12/Cartoon-City-Free-Pack-1.jpg"
+         alt="ITHappy Cartoon City Free"
+         onerror="this.outerHTML='<div class=img-error>Preview unavailable — visit link below</div>'">
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Cartoon City Free (Demo Scene)</span>
+      </div>
+      <div class="card-creator">by ITHappy Studios</div>
+      <div class="card-badges">
+        <span class="badge" style="background:#EC489930;color:#EC4899;border:1px solid #EC489950;">SCENE</span>
+        <span class="badge badge-free">FREE</span>
+        <span class="badge badge-gltf">GLTF</span>
+      </div>
+      <p class="card-desc">80 models + a prepared demo scene with everything already laid out — buildings, roads, cars, sidewalks, props. Drop-in ready. GLTF included.</p>
+      <div class="card-models">
+        <strong>Demo scene includes:</strong> 4 buildings, 6 cars on roads, 7 road segments, sidewalks, fountains, traffic lights, benches, trees — all placed
+      </div>
+      <div class="card-stats">
+        <span>80 models</span>
+        <span>49K tris total</span>
+        <span>GLTF/FBX/OBJ</span>
+      </div>
+      <div class="card-links">
+        <a href="https://ithappystudios.com/free/cartoon-city-free/" class="btn-primary">Download (Free)</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sketchfab: Low Poly Village by ryzexfn -->
+  <div class="card" style="border-color:#EC489950;">
+    <a href="https://sketchfab.com/3d-models/low-poly-village-0fef82e56bdf4220b430f1de7380d92e" target="_blank">
+      <img class="card-img"
+           src="https://media.sketchfab.com/models/0fef82e56bdf4220b430f1de7380d92e/thumbnails/4f0a9e14c19a4c34a49afb0f56d8ce3a/800x600.jpeg"
+           alt="Low Poly Village"
+           onerror="this.outerHTML='<div class=img-error>Click link below to preview in 3D on Sketchfab</div>'">
+    </a>
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Low Poly Village (Hilly + River)</span>
+      </div>
+      <div class="card-creator">by ryzexfn</div>
+      <div class="card-badges">
+        <span class="badge" style="background:#EC489930;color:#EC4899;border:1px solid #EC489950;">SCENE</span>
+        <span class="badge badge-free">FREE</span>
+        <span class="badge badge-gltf">GLTF</span>
+      </div>
+      <p class="card-desc">Charming village on hilly terrain — 10 buildings, windmill, watermill, river, central well, trees, hedges. Storybook feel.</p>
+      <div class="card-models">
+        <strong>Scene contains:</strong> 10 buildings (4 types), windmill, watermill, river, well, 2 tree types, hedges — all on shaped terrain
+      </div>
+      <div class="card-stats">
+        <span>Complete village</span>
+        <span>Check license on page</span>
+      </div>
+      <div class="card-links">
+        <a href="https://sketchfab.com/3d-models/low-poly-village-0fef82e56bdf4220b430f1de7380d92e" class="btn-primary">View 3D + Download</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="note-box" style="border-color:#EC489950;">
+  <strong style="color:#EC4899;">How to use these complete scenes:</strong><br>
+  1. Click "View 3D + Download" to preview the scene in Sketchfab's 3D viewer<br>
+  2. Download as GLTF/GLB (Sketchfab's default export format)<br>
+  3. Load the whole GLB into R3F with a single <code>&lt;primitive object={gltf.scene} /&gt;</code><br>
+  4. You can also break apart the scene in Blender to extract individual buildings<br><br>
+  <strong>License note:</strong> Most are CC-BY (attribution required, but free). Check each model's page for exact terms.
+</div>
+
+<br>
+
+<!-- ============================================== -->
+<!-- SECTION 1: KAYKIT (same style as existing) -->
+<!-- ============================================== -->
+<h2 class="section-title" style="font-size:1.3rem; color:#6B5C8A; border-bottom-color:#2D1B69;">Individual Asset Packs (Objects to Build Your Own)</h2>
+<p class="section-desc" style="font-size:0.95rem;">If you'd rather assemble your own town from individual objects, these packs give you the building blocks.</p>
+<h2 class="section-title">KayKit Packs (Best Style Match)</h2>
+<p class="section-desc">Same creator as your existing assets. Guaranteed visual consistency with dungeon, space, restaurant packs.</p>
+
+<div class="grid">
+
+  <!-- KayKit City Builder Bits (OWNED) -->
+  <div class="card">
+    <img class="card-img"
+         src="https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-City-Builder-Bits-1.0/main/Preview/kaykit_city_builder.png"
+         alt="KayKit City Builder Bits"
+         onerror="this.parentElement.querySelector('.card-img').outerHTML='<div class=img-error>Preview unavailable — visit link below</div>'">
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">City Builder Bits</span>
+      </div>
+      <div class="card-creator">by Kay Lousberg (KayKit)</div>
+      <div class="card-badges">
+        <span class="badge badge-cc0">CC0</span>
+        <span class="badge badge-owned">OWNED</span>
+        <span class="badge badge-gltf">GLTF</span>
+      </div>
+      <p class="card-desc">32+ low-poly city assets — buildings, roads, vehicles. Uses single gradient atlas texture. Perfect for town centers.</p>
+      <div class="card-models">
+        <strong>Includes:</strong> Houses, apartments, shops, roads, cars, trees, street props
+      </div>
+      <div class="card-stats">
+        <span>32+ models</span>
+        <span>GLTF/FBX/OBJ</span>
+      </div>
+      <div class="card-links">
+        <a href="https://kaylousberg.itch.io/city-builder-bits" class="btn-primary">itch.io Page</a>
+        <a href="https://github.com/KayKit-Game-Assets/KayKit-City-Builder-Bits-1.0" class="btn-github">GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- KayKit Medieval Hexagon Pack -->
+  <div class="card">
+    <img class="card-img"
+         src="https://img.itch.zone/aW1hZ2UvMTg3NDUxMS8xMTAyMjI5NC5wbmc=/original/Lj8JW7.png"
+         alt="KayKit Medieval Hexagon Pack"
+         onerror="this.outerHTML='<div class=img-error>Preview unavailable — visit link below</div>'">
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Medieval Hexagon Pack</span>
+      </div>
+      <div class="card-creator">by Kay Lousberg (KayKit)</div>
+      <div class="card-badges">
+        <span class="badge badge-cc0">CC0</span>
+        <span class="badge badge-free">FREE</span>
+        <span class="badge badge-gltf">GLTF</span>
+      </div>
+      <p class="card-desc">200+ medieval hex tiles with buildings and props. 4 team colors. Great for fantasy town districts!</p>
+      <div class="card-models">
+        <strong>Buildings:</strong> Blacksmith, lumbermill, church, tavern, market, windmill, watermill, mine, well, houses, barracks, archery range<br>
+        <strong>Props:</strong> Trees, rocks, hills, mountains, clouds, horses, ships
+      </div>
+      <div class="card-stats">
+        <span>200+ models</span>
+        <span>GLTF/FBX/OBJ</span>
+        <span>4 color variants</span>
+      </div>
+      <div class="card-links">
+        <a href="https://kaylousberg.itch.io/kaykit-medieval-hexagon" class="btn-primary">itch.io (Free)</a>
+        <a href="https://github.com/KayKit-Game-Assets" class="btn-github">GitHub</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================== -->
+<!-- SECTION 2: KENNEY (same low-poly CC0 quality) -->
+<!-- ============================================== -->
+<h2 class="section-title">Kenney Packs (CC0 Low-Poly Standard)</h2>
+<p class="section-desc">Famous for high-quality CC0 game assets. Slightly different art style from KayKit but very clean and consistent.</p>
+
+<div class="grid">
+
+  <!-- Kenney Fantasy Town Kit -->
+  <div class="card">
+    <img class="card-img"
+         src="https://kenney.nl/media/pages/assets/fantasy-town-kit/46654aa09c-1754222358/preview.png"
+         alt="Kenney Fantasy Town Kit"
+         onerror="this.outerHTML='<div class=img-error>Preview unavailable — visit link below</div>'">
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Fantasy Town Kit</span>
+      </div>
+      <div class="card-creator">by Kenney</div>
+      <div class="card-badges">
+        <span class="badge badge-cc0">CC0</span>
+        <span class="badge badge-free">FREE</span>
+      </div>
+      <p class="card-desc">Massive fantasy town building set — medieval houses, walls, towers, and decorative elements with color variations. Version 2.0 completely remade!</p>
+      <div class="card-models">
+        <strong>Includes:</strong> Medieval buildings, walls, towers, gates, rooftops, windows, ground tiles, and decorative props. Multiple color variations.
+      </div>
+      <div class="card-stats">
+        <span>160 assets</span>
+        <span>ZIP (GLB inside)</span>
+        <span>v2.0 (2025)</span>
+      </div>
+      <div class="card-links">
+        <a href="https://kenney.nl/assets/fantasy-town-kit" class="btn-primary">Download (Free)</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kenney Medieval Town Base -->
+  <div class="card">
+    <img class="card-img"
+         src="https://kenney.nl/media/pages/assets/medieval-town-base/31d8b91ce0-1754222248/preview.png"
+         alt="Kenney Medieval Town (Base)"
+         onerror="this.outerHTML='<div class=img-error>Preview unavailable — visit link below</div>'">
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Medieval Town (Base)</span>
+      </div>
+      <div class="card-creator">by Kenney</div>
+      <div class="card-badges">
+        <span class="badge badge-cc0">CC0</span>
+        <span class="badge badge-free">FREE</span>
+      </div>
+      <p class="card-desc">Base set of medieval town buildings — houses, shops, market stalls, and town infrastructure. Solid foundation pack.</p>
+      <div class="card-models">
+        <strong>Includes:</strong> Houses (small/large), shops, market stalls, wells, fences, roads, crates, barrels, wagons
+      </div>
+      <div class="card-stats">
+        <span>65 assets</span>
+        <span>ZIP</span>
+      </div>
+      <div class="card-links">
+        <a href="https://kenney.nl/assets/medieval-town-base" class="btn-primary">Download (Free)</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kenney City Kit Suburban -->
+  <div class="card">
+    <img class="card-img"
+         src="https://kenney.nl/media/pages/assets/city-kit-suburban/5643c4dca2-1745479397/preview.png"
+         alt="Kenney City Kit (Suburban)"
+         onerror="this.outerHTML='<div class=img-error>Preview unavailable — visit link below</div>'">
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">City Kit (Suburban)</span>
+      </div>
+      <div class="card-creator">by Kenney</div>
+      <div class="card-badges">
+        <span class="badge badge-cc0">CC0</span>
+        <span class="badge badge-free">FREE</span>
+      </div>
+      <p class="card-desc">Suburban neighborhood buildings — houses, driveways, fences, trees. Multiple color variations. Completely remade in v2.0.</p>
+      <div class="card-models">
+        <strong>Includes:</strong> Suburban houses (multiple types), fences, driveways, trees, garages, gardens
+      </div>
+      <div class="card-stats">
+        <span>40 assets</span>
+        <span>ZIP</span>
+        <span>3 color schemes</span>
+      </div>
+      <div class="card-links">
+        <a href="https://kenney.nl/assets/city-kit-suburban" class="btn-primary">Download (Free)</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kenney City Kit Industrial -->
+  <div class="card">
+    <img class="card-img"
+         src="https://kenney.nl/media/pages/assets/city-kit-industrial/7a7bef5265-1750838283/preview.png"
+         alt="Kenney City Kit (Industrial)"
+         onerror="this.outerHTML='<div class=img-error>Preview unavailable — visit link below</div>'">
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">City Kit (Industrial)</span>
+      </div>
+      <div class="card-creator">by Kenney</div>
+      <div class="card-badges">
+        <span class="badge badge-cc0">CC0</span>
+        <span class="badge badge-free">FREE</span>
+      </div>
+      <p class="card-desc">Industrial zone buildings — factories, warehouses, smokestacks. Good for a city outskirts area.</p>
+      <div class="card-models">
+        <strong>Includes:</strong> Factories, warehouses, chimneys, industrial props, loading docks
+      </div>
+      <div class="card-stats">
+        <span>25 assets</span>
+        <span>ZIP</span>
+        <span>3 color schemes</span>
+      </div>
+      <div class="card-links">
+        <a href="https://kenney.nl/assets/city-kit-industrial" class="btn-primary">Download (Free)</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kenney Modular Buildings -->
+  <div class="card">
+    <img class="card-img"
+         src="https://kenney.nl/media/pages/assets/modular-buildings/4931745b3c-1707397420/preview.png"
+         alt="Kenney Modular Buildings"
+         onerror="this.outerHTML='<div class=img-error>Preview unavailable — visit link below</div>'">
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Modular Buildings</span>
+      </div>
+      <div class="card-creator">by Kenney</div>
+      <div class="card-badges">
+        <span class="badge badge-cc0">CC0</span>
+        <span class="badge badge-free">FREE</span>
+      </div>
+      <p class="card-desc">Modular building components — stack walls, windows, doors, and roofs to create unique buildings of any size.</p>
+      <div class="card-models">
+        <strong>Includes:</strong> Wall segments, windows, doors, rooftops, balconies, stairs, ground floors, upper floors — all snap-together modular
+      </div>
+      <div class="card-stats">
+        <span>100 variations</span>
+        <span>ZIP</span>
+        <span>2 color schemes</span>
+      </div>
+      <div class="card-links">
+        <a href="https://kenney.nl/assets/modular-buildings" class="btn-primary">Download (Free)</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================== -->
+<!-- SECTION 3: QUATERNIUS -->
+<!-- ============================================== -->
+<h2 class="section-title">Quaternius Packs</h2>
+<p class="section-desc">Well-known low-poly asset creator. Mostly CC0. Slightly more detailed style than KayKit but still game-ready.</p>
+
+<div class="grid">
+
+  <!-- Quaternius Buildings Pack -->
+  <div class="card">
+    <img class="card-img"
+         src="https://opengameart.org/sites/default/files/Promo_Buildings.jpg"
+         alt="Quaternius Buildings Pack"
+         onerror="this.outerHTML='<div class=img-error>Preview unavailable — visit link below</div>'">
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">LowPoly Buildings Pack</span>
+      </div>
+      <div class="card-creator">by Quaternius</div>
+      <div class="card-badges">
+        <span class="badge badge-cc0">CC0</span>
+        <span class="badge badge-free">FREE</span>
+      </div>
+      <p class="card-desc">Modular buildings with swappable atlas textures. Bank, hospital, shop, flats, houses, apartments, stores.</p>
+      <div class="card-models">
+        <strong>Includes:</strong> Bank, hospital, shop, apartment blocks, houses, stores — all with palette-swap textures
+      </div>
+      <div class="card-stats">
+        <span>FBX/OBJ/Blend</span>
+        <span>Multiple palettes</span>
+      </div>
+      <div class="card-links">
+        <a href="https://opengameart.org/content/lowpoly-buildings-pack" class="btn-primary">OpenGameArt</a>
+        <a href="https://quaternius.com/assets.html" class="btn-secondary">All Packs</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quaternius Farm Buildings -->
+  <div class="card">
+    <img class="card-img"
+         src="https://img.itch.zone/aW1hZ2UvMzQzNTk2LzE3MDQ0NjEucG5n/original/X0rXX2.png"
+         alt="Quaternius Farm Buildings"
+         onerror="this.outerHTML='<div class=img-error>Preview unavailable — visit link below</div>'">
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">LowPoly Farm Buildings</span>
+      </div>
+      <div class="card-creator">by Quaternius</div>
+      <div class="card-badges">
+        <span class="badge badge-cc0">CC0</span>
+        <span class="badge badge-free">FREE</span>
+      </div>
+      <p class="card-desc">13 farm buildings — barns, silos, farmhouses, stables. Great for town outskirts or rural areas.</p>
+      <div class="card-models">
+        <strong>Includes:</strong> Barns, silos, farmhouses, stables, sheds, windmills
+      </div>
+      <div class="card-stats">
+        <span>13 models</span>
+        <span>FBX/OBJ/Blend</span>
+      </div>
+      <div class="card-links">
+        <a href="https://quaternius.itch.io/lowpoly-farm-buildings" class="btn-primary">itch.io (Free)</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quaternius Ultimate Textured Buildings -->
+  <div class="card">
+    <img class="card-img"
+         src="https://img.itch.zone/aW1hZ2UvNTEyNzI0LzI2NjYzOTEucG5n/original/QQVJ%2FZ.png"
+         alt="Quaternius Ultimate Textured Buildings"
+         onerror="this.outerHTML='<div class=img-error>Preview unavailable — visit link below</div>'">
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Ultimate Textured Buildings</span>
+      </div>
+      <div class="card-creator">by Quaternius</div>
+      <div class="card-badges">
+        <span class="badge badge-cc0">CC0</span>
+        <span class="badge badge-free">FREE</span>
+      </div>
+      <p class="card-desc">Textured, more detailed buildings — good for when you want a slightly more polished look than flat-color low-poly.</p>
+      <div class="card-models">
+        <strong>Includes:</strong> Various residential and commercial buildings with UV-mapped textures
+      </div>
+      <div class="card-stats">
+        <span>FBX/OBJ/Blend</span>
+      </div>
+      <div class="card-links">
+        <a href="https://quaternius.com/assets.html" class="btn-primary">Quaternius Site</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================== -->
+<!-- SECTION 4: ITCH.IO COMMUNITY PACKS -->
+<!-- ============================================== -->
+<h2 class="section-title">itch.io Community Packs</h2>
+<p class="section-desc">Popular free packs from itch.io creators. Check individual licenses before using.</p>
+
+<div class="grid">
+
+  <!-- ITHappy Cartoon City Free -->
+  <div class="card">
+    <img class="card-img"
+         src="https://ithappystudios.com/wp-content/uploads/2023/12/Cartoon-City-Free-Pack-1.jpg"
+         alt="ITHappy Cartoon City Free"
+         onerror="this.outerHTML='<div class=img-error>Preview unavailable — visit link below</div>'">
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Cartoon City Free</span>
+      </div>
+      <div class="card-creator">by ITHappy Studios</div>
+      <div class="card-badges">
+        <span class="badge badge-free">FREE</span>
+        <span class="badge badge-gltf">GLTF</span>
+      </div>
+      <p class="card-desc">80 low-poly cartoon city models — buildings, cars, roads, sidewalks, vegetation, billboards, and 18+ props. Full demo scene included.</p>
+      <div class="card-models">
+        <strong>Buildings:</strong> 4 types &bull; <strong>Cars:</strong> 6 &bull; <strong>Roads:</strong> 7 segments &bull; <strong>Sidewalks:</strong> 5 &bull; <strong>Props:</strong> 18 (fountains, traffic lights, benches, etc.) &bull; <strong>Vegetation:</strong> 3 types &bull; <strong>Billboards:</strong> 5
+      </div>
+      <div class="card-stats">
+        <span>80 models</span>
+        <span>49K tris (620/model)</span>
+        <span>Unity/UE/Godot/GLTF</span>
+      </div>
+      <div class="card-links">
+        <a href="https://ithappystudios.com/free/cartoon-city-free/" class="btn-primary">Download (Free)</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fertile Soil Modular Village -->
+  <div class="card">
+    <img class="card-img"
+         src="https://img.itch.zone/aW1hZ2UvMjk4NTIxLzE0NjA3MTAuanBn/original/eDDGQ1.jpg"
+         alt="Modular Village Pack"
+         onerror="this.outerHTML='<div class=img-error>Preview unavailable — visit link below</div>'">
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Modular Village Pack</span>
+      </div>
+      <div class="card-creator">by Keith at Fertile Soil Productions</div>
+      <div class="card-badges">
+        <span class="badge badge-cc0">CC0</span>
+        <span class="badge badge-free">FREE</span>
+      </div>
+      <p class="card-desc">142+ modular village pieces — snap-together blocks for medieval-style villages. Walls, roofs, floors, and prop pieces.</p>
+      <div class="card-models">
+        <strong>Includes:</strong> Wall segments, roofs, floors, windows, doors, chimneys, carts, boats, stairs, fences, and decorative props
+      </div>
+      <div class="card-stats">
+        <span>142+ pieces</span>
+        <span>OBJ format</span>
+        <span>Modular snap-together</span>
+      </div>
+      <div class="card-links">
+        <a href="https://fertile-soil-productions.itch.io/modular-village-pack" class="btn-primary">itch.io (Free)</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stars and Shells Low Poly City Buildings -->
+  <div class="card">
+    <img class="card-img"
+         src="https://img.itch.zone/aW1nLzIwNjA3MDMzLnBuZw==/original/HW49Pg.png"
+         alt="Low Poly City Buildings Pack"
+         onerror="this.outerHTML='<div class=img-error>Preview unavailable — visit link below</div>'">
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Low Poly City Buildings Pack</span>
+      </div>
+      <div class="card-creator">by StarsandShellsStudio</div>
+      <div class="card-badges">
+        <span class="badge badge-free">FREE (1 model)</span>
+        <span class="badge badge-paid">PAID (full)</span>
+      </div>
+      <p class="card-desc">Colorful cartoon-style city buildings — apartments, shop/cafe, urban structures. One free yellow building. Full pack is paid.</p>
+      <div class="card-models">
+        <strong>Includes:</strong> Apartments, shops, cafes, small urban buildings
+      </div>
+      <div class="card-stats">
+        <span>WebGL-ready</span>
+        <span>Unity/UE/Godot/Blender</span>
+      </div>
+      <div class="card-links">
+        <a href="https://starsandshellsstudio.itch.io/low-poly-city-buildings-pack-game-ready-3d" class="btn-secondary">itch.io Page</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================== -->
+<!-- SECTION 5: SKETCHFAB FREE MODELS -->
+<!-- ============================================== -->
+<h2 class="section-title">Sketchfab Individual Models</h2>
+<p class="section-desc">Single models or small scenes. Free downloads available in GLTF. Check license per model (not all CC0).</p>
+
+<div class="grid">
+
+  <!-- Low Poly Village by damagedgrounds -->
+  <div class="card">
+    <a href="https://sketchfab.com/3d-models/low-poly-village-7d31a44c96784c0c9f6dea1979377963" target="_blank">
+      <img class="card-img"
+           src="https://media.sketchfab.com/models/7d31a44c96784c0c9f6dea1979377963/thumbnails/c22325e3c7e544928a8f7ebd13e8b8e7/800x600.jpeg"
+           alt="Low Poly Village"
+           onerror="this.outerHTML='<div class=img-error>Click to view 3D preview on Sketchfab</div>'">
+    </a>
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Low Poly Village (135+ prefabs)</span>
+      </div>
+      <div class="card-creator">by damagedgrounds</div>
+      <div class="card-badges">
+        <span class="badge badge-free">FREE</span>
+      </div>
+      <p class="card-desc">Complete village demo scene — 135+ prefabs to build a village and surrounding world. All models use one material and one 234x234 texture.</p>
+      <div class="card-stats">
+        <span>135+ prefabs</span>
+        <span>GLTF download</span>
+      </div>
+      <div class="card-links">
+        <a href="https://sketchfab.com/3d-models/low-poly-village-7d31a44c96784c0c9f6dea1979377963" class="btn-primary">View on Sketchfab</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Low Poly Village by ryzexfn -->
+  <div class="card">
+    <a href="https://sketchfab.com/3d-models/low-poly-village-0fef82e56bdf4220b430f1de7380d92e" target="_blank">
+      <img class="card-img"
+           src="https://media.sketchfab.com/models/0fef82e56bdf4220b430f1de7380d92e/thumbnails/4f0a9e14c19a4c34a49afb0f56d8ce3a/800x600.jpeg"
+           alt="Low Poly Village"
+           onerror="this.outerHTML='<div class=img-error>Click to view 3D preview on Sketchfab</div>'">
+    </a>
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Low Poly Village (windmill + river)</span>
+      </div>
+      <div class="card-creator">by ryzexfn</div>
+      <div class="card-badges">
+        <span class="badge badge-free">FREE</span>
+      </div>
+      <p class="card-desc">Stylized village on hilly terrain — 10 buildings (4 unique types), central well, windmill, watermill, river, trees, and hedges.</p>
+      <div class="card-stats">
+        <span>10 buildings</span>
+        <span>GLTF download</span>
+      </div>
+      <div class="card-links">
+        <a href="https://sketchfab.com/3d-models/low-poly-village-0fef82e56bdf4220b430f1de7380d92e" class="btn-primary">View on Sketchfab</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Low Poly Town by Ert2316 -->
+  <div class="card">
+    <a href="https://sketchfab.com/3d-models/low-poly-town-c21a5d42050e4e08b9ce3144b2713d3a" target="_blank">
+      <img class="card-img"
+           src="https://media.sketchfab.com/models/c21a5d42050e4e08b9ce3144b2713d3a/thumbnails/c74a1fe0e63a4db6a04d01e3e6636e9b/800x600.jpeg"
+           alt="Low Poly Town"
+           onerror="this.outerHTML='<div class=img-error>Click to view 3D preview on Sketchfab</div>'">
+    </a>
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Low Poly Town</span>
+      </div>
+      <div class="card-creator">by Ert2316</div>
+      <div class="card-badges">
+        <span class="badge badge-free">FREE</span>
+      </div>
+      <p class="card-desc">A complete low-poly town scene. Check Sketchfab for exact license terms before use.</p>
+      <div class="card-stats">
+        <span>Complete scene</span>
+        <span>GLTF download</span>
+      </div>
+      <div class="card-links">
+        <a href="https://sketchfab.com/3d-models/low-poly-town-c21a5d42050e4e08b9ce3144b2713d3a" class="btn-primary">View on Sketchfab</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Low Poly Town Hall -->
+  <div class="card">
+    <a href="https://sketchfab.com/3d-models/low-poly-town-hall-2a1c649f403d435b96cffd58662660eb" target="_blank">
+      <img class="card-img"
+           src="https://media.sketchfab.com/models/2a1c649f403d435b96cffd58662660eb/thumbnails/5f3a50e7b63e43408fc6c2b5e2ab4424/800x600.jpeg"
+           alt="Low Poly Town Hall"
+           onerror="this.outerHTML='<div class=img-error>Click to view 3D preview on Sketchfab</div>'">
+    </a>
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Low Poly Town Hall</span>
+      </div>
+      <div class="card-creator">by Sergi Trojanski</div>
+      <div class="card-badges">
+        <span class="badge badge-free">FREE</span>
+      </div>
+      <p class="card-desc">Medieval town hall for RPG/RTS games. Textured with standard materials. Good standalone centerpiece building.</p>
+      <div class="card-stats">
+        <span>Single model</span>
+        <span>GLTF download</span>
+      </div>
+      <div class="card-links">
+        <a href="https://sketchfab.com/3d-models/low-poly-town-hall-2a1c649f403d435b96cffd58662660eb" class="btn-primary">View on Sketchfab</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Low Poly Cartoon Town Hall -->
+  <div class="card">
+    <a href="https://sketchfab.com/models/d0022fe1b265486497b847049b2edfdf" target="_blank">
+      <img class="card-img"
+           src="https://media.sketchfab.com/models/d0022fe1b265486497b847049b2edfdf/thumbnails/af0fdef1c2ad4ac094c34a71b72e4e6e/800x600.jpeg"
+           alt="Low Poly Cartoon Town Hall"
+           onerror="this.outerHTML='<div class=img-error>Click to view 3D preview on Sketchfab</div>'">
+    </a>
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Cartoon Town Hall (Island)</span>
+      </div>
+      <div class="card-creator">by Skodvirr</div>
+      <div class="card-badges">
+        <span class="badge badge-free">FREE</span>
+      </div>
+      <p class="card-desc">Charming cartoon town hall on a cube island. Models in the scene can be used separately. Fun, playful style.</p>
+      <div class="card-stats">
+        <span>Scene + parts</span>
+        <span>GLTF download</span>
+      </div>
+      <div class="card-links">
+        <a href="https://sketchfab.com/models/d0022fe1b265486497b847049b2edfdf" class="btn-primary">View on Sketchfab</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Village House by lightguard -->
+  <div class="card">
+    <a href="https://sketchfab.com/3d-models/village-house-1-low-poly-af56521ade3c4b38bb8ba154d5222352" target="_blank">
+      <img class="card-img"
+           src="https://media.sketchfab.com/models/af56521ade3c4b38bb8ba154d5222352/thumbnails/b7b50c8f60e848d7b89f59eca53ea2ce/800x600.jpeg"
+           alt="Village House"
+           onerror="this.outerHTML='<div class=img-error>Click to view 3D preview on Sketchfab</div>'">
+    </a>
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Village House (Wood)</span>
+      </div>
+      <div class="card-creator">by lightguard</div>
+      <div class="card-badges">
+        <span class="badge badge-free">FREE</span>
+      </div>
+      <p class="card-desc">Simple low-poly wooden village house. Clean design, easy to integrate as a recurring house type.</p>
+      <div class="card-stats">
+        <span>Single model</span>
+        <span>GLTF download</span>
+      </div>
+      <div class="card-links">
+        <a href="https://sketchfab.com/3d-models/village-house-1-low-poly-af56521ade3c4b38bb8ba154d5222352" class="btn-primary">View on Sketchfab</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================== -->
+<!-- SECTION 6: POLY PIZZA -->
+<!-- ============================================== -->
+<h2 class="section-title">Poly Pizza (Browse Collection)</h2>
+<p class="section-desc">10,500+ free models. No login required. GLTF download. Great for filling in specific gaps — search for exactly what you need.</p>
+
+<div class="grid">
+
+  <div class="card">
+    <img class="card-img"
+         src="https://polypizza.xyz/og-image.png"
+         alt="Poly Pizza"
+         onerror="this.outerHTML='<div class=img-error>Preview unavailable — visit link below</div>'">
+    <div class="card-body">
+      <div class="card-header">
+        <span class="card-title">Poly Pizza — Buildings Collection</span>
+      </div>
+      <div class="card-creator">Various CC-BY / CC0 artists</div>
+      <div class="card-badges">
+        <span class="badge badge-free">FREE</span>
+        <span class="badge badge-gltf">GLTF</span>
+      </div>
+      <p class="card-desc">Thousands of free low-poly buildings. Search for "house", "shop", "castle", "church", "tavern" — individual model downloads in GLTF. No login needed.</p>
+      <div class="card-models">
+        <strong>Search ideas:</strong> house, cottage, shop, castle, church, tavern, inn, tower, barn, stable, marketplace, fountain, bridge, well, windmill, lighthouse
+      </div>
+      <div class="card-stats">
+        <span>10,500+ models total</span>
+        <span>GLTF format</span>
+        <span>No login</span>
+      </div>
+      <div class="card-links">
+        <a href="https://poly.pizza/explore/Buildings" class="btn-primary">Browse Buildings</a>
+        <a href="https://poly.pizza/search/house" class="btn-secondary">Search Houses</a>
+        <a href="https://poly.pizza/search/town" class="btn-secondary">Search Town</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================== -->
+<!-- RECOMMENDATIONS -->
+<!-- ============================================== -->
+<div class="note-box">
+  <strong>Drew's Quick-Pick Recommendations:</strong><br><br>
+  For <strong>best style match</strong> with your existing KayKit assets:<br>
+  &bull; <strong>KayKit Medieval Hexagon</strong> — 200+ pieces, CC0, GLTF, same art style. Includes tavern, church, blacksmith, windmill, market.<br>
+  &bull; <strong>KayKit City Builder Bits</strong> — Already owned! Use these as-is for modern town areas.<br><br>
+
+  For <strong>maximum variety</strong>:<br>
+  &bull; <strong>Kenney Fantasy Town Kit</strong> — 160 assets, CC0. Biggest free fantasy town pack available. Freshly remade in 2025.<br>
+  &bull; <strong>Kenney Medieval Town Base</strong> — 65 assets, CC0. Good complement to Fantasy Town Kit.<br><br>
+
+  For <strong>quick wins</strong> (individual buildings):<br>
+  &bull; <strong>Poly Pizza</strong> — Search + download specific GLTF models instantly. No login needed.<br>
+  &bull; <strong>Sketchfab</strong> — Preview in 3D before downloading. Check license per model.<br><br>
+
+  <strong>Art style notes:</strong> KayKit uses a single gradient atlas texture. Kenney uses flat vertex colors. Quaternius is somewhere in between.
+  Mixing KayKit + Kenney works if you keep them in separate areas of the town (e.g., KayKit for the main square, Kenney for the outskirts).
+</div>
+
+<!-- ============================================== -->
+<!-- ADDITIONAL RESOURCES -->
+<!-- ============================================== -->
+<h2 class="section-title">Additional Resource Links</h2>
+<div class="note-box">
+  <strong>Curated Lists:</strong><br>
+  &bull; <a href="https://github.com/madjin/awesome-cc0" style="color:#8B5CF6">awesome-cc0</a> — GitHub list of CC0 assets from across the internet<br>
+  &bull; <a href="https://opengameart.org/content/cc0-assets-3d-low-poly" style="color:#8B5CF6">OpenGameArt CC0 3D Low Poly</a> — Curated collection<br><br>
+
+  <strong>Browse by Tag:</strong><br>
+  &bull; <a href="https://itch.io/game-assets/assets-cc0/tag-low-poly" style="color:#8B5CF6">itch.io CC0 + Low-Poly</a><br>
+  &bull; <a href="https://itch.io/game-assets/tag-low-poly/tag-village" style="color:#8B5CF6">itch.io Low-Poly + Village</a><br>
+  &bull; <a href="https://itch.io/game-assets/free/tag-city-builder/tag-low-poly" style="color:#8B5CF6">itch.io Free + City Builder + Low-Poly</a><br>
+  &bull; <a href="https://kenney.nl/assets?t=town" style="color:#8B5CF6">Kenney "town" tag</a><br>
+  &bull; <a href="https://kenney.nl/assets?t=building" style="color:#8B5CF6">Kenney "building" tag</a><br>
+</div>
+
+<br><br>
+<p style="text-align:center; color:#6B5C8A; font-size:0.85rem;">
+  Generated for Prompt Quest town asset selection &bull; All links verified Feb 2026
+</p>
+
+</body>
+</html>

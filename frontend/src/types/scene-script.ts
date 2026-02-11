@@ -122,9 +122,21 @@ export interface RemoveAction {
   delay_ms?: number;
 }
 
+export interface SpawnGroupAction {
+  type: 'spawn_group';
+  targets: Array<{
+    id: string;       // unique instance id: "cat-0", "cat-1"
+    target: string;   // actor key: "cat"
+    position: Position;
+    offset?: [number, number, number];
+  }>;
+  stagger_ms?: number; // default 150ms between spawns
+  delay_ms?: number;
+}
+
 export type Action =
   | SpawnAction | MoveAction | AnimateAction | ReactAction
-  | EmoteAction | SfxAction | WaitAction | RemoveAction;
+  | EmoteAction | SfxAction | WaitAction | RemoveAction | SpawnGroupAction;
 
 export interface SceneScript {
   success_level: SuccessLevel;

@@ -379,6 +379,19 @@ export const ANIMATION_GROUPS = {
   magic: ['Ranged_Magic_Raise', 'Ranged_Magic_Shoot', 'Ranged_Magic_Spellcasting_Long', 'Ranged_Magic_Summon'],
 } as const;
 
+// ─── ANIMAL MODELS (Quaternius) ──────────────────────────────────────────────
+// GLB files with embedded rigs and animations. Paths relative to ASSET_BASE.
+
+export const ANIMAL_MODELS: Record<string, string> = {
+  cat:     'quaternius/animals/kitty_001.glb',
+  dog:     'quaternius/animals/dog_001.glb',
+  horse:   'quaternius/animals/horse_001.glb',
+  chicken: 'quaternius/animals/chicken_001.glb',
+  deer:    'quaternius/animals/deer_001.glb',
+  penguin: 'quaternius/animals/pinguin_001.glb',
+  tiger:   'quaternius/animals/tiger_001.glb',
+};
+
 // ─── ASSET BASE PATH ────────────────────────────────────────────────────────
 
 export const ASSET_BASE = '/assets/3d/';

@@ -205,6 +205,38 @@ const PROP_PATHS: Record<string, string> = {
   sandbox: 'tiny-treats/fun-playground/sandbox_square_decorated.gltf',
   merry_go_round: 'tiny-treats/fun-playground/merry_go_round.gltf',
 
+  // === Food (Quaternius GLB) ===
+  burger: 'quaternius/food/burger_001.glb',
+  carrot: 'quaternius/food/carrot_001.glb',
+  chips: 'quaternius/food/chips_001.glb',
+  coffee: 'quaternius/food/coffee_001.glb',
+  donut_food: 'quaternius/food/donut_001.glb',
+  drink: 'quaternius/food/drink_001.glb',
+  fish_food: 'quaternius/food/fish_001.glb',
+  ice_cream: 'quaternius/food/ice_cream_dish_001.glb',
+  banana: 'quaternius/food/banana_001.glb',
+  sandwich_food: 'quaternius/food/sandwich_001.glb',
+  sausages: 'quaternius/food/sausages_001.glb',
+  sushi: 'quaternius/food/sushi_dish_001.glb',
+  tomato: 'quaternius/food/tomato_001.glb',
+  yogurt: 'quaternius/food/yogurt_001.glb',
+  peach: 'quaternius/food/peach_001.glb',
+  eggplant: 'quaternius/food/eggplant_001.glb',
+
+  // === Christmas (Quaternius GLB) ===
+  christmas_tree: 'quaternius/christmas/Christmass_tree_indoor_001.glb',
+  snowman: 'quaternius/christmas/Snowman_001.glb',
+  present_xmas: 'quaternius/christmas/Present_001.glb',
+  candy_cane: 'quaternius/christmas/Shugar_cane_001.glb',
+  wreath: 'quaternius/christmas/Advent_Wreath_001.glb',
+  garland: 'quaternius/christmas/Garland_001.glb',
+  stocking: 'quaternius/christmas/Christmass_sock_001.glb',
+  fireplace_xmas: 'quaternius/christmas/Fireplace_001.glb',
+  cookie_xmas: 'quaternius/christmas/Cookie_001.glb',
+  teapot_xmas: 'quaternius/christmas/Teapot_001.glb',
+  armchair: 'quaternius/christmas/Armchair_001.glb',
+  couch: 'quaternius/christmas/Couch_001.glb',
+
   // === Misc ===
   lunchbox: 'tiny-treats/pleasant-picnic/cooler.gltf',
   'fire-extinguisher': 'kaykit/packs/restaurant/pot_large.gltf',
@@ -234,6 +266,14 @@ const PROP_SCALE: Record<string, number> = {
   // Holiday
   present: 2.5, present_A_red: 2.5, present_B_blue: 2.5, present_C_green: 2.5,
   balloon: 2.5, candle: 2.5,
+  // Food (Quaternius GLB)
+  burger: 2.5, carrot: 2.5, chips: 2.5, coffee: 2.5, donut_food: 2.5,
+  drink: 2.5, fish_food: 2.5, ice_cream: 2.5, banana: 2.5, sandwich_food: 2.5,
+  sausages: 2.5, sushi: 2.5, tomato: 2.5, yogurt: 2.5, peach: 2.5, eggplant: 2.5,
+  // Christmas (Quaternius GLB)
+  christmas_tree: 1.5, snowman: 1.5, present_xmas: 2.0, candy_cane: 2.0,
+  wreath: 2.0, garland: 1.5, stocking: 2.0, fireplace_xmas: 1.2,
+  cookie_xmas: 2.5, teapot_xmas: 2.5, armchair: 1.2, couch: 1.2,
 }
 
 function resolvePropScale(propId: string): number {

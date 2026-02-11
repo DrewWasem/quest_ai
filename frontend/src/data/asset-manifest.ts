@@ -392,6 +392,54 @@ export const ANIMAL_MODELS: Record<string, string> = {
   tiger:   'quaternius/animals/tiger_001.glb',
 };
 
+// ─── FOOD MODELS (Quaternius) ────────────────────────────────────────────────
+// GLB files — static props. Paths relative to ASSET_BASE.
+
+export const FOOD_MODELS: Record<string, string> = {
+  apple:         'quaternius/food/apple_001.glb',
+  banana:        'quaternius/food/banana_001.glb',
+  burger:        'quaternius/food/burger_001.glb',
+  carrot:        'quaternius/food/carrot_001.glb',
+  chips:         'quaternius/food/chips_001.glb',
+  coffee:        'quaternius/food/coffee_001.glb',
+  donut:         'quaternius/food/donut_001.glb',
+  drink:         'quaternius/food/drink_001.glb',
+  eggplant:      'quaternius/food/eggplant_001.glb',
+  fish:          'quaternius/food/fish_001.glb',
+  fork:          'quaternius/food/fork_001.glb',
+  ice_cream:     'quaternius/food/ice_cream_dish_001.glb',
+  peach:         'quaternius/food/peach_001.glb',
+  plate_food:    'quaternius/food/Plate_001.glb',
+  sandwich_food: 'quaternius/food/sandwich_001.glb',
+  sausages:      'quaternius/food/sausages_001.glb',
+  sushi:         'quaternius/food/sushi_dish_001.glb',
+  tomato:        'quaternius/food/tomato_001.glb',
+  wineglass:     'quaternius/food/wineglass_001.glb',
+  yogurt:        'quaternius/food/yogurt_001.glb',
+};
+
+// ─── CHRISTMAS MODELS (Quaternius) ───────────────────────────────────────────
+// GLB files — static props. Paths relative to ASSET_BASE.
+
+export const CHRISTMAS_MODELS: Record<string, string> = {
+  christmas_tree:   'quaternius/christmas/Christmass_tree_indoor_001.glb',
+  snowman:          'quaternius/christmas/Snowman_001.glb',
+  present_xmas_1:   'quaternius/christmas/Present_001.glb',
+  present_xmas_2:   'quaternius/christmas/Present_002.glb',
+  present_xmas_3:   'quaternius/christmas/Present_003.glb',
+  candy_cane:       'quaternius/christmas/Shugar_cane_001.glb',
+  wreath:           'quaternius/christmas/Advent_Wreath_001.glb',
+  garland:          'quaternius/christmas/Garland_001.glb',
+  stocking:         'quaternius/christmas/Christmass_sock_001.glb',
+  fireplace:        'quaternius/christmas/Fireplace_001.glb',
+  cookie:           'quaternius/christmas/Cookie_001.glb',
+  teapot:           'quaternius/christmas/Teapot_001.glb',
+  bowl:             'quaternius/christmas/Bowl_001.glb',
+  cup:              'quaternius/christmas/Cup_001.glb',
+  armchair:         'quaternius/christmas/Armchair_001.glb',
+  couch:            'quaternius/christmas/Couch_001.glb',
+};
+
 // ─── ASSET BASE PATH ────────────────────────────────────────────────────────
 
 export const ASSET_BASE = '/assets/3d/';

@@ -328,6 +328,178 @@ const PROP_BLOCKS: ActionBlock[] = [
   },
 ];
 
+// ─── FOOD PROPS (Quaternius GLB) ────────────────────────────────────────────
+
+const FOOD_BLOCKS: ActionBlock[] = [
+  {
+    id: 'apple', aliases: ['apples', 'fruit'],
+    category: 'prop', modelPath: 'quaternius/food/apple_001.glb',
+    enterStyle: 'drop-in', supportsGroup: true, maxCount: 4, spreadDistance: 1.0,
+    scale: 2.5,
+  },
+  {
+    id: 'banana', aliases: ['bananas'],
+    category: 'prop', modelPath: 'quaternius/food/banana_001.glb',
+    enterStyle: 'drop-in', supportsGroup: true, maxCount: 3, spreadDistance: 1.0,
+    scale: 2.5,
+  },
+  {
+    id: 'burger', aliases: ['hamburger', 'cheeseburger'],
+    category: 'prop', modelPath: 'quaternius/food/burger_001.glb',
+    enterStyle: 'drop-in', supportsGroup: true, maxCount: 4, spreadDistance: 1.2,
+    scale: 2.5,
+  },
+  {
+    id: 'carrot', aliases: ['carrots'],
+    category: 'prop', modelPath: 'quaternius/food/carrot_001.glb',
+    enterStyle: 'drop-in', supportsGroup: true, maxCount: 4, spreadDistance: 0.8,
+    scale: 2.5,
+  },
+  {
+    id: 'chips', aliases: ['fries', 'french_fries'],
+    category: 'prop', modelPath: 'quaternius/food/chips_001.glb',
+    enterStyle: 'drop-in', supportsGroup: true, maxCount: 3, spreadDistance: 1.0,
+    scale: 2.5,
+  },
+  {
+    id: 'coffee', aliases: ['coffee_cup', 'hot_coffee'],
+    category: 'prop', modelPath: 'quaternius/food/coffee_001.glb',
+    enterStyle: 'drop-in', supportsGroup: true, maxCount: 3, spreadDistance: 1.0,
+    scale: 2.5,
+  },
+  {
+    id: 'donut_food', aliases: ['doughnut', 'donut_snack'],
+    category: 'prop', modelPath: 'quaternius/food/donut_001.glb',
+    enterStyle: 'drop-in', supportsGroup: true, maxCount: 4, spreadDistance: 0.8,
+    scale: 2.5,
+  },
+  {
+    id: 'drink', aliases: ['soda', 'juice', 'beverage', 'drinks'],
+    category: 'prop', modelPath: 'quaternius/food/drink_001.glb',
+    enterStyle: 'drop-in', supportsGroup: true, maxCount: 4, spreadDistance: 1.0,
+    scale: 2.5,
+  },
+  {
+    id: 'fish_food', aliases: ['cooked_fish', 'fish_dish'],
+    category: 'prop', modelPath: 'quaternius/food/fish_001.glb',
+    enterStyle: 'drop-in', supportsGroup: false, maxCount: 1, spreadDistance: 0,
+    scale: 2.5,
+  },
+  {
+    id: 'ice_cream', aliases: ['icecream', 'ice_cream_dish', 'sundae'],
+    category: 'prop', modelPath: 'quaternius/food/ice_cream_dish_001.glb',
+    enterStyle: 'drop-in', supportsGroup: true, maxCount: 3, spreadDistance: 1.0,
+    scale: 2.5, associatedReactions: ['hearts-float'],
+  },
+  {
+    id: 'sandwich_food', aliases: ['sub', 'hoagie', 'panini'],
+    category: 'prop', modelPath: 'quaternius/food/sandwich_001.glb',
+    enterStyle: 'drop-in', supportsGroup: true, maxCount: 3, spreadDistance: 1.0,
+    scale: 2.5,
+  },
+  {
+    id: 'sausages', aliases: ['hot_dog', 'hotdog', 'sausage', 'wiener'],
+    category: 'prop', modelPath: 'quaternius/food/sausages_001.glb',
+    enterStyle: 'drop-in', supportsGroup: true, maxCount: 3, spreadDistance: 1.0,
+    scale: 2.5,
+  },
+  {
+    id: 'sushi', aliases: ['sushi_dish', 'sashimi', 'sushi_roll'],
+    category: 'prop', modelPath: 'quaternius/food/sushi_dish_001.glb',
+    enterStyle: 'drop-in', supportsGroup: false, maxCount: 1, spreadDistance: 0,
+    scale: 2.5,
+  },
+  {
+    id: 'tomato', aliases: ['tomatoes'],
+    category: 'prop', modelPath: 'quaternius/food/tomato_001.glb',
+    enterStyle: 'drop-in', supportsGroup: true, maxCount: 4, spreadDistance: 0.8,
+    scale: 2.5,
+  },
+  {
+    id: 'yogurt', aliases: ['yoghurt', 'pudding'],
+    category: 'prop', modelPath: 'quaternius/food/yogurt_001.glb',
+    enterStyle: 'drop-in', supportsGroup: false, maxCount: 1, spreadDistance: 0,
+    scale: 2.5,
+  },
+];
+
+// ─── CHRISTMAS / DECORATION PROPS (Quaternius GLB) ──────────────────────────
+
+const CHRISTMAS_BLOCKS: ActionBlock[] = [
+  {
+    id: 'christmas_tree', aliases: ['xmas_tree', 'holiday_tree', 'tree_christmas'],
+    category: 'prop', modelPath: 'quaternius/christmas/Christmass_tree_indoor_001.glb',
+    enterStyle: 'appear', supportsGroup: false, maxCount: 1, spreadDistance: 0,
+    scale: 1.5, associatedReactions: ['sparkle-magic'],
+  },
+  {
+    id: 'snowman', aliases: ['snow_man', 'frosty'],
+    category: 'prop', modelPath: 'quaternius/christmas/Snowman_001.glb',
+    enterStyle: 'appear', supportsGroup: true, maxCount: 3, spreadDistance: 2.0,
+    scale: 1.5,
+  },
+  {
+    id: 'present_xmas', aliases: ['christmas_present', 'xmas_gift', 'wrapped_gift'],
+    category: 'prop', modelPath: 'quaternius/christmas/Present_001.glb',
+    enterStyle: 'bounce', supportsGroup: true, maxCount: 6, spreadDistance: 1.0,
+    scale: 2.0,
+  },
+  {
+    id: 'candy_cane', aliases: ['candy_canes', 'sugar_cane', 'peppermint_stick'],
+    category: 'prop', modelPath: 'quaternius/christmas/Shugar_cane_001.glb',
+    enterStyle: 'appear', supportsGroup: true, maxCount: 4, spreadDistance: 1.0,
+    scale: 2.0,
+  },
+  {
+    id: 'wreath', aliases: ['wreaths', 'door_wreath', 'advent_wreath'],
+    category: 'prop', modelPath: 'quaternius/christmas/Advent_Wreath_001.glb',
+    enterStyle: 'appear', supportsGroup: false, maxCount: 1, spreadDistance: 0,
+    scale: 2.0,
+  },
+  {
+    id: 'garland', aliases: ['garlands', 'decoration_garland'],
+    category: 'prop', modelPath: 'quaternius/christmas/Garland_001.glb',
+    enterStyle: 'appear', supportsGroup: true, maxCount: 3, spreadDistance: 2.5,
+    scale: 1.5,
+  },
+  {
+    id: 'stocking', aliases: ['stockings', 'christmas_sock', 'christmas_stocking'],
+    category: 'prop', modelPath: 'quaternius/christmas/Christmass_sock_001.glb',
+    enterStyle: 'appear', supportsGroup: true, maxCount: 4, spreadDistance: 1.2,
+    scale: 2.0,
+  },
+  {
+    id: 'fireplace_xmas', aliases: ['chimney', 'fire_place'],
+    category: 'prop', modelPath: 'quaternius/christmas/Fireplace_001.glb',
+    enterStyle: 'appear', supportsGroup: false, maxCount: 1, spreadDistance: 0,
+    scale: 1.2,
+  },
+  {
+    id: 'cookie_xmas', aliases: ['cookies', 'biscuit', 'biscuits'],
+    category: 'prop', modelPath: 'quaternius/christmas/Cookie_001.glb',
+    enterStyle: 'drop-in', supportsGroup: true, maxCount: 4, spreadDistance: 0.8,
+    scale: 2.5,
+  },
+  {
+    id: 'teapot', aliases: ['tea_pot', 'tea'],
+    category: 'prop', modelPath: 'quaternius/christmas/Teapot_001.glb',
+    enterStyle: 'drop-in', supportsGroup: false, maxCount: 1, spreadDistance: 0,
+    scale: 2.5,
+  },
+  {
+    id: 'armchair', aliases: ['armchairs', 'comfy_chair', 'easy_chair'],
+    category: 'prop', modelPath: 'quaternius/christmas/Armchair_001.glb',
+    enterStyle: 'appear', supportsGroup: true, maxCount: 3, spreadDistance: 2.0,
+    scale: 1.2,
+  },
+  {
+    id: 'couch', aliases: ['sofa', 'loveseat'],
+    category: 'prop', modelPath: 'quaternius/christmas/Couch_001.glb',
+    enterStyle: 'appear', supportsGroup: false, maxCount: 1, spreadDistance: 0,
+    scale: 1.2,
+  },
+];
+
 // ─── PROCEDURAL (1) ─────────────────────────────────────────────────────────
 
 const PROCEDURAL_BLOCKS: ActionBlock[] = [
@@ -374,6 +546,8 @@ const ALL_BLOCKS: ActionBlock[] = [
   ...CHARACTER_BLOCKS,
   ...ANIMAL_BLOCKS,
   ...PROP_BLOCKS,
+  ...FOOD_BLOCKS,
+  ...CHRISTMAS_BLOCKS,
   ...PROCEDURAL_BLOCKS,
   ...REACTION_COMBO_BLOCKS,
 ];

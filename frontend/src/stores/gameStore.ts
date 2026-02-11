@@ -14,6 +14,12 @@ import { ADVENTURERS_PICNIC_PROMPT } from '../prompts/adventurers-picnic';
 
 // Block-format prompts (lightweight, resolved client-side)
 import { SKELETON_BIRTHDAY_BLOCK_PROMPT } from '../prompts/block/skeleton-birthday-block';
+import { KNIGHT_SPACE_BLOCK_PROMPT } from '../prompts/block/knight-space-block';
+import { MAGE_KITCHEN_BLOCK_PROMPT } from '../prompts/block/mage-kitchen-block';
+import { BARBARIAN_SCHOOL_BLOCK_PROMPT } from '../prompts/block/barbarian-school-block';
+import { DUNGEON_CONCERT_BLOCK_PROMPT } from '../prompts/block/dungeon-concert-block';
+import { SKELETON_PIZZA_BLOCK_PROMPT } from '../prompts/block/skeleton-pizza-block';
+import { ADVENTURERS_PICNIC_BLOCK_PROMPT } from '../prompts/block/adventurers-picnic-block';
 
 interface HistoryEntry {
   input: string;
@@ -66,6 +72,12 @@ const SYSTEM_PROMPTS: Record<string, string> = {
 // Block-format prompts — preferred over legacy when available
 const BLOCK_PROMPTS: Record<string, string> = {
   'skeleton-birthday': SKELETON_BIRTHDAY_BLOCK_PROMPT,
+  'knight-space': KNIGHT_SPACE_BLOCK_PROMPT,
+  'mage-kitchen': MAGE_KITCHEN_BLOCK_PROMPT,
+  'barbarian-school': BARBARIAN_SCHOOL_BLOCK_PROMPT,
+  'dungeon-concert': DUNGEON_CONCERT_BLOCK_PROMPT,
+  'skeleton-pizza': SKELETON_PIZZA_BLOCK_PROMPT,
+  'adventurers-picnic': ADVENTURERS_PICNIC_BLOCK_PROMPT,
 };
 
 /** Get the best available prompt for a task. Prefers block format when available. */

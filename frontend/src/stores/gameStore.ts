@@ -3,7 +3,7 @@ import type { SceneScript } from '../types/scene-script';
 import type { ResponseSource } from '../services/resolver';
 import { resolveResponse } from '../services/resolver';
 
-// 3D prompts
+// 3D prompts (legacy scene-script format)
 import { SKELETON_BIRTHDAY_PROMPT } from '../prompts/skeleton-birthday';
 import { KNIGHT_SPACE_PROMPT } from '../prompts/knight-space';
 import { MAGE_KITCHEN_PROMPT } from '../prompts/mage-kitchen';
@@ -11,6 +11,9 @@ import { BARBARIAN_SCHOOL_PROMPT } from '../prompts/barbarian-school';
 import { DUNGEON_CONCERT_PROMPT } from '../prompts/dungeon-concert';
 import { SKELETON_PIZZA_PROMPT } from '../prompts/skeleton-pizza';
 import { ADVENTURERS_PICNIC_PROMPT } from '../prompts/adventurers-picnic';
+
+// Block-format prompts (lightweight, resolved client-side)
+import { SKELETON_BIRTHDAY_BLOCK_PROMPT } from '../prompts/block/skeleton-birthday-block';
 
 interface HistoryEntry {
   input: string;
@@ -48,7 +51,7 @@ interface GameState {
 }
 
 const SYSTEM_PROMPTS: Record<string, string> = {
-  // 3D tasks (primary)
+  // 3D tasks (primary — legacy scene-script format)
   'skeleton-birthday': SKELETON_BIRTHDAY_PROMPT,
   'knight-space': KNIGHT_SPACE_PROMPT,
   'mage-kitchen': MAGE_KITCHEN_PROMPT,
@@ -57,6 +60,22 @@ const SYSTEM_PROMPTS: Record<string, string> = {
   'skeleton-pizza': SKELETON_PIZZA_PROMPT,
   'adventurers-picnic': ADVENTURERS_PICNIC_PROMPT,
 };
+
+// Block-format prompts — preferred over legacy when available
+const BLOCK_PROMPTS: Record<string, string> = {
+  'skeleton-birthday': SKELETON_BIRTHDAY_BLOCK_PROMPT,
+};
+
+/** Get the best available prompt for a task. Prefers block format when available. */
+function getSystemPrompt(taskId: string): { prompt: string; isBlock: boolean } {
+  if (BLOCK_PROMPTS[taskId]) {
+    return { prompt: BLOCK_PROMPTS[taskId], isBlock: true };
+  }
+  if (SYSTEM_PROMPTS[taskId]) {
+    return { prompt: SYSTEM_PROMPTS[taskId], isBlock: false };
+  }
+  return { prompt: '', isBlock: false };
+}
 
 // Zone center positions in world space — circular ring at radius ~35
 export const ZONE_CENTERS: Record<string, [number, number, number]> = {
@@ -161,7 +180,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     const trimmed = userInput.trim();
     if (!trimmed) return;
 
-    const systemPrompt = SYSTEM_PROMPTS[currentTask];
+    const { prompt: systemPrompt, isBlock } = getSystemPrompt(currentTask);
     if (!systemPrompt) {
       set({ error: `Unknown task: ${currentTask}` });
       return;
@@ -171,10 +190,12 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     try {
       // Three-tier resolver: cache → live API → fallback
+      // Pass useBlockFormat flag so resolver knows to use block pipeline
       const { script, source, latencyMs } = await resolveResponse(
         currentTask,
         systemPrompt,
         trimmed,
+        isBlock,
       );
 
       set((state) => ({

@@ -17,9 +17,11 @@ import { useFrame } from '@react-three/fiber'
 import { Html } from '@react-three/drei'
 import { Character3D, type Character3DHandle } from './Character3D'
 import { Prop3D, type Prop3DHandle } from './Prop3D'
+import AnimalCharacter3D from './AnimalCharacter3D'
+import ProceduralBalloon from './ProceduralBalloon'
 import { SoundManager3D } from './SoundManager3D'
-import type { SceneScript, Action, Position } from '../types/scene-script'
-import { CHARACTERS, type CharacterKey } from '../data/asset-manifest'
+import type { SceneScript, Action, Position, SpawnGroupAction } from '../types/scene-script'
+import { CHARACTERS, ANIMAL_MODELS, type CharacterKey } from '../data/asset-manifest'
 import { useGameStore, ZONE_CENTERS } from '../stores/gameStore'
 
 // Mini error boundary: renders nothing if a child (e.g. GLTF load) throws
@@ -378,12 +380,14 @@ export function easeInOutSine(t: number): number {
 
 interface ActiveActor {
   id: string
-  type: 'character' | 'prop'
+  type: 'character' | 'prop' | 'animal' | 'procedural'
   characterId?: CharacterKey
   modelPath?: string
+  proceduralType?: string  // "balloon"
   position: [number, number, number]
   animation?: string
   scale?: number
+  color?: string           // for procedural items
 }
 
 interface ActiveEffect {
@@ -686,6 +690,10 @@ export default function ScenePlayer3D({ script, taskId, onComplete }: ScenePlaye
         handleRemove(action.target)
         break
 
+      case 'spawn_group':
+        await handleSpawnGroup(action as SpawnGroupAction, signal)
+        break
+
       default:
         console.warn('[ScenePlayer3D] Unknown action type:', action)
     }
@@ -700,32 +708,53 @@ export default function ScenePlayer3D({ script, taskId, onComplete }: ScenePlaye
     const pos = zonePosition(currentZone, localPos)
     const actorId = target
 
-    // Check if it's a character or prop
+    // Resolve target type: character → animal → procedural → prop
     const characterId = resolveCharacterId(actorId)
     const isCharacter = characterId !== null
-    const propPath = !isCharacter ? resolvePropPath(actorId) : null
+    const isAnimal = !isCharacter && isAnimalModel(actorId)
+    const isProcedural = !isCharacter && !isAnimal && actorId === 'balloon'
+    const propPath = !isCharacter && !isAnimal && !isProcedural ? resolvePropPath(actorId) : null
 
     // Skip if we can't resolve the target at all
-    if (!isCharacter && !propPath) {
+    if (!isCharacter && !isAnimal && !isProcedural && !propPath) {
       console.warn(`[ScenePlayer3D] Unknown target "${actorId}" — skipping spawn`)
       return
     }
 
-    const newActor: ActiveActor = isCharacter
-      ? {
-          id: actorId,
-          type: 'character',
-          characterId: characterId!,
-          position: pos,
-          animation: 'Spawn_Ground', // Start with spawn animation
-        }
-      : {
-          id: actorId,
-          type: 'prop',
-          modelPath: propPath!,
-          position: pos,
-          scale: resolvePropScale(actorId),
-        }
+    let newActor: ActiveActor
+    if (isCharacter) {
+      newActor = {
+        id: actorId,
+        type: 'character',
+        characterId: characterId!,
+        position: pos,
+        animation: 'Spawn_Ground',
+      }
+    } else if (isAnimal) {
+      newActor = {
+        id: actorId,
+        type: 'animal',
+        modelPath: ANIMAL_MODELS[actorId],
+        position: pos,
+        scale: 0.8,
+      }
+    } else if (isProcedural) {
+      newActor = {
+        id: actorId,
+        type: 'procedural',
+        proceduralType: 'balloon',
+        position: pos,
+        scale: 1.0,
+      }
+    } else {
+      newActor = {
+        id: actorId,
+        type: 'prop',
+        modelPath: propPath!,
+        position: pos,
+        scale: resolvePropScale(actorId),
+      }
+    }
 
     setActors((prev) => {
       // Replace if already exists
@@ -905,6 +934,97 @@ export default function ScenePlayer3D({ script, taskId, onComplete }: ScenePlaye
     console.log(`[ScenePlayer3D] Removed ${target}`)
   }
 
+  async function handleSpawnGroup(action: SpawnGroupAction, signal: AbortSignal) {
+    const stagger = action.stagger_ms || 150
+
+    for (let i = 0; i < action.targets.length; i++) {
+      if (signal.aborted) break
+      const target = action.targets[i]
+
+      const localPos = POSITION_MAP[target.position] || [0, 0, 0]
+      const basePos = zonePosition(currentZone, localPos)
+      const offset = target.offset || [0, 0, 0]
+      const pos: [number, number, number] = [
+        basePos[0] + offset[0],
+        basePos[1] + offset[1],
+        basePos[2] + offset[2],
+      ]
+
+      const actor = resolveGroupTarget(target.id, target.target, pos)
+      if (actor) {
+        setActors((prev) => [...prev, actor])
+        spawnedIds.current.add(target.id)
+        SoundManager3D.play('spawn')
+        console.log(`[ScenePlayer3D] Group spawned ${target.id} at [${pos.join(', ')}]`)
+      }
+
+      // Stagger between spawns
+      if (i < action.targets.length - 1 && stagger > 0) {
+        await sleep(stagger, signal)
+      }
+    }
+  }
+
+  /** Resolve a group target to an ActiveActor (character, prop, animal, or procedural) */
+  function resolveGroupTarget(
+    id: string,
+    targetKey: string,
+    position: [number, number, number],
+  ): ActiveActor | null {
+    // Check if it's an animal model
+    if (isAnimalModel(targetKey)) {
+      return {
+        id,
+        type: 'animal',
+        modelPath: ANIMAL_MODELS[targetKey],
+        position,
+        scale: 0.8,
+      }
+    }
+
+    // Check if it's a procedural type (balloon)
+    if (targetKey === 'balloon') {
+      return {
+        id,
+        type: 'procedural',
+        proceduralType: 'balloon',
+        position,
+        scale: 1.0,
+      }
+    }
+
+    // Check if it's a character
+    const characterId = resolveCharacterId(targetKey)
+    if (characterId) {
+      return {
+        id,
+        type: 'character',
+        characterId,
+        position,
+        animation: 'Spawn_Ground',
+      }
+    }
+
+    // Check if it's a prop
+    const propPath = resolvePropPath(targetKey)
+    if (propPath) {
+      return {
+        id,
+        type: 'prop',
+        modelPath: propPath,
+        position,
+        scale: resolvePropScale(targetKey),
+      }
+    }
+
+    console.warn(`[ScenePlayer3D] Cannot resolve group target "${targetKey}" — skipping`)
+    return null
+  }
+
+  function isAnimalModel(key: string): boolean {
+    return key in ANIMAL_MODELS
+  }
+
   // ============================================================================
   // HELPERS
   // ============================================================================
@@ -945,7 +1065,7 @@ export default function ScenePlayer3D({ script, taskId, onComplete }: ScenePlaye
         </SafeModel>
       ))}
 
-      {/* Actors (Characters + Props) — SafeModel prevents one bad model from crashing */}
+      {/* Actors (Characters + Props + Animals + Procedural) */}
       {actors.map((actor) => {
         if (actor.type === 'character' && actor.characterId) {
           return (
@@ -957,6 +1077,31 @@ export default function ScenePlayer3D({ script, taskId, onComplete }: ScenePlaye
                 ref={(ref) => {
                   if (ref) actorRefs.current.set(actor.id, ref)
                 }}
+              />
+            </SafeModel>
+          )
+        }
+
+        if (actor.type === 'animal' && actor.modelPath) {
+          return (
+            <SafeModel key={actor.id}>
+              <AnimalCharacter3D
+                modelPath={actor.modelPath}
+                position={actor.position}
+                scale={actor.scale || 0.8}
+                animation={actor.animation}
+              />
+            </SafeModel>
+          )
+        }
+
+        if (actor.type === 'procedural' && actor.proceduralType === 'balloon') {
+          return (
+            <SafeModel key={actor.id}>
+              <ProceduralBalloon
+                position={actor.position}
+                color={actor.color}
+                scale={actor.scale || 1}
               />
             </SafeModel>
           )

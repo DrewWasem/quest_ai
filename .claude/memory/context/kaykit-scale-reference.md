@@ -58,14 +58,28 @@ KayKit Medieval Hex Pack buildings are strategy-game scale (1-2 units tall nativ
 | bench | 1.41 | 1.0 (keep) | 0.6x char |
 | street_lantern | 4.50 | 1.0 (keep) | 1.9x char |
 
-## Scale Rules
+## Scale Rules (UPDATED 2026-02-11)
 
-1. **Hex buildings → multiply by 3.0** (they're strategy-game icons)
-2. **Hex decorations → multiply by 3.0** (same reason)
+**Previous scale (3.0x) was too small — buildings looked like dollhouses next to characters.**
+
+1. **Hex buildings → multiply by 7.0** (strategy icons → real-world proportions)
+2. **Hex decorations → multiply by 7.0** (same reason)
 3. **Dungeon pack walls/pillars → keep at 1.0** (designed for characters)
 4. **Dungeon pack props (barrels/chests) → multiply by 0.35-0.5** (oversized for drama)
 5. **Tiny Treats park → keep at 0.8-1.0** (designed for characters)
-6. **When scaling buildings up, spread positions 8-14 units apart** to prevent overlap
+6. **When scaling buildings at 7.0x, spread positions 18-32 units apart** to prevent overlap
+7. **Perimeter mountains → scale 8.0-10.0** (backdrop ring for larger village)
+8. **Camera distances double** — village overview ~(0, 40, 60), zone ~(0, 18, 28)
+
+### Ratios at 7.0x vs Character (2.61u)
+| Building | At 7.0x | Ratio | Real-World Match |
+|----------|---------|-------|-----------------|
+| Townhall | 14.56u | 5.6x | 2-3 story building ✓ |
+| Church | 12.67u | 4.9x | Church without tall spire ✓ |
+| Windmill | 11.20u | 4.3x | Windmill ✓ |
+| Tavern | 9.80u | 3.8x | Large single-story ✓ |
+| Home_A | 5.88u | 2.3x | Small cottage ✓ |
+| Stables | 4.27u | 1.6x | Low open structure ✓ |
 
 ## Related
 - `frontend/src/game/VillageWorld.tsx` — where all scales are applied

@@ -1,9 +1,10 @@
 # Three.js 3D Migration Plan — Prompt Quest
 
 **Created:** 2026-02-10
-**Status:** PHASE 0 COMPLETE — Phase 1 ready
+**Last Updated:** 2026-02-11
+**Status:** PHASES 0-2 + VILLAGE WORLD COMPLETE — Scale fix needed, then Phase 3+
 **Goal:** Migrate from Phaser 2D to Three.js 3D using KayKit + Tiny Treats assets
-**Deadline:** Feb 16 (6 build days remaining)
+**Deadline:** Feb 16 (4 build days remaining)
 **Asset Investment:** KayKit Complete ($99) + Tiny Treats ($19.95) = $119
 
 ---
@@ -139,197 +140,219 @@ Child types prompt
 
 ---
 
-## Phase 1: Three.js Engine Foundation (Day 1-2 — Mon-Tue)
+## Phase 1: Three.js Engine Foundation (Day 1-2 — Mon-Tue) — COMPLETE
 **Goal:** R3F canvas rendering with character + animation + basic scene
-**Gate:** One character model with Idle animation visible on screen
+**Gate:** One character model with Idle animation visible on screen ✅
 
 ### Tasks
 
-- [ ] **1.1** Create `src/game/R3FGame.tsx` — Main Three.js canvas component
-  - `<Canvas>` with: 45° FOV camera, antialias, shadows, sRGB encoding
-  - Camera at (0, 4, 8) looking at (0, 1, 0)
-  - Warm lighting: AmbientLight(0xffeedd, 0.6) + DirectionalLight(0xffffff, 1.0)
-  - Resize handler (responsive)
-  - Matches current canvas area in the UI layout
+- [x] **1.1** Create `src/game/R3FGame.tsx` — Main Three.js canvas component
+  - Canvas with VillageCamera (45° FOV), shadows, dpr=[1,2]
+  - SceneMeasurer dev tool for debugging 3D sizes
+  - VillageWorld + VillageCamera composed inside Canvas
 
-- [ ] **1.2** Create `src/game/AssetLoader3D.ts` — GLTF preloading system
-  - `useGLTF.preload()` calls for all assets needed by current task
-  - `preloadTask(taskId)` loads characters + props + environment from manifest
-  - Clone-on-use pattern: `SkeletonUtils.clone()` for animated models
-  - Progress callback for loading bar
+- [x] **1.2** Asset loading via `useGLTF` + manifest — `src/data/asset-manifest.ts`
+  - 28 character GLBs, 8 animation packs (139 clips), 4,270+ prop models
+  - Per-task asset lists (TASK_ASSETS) for preloading
+  - Clone-on-use via `SkeletonUtils.clone()`
 
-- [ ] **1.3** Create `src/game/AnimationController.ts` — Skeletal animation system
-  - Load 161 clips from shared animation GLB
-  - `useAnimations()` hook wrapper with crossFadeTo transitions
-  - `play(clipName, fadeIn=0.25)` method
-  - Fallback to Idle if clip not found (never crash)
-  - Special handling for Skeleton-specific clips (Idle_Skeleton, etc.)
+- [x] **1.3** Create `src/game/AnimationController.ts` — Skeletal animation system
+  - Loads all 8 animation packs, caches clips
+  - `useAnimationClips()` hook returns combined clips
+  - `preloadAllAnimations()` for upfront loading
+  - Fallback to Idle_A if clip not found
 
-- [ ] **1.4** Wire into App.tsx — Replace `<PhaserGame>` with `<R3FGame>`
-  - Keep PhaserGame temporarily (feature flag or route toggle)
-  - R3FGame receives task ID and SceneScript from Zustand store
-  - EventBus bridge for React ↔ 3D communication
+- [x] **1.4** Create `src/game/Character3D.tsx` — Reusable animated character
+  - SkeletonUtils.clone for independent instances
+  - Crossfade transitions (0.25s default)
+  - Idle breathing effect (subtle scale pulse)
+  - Imperative ref API: `play()`, `getPosition()`
 
-- [ ] **1.5** Branded splash/loading screen
-  - Show while assets preload
-  - Fun messages: "Sharpening the Knight's sword...", "Reassembling the Skeleton..."
-  - Progress bar with percentage
-  - Dismiss after Phase 1 of progressive load (first task ready)
+- [x] **1.5** Wire into App.tsx + LoadingScreen
+  - R3FGame replaces PhaserGame as main renderer
+  - LoadingScreen with 2s timer during animation preload
+  - Zone-based navigation replaces task grid
+
+---
+
+## Phase 2: SceneScriptPlayer3D + Village World (Day 2 — Tue) — COMPLETE
+**Goal:** Execute scene scripts in 3D + persistent village world
+**Gate:** Village renders with buildings, zones, and character spawning ✅
+
+### Tasks
+
+- [x] **2.1** Create `src/game/ScenePlayer3D.tsx` — 3D script executor
+  - Manages active actors (characters + props) as R3F components
+  - Executes spawn/animate/move/remove/react/sound actions
+  - Zone-aware positioning via `zonePosition()` offset
+
+- [x] **2.2** Create `src/game/VillageWorld.tsx` — Persistent medieval village
+  - Hex terrain grid (29x33 tiles) using KayKit Medieval Hex Pack
+  - 12+ buildings (townhall, tavern, market, well, blacksmith, homes, church, windmill, stables)
+  - 2 quest zones: Dungeon (north, Z=-16) + Park (south, Z=+16)
+  - VillagePerimeter (mountains, hills, trees, rocks)
+  - VillageAtmosphere (Sky, fog, hemisphere+directional lights, clouds)
+  - Zone markers (glowing purple pillars + HTML labels)
+
+- [x] **2.3** Create `src/game/VillageCamera.tsx` — Camera transitions
+  - Smooth 2s ease-out cubic camera fly between zones
+  - Village overview: offset (0, 18, 28)
+  - Zone close-up: offset (0, 9, 14)
+  - Orbit controls with polar angle + distance limits
+
+- [x] **2.4** Create `src/game/Prop3D.tsx` — Reusable prop component
+- [x] **2.5** Create `src/game/SoundManager3D.ts` — Audio for 3D scenes
+- [x] **2.6** Create `src/game/SceneEnvironment3D.tsx` — Environment setup
+- [x] **2.7** Create `src/game/TaskAtmosphere.tsx` — Per-task mood lighting
+- [x] **2.8** Create `src/game/TaskIntro.tsx` — Task introduction transitions
+
+### Known Issue: Building Scale (BLOCKING)
+- Buildings at 3.0x scale are too small relative to characters (2.61u tall)
+- Home_A at 3.0x = 2.51u (barely taller than character)
+- Townhall at 3.0x = 6.22u (only 2.7x character — should be 6-8x)
+- Stables at 3.0x = 1.83u (SHORTER than character)
+- **Fix: Scale buildings to ~7x** and spread positions further apart
+- Test page: `test-scale.html` (interactive slider comparison)
+
+---
+
+## Phase 2.5: Building Scale Fix (PRIORITY — Next)
+**Goal:** Buildings proportional to characters — village looks like a real place
+**Gate:** Knight stands next to townhall and looks appropriately small (person-to-building ratio)
+
+### The Problem
+KayKit Medieval Hex buildings are strategy-game miniatures (designed for overhead view), not adventure-game scale. Characters are 2.61u tall. At the current 3.0x, buildings are dollhouse-sized:
+
+| Building | At 3.0x | Char Ratio | Real-World Target |
+|----------|---------|-----------|-------------------|
+| Townhall | 6.22u | 2.7x | 6-8x (~17u) |
+| Church | 5.43u | 2.1x | 8-11x (~23u) |
+| Windmill | 4.81u | 1.8x | 5-8x (~17u) |
+| Tavern | 4.19u | 1.6x | 2-3x (~7u) |
+| Home_A | 2.51u | 1.1x | 2.5-3.5x (~8u) |
+| Stables | 1.83u | 0.8x | 1.5-2x (~5u) |
+
+### Tasks
+
+- [ ] **2.5.1** Update VillageWorld.tsx building scale from 3.0 to 7.0
+  - All hex buildings and hex decorations: `s = 7.0`, `d = 7.0`
+  - Perimeter mountains: scale proportionally (~8-10x)
+
+- [ ] **2.5.2** Reposition all buildings to prevent overlap
+  - At 7.0x, buildings are ~2.3x wider — spread positions by same factor
+  - Current positions: 8-14 units apart → need 18-32 units apart
+  - Village area expands from ~28u to ~65u wide
+
+- [ ] **2.5.3** Update hex terrain grid to cover larger village area
+  - Expand from col -14..+14 to col -32..+32 (or use larger hex tiles)
+  - Consider instanced rendering if tile count > 2000
+
+- [ ] **2.5.4** Update camera distances for larger village
+  - Village overview offset: (0, 18, 28) → (0, 40, 60) approx
+  - Zone camera offset: (0, 9, 14) → (0, 18, 28) approx
+  - Max orbit distance: 50 → 100
+  - Fog push: near 40→80, far 180→350
+
+- [ ] **2.5.5** Update zone center positions
+  - Dungeon: [0, 0, -16] → [0, 0, -35] approx
+  - Park: [0, 0, 16] → [0, 0, 35] approx
+
+- [ ] **2.5.6** Update dungeon zone — keep dungeon pack at 1.0 (adventure-scale)
+  - Dungeon walls/pillars stay at 1.0 (already character-scale)
+  - But zone approach decoration (hex flags, weaponracks) scale from 3.0 to 7.0
+
+- [ ] **2.5.7** Update park zone — tiny-treats props at 0.8-1.0 (adventure-scale)
+  - Park trees, benches, fountain stay at 0.8-1.0
+  - But hex stone fences scale from 2.0 to ~4.5
+
+- [ ] **2.5.8** Verify with test-scale.html — compare at final scale
+  - All buildings visually taller than character at correct ratios
+  - No buildings overlapping
+  - Camera overview shows full village
+  - Zone fly-to still works smoothly
 
 ### Verification
-- R3F canvas renders at correct size in the layout
-- One KayKit character visible with Idle animation playing
-- Loading screen shows during asset load
+- Knight stands next to townhall → character is small relative to building (6-8x ratio)
+- No building overlaps or z-fighting
+- Camera can still see full village in overview
+- Zone transitions still smooth
+- Performance acceptable (FPS > 30)
+
+---
+
+## Phase 3: End-to-End Loop — Prompt → 3D Scene (Day 3 — Wed)
+**Goal:** Full gameplay loop: type prompt → Claude → 3D scene plays → feedback shown
+**Gate:** Type "have a picnic" → funny 3D scene plays in the park zone
+
+### Completed
+- [x] System prompts written for all 7 tasks (`prompts/*.ts`)
+- [x] Asset manifest with per-task character + prop lists (`data/asset-manifest.ts`)
+- [x] ScenePlayer3D executes scene scripts with zone offset
+- [x] Vocabulary contract types (`types/scene-script.ts`)
+- [x] Village zone navigation (click marker → camera fly → ready)
+
+### Remaining Tasks
+
+- [ ] **3.1** Verify end-to-end loop: PromptInput → resolver → ScenePlayer3D → narration
+  - Ensure Zustand store pipes SceneScript to ScenePlayer3D correctly
+  - Test with hardcoded script first, then live API
+
+- [ ] **3.2** Test skeleton-birthday zone (dungeon) — primary demo task
+  - Spawn skeletons + adventurers in dungeon courtyard
+  - Animations play correctly (Skeletons_Awaken_Floor, Cheering, etc.)
+  - Props spawn at correct positions within zone
+
+- [ ] **3.3** Test adventurers-picnic zone (park) — secondary demo task
+  - Spawn 5 adventurers in park area
+  - Picnic props (blanket, basket, food) spawn correctly
+  - Park environment visible around actors
+
+- [ ] **3.4** Build golden cache for demo tasks (25 entries each)
+  - skeleton-birthday: 25 cached responses
+  - adventurers-picnic: 25 cached responses
+  - Distribution: FUNNY_FAIL / PARTIAL_SUCCESS / FULL_SUCCESS
+
+- [ ] **3.5** Narration + feedback display in 3D context
+  - Typewriter narration overlaid on 3D scene
+  - Star rating visible
+  - Feedback panel readable
+
+### Verification
+- Type prompt in dungeon zone → skeletons animate → narration plays
+- Type prompt in park zone → adventurers react → narration plays
+- Cache hit rate > 80% for test prompts
+- No console errors during full loop
+
+---
+
+## Phase 4: Additional Zones + Tasks (Day 4 — Thu)
+**Goal:** More village zones playable beyond the initial 2
+**Gate:** At least 4 of 7 tasks playable via zone markers
+
+### Architecture Change
+Original plan had per-task isolated scenes. Actual implementation uses a persistent village with quest zones. Only 2 zones exist (dungeon + park). Additional tasks need either:
+- **New zones** in VillageWorld (requires zone area design + zone marker)
+- **Reuse existing zones** with different props/characters per task
+
+### Tasks
+
+- [ ] **4.1** Add 2-3 more zone areas to VillageWorld
+  - Options: Kitchen (mage-kitchen), School (barbarian-school), Stage (dungeon-concert)
+  - Each zone needs: position, environment props, zone marker, ZONE_CENTERS entry
+
+- [ ] **4.2** Build golden cache for remaining tasks (25 entries each)
+  - knight-space, mage-kitchen, barbarian-school, dungeon-concert, skeleton-pizza
+  - System prompts already exist — just need cached responses
+
+- [ ] **4.3** Test all tasks end-to-end
+  - Each zone spawns correct characters + props
+  - Claude responses reference only valid assets per task
+  - Fallback scripts work for each task
+
+### Verification
+- 4+ tasks playable via zone navigation
+- Each has cached responses validated against vocabulary contract
 - No console errors
-
----
-
-## Phase 2: SceneScriptPlayer3D (Day 2-3 — Tue-Wed)
-**Goal:** Execute scene scripts in 3D — the heart of the engine
-**Gate:** Hardcoded scene script plays: character walks in, waves, sits, confetti
-
-### Tasks
-
-- [ ] **2.1** Create `src/game/SceneScriptPlayer3D.tsx` — 3D script executor
-  - React component that takes `SceneScript` prop
-  - Manages a `Map<string, Object3D>` of active actors
-  - Executes actions sequentially with `delay_ms` timing
-  - Emits "script-complete" event when done
-
-- [ ] **2.2** Implement `spawn` action
-  - Load GLB from asset manifest → clone → add to scene at named position
-  - Named positions map to 3D coords: `left(-3,0,0)`, `center(0,0,0)`, `right(3,0,0)`, etc.
-  - Pop-in scale animation (0 → 1.0 over 300ms)
-  - Play `pop` SFX on spawn
-
-- [ ] **2.3** Implement `animate` action
-  - Look up clip name in AnimationController
-  - Play with crossFadeTo from current clip
-  - Wait for duration_ms or clip length
-
-- [ ] **2.4** Implement `move` action
-  - Tween position from current to target over `duration_ms`
-  - Support styles: `linear`, `arc` (parabolic Y curve), `bounce`
-  - Use `@react-spring/three` or manual tween in animation loop
-
-- [ ] **2.5** Implement `react` action
-  - Trigger Lottie overlay on HTML div positioned over 3D canvas
-  - Effects: confetti-burst, explosion-cartoon, hearts-float, sparkle-magic, etc.
-  - Position overlay based on 3D→screen projection
-
-- [ ] **2.6** Implement `sound` action
-  - Play named SFX (reuse existing OGG files or add new from Kenney packs)
-  - Respect `isMuted` from Zustand
-
-- [ ] **2.7** Implement `camera` action
-  - Tween camera position and lookAt target
-  - Smooth easing over duration_ms
-  - Support presets: "zoom-in", "pan-left", "overview"
-
-- [ ] **2.8** Implement `remove` action
-  - Scale-down animation (1.0 → 0 over 200ms)
-  - Remove from scene and actors map
-
-### Verification
-- A hardcoded test script plays all 7 action types without errors
-- Timing/sequencing works (delay_ms respected)
-- Animations crossfade smoothly
-- Lottie overlays position correctly over 3D scene
-
----
-
-## Phase 3: First Complete Task — T7 Picnic (Day 3 — Wed)
-**Goal:** End-to-end: prompt → Claude → 3D scene → narration
-**Gate:** Type "have a picnic" → funny 3D scene plays → feedback displayed
-
-### Tasks
-
-- [ ] **3.1** Create picnic environment scene
-  - Load Pleasant Picnic assets (blankets, baskets, food)
-  - Load Pretty Park assets (trees, benches, fountain)
-  - Compose ground plane + environment props
-  - Set camera preset for picnic viewing angle
-
-- [ ] **3.2** Load 5 Adventurer characters
-  - Knight, Barbarian, Mage, Archer, Rogue — all with Idle animation
-  - Position at scene start positions
-
-- [ ] **3.3** Write system prompt (`prompts/adventurers-picnic.ts`)
-  - Per-task available characters, props, animations, reactions
-  - Comedy formula: Wrong character + wrong place + wrong tools
-  - Evaluation rubric for FUNNY_FAIL / PARTIAL_SUCCESS / FULL_SUCCESS
-
-- [ ] **3.4** Update vocabulary contract (`types/scene-script.ts`)
-  - Add new ActorKeys: `knight`, `barbarian`, `mage`, `archer`, `rogue`, `skeleton`
-  - Add new PropKeys for KayKit props (basket, blanket, bow, sword, etc.)
-  - Add new animation names matching the 161 clip catalog
-
-- [ ] **3.5** Connect full loop: prompt → resolver → SceneScriptPlayer3D → narration
-  - Wire Zustand store to R3FGame
-  - PromptInput submits → resolveResponse → 3D playback
-  - Narration typewriter display
-  - Star rating display
-
-- [ ] **3.6** Build golden cache for T7 (25 entries)
-  - 5 FUNNY_FAIL (vague), 5 FUNNY_FAIL (wrong approach)
-  - 5 PARTIAL_SUCCESS, 3 FULL_SUCCESS
-  - 5 edge cases, 2 demo-scripted exact matches
-
-### Verification
-- Type "have a picnic" → FUNNY_FAIL plays in 3D (Barbarian axe-chops basket)
-- Type detailed prompt → FULL_SUCCESS plays with confetti
-- Narration displays with typewriter effect
-- Star rating shows correctly
-- Cache hit rate for test prompts > 80%
-
----
-
-## Phase 4: Remaining 6 Tasks (Day 3-4 — Wed-Thu)
-**Goal:** All 7 tasks playable in 3D
-**Gate:** Every task selector card leads to a working 3D scene
-
-### Tasks (Repeat pattern from Phase 3 for each task)
-
-- [ ] **4.1** T1: Skeleton's Surprise Birthday
-  - Environment: Dungeon + Holiday + Halloween props
-  - Characters: Skeleton, Adventurers as party guests
-  - System prompt + cache (25 entries)
-
-- [ ] **4.2** T2: Knight's Accidental Space Mission
-  - Environment: Space Base modules
-  - Characters: Knight, Space Ranger (bonus)
-  - System prompt + cache (25 entries)
-
-- [ ] **4.3** T3: Mage vs. The Cute Kitchen
-  - Environment: Charming Kitchen + Bakery Interior
-  - Characters: Mage, Witch (bonus), Skeleton
-  - System prompt + cache (25 entries)
-
-- [ ] **4.4** T4: Barbarian's First Day of School
-  - Environment: Fun Playground + Homely House + Furniture
-  - Characters: Barbarian, all Adventurers
-  - System prompt + cache (25 entries)
-
-- [ ] **4.5** T5: Dungeon Rock Concert
-  - Environment: Dungeon Remastered
-  - Characters: All 5 Adventurers, Skeleton, Clown (bonus)
-  - System prompt + cache (25 entries)
-
-- [ ] **4.6** T6: Skeleton Pizza Delivery
-  - Environment: City Builder + Pretty Park
-  - Characters: Skeleton, Adventurers
-  - System prompt + cache (25 entries)
-
-- [ ] **4.7** Update task selector UI
-  - 7 task cards (new emoji + titles + descriptions)
-  - Update App.tsx TASKS dictionary
-  - Wire scene switching to load correct 3D environment
-
-### Verification
-- All 7 tasks selectable and playable
-- Each task loads correct environment and characters
-- Each has 25 cached responses validated
-- No console errors on any task
 
 ---
 
@@ -422,16 +445,16 @@ Child types prompt
 
 ---
 
-## Schedule Summary
+## Schedule Summary (Updated)
 
-| Day | Date | Phase | Critical Gate |
-|-----|------|-------|---------------|
-| 1 | Mon Feb 10 | Phase 0 + Phase 1 start | ONE character model rotating on screen |
-| 2 | Tue Feb 11 | Phase 1 complete + Phase 2 start | Animation system + SceneScriptPlayer3D |
-| 3 | Wed Feb 12 | Phase 2 + Phase 3 | Full loop: prompt → Claude → 3D scene → narration |
-| 4 | Thu Feb 13 | Phase 4 | All 7 tasks playable |
-| 5 | Fri Feb 14 | Phase 5 | Polish, voice, offline, optimization |
-| 6 | Sat Feb 15 | Phase 6 | Bug-free demo, submission ready |
+| Day | Date | Phase | Status |
+|-----|------|-------|--------|
+| 1 | Mon Feb 10 | Phase 0: Asset Pipeline | ✅ COMPLETE |
+| 2 | Tue Feb 11 | Phase 1 + 2: Engine + Village World | ✅ COMPLETE (scale issue found) |
+| 3 | Wed Feb 12 | **Phase 2.5: Scale Fix** + Phase 3: E2E Loop | **← TODAY's PRIORITY** |
+| 4 | Thu Feb 13 | Phase 4: Additional Zones | |
+| 5 | Fri Feb 14 | Phase 5: Polish & Resilience | |
+| 6 | Sat Feb 15 | Phase 6: Demo Prep | |
 | 7 | Sun Feb 16 | Submit | Demo day |
 
 ---

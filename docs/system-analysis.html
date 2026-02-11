@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Quest — Full System Analysis</title>
+<style>
+  :root {
+    --purple: #7C3AED;
+    --orange: #FF8C42;
+    --green: #22C55E;
+    --yellow: #FBBF24;
+    --blue: #38BDF8;
+    --pink: #EC4899;
+    --bg: #FAF7FF;
+    --card: #FFFFFF;
+    --panel: #F3EEFF;
+    --border: #E9DFFF;
+    --text-dark: #1E1337;
+    --text-mid: #4A3D6B;
+    --text-light: #7B6FA0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text-dark); line-height: 1.6; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+  h1 { font-size: 2.2rem; color: var(--purple); margin-bottom: 0.5rem; }
+  h2 { font-size: 1.5rem; color: var(--purple); margin: 2.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+  h3 { font-size: 1.15rem; color: var(--text-dark); margin: 1.5rem 0 0.5rem; }
+  h4 { font-size: 1rem; color: var(--text-mid); margin: 1rem 0 0.3rem; }
+  p, li { color: var(--text-mid); }
+  .subtitle { color: var(--text-light); font-size: 1rem; margin-bottom: 2rem; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; }
+  .card-header { font-weight: 700; color: var(--text-dark); margin-bottom: 0.5rem; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+  .badge-green { background: #dcfce7; color: #166534; }
+  .badge-yellow { background: #fef9c3; color: #854d0e; }
+  .badge-orange { background: #ffedd5; color: #9a3412; }
+  .badge-purple { background: var(--panel); color: var(--purple); }
+  .badge-blue { background: #e0f2fe; color: #075985; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+  th { background: var(--panel); text-align: left; padding: 8px 12px; color: var(--text-dark); font-weight: 700; border-bottom: 2px solid var(--border); }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text-mid); }
+  tr:hover td { background: #faf5ff; }
+  code { background: var(--panel); padding: 2px 6px; border-radius: 4px; font-size: 0.85rem; color: var(--purple); }
+  pre { background: #1E1337; color: #e0d8f0; padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; line-height: 1.5; margin: 0.5rem 0; }
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0; }
+  .metric { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; text-align: center; }
+  .metric-value { font-size: 1.8rem; font-weight: 800; color: var(--purple); }
+  .metric-label { font-size: 0.8rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.05em; }
+  .issue { border-left: 4px solid; padding: 0.75rem 1rem; margin: 0.5rem 0; border-radius: 0 8px 8px 0; }
+  .issue-critical { border-color: var(--orange); background: #fff7ed; }
+  .issue-major { border-color: var(--yellow); background: #fffbeb; }
+  .issue-minor { border-color: var(--blue); background: #f0f9ff; }
+  .issue-good { border-color: var(--green); background: #f0fdf4; }
+  .issue-title { font-weight: 700; font-size: 0.9rem; color: var(--text-dark); }
+  .issue-desc { font-size: 0.85rem; color: var(--text-mid); }
+  .file-ref { font-family: monospace; font-size: 0.8rem; color: var(--text-light); }
+  .toc { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem 2rem; margin: 1.5rem 0; }
+  .toc a { color: var(--purple); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .toc ol { padding-left: 1.5rem; }
+  .toc li { margin: 0.3rem 0; }
+  .grade { display: inline-block; width: 36px; height: 36px; border-radius: 50%; text-align: center; line-height: 36px; font-weight: 800; font-size: 1rem; color: white; margin-right: 0.5rem; }
+  .grade-a { background: var(--green); }
+  .grade-b { background: var(--blue); }
+  .grade-c { background: var(--yellow); }
+  .grade-d { background: var(--orange); }
+  .flow-diagram { background: #1E1337; color: #e0d8f0; padding: 1.5rem; border-radius: 10px; font-family: monospace; font-size: 0.85rem; line-height: 1.8; overflow-x: auto; }
+  ul { padding-left: 1.5rem; }
+  li { margin: 0.25rem 0; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } .metric-grid { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Prompt Quest &mdash; Full System Analysis</h1>
+<p class="subtitle">Generated Feb 11, 2026 &bull; Solo hackathon build by Drew &bull; Deadline: Feb 16</p>
+
+<!-- KEY METRICS -->
+<div class="metric-grid">
+  <div class="metric"><div class="metric-value">7</div><div class="metric-label">Playable Tasks</div></div>
+  <div class="metric"><div class="metric-value">166</div><div class="metric-label">Cached Responses</div></div>
+  <div class="metric"><div class="metric-value">4,270+</div><div class="metric-label">3D Models (GLTF)</div></div>
+  <div class="metric"><div class="metric-value">139</div><div class="metric-label">Animation Clips</div></div>
+  <div class="metric"><div class="metric-value">0</div><div class="metric-label">TypeScript Errors</div></div>
+  <div class="metric"><div class="metric-value">15</div><div class="metric-label">Test Files</div></div>
+  <div class="metric"><div class="metric-value">~347 kB</div><div class="metric-label">JS Gzipped</div></div>
+  <div class="metric"><div class="metric-value">2</div><div class="metric-label">Village Zones</div></div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <strong>Contents</strong>
+  <ol>
+    <li><a href="#arch">Architecture Overview</a></li>
+    <li><a href="#3d">3D Rendering Pipeline</a></li>
+    <li><a href="#data">Data &amp; API Layer (Three-Tier System)</a></li>
+    <li><a href="#prompts">System Prompts &amp; Tasks</a></li>
+    <li><a href="#tests">Test Coverage</a></li>
+    <li><a href="#build">Build, Dependencies &amp; Styling</a></li>
+    <li><a href="#brand">Brand Brief Compliance</a></li>
+    <li><a href="#issues">Issues &amp; Recommendations</a></li>
+    <li><a href="#files">Key File Map</a></li>
+  </ol>
+</div>
+
+<!-- 1. ARCHITECTURE -->
+<h2 id="arch">1. Architecture Overview</h2>
+
+<div class="flow-diagram">
+User Input (PromptInput.tsx)
+    |
+    v
+gameStore.submitInput()  ──>  resolveResponse()
+    |                              |
+    |                    ┌─────────┼─────────┐
+    |                    v         v         v
+    |               Tier 1     Tier 2     Tier 3
+    |               CACHE    LIVE API    FALLBACK
+    |              (0-5ms)   (1-8s)     (instant)
+    |                    └─────────┴─────────┘
+    |                              |
+    v                              v
+gameStore.lastScript  <───  SceneScript JSON
+    |
+    ├──> ScenePlayer3D.tsx (executes actions in 3D)
+    ├──> PromptInput.tsx (displays narration + feedback)
+    └──> useTTS.ts (speaks narration aloud)
+</div>
+
+<div class="card">
+  <div class="card-header">Core Components</div>
+  <table>
+    <tr><th>File</th><th>Lines</th><th>Role</th></tr>
+    <tr><td><code>App.tsx</code></td><td>120</td><td>Main layout: header, game canvas, prompt input, loading screen</td></tr>
+    <tr><td><code>gameStore.ts</code></td><td>167</td><td>Zustand store: task state, zone navigation, submit flow</td></tr>
+    <tr><td><code>R3FGame.tsx</code></td><td>95</td><td>R3F Canvas wrapper: VillageCamera + VillageWorld + children</td></tr>
+    <tr><td><code>VillageWorld.tsx</code></td><td>646</td><td>Persistent hex village: terrain, buildings, zones, atmosphere</td></tr>
+    <tr><td><code>VillageCamera.tsx</code></td><td>123</td><td>Camera controller: smooth transitions, orbit controls</td></tr>
+    <tr><td><code>ScenePlayer3D.tsx</code></td><td>~1000</td><td>Action executor: spawn, move, animate, react, emote, sfx</td></tr>
+  </table>
+</div>
+
+<h3>Village World Structure</h3>
+<div class="card">
+  <table>
+    <tr><th>Component</th><th>Content</th><th>Scale</th></tr>
+    <tr><td>HexTerrain</td><td>~1000 hex tiles (grass + 3-wide road), col &plusmn;14, row &plusmn;16</td><td>1.0x</td></tr>
+    <tr><td>VillageCenter</td><td>13 buildings (townhall, tavern, church, windmill, etc.) + props + trees</td><td>3.0x</td></tr>
+    <tr><td>VillagePerimeter</td><td>10 mountains, 6 hills, 8 tree clusters, 4 rocks</td><td>2.0-4.5x</td></tr>
+    <tr><td>DungeonZone (Z=-16)</td><td>Stone walls, pillars, torches, barrels, chests, banners</td><td>0.35-1.2x</td></tr>
+    <tr><td>ParkZone (Z=+16)</td><td>Trees, bushes, flowers, fountain, benches, hedges, stone fences</td><td>0.8-2.0x</td></tr>
+    <tr><td>RoadDecoration</td><td>Flags, barrels, haybales, trees along road spine</td><td>3.0x</td></tr>
+    <tr><td>ZoneMarkers</td><td>2 clickable pillars with golden orbs + purple light</td><td>&mdash;</td></tr>
+  </table>
+</div>
+
+<!-- 2. 3D PIPELINE -->
+<h2 id="3d">2. 3D Rendering Pipeline</h2>
+
+<div class="two-col">
+  <div class="card">
+    <div class="card-header">Character System</div>
+    <p><code>Character3D.tsx</code> &mdash; KayKit character loader</p>
+    <ul>
+      <li>28 character GLBs (Barbarian, Knight, Mage, Skeleton, etc.)</li>
+      <li>SkeletonUtils.clone for instancing</li>
+      <li>Automatic shadow enable on all meshes</li>
+      <li>Animation crossfade via AnimationController</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-header">Prop System</div>
+    <p><code>Prop3D.tsx</code> &mdash; GLTF prop loader</p>
+    <ul>
+      <li>87 prop paths (68 unique .gltf files)</li>
+      <li>Bounce entrance animation</li>
+      <li>Fuzzy path resolution (exact &rarr; strip suffix &rarr; hyphenated)</li>
+      <li>Per-model error boundary (SafeModel)</li>
+    </ul>
+  </div>
+</div>
+
+<div class="two-col">
+  <div class="card">
+    <div class="card-header">Animation System</div>
+    <p><code>AnimationController.ts</code> &mdash; Shared clips</p>
+    <ul>
+      <li>8 animation GLBs, 139 clips total</li>
+      <li>Rig_Medium shared skeleton</li>
+      <li>Groups: Combat, Movement, General, Tools, etc.</li>
+      <li>Smooth crossfade between animations</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-header">Sound System</div>
+    <p><code>SoundManager3D.ts</code> &mdash; Web Audio API</p>
+    <ul>
+      <li>9 synthesized sound types (no audio files)</li>
+      <li>Types: spawn, move, success, fail, confetti, magic, intro, etc.</li>
+      <li>Respects isMuted from Zustand</li>
+      <li>Filtered noise + oscillator synthesis</li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Scene Script Actions</div>
+  <table>
+    <tr><th>Action</th><th>Description</th><th>Properties</th></tr>
+    <tr><td><code>spawn</code></td><td>Create actor/prop at position</td><td>actor, position, scale</td></tr>
+    <tr><td><code>move</code></td><td>Animate movement with easing</td><td>actor, to, style (arc/bounce/float/etc.)</td></tr>
+    <tr><td><code>animate</code></td><td>Play skeletal animation</td><td>actor, anim (139 clip names)</td></tr>
+    <tr><td><code>react</code></td><td>Particle effect burst</td><td>effect (confetti/hearts/sparkle/etc.), position</td></tr>
+    <tr><td><code>emote</code></td><td>Emoji expression above actor</td><td>actor, emoji</td></tr>
+    <tr><td><code>sfx</code></td><td>Play synthesized sound</td><td>sound type</td></tr>
+    <tr><td><code>wait</code></td><td>Pause between actions</td><td>duration (ms)</td></tr>
+    <tr><td><code>remove</code></td><td>Remove actor from scene</td><td>actor</td></tr>
+  </table>
+</div>
+
+<h3>Legacy Components (Still in Codebase)</h3>
+<div class="card">
+  <table>
+    <tr><th>File</th><th>Lines</th><th>Status</th><th>Notes</th></tr>
+    <tr><td><code>TaskAtmosphere.tsx</code></td><td>~200</td><td><span class="badge badge-yellow">Legacy</span></td><td>Replaced by VillageWorld atmosphere; still imported by TaskIntro</td></tr>
+    <tr><td><code>SceneEnvironment3D.tsx</code></td><td>386</td><td><span class="badge badge-yellow">Legacy</span></td><td>Per-task environments; zone content now in VillageWorld</td></tr>
+    <tr><td><code>TaskIntro.tsx</code></td><td>208</td><td><span class="badge badge-yellow">Legacy</span></td><td>Fog walk-through intro; replaced by zone transitions</td></tr>
+  </table>
+</div>
+
+<!-- 3. DATA & API -->
+<h2 id="data">3. Data &amp; API Layer</h2>
+
+<h3>Three-Tier Response System</h3>
+<div class="card">
+  <table>
+    <tr><th>Tier</th><th>Source</th><th>Latency</th><th>Implementation</th></tr>
+    <tr>
+      <td><span class="badge badge-green">Tier 1</span></td>
+      <td>Golden Cache</td>
+      <td>0-5ms</td>
+      <td><code>cache.ts</code> &mdash; 166 pre-generated responses. Exact match first, then fuzzy keyword overlap (&ge;60% threshold).</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-blue">Tier 2</span></td>
+      <td>Live Claude API</td>
+      <td>1-8s</td>
+      <td><code>claude.ts</code> &mdash; Opus 4.6, 400 max tokens, 6s timeout. Strips markdown fences, validates JSON. Saves result to runtime cache.</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-purple">Tier 3</span></td>
+      <td>Fallback Scripts</td>
+      <td>Instant</td>
+      <td><code>fallback-scripts.ts</code> &mdash; 13 pre-written PARTIAL_SUCCESS scripts. Demo never shows an error screen.</td>
+    </tr>
+  </table>
+</div>
+
+<h3>Cache Statistics</h3>
+<div class="card">
+  <table>
+    <tr><th>File</th><th>Entries</th><th>Lines</th><th>Matching</th></tr>
+    <tr><td><code>demo-cache.json</code></td><td>166</td><td>6,012</td><td>Exact + fuzzy keyword (60% Jaccard overlap)</td></tr>
+    <tr><td><code>fallback-scripts.ts</code></td><td>13</td><td>176</td><td>7 primary 3D + 6 legacy 2D tasks</td></tr>
+  </table>
+</div>
+
+<h3>UI Components</h3>
+<div class="card">
+  <table>
+    <tr><th>Component</th><th>Lines</th><th>Role</th></tr>
+    <tr><td><code>PromptInput.tsx</code></td><td>195</td><td>Text input, voice button, submit, result display (narration + feedback + badges)</td></tr>
+    <tr><td><code>VoiceButton.tsx</code></td><td>137</td><td>Web Speech API voice input (Chrome). Pulse animation when listening.</td></tr>
+    <tr><td><code>LoadingScreen.tsx</code></td><td>127</td><td>Branded splash with cycling messages and shimmer progress bar</td></tr>
+    <tr><td><code>ErrorBoundary.tsx</code></td><td>35</td><td>React error boundary with reload button</td></tr>
+  </table>
+</div>
+
+<!-- 4. PROMPTS -->
+<h2 id="prompts">4. System Prompts &amp; Tasks</h2>
+
+<div class="card">
+  <table>
+    <tr><th>#</th><th>Task</th><th>Actors</th><th>Props</th><th>Success Criteria (3-part)</th><th>Quality</th></tr>
+    <tr>
+      <td>1</td><td>Skeleton's Surprise Birthday</td>
+      <td>skeleton_warrior, skeleton_mage, skeleton_minion, knight, mage, rogue</td>
+      <td>table, torch, barrel, banner, present_A/B/C, cake_birthday, cupcake</td>
+      <td>Guest list + Decorations + Cake/presents</td>
+      <td><span class="badge badge-green">Excellent</span></td>
+    </tr>
+    <tr>
+      <td>2</td><td>Knight's Space Mission</td>
+      <td>knight, space_ranger</td>
+      <td>basemodule_A/B, dome, solarpanel, cargo_A</td>
+      <td>Survive (oxygen) + Befriend ranger + Accomplish mission</td>
+      <td><span class="badge badge-green">Excellent</span></td>
+    </tr>
+    <tr>
+      <td>3</td><td>Mage vs. Kitchen</td>
+      <td>mage, witch, skeleton_minion</td>
+      <td>stove, sink, fridge, pot, pan, cake_chocolate, pie_apple</td>
+      <td>Tame stove + Deal with flying food + Create dish</td>
+      <td><span class="badge badge-green">Excellent</span></td>
+    </tr>
+    <tr>
+      <td>4</td><td>Barbarian's School</td>
+      <td>barbarian, knight, mage, ranger, rogue</td>
+      <td>slide, seesaw, sandbox, desk, chair_A, book_stack</td>
+      <td>Fit at desk + Make friend + Learn something</td>
+      <td><span class="badge badge-green">Excellent</span></td>
+    </tr>
+    <tr>
+      <td>5</td><td>Dungeon Rock Concert</td>
+      <td>knight, barbarian, mage, ranger, rogue, skeleton_warrior, clown</td>
+      <td>torch, barrel, banner_blue/red, table_long, chair</td>
+      <td>Assign instruments + Set up stage + Audience/performance</td>
+      <td><span class="badge badge-blue">Good</span></td>
+    </tr>
+    <tr>
+      <td>6</td><td>Skeleton Pizza Delivery</td>
+      <td>skeleton_warrior, skeleton_rogue, knight, ranger</td>
+      <td>pizza_pepperoni, pizza_cheese, table_round, plate, bench</td>
+      <td>Pick up pizza + Navigate obstacles + Deliver successfully</td>
+      <td><span class="badge badge-green">Excellent</span></td>
+    </tr>
+    <tr>
+      <td>7</td><td>Adventurers' Picnic</td>
+      <td>knight, barbarian, mage, ranger, rogue</td>
+      <td>picnic_blanket, basket, sandwich, teapot, plate, mug, apple, tree, fountain (16 total)</td>
+      <td>Set up spot + Prepare food + Handle disaster</td>
+      <td><span class="badge badge-green">Excellent</span></td>
+    </tr>
+  </table>
+</div>
+
+<h3>Legacy 2D Prompts (6 files)</h3>
+<div class="card">
+  <p>Still imported in <code>gameStore.ts</code> (lines 7-12) and registered in SYSTEM_PROMPTS. Labeled "kept for fallback." Tests verify they don't break the resolver.</p>
+  <p>Files: <code>monster-party.ts</code>, <code>robot-pizza.ts</code>, <code>wizard-kitchen.ts</code>, <code>dinosaur-school.ts</code>, <code>dog-space.ts</code>, <code>octopus-band.ts</code></p>
+  <p><span class="badge badge-yellow">Legacy</span> &mdash; Not dead code, but not reachable via village UI. Safe to keep.</p>
+</div>
+
+<!-- 5. TESTS -->
+<h2 id="tests">5. Test Coverage</h2>
+
+<div class="two-col">
+  <div class="card">
+    <div class="card-header"><span class="grade grade-a">A</span> Well Tested</div>
+    <ul>
+      <li>Cache service (505 lines) &mdash; exact, normalized, fuzzy matching</li>
+      <li>3-tier resolver (224 lines) &mdash; all tiers + latency tracking</li>
+      <li>System prompts (269 lines) &mdash; structure, vocabulary, rules</li>
+      <li>Game store (243 lines) &mdash; state, actions, task registry</li>
+      <li>PromptInput UI (193 lines) &mdash; states, styling, brand colors</li>
+      <li>Easing functions (332 lines) &mdash; math correctness</li>
+      <li>Fallback scripts &mdash; vocabulary contract validation</li>
+      <li>Scene script types &mdash; type structure validation</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="grade grade-d">!</span> Not Tested</div>
+    <ul>
+      <li>Live Claude API integration (all tests mock evaluateInput)</li>
+      <li>Prompt effectiveness (does Claude follow 3-part criteria?)</li>
+      <li>Cross-vocabulary validation (do actor names match GLTF paths?)</li>
+      <li>Narration quality (20-word limit, brand voice)</li>
+      <li>FUNNY_FAIL comedy quality</li>
+      <li>Village zone integration (zone-relative positions)</li>
+      <li>3D asset loading (do referenced GLTFs exist?)</li>
+      <li>End-to-end flow (input &rarr; API &rarr; 3D render)</li>
+      <li>Visual regression</li>
+      <li>Accessibility (WCAG compliance)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 6. BUILD -->
+<h2 id="build">6. Build, Dependencies &amp; Styling</h2>
+
+<h3>Production Dependencies</h3>
+<div class="card">
+  <table>
+    <tr><th>Package</th><th>Version</th><th>Status</th></tr>
+    <tr><td><code>react</code> + <code>react-dom</code></td><td>^18.2.0</td><td><span class="badge badge-green">Active</span></td></tr>
+    <tr><td><code>three</code></td><td>^0.170.0</td><td><span class="badge badge-green">Active</span> &mdash; Core 3D engine</td></tr>
+    <tr><td><code>@react-three/fiber</code></td><td>^8.18.0</td><td><span class="badge badge-green">Active</span> &mdash; R3F renderer</td></tr>
+    <tr><td><code>@react-three/drei</code></td><td>^9.122.0</td><td><span class="badge badge-green">Active</span> &mdash; OrbitControls, Text, Sky, etc.</td></tr>
+    <tr><td><code>@react-three/postprocessing</code></td><td>^2.19.1</td><td><span class="badge badge-green">Active</span> &mdash; Bloom, vignette</td></tr>
+    <tr><td><code>zustand</code></td><td>^5.0.11</td><td><span class="badge badge-green">Active</span> &mdash; State management (~5 kB)</td></tr>
+    <tr><td><code>three-stdlib</code></td><td>^2.36.1</td><td><span class="badge badge-green">Active</span> &mdash; SkeletonUtils</td></tr>
+    <tr><td><code>@tanstack/react-query</code></td><td>^5.17.0</td><td><span class="badge badge-orange">Unused</span> &mdash; Remove</td></tr>
+    <tr><td><code>react-router-dom</code></td><td>^6.21.0</td><td><span class="badge badge-orange">Unused</span> &mdash; Remove</td></tr>
+    <tr><td><code>phaser</code></td><td>^3.90.0</td><td><span class="badge badge-yellow">Legacy</span> &mdash; Replaced by R3F, still in deps</td></tr>
+  </table>
+  <p style="margin-top: 0.5rem; font-size: 0.85rem;"><strong>Estimated savings from removing unused deps:</strong> ~300 kB gzipped</p>
+</div>
+
+<h3>Bundle Size</h3>
+<div class="metric-grid">
+  <div class="metric"><div class="metric-value">655</div><div class="metric-label">Modules</div></div>
+  <div class="metric"><div class="metric-value">1,295 kB</div><div class="metric-label">JS Uncompressed</div></div>
+  <div class="metric"><div class="metric-value">347 kB</div><div class="metric-label">JS Gzipped</div></div>
+  <div class="metric"><div class="metric-value">~128 MB</div><div class="metric-label">3D Assets (on-demand)</div></div>
+</div>
+
+<h3>Styling &amp; Fonts</h3>
+<div class="card">
+  <ul>
+    <li><strong>Fonts:</strong> Fredoka (headings: 400-700), Nunito (body: 400-800) via Google Fonts</li>
+    <li><strong>CSS:</strong> Tailwind 3.4 with custom <code>quest-*</code> color tokens, 9 custom animations, glow shadows</li>
+    <li><strong>Game utilities:</strong> <code>.btn-game</code>, <code>.input-magic</code>, <code>.bubble-result</code>, <code>.btn-primary</code>/<code>.btn-secondary</code></li>
+    <li><strong>Effects:</strong> Star backgrounds (light + dark), shimmer loading, pulse ring, staggered entrance (7 steps)</li>
+  </ul>
+</div>
+
+<!-- 7. BRAND -->
+<h2 id="brand">7. Brand Brief Compliance</h2>
+
+<h3>Color Compliance</h3>
+<div class="issue issue-good">
+  <div class="issue-title">100% Brand Color Match</div>
+  <div class="issue-desc">All 5 primary, 5 supporting, 4 UI background, 4 canvas, 4 text, and 5 state colors match the Brand Brief v2 exactly. Yellow (#FBBF24) used for failure states &mdash; never red.</div>
+</div>
+
+<h3>Forbidden Word Violations</h3>
+<div class="card">
+  <p><strong>Forbidden in kid-facing text:</strong> "prompt", "Great job!", "skills", "learning", "wrong", "failed", "error"</p>
+  <table>
+    <tr><th>File</th><th>Line</th><th>Violation</th><th>Fix</th></tr>
+    <tr>
+      <td><code>VoiceButton.tsx</code></td><td>117</td>
+      <td>Tooltip: <em>"Speak your <strong>prompt</strong>"</em></td>
+      <td>Change to "Speak your description"</td>
+    </tr>
+    <tr>
+      <td><code>fallback-scripts.ts</code></td><td>41</td>
+      <td>Feedback: <em>"<strong>Amazing job!</strong> You included..."</em></td>
+      <td>Change to "You nailed it!"</td>
+    </tr>
+    <tr>
+      <td><code>ErrorBoundary.tsx</code></td><td>20</td>
+      <td>Displays raw <code>error.message</code> (may contain technical jargon)</td>
+      <td>Sanitize or replace with "Something unexpected happened"</td>
+    </tr>
+  </table>
+  <p style="margin-top: 0.5rem; font-size: 0.85rem;"><strong>All 7 system prompts: 0 violations detected.</strong> Narrations, feedback, and examples all follow brand voice.</p>
+</div>
+
+<!-- 8. ISSUES -->
+<h2 id="issues">8. Issues &amp; Recommendations</h2>
+
+<h3>Critical (Functionality)</h3>
+
+<div class="issue issue-critical">
+  <div class="issue-title">5 of 7 tasks unreachable via village UI</div>
+  <div class="issue-desc">
+    <code>ZONE_CENTERS</code> in gameStore.ts only defines 2 zones (skeleton-birthday, adventurers-picnic). VillageWorld only renders 2 zone markers. The other 5 tasks (knight-space, mage-kitchen, barbarian-school, dungeon-concert, skeleton-pizza) have system prompts and cached responses but no way for users to access them.
+    <br><span class="file-ref">gameStore.ts:75-78 &bull; VillageWorld.tsx:631-642 &bull; App.tsx:34-37</span>
+  </div>
+</div>
+
+<h3>Major (Code Quality)</h3>
+
+<div class="issue issue-major">
+  <div class="issue-title">3 unused dependencies bloating bundle (~300 kB gzipped)</div>
+  <div class="issue-desc">
+    <code>@tanstack/react-query</code>, <code>react-router-dom</code>, and <code>phaser</code> are in package.json but have 0 usages in production code. Removing them could cut bundle by ~25%.
+    <br><span class="file-ref">package.json:15-26</span>
+  </div>
+</div>
+
+<div class="issue issue-major">
+  <div class="issue-title">Dev tools leak to production</div>
+  <div class="issue-desc">
+    <code>SceneMeasurer</code> exposes <code>window.__measureScene()</code> and <code>window.__measureByPattern()</code> in production builds. Should be behind <code>import.meta.env.DEV</code> guard.
+    <br><span class="file-ref">R3FGame.tsx:8-52</span>
+  </div>
+</div>
+
+<div class="issue issue-major">
+  <div class="issue-title">Dead code: unused refs and methods</div>
+  <div class="issue-desc">
+    <code>r3fRef</code> in App.tsx is created but never used. <code>loadTask</code> method in R3FGame.tsx is exposed via ref but never called. 6 legacy 2D prompt imports add bundle weight.
+    <br><span class="file-ref">App.tsx:12 &bull; R3FGame.tsx:64-66 &bull; gameStore.ts:7-12</span>
+  </div>
+</div>
+
+<h3>Minor (Maintenance)</h3>
+
+<div class="issue issue-minor">
+  <div class="issue-title">VillageWorld.tsx is 646 lines &mdash; large monolithic component</div>
+  <div class="issue-desc">Contains 9 sub-components (HexTerrain, VillageCenter, VillagePerimeter, DungeonZone, ParkZone, RoadDecoration, VillageAtmosphere, ZoneMarker, Piece). Could be split into separate files for maintainability.</div>
+</div>
+
+<div class="issue issue-minor">
+  <div class="issue-title">Performance: 1000+ individual hex tile meshes</div>
+  <div class="issue-desc">Each hex tile is a separate GLTF clone. Could use <code>InstancedMesh</code> to batch draw calls. Shadow map (2048x2048) covers 1000+ shadow casters. No LOD for perimeter mountains.</div>
+</div>
+
+<div class="issue issue-minor">
+  <div class="issue-title">3 brand brief violations in UI text</div>
+  <div class="issue-desc">VoiceButton tooltip uses "prompt", fallback script uses "Amazing job!", ErrorBoundary shows raw error messages. All quick fixes.</div>
+</div>
+
+<h3>Positive Highlights</h3>
+
+<div class="issue issue-good">
+  <div class="issue-title">Three-tier response system is bulletproof</div>
+  <div class="issue-desc">166 cached golden responses + fuzzy matching + 6s API timeout + 13 fallback scripts. Demo never shows an error screen. Architecture implemented exactly as designed.</div>
+</div>
+
+<div class="issue issue-good">
+  <div class="issue-title">All 7 system prompts are excellent quality</div>
+  <div class="issue-desc">Clear 3-part success criteria, explicit asset vocabulary, max 6 actions, 20-word narration limit, brand-compliant feedback. Zero forbidden word violations in prompts.</div>
+</div>
+
+<div class="issue issue-good">
+  <div class="issue-title">Error tolerance is comprehensive</div>
+  <div class="issue-desc">SafeModel boundary per GLTF, try/catch per action in ScenePlayer3D, auto-spawn for missing actors, unknown props silently skipped. Graceful degradation at every level.</div>
+</div>
+
+<div class="issue issue-good">
+  <div class="issue-title">0 TypeScript errors, clean production build</div>
+  <div class="issue-desc">Strict mode enabled. 655 modules bundle cleanly. No runtime errors detected in testing.</div>
+</div>
+
+<!-- 9. FILE MAP -->
+<h2 id="files">9. Key File Map</h2>
+
+<div class="card">
+  <h4>Game Engine (frontend/src/game/)</h4>
+  <table>
+    <tr><th>File</th><th>Lines</th><th>Status</th></tr>
+    <tr><td><code>VillageWorld.tsx</code></td><td>646</td><td><span class="badge badge-green">Active</span></td></tr>
+    <tr><td><code>VillageCamera.tsx</code></td><td>123</td><td><span class="badge badge-green">Active</span></td></tr>
+    <tr><td><code>ScenePlayer3D.tsx</code></td><td>~1000</td><td><span class="badge badge-green">Active</span></td></tr>
+    <tr><td><code>Character3D.tsx</code></td><td>~150</td><td><span class="badge badge-green">Active</span></td></tr>
+    <tr><td><code>Prop3D.tsx</code></td><td>~120</td><td><span class="badge badge-green">Active</span></td></tr>
+    <tr><td><code>AnimationController.ts</code></td><td>~200</td><td><span class="badge badge-green">Active</span></td></tr>
+    <tr><td><code>SoundManager3D.ts</code></td><td>~150</td><td><span class="badge badge-green">Active</span></td></tr>
+    <tr><td><code>R3FGame.tsx</code></td><td>95</td><td><span class="badge badge-green">Active</span></td></tr>
+    <tr><td><code>TaskAtmosphere.tsx</code></td><td>~200</td><td><span class="badge badge-yellow">Legacy</span></td></tr>
+    <tr><td><code>SceneEnvironment3D.tsx</code></td><td>386</td><td><span class="badge badge-yellow">Legacy</span></td></tr>
+    <tr><td><code>TaskIntro.tsx</code></td><td>208</td><td><span class="badge badge-yellow">Legacy</span></td></tr>
+  </table>
+
+  <h4>Services &amp; Data (frontend/src/)</h4>
+  <table>
+    <tr><th>File</th><th>Lines</th><th>Role</th></tr>
+    <tr><td><code>services/resolver.ts</code></td><td>56</td><td>Three-tier orchestrator</td></tr>
+    <tr><td><code>services/cache.ts</code></td><td>114</td><td>Golden cache with fuzzy matching</td></tr>
+    <tr><td><code>services/claude.ts</code></td><td>81</td><td>Claude API client (Opus 4.6, 6s timeout)</td></tr>
+    <tr><td><code>data/demo-cache.json</code></td><td>6,012</td><td>166 pre-generated responses</td></tr>
+    <tr><td><code>data/fallback-scripts.ts</code></td><td>176</td><td>13 Tier 3 fallback scripts</td></tr>
+    <tr><td><code>data/asset-manifest.ts</code></td><td>390</td><td>Asset registry (characters, props, animations)</td></tr>
+    <tr><td><code>types/scene-script.ts</code></td><td>136</td><td>SceneScript TypeScript types</td></tr>
+    <tr><td><code>stores/gameStore.ts</code></td><td>167</td><td>Zustand state management</td></tr>
+  </table>
+
+  <h4>Prompts (frontend/src/prompts/)</h4>
+  <table>
+    <tr><th>File</th><th>Status</th></tr>
+    <tr><td><code>skeleton-birthday.ts</code>, <code>knight-space.ts</code>, <code>mage-kitchen.ts</code>, <code>barbarian-school.ts</code>, <code>dungeon-concert.ts</code>, <code>skeleton-pizza.ts</code>, <code>adventurers-picnic.ts</code></td><td><span class="badge badge-green">Active (7)</span></td></tr>
+    <tr><td><code>monster-party.ts</code>, <code>robot-pizza.ts</code>, <code>wizard-kitchen.ts</code>, <code>dinosaur-school.ts</code>, <code>dog-space.ts</code>, <code>octopus-band.ts</code></td><td><span class="badge badge-yellow">Legacy (6)</span></td></tr>
+  </table>
+</div>
+
+<hr style="margin: 3rem 0; border: none; border-top: 2px solid var(--border);">
+<p style="text-align: center; color: var(--text-light); font-size: 0.85rem;">
+  Prompt Quest &bull; Built with Claude Opus 4.6 &bull; Solo Hackathon Feb 10-16, 2026
+</p>
+
+</div>
+</body>
+</html>

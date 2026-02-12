@@ -8,6 +8,7 @@ import { useGameStore } from './stores/gameStore';
 import { preloadAllAnimations } from './game/AnimationController';
 import { WORLDS } from './data/worlds';
 import { BADGES } from './services/badge-system';
+import CameraControls from './components/CameraControls';
 
 export default function App() {
   const currentZone = useGameStore((s) => s.currentZone);
@@ -102,6 +103,7 @@ export default function App() {
                   onComplete={() => console.log('[App] Scene complete')}
                 />
               </R3FGame>
+              {!currentZone && !isTransitioning && <CameraControls />}
             </div>
           </div>
 
@@ -116,7 +118,7 @@ export default function App() {
                 {isTransitioning ? 'Traveling...' : 'Walk to a glowing circle to start a quest!'}
               </p>
               <p className="text-sm text-quest-text-light mt-1">
-                {isTransitioning ? '' : 'Use WASD or arrow keys to move \u2022 Hold Shift to run'}
+                {isTransitioning ? '' : 'WASD to move \u2022 Shift to run \u2022 Drag or Q/E to turn \u2022 Scroll or +/\u2212 to zoom'}
               </p>
             </div>
           )}

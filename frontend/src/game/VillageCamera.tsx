@@ -17,15 +17,14 @@ import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import * as THREE from 'three'
 import { useGameStore } from '../stores/gameStore'
 
-// Follow offset for third-person village walking (before yaw rotation)
-const DEFAULT_FOLLOW_DISTANCE = 14
+// Follow offset for third-person village walking
 const FOLLOW_HEIGHT = 8
 const ZONE_CAMERA_OFFSET = new THREE.Vector3(0, 8, 14)
 
-// Zoom limits for village follow mode (comma key toggles)
-const MIN_FOLLOW_DISTANCE = 8
-const MAX_FOLLOW_DISTANCE = 60
-const ZOOM_SPEED = 0.08 // multiplier per wheel delta
+// Per-zone camera offset overrides (camera from village center direction)
+const ZONE_CAMERA_OVERRIDES: Record<string, THREE.Vector3> = {
+  'adventurers-picnic': new THREE.Vector3(0, 8, -14),
+}
 
 // Orbit settings (zone mode only)
 const MIN_POLAR_ANGLE = 0.3
@@ -56,7 +55,9 @@ export function VillageCamera() {
   const isTransitioning = useGameStore((s) => s.isTransitioning)
   const playerPosition = useGameStore((s) => s.playerPosition)
   const cameraYaw = useGameStore((s) => s.cameraYaw)
+  const cameraZoom = useGameStore((s) => s.cameraZoom)
   const rotateCameraYaw = useGameStore((s) => s.rotateCameraYaw)
+  const adjustCameraZoom = useGameStore((s) => s.adjustCameraZoom)
   const cameraRef = useRef<THREE.PerspectiveCamera>(null)
   const controlsRef = useRef<any>(null)
 
@@ -64,9 +65,6 @@ export function VillageCamera() {
   const isDraggingRef = useRef(false)
   // Track rotation keys
   const rotateKeysRef = useRef(new Set<string>())
-  // Zoom toggle (comma key) and follow distance
-  const zoomEnabledRef = useRef(false)
-  const followDistanceRef = useRef(DEFAULT_FOLLOW_DISTANCE)
 
   // Animation state for fly-to transitions
   const transitionRef = useRef({
@@ -121,27 +119,18 @@ export function VillageCamera() {
       if (e.code === 'KeyQ' || e.code === 'KeyE') {
         rotateKeysRef.current.add(e.code)
       }
-      // Comma toggles zoom mode
-      if (e.code === 'Comma') {
-        zoomEnabledRef.current = !zoomEnabledRef.current
-        console.log(`[Camera] Zoom ${zoomEnabledRef.current ? 'ON' : 'OFF'} (distance: ${followDistanceRef.current.toFixed(1)})`)
-      }
     }
 
     const onKeyUp = (e: KeyboardEvent) => {
       rotateKeysRef.current.delete(e.code)
     }
 
-    // Scroll/pinch zoom in village mode (only when zoom enabled)
+    // Scroll/pinch zoom in village mode
     const onWheel = (e: WheelEvent) => {
-      if (!zoomEnabledRef.current || currentZone) return
+      if (currentZone) return
       e.preventDefault()
       const delta = e.deltaY > 0 ? 1 : -1
-      followDistanceRef.current = THREE.MathUtils.clamp(
-        followDistanceRef.current * (1 + delta * ZOOM_SPEED),
-        MIN_FOLLOW_DISTANCE,
-        MAX_FOLLOW_DISTANCE,
-      )
+      adjustCameraZoom(delta)
     }
 
     canvas.addEventListener('pointerdown', onPointerDown)
@@ -161,7 +150,7 @@ export function VillageCamera() {
       window.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('keyup', onKeyUp)
     }
-  }, [gl, currentZone, rotateCameraYaw])
+  }, [gl, currentZone, rotateCameraYaw, adjustCameraZoom])
 
   // Start fly-to transition when entering/exiting a zone
   useEffect(() => {
@@ -181,13 +170,14 @@ export function VillageCamera() {
 
     let endPos: THREE.Vector3
     if (currentZone) {
-      endPos = endTarget.clone().add(ZONE_CAMERA_OFFSET)
+      const offset = ZONE_CAMERA_OVERRIDES[currentZone] || ZONE_CAMERA_OFFSET
+      endPos = endTarget.clone().add(offset)
     } else {
       // Returning to village — use yaw-rotated offset
       _followOffset.set(
-        Math.sin(cameraYaw) * followDistanceRef.current,
+        Math.sin(cameraYaw) * cameraZoom,
         FOLLOW_HEIGHT,
-        Math.cos(cameraYaw) * followDistanceRef.current,
+        Math.cos(cameraYaw) * cameraZoom,
       )
       endPos = endTarget.clone().add(_followOffset)
     }
@@ -245,9 +235,9 @@ export function VillageCamera() {
 
       // Compute yaw-rotated follow offset
       _followOffset.set(
-        Math.sin(cameraYaw) * followDistanceRef.current,
+        Math.sin(cameraYaw) * cameraZoom,
         FOLLOW_HEIGHT,
-        Math.cos(cameraYaw) * followDistanceRef.current,
+        Math.cos(cameraYaw) * cameraZoom,
       )
 
       // Target: camera at rotated offset from player

@@ -498,59 +498,94 @@ function VillageCenter() {
 // ============================================================================
 
 function VillagePerimeter() {
-  // Perimeter pushed far out for the 7x-scale village (~65u wide)
-  // North mountains pushed to Z=-80+ to sit behind the dungeon cliff bowl
+  // Dense cliff/hill wall ringing the entire world edge.
+  // Player bounds: X [-40,40], Z [-65,45]. Place cliffs just outside.
+  // North side already has DungeonCliffs, so the north edge (Z<-65) uses
+  // mountains pushed further back. All other edges get a continuous wall.
   return (
     <group name="village-perimeter">
-      {/* Mountains — large backdrop ring */}
-      {/* North backdrop — pushed behind dungeon cliff bowl */}
+      {/* ══════════ EAST WALL (X ≈ 44-55, Z from -60 to 45) ══════════ */}
+      <Piece model={DECORATION.mountain_C} position={[48, 0, -55]} rotation={[0, Math.PI / 4, 0]} scale={8.0} />
+      <Piece model={DECORATION.hill_A} position={[44, 0, -48]} scale={6.0} />
+      <Piece model={DECORATION.rock_A} position={[46, 0, -42]} scale={7.0} />
+      <Piece model={DECORATION.mountain_A} position={[50, 0, -35]} rotation={[0, Math.PI / 6, 0]} scale={8.0} />
+      <Piece model={DECORATION.hills_trees} position={[46, 0, -28]} scale={6.0} />
+      <Piece model={DECORATION.hill_C} position={[48, 0, -20]} scale={6.5} />
+      <Piece model={DECORATION.mountain_B} position={[52, 0, -12]} rotation={[0, Math.PI / 3, 0]} scale={7.5} />
+      <Piece model={DECORATION.rock_D} position={[46, 0, -5]} scale={6.0} />
+      <Piece model={DECORATION.hill_A} position={[50, 0, 2]} scale={6.5} />
+      <Piece model={DECORATION.mountain_C} position={[48, 0, 10]} rotation={[0, -Math.PI / 5, 0]} scale={8.0} />
+      <Piece model={DECORATION.hills_B_trees} position={[46, 0, 18]} scale={6.0} />
+      <Piece model={DECORATION.rock_B} position={[48, 0, 25]} scale={7.0} />
+      <Piece model={DECORATION.hill_B} position={[50, 0, 32]} scale={6.0} />
+      <Piece model={DECORATION.mountain_A} position={[48, 0, 40]} rotation={[0, Math.PI / 4, 0]} scale={7.5} />
+      <Piece model={DECORATION.rock_E} position={[45, 0, 46]} scale={6.0} />
+
+      {/* ══════════ WEST WALL (X ≈ -44 to -55, Z from -60 to 45) ══════════ */}
+      <Piece model={DECORATION.mountain_A} position={[-48, 0, -55]} rotation={[0, -Math.PI / 4, 0]} scale={8.0} />
+      <Piece model={DECORATION.hill_B} position={[-44, 0, -48]} scale={6.0} />
+      <Piece model={DECORATION.rock_C} position={[-46, 0, -42]} scale={7.0} />
+      <Piece model={DECORATION.mountain_B} position={[-50, 0, -35]} rotation={[0, -Math.PI / 6, 0]} scale={8.0} />
+      <Piece model={DECORATION.hills_B_trees} position={[-46, 0, -28]} scale={6.0} />
+      <Piece model={DECORATION.hill_A} position={[-48, 0, -20]} scale={6.5} />
+      <Piece model={DECORATION.mountain_C} position={[-52, 0, -12]} rotation={[0, -Math.PI / 3, 0]} scale={7.5} />
+      <Piece model={DECORATION.rock_E} position={[-46, 0, -5]} scale={6.0} />
+      <Piece model={DECORATION.hill_C} position={[-50, 0, 2]} scale={6.5} />
+      <Piece model={DECORATION.mountain_A} position={[-48, 0, 10]} rotation={[0, Math.PI / 5, 0]} scale={8.0} />
+      <Piece model={DECORATION.hills_trees} position={[-46, 0, 18]} scale={6.0} />
+      <Piece model={DECORATION.rock_A} position={[-48, 0, 25]} scale={7.0} />
+      <Piece model={DECORATION.hill_B} position={[-50, 0, 32]} scale={6.0} />
+      <Piece model={DECORATION.mountain_B} position={[-48, 0, 40]} rotation={[0, -Math.PI / 4, 0]} scale={7.5} />
+      <Piece model={DECORATION.rock_D} position={[-45, 0, 46]} scale={6.0} />
+
+      {/* ══════════ SOUTH WALL (Z ≈ 48-60, X from -45 to 45) ══════════ */}
+      <Piece model={DECORATION.mountain_A} position={[-42, 0, 52]} rotation={[0, Math.PI / 3, 0]} scale={8.0} />
+      <Piece model={DECORATION.hill_A} position={[-32, 0, 50]} scale={6.0} />
+      <Piece model={DECORATION.rock_B} position={[-24, 0, 52]} scale={7.0} />
+      <Piece model={DECORATION.mountain_B} position={[-14, 0, 55]} scale={8.0} />
+      <Piece model={DECORATION.hills_trees} position={[-5, 0, 52]} scale={6.0} />
+      <Piece model={DECORATION.hill_C} position={[5, 0, 54]} scale={6.5} />
+      <Piece model={DECORATION.mountain_C} position={[14, 0, 52]} rotation={[0, -Math.PI / 4, 0]} scale={8.0} />
+      <Piece model={DECORATION.rock_D} position={[24, 0, 50]} scale={6.5} />
+      <Piece model={DECORATION.hill_B} position={[32, 0, 52]} scale={6.0} />
+      <Piece model={DECORATION.mountain_A} position={[42, 0, 52]} rotation={[0, -Math.PI / 3, 0]} scale={8.0} />
+
+      {/* South wall — second row pushed further back for depth */}
+      <Piece model={DECORATION.mountain_B} position={[-38, 0, 62]} scale={9.0} />
+      <Piece model={DECORATION.mountain_A} position={[-10, 0, 65]} scale={9.0} />
+      <Piece model={DECORATION.mountain_C} position={[18, 0, 64]} rotation={[0, Math.PI / 5, 0]} scale={9.0} />
+      <Piece model={DECORATION.mountain_B} position={[40, 0, 62]} scale={8.5} />
+      <Piece model={DECORATION.mountain_A} position={[0, 0, 72]} scale={10.0} />
+
+      {/* ══════════ NORTH WALL (Z ≈ -70 to -85, behind dungeon) ══════════ */}
+      {/* Behind the dungeon cliff bowl — large mountains as skyline */}
       <Piece model={DECORATION.mountain_A} position={[0, 0, -85]} scale={10.0} />
-      <Piece model={DECORATION.mountain_B} position={[-35, 0, -82]} scale={8.0} />
-      <Piece model={DECORATION.mountain_A} position={[35, 0, -82]} scale={9.0} />
-      <Piece model={DECORATION.mountain_C} position={[-55, 0, -75]} rotation={[0, Math.PI / 5, 0]} scale={8.0} />
-      <Piece model={DECORATION.mountain_C} position={[55, 0, -75]} rotation={[0, -Math.PI / 5, 0]} scale={8.0} />
-      {/* East/west flanks */}
-      <Piece model={DECORATION.mountain_C} position={[65, 0, -20]} rotation={[0, Math.PI / 4, 0]} scale={8.0} />
-      <Piece model={DECORATION.mountain_C} position={[-65, 0, -20]} rotation={[0, -Math.PI / 3, 0]} scale={7.5} />
-      <Piece model={DECORATION.mountain_A} position={[65, 0, 10]} rotation={[0, Math.PI / 6, 0]} scale={8.5} />
-      <Piece model={DECORATION.mountain_B} position={[-65, 0, 10]} rotation={[0, -Math.PI / 5, 0]} scale={7.0} />
-      <Piece model={DECORATION.mountain_A} position={[-60, 0, -40]} rotation={[0, Math.PI / 5, 0]} scale={9.0} />
-      <Piece model={DECORATION.mountain_B} position={[60, 0, -40]} rotation={[0, -Math.PI / 6, 0]} scale={8.0} />
-      {/* South backdrop */}
-      <Piece model={DECORATION.mountain_A} position={[-55, 0, 30]} scale={7.0} />
-      <Piece model={DECORATION.mountain_B} position={[55, 0, 40]} scale={8.0} />
-      <Piece model={DECORATION.mountain_B} position={[-50, 0, 65]} scale={7.0} />
-      <Piece model={DECORATION.mountain_A} position={[50, 0, 70]} scale={8.0} />
-      <Piece model={DECORATION.mountain_B} position={[0, 0, 75]} scale={9.0} />
-      <Piece model={DECORATION.mountain_C} position={[-40, 0, 72]} rotation={[0, Math.PI / 3, 0]} scale={8.0} />
+      <Piece model={DECORATION.mountain_B} position={[-30, 0, -82]} scale={9.0} />
+      <Piece model={DECORATION.mountain_A} position={[30, 0, -82]} scale={9.0} />
+      <Piece model={DECORATION.mountain_C} position={[-55, 0, -75]} rotation={[0, Math.PI / 5, 0]} scale={8.5} />
+      <Piece model={DECORATION.mountain_C} position={[55, 0, -75]} rotation={[0, -Math.PI / 5, 0]} scale={8.5} />
 
-      {/* Hills — medium distance ring (pushed away from zone centers) */}
-      <Piece model={DECORATION.hills_trees} position={[45, 0, 30]} scale={6.0} />
-      <Piece model={DECORATION.hill_A} position={[-38, 0, 45]} scale={5.0} />
-      <Piece model={DECORATION.hills_trees} position={[-50, 0, 5]} scale={6.0} />
-      <Piece model={DECORATION.hill_A} position={[50, 0, -5]} scale={5.0} />
-      <Piece model={DECORATION.hill_C} position={[48, 0, 38]} scale={5.0} />
-      <Piece model={DECORATION.hills_B_trees} position={[-48, 0, 50]} scale={6.0} />
-      <Piece model={DECORATION.hill_B} position={[45, 0, 55]} scale={5.5} />
-      <Piece model={DECORATION.hill_A} position={[50, 0, -20]} scale={5.5} />
-      <Piece model={DECORATION.hills_trees} position={[-55, 0, -12]} scale={6.0} />
-      <Piece model={DECORATION.hills_B_trees} position={[25, 0, 58]} scale={5.5} />
+      {/* North — fill gaps between dungeon cliffs and east/west walls */}
+      <Piece model={DECORATION.hill_A} position={[-38, 0, -68]} scale={7.0} />
+      <Piece model={DECORATION.rock_C} position={[-44, 0, -62]} scale={7.0} />
+      <Piece model={DECORATION.mountain_B} position={[-48, 0, -65]} rotation={[0, Math.PI / 4, 0]} scale={7.5} />
+      <Piece model={DECORATION.hill_B} position={[38, 0, -68]} scale={7.0} />
+      <Piece model={DECORATION.rock_A} position={[44, 0, -62]} scale={7.0} />
+      <Piece model={DECORATION.mountain_A} position={[48, 0, -65]} rotation={[0, -Math.PI / 4, 0]} scale={7.5} />
 
-      {/* Dense tree clusters — pushed behind zone areas */}
-      <Piece model={DECORATION.trees_medium} position={[42, 0, 45]} scale={6.0} />
-      <Piece model={DECORATION.trees_B_large} position={[-42, 0, 38]} scale={6.0} />
-      <Piece model={DECORATION.trees_medium} position={[40, 0, -35]} scale={6.0} />
-      <Piece model={DECORATION.trees_large} position={[-50, 0, -10]} scale={6.0} />
-      <Piece model={DECORATION.trees_B_large} position={[50, 0, 10]} scale={6.0} />
-      <Piece model={DECORATION.trees_large} position={[-32, 0, 55]} scale={5.0} />
-
-      {/* Rocks scattered around edges (away from zones) */}
-      <Piece model={DECORATION.rock_B} position={[38, 0, 42]} scale={7.0} />
-      <Piece model={DECORATION.rock_A} position={[-32, 0, 58]} scale={6.0} />
-      <Piece model={DECORATION.rock_D} position={[-45, 0, 42]} scale={5.5} />
-      <Piece model={DECORATION.rock_D} position={[50, 0, 18]} scale={5.0} />
-      <Piece model={DECORATION.rock_E} position={[-50, 0, 25]} scale={5.5} />
-      <Piece model={DECORATION.rock_A} position={[15, 0, 60]} scale={6.0} />
+      {/* ══════════ CORNERS — fill diagonal gaps ══════════ */}
+      {/* NE corner */}
+      <Piece model={DECORATION.mountain_C} position={[52, 0, -58]} rotation={[0, Math.PI / 3, 0]} scale={8.0} />
+      <Piece model={DECORATION.hill_C} position={[50, 0, -50]} scale={6.0} />
+      {/* NW corner */}
+      <Piece model={DECORATION.mountain_B} position={[-52, 0, -58]} rotation={[0, -Math.PI / 3, 0]} scale={8.0} />
+      <Piece model={DECORATION.hill_A} position={[-50, 0, -50]} scale={6.0} />
+      {/* SE corner */}
+      <Piece model={DECORATION.mountain_A} position={[48, 0, 48]} rotation={[0, -Math.PI / 4, 0]} scale={8.0} />
+      <Piece model={DECORATION.hills_B_trees} position={[45, 0, 55]} scale={6.5} />
+      {/* SW corner */}
+      <Piece model={DECORATION.mountain_B} position={[-48, 0, 48]} rotation={[0, Math.PI / 4, 0]} scale={8.0} />
+      <Piece model={DECORATION.hills_trees} position={[-45, 0, 55]} scale={6.5} />
     </group>
   )
 }

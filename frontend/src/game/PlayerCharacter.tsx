@@ -93,8 +93,8 @@ export function PlayerCharacter({ enabled, onPositionUpdate }: PlayerCharacterPr
       const yaw = cameraYawRef.current
       const cosYaw = Math.cos(yaw)
       const sinYaw = Math.sin(yaw)
-      const worldX = dirX * cosYaw - dirZ * sinYaw
-      const worldZ = dirX * sinYaw + dirZ * cosYaw
+      const worldX = dirX * cosYaw + dirZ * sinYaw
+      const worldZ = -dirX * sinYaw + dirZ * cosYaw
 
       // Move position with collision detection
       const pos = groupRef.current.position

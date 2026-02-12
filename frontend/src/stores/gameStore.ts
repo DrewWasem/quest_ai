@@ -105,15 +105,15 @@ function getSystemPrompt(taskId: string): { prompt: string; isBlock: boolean } {
   return { prompt: BLOCK_PROMPTS['skeleton-birthday'], isBlock: true };
 }
 
-// Zone center positions in world space — circular ring at radius ~35
+// Zone center positions in world space — ring at R≈48-53, dungeon at Z=-70
 export const ZONE_CENTERS: Record<string, [number, number, number]> = {
-  'skeleton-birthday': [0, 0, -55],       // north — reached via canyon pass
-  'knight-space':      [25, 0, -25],      // northeast
-  'barbarian-school':  [35, 0, 0],        // east
-  'skeleton-pizza':    [25, 0, 25],       // southeast
-  'adventurers-picnic':[0, 0, 35],        // south
-  'dungeon-concert':   [-25, 0, 25],      // southwest
-  'mage-kitchen':      [-35, 0, 0],       // west
+  'skeleton-birthday': [0, 0, -70],       // north — reached via grand boulevard
+  'knight-space':      [38, 0, -38],      // northeast
+  'barbarian-school':  [48, 0, 5],        // east
+  'skeleton-pizza':    [38, 0, 38],       // southeast
+  'adventurers-picnic':[0, 0, 48],        // south
+  'dungeon-concert':   [-38, 0, 38],      // southwest
+  'mage-kitchen':      [-48, 0, 5],       // west
 };
 
 export const ZONE_META: Record<string, { label: string; emoji: string; color: string }> = {

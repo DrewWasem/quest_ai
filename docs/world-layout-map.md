@@ -1,529 +1,431 @@
-# Prompt Quest — World Layout Map v2
+# Prompt Quest — World Layout v2 (NEW DESIGN)
 
-**Player Bounds**: X [-40, 40], Z [-65, 45] = 80w x 110d units
-**Player Spawn**: [0, 0, 0] (village center)
-**Walk**: 8 u/s | **Run**: 14 u/s | **Zone trigger**: 3.0u
-**Character height**: 2.56u (Knight @ Rig_Medium)
+**Status**: BUILT — implemented in VillageWorld.tsx
+**Previous layout**: saved as `VillageWorld.backup.tsx`
 
 ---
 
-## Master Map — Full World (1 char ≈ 2 units)
-
-```
-              X=-65      X=-40        X=-20       X=0        X=+20       X=+40       X=+65
-              :          |            :           :          :            |           :
-              :          |            :           :          :            |           :
- Z=-90 ·  ·  🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲  ·  · TREE BORDER ROW 3
- Z=-85 ·  ·  🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲  ·  · TREE BORDER ROW 2
- Z=-80 ·  ·  🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲  ·  · TREE BORDER ROW 1
-              :          |            :           :          :            |           :
- Z=-85 ·  ·  ·  ·  ·  ⛰⛰ ·  ·  ·  ·  ·  ⛰ ·  ·  ·  ·  ·  ⛰⛰ ·  ·  ·  ·  · NORTH WALL (behind dungeon)
- Z=-82 ·  ·  ·  ·  ⛰⛰ ·  ·  ·  ·  ·  ·  ·  ⛰ ·  ·  ·  ·  ·  ⛰⛰ ·  ·  ·  ·
-              :          |            :           :          :            |           :
- Z=-75 ·  ·  ·  ·  ·  ·│·  ·  ·🌲· 🌲 ·  ·  ·  · 🌲·  🌲·  ·│·  ·  ·  ·  ·  · CLIFF-TOP TREES
- Z=-72 ·  ·  ·  ·  ·  ·│·  ·  ⛰⛰⛰ ⛰⛰⛰ ⛰⛰⛰ ·  ·│·  ·  ·  ·  ·  · DUNGEON BACK WALL
- Z=-70 ·  ·  ·  ·  ·  ·│·  ⛰⛰ · · · · · · · ⛰⛰ ·│·  ·  ·  ·  ·  ·
- Z=-68 ·  ·  ·  ·  ·  ·│· ⛰⛰  ·  ·  ·  ·  ·  ⛰⛰ │·  ·  ·  ·  ·  · DUNGEON LEFT/RIGHT WALLS
-              :          |    :       :           :       :   |           :
- Z=-65 ═══════════════════════╬═══════╬═══════════╬═══════╬═══════════════════════ PLAYER BOUND (north)
-              :          |    :       :           :       :   |           :
- Z=-62 ·  ·  ·  ·  ⛰🪨 │  ⛰│·  ·  ·  ·  ·  ·│⛰  │🪨⛰·  ·  ·  ·  · DUNGEON SIDE WALLS
- Z=-60 ·  ·  ·  ·  ·  ⛰│ 🏰⛰  ·  ·  ·  ·  ·  ⛰  │⛰ ·  ·  ·  ·  · CASTLE (31.8u tall!)
-              :          | [-10,     :           :       :   |           :
- Z=-58 ·  ·  ·  ·  ·  · │  -60]⛰  ·  ·  ·  ·  ·  ⛰  │·  ·  ·  ·  ·
-              :          |    :       :           :       :   |           :
- Z=-55 ·  ·  ·  ·  ·  · │  · │ ╔══DUNGEON══╗  · │ ·  · │·  ·  ·  ·  · ← ZONE CENTER [0,0,-55]
-              :          |    : │║ walls     ║│  :       :   |           :
- Z=-52 ·  ·  ·  ·  ·  · │  · │ ║ pillars   ║│  · ·  · │·  ·  ·  ·  · 💀 skeleton-birthday
-              :          |    : │║ torches   ║│  :       :   |           :
- Z=-49 ·  ·  ·  ·  ·  🪨│  · │ ╚═══════════╝│🪨 ·  · │·  ·  ·  ·  · ENTRANCE BOULDERS
-              :          |    :  ⌐approach¬   :       :   |           :
- Z=-46 ·  ·  ·  ·  ·  · │  ·🪨  ·  ·  ·  · 🪨·  · │·  ·  ·  ·  · APPROACH CLIFFS (growing)
- Z=-43 ·  ·  ·  ·  ·  · │  ·⛰🪨 ·  ·  · 🪨⛰·  · │·  ·  ·  ·  ·
- Z=-40 ·  ·  ·  ·  ·  · │  · ⛰  ·  ·  ·  · ⛰ ·  │·  ·  ·  ·  ·
- Z=-37 ·  ·  ·  ·  ·  · │  ·🪨⛰ ·  ·  · ⛰🪨·  · │·  ·  ·  ·  ·
- Z=-34 ·  ·  ·  ·  ·  · │  · ⛰  ║  ║  ║  ⛰ ·  · │·  ·  ·  ·  ·
- Z=-30 ·  ·  ·  ·  ·  · │  · 🪨  ║  ║  ║  🪨 ·  · │·  ·  ·  ·  ·
- Z=-27 ·  ·  ·  ·  ·  · │  · 🪨  ║  ║  ║  🪨 ·  · │·  ·  ·  ·  · APPROACH CLIFFS (start)
-              :          |    :   ║MAIN║    :       :   |           :
-              :          |    :   ║ROAD║    :       :   |           :
-              :          |    :   ║N-S ║    :       :   |           :
- Z=-25 ·  ·  ·  ·  ⛰  ⛰│🌲 ·   ║    ║  · ·🗼🚀·  │·  ·  ·  ·  · ← SPACE ZONE [25,0,-25]
-              :          |  🌲:   ║    ╠═══════╝    :   |           :   🗼 = Tower_A_blue (17.5u)
-              :          |    : ╔═╩════╗  :       :     |           :
-              :          |    : ║spoke ║  :       :     |           :
- Z=-20 ·  ·  ·  ·  ⛰  ⛰│🌲 · ╠══════╬═══════╗  ·  · │⛰  ·  ·  · FOREST RING (inner)
-              :          | 🌲 : ║      ║  :   ║   :     |           :
-              :          |    : ║      ║  :   ║   :     |           :
- Z=-15 ·  ·  ·  ·  ·  ·│· 🌲 ║ ⛰   ·║  ·  ·║  ·  · │·  ·  ·  · HILLS between spokes
-              :          |    : ║      ║  :   ║   :     |           :
-              :          |    : ║      ║  :   ║   :     |           :
- Z=-12 ·  ·  ·  ·  ·  ·│·  · ║ ·[STB]·║[HmA] ║  ·  · │·  ·  ·  · [STB]=Stables [HmA]=Home_A
-              :          |    : ║ [STG]·║  :   ║   :    |           :  [STG]=Stage
-              :          |    : ║      ║  :   ║   :     |           :
-              :    KITCHEN│ZONE: ║      ║  :   ║   :  SCHOOL│ZONE   :
- Z=-8  ·  ·  ·  ·  ·  ·│·  · ║· [WCT]║  ·  ·║  ·  ·[🗼]│·  ·  · [WCT]=Watchtower
-              :          |    : ║      ║  :   ║   :     |           :  🗼=Tower_B_red (19.9u)
- Z=-7  ·  ·  ·  ·  ·  ·│·  ·[TAV]  · ║  ·  ·║  ·  · │·  ·  ·  · [TAV]=Tavern
- Z=-5  ·  ·  ·  ·  · 🗼│·  · ║[TWN]  ║  ·  ·║  ·  · │·  ·  ·  · [TWN]=Townhall (14.5u)
-              :   [-41,  |    : ║      ║  :   ║   :     |[41,-4]    :  🗼=Tower_B_green
-              :    -4]   |    : ║      ║  :   ║   :     |           :
-═══════╬═══KITCHEN═══════╬════╬═╬══════╬══════╬═══╬════╬═══SCHOOL═══╬════ Z=0 EQUATOR
- Z=0   ║  ·🧙·  ·[WM]·[BK]│·[WL]║  ·  ·║  ·  ·║[CH] · │📚·  ·  ·  ·  [WM]=Windmill [BK]=Blacksmith
-              :   [-35,  |    : ║      ║  :   ║   :     |[35,0]     :   [WL]=Well [CH]=Church
-              :    0]    |    : ║      ║  :   ║   :     |           :
- Z=2   ║  ·  ·  ·  ·  ·│·  · ║  ·  ·║  ·  ·║  ·  · │·  ·  ·  ║
-              :          |    : ║      ║  :   ║   :     |           :
- Z=5   ║  ·  ·  ·  ·  ·│·  · ║  ·  ·║  ·  ·║  ·  · │·  ·  ·  ║
-              :          |    : ║      ║  :   ║   :     |           :
- Z=7   ║  ·  ·  ·  ·  ·│[HmA]· ║[MKT]·║  ·  ·║[HmB]· │·  ·  ·  ║  [MKT]=Market
-              :          |    : ║      ║  :   ║   :     |           :
- Z=9   ║  ·  ·  ·  ·  ·│·  · ║  ·  ·║  ·  ·║  ·  · │·  ·  ·  ║
-              :          |    :╔╩══════╩══╗  ·║  :     |           :
- Z=12  ·  ·  ·  ·  ·  ·│[HmA]·║  ☆POND ·║  ·║[HmB]· │·  ·  ·  · [HmA/B]=Homes
-              :          |    : ╚═════════╝  :║   :     |           :
-              :          |    : ║      ║  :   ║   :     |           :
- Z=15  ·  ·  ·  ·  ·  ·│·  · ║  ⛰   ·║  ·  ·║  ·  · │·  ·  ·  · HILLS
-              :          |    : ║      ║  :   ║   :     |           :
- Z=18  ·  ·  ·  ·  ·  ·│🌲 · ║  ·  🌲║  ·  ·║🌲·  · │·  ·  ·  · ROAD-SIDE TREES
-              :          | 🌲  :╠══════╬════╗ ║  :      |           :
- Z=20  ·  ·  ·  ·  ·  ·│· 🌲 ╠══════╬════╬═╬═════╗  │·  ·  ·  · FOREST RING
-              :          |  🌲: ║      ║  :║  ║   ║:    |           :
-              :          |    : ║      ║  :║  ║   ║:    |           :
-              :  CONCERT |    : ║      ║  :║  ║   ║: PIZZA|         :
- Z=25  ·  ·  ·  ·🗼🎸  │🌲 · ║  ·  ·║  ·║  ·  ·║  🍕🏛│·  ·  · ← CONCERT [-25,0,25]
-              :   [-25,  | 🌲 : ║      ║  :║  ║   ║:  [25,|25]     :    PIZZA [25,0,25]
-              :    25]   |    : ║      ║  :║  ║   ║:    |           :   🗼=Tower_A_yellow
-              :          |    : ║      ║  :║  ║   ║:    | 🏛=Shrine_yellow
- Z=28  ·  ·  ·  ·  ·  ·│🌲 · ║  ·  ·║  ·║  ·  ·║  · │·  ·  ·  ·
-              :          | 🌲 : ╚══════╩════╩═╩════╝    |           :
-              :          |    :       :   ║       :     |           :
-              :          |    :       :   ║       :     |           :
- Z=32  ·  ·  ·  ·  ·  ·│🌲 ·  ·  ·  ·  ║  ·  ·  · 🌲│·  ·  ·  ·
-              :          |    :       :   ║       :     |           :
- Z=35  ·  ·  ·  ·  ·  ·│· 🌲 ·  · 🏛🧺 ║  ·  · 🌲·│·  ·  ·  · ← PARK ZONE [0,0,35]
-              :          | 🌲 :       : [0,0,35]  :     |           :   🏛=Watchtower_green (8.9u)
- Z=38  ·  ·  ·  ·  ·  ·│🌲 ·  ·  ·  ·  ·  ·  ·  · 🌲│·  ·  ·  ·
-              :          |    :       :           :     |           :
- Z=40  ·  ·  ·  ·  ·  ⛰│· 🌲 ·  ·  ·  ·  ·  · 🌲· │⛰·  ·  ·  · PERIMETER MOUNTAINS
-              :          |    :       :           :     |           :
- Z=45  ═══════════════════════════════════════════════════════════════ PLAYER BOUND (south)
-              :          |    :       :           :     |           :
- Z=48  ·  ·  ·  ·  ⛰  ·│·  ·  ⛰  ·  ⛰  ⛰  · ⛰ · │· ⛰·  ·  · SOUTH WALL row 1
- Z=52  ·  ·  ·  ·  ⛰  ⛰ ·🪨· ⛰  ⛰  ⛰  · 🪨 ⛰  ⛰ ⛰ ·  ·  ·  SOUTH WALL row 1 (cont)
- Z=55  ·  ·  ·  ·  ·  · ·  · ⛰⛰ ·  ·  · ⛰⛰ ·  ·  ·  ·  ·  · SOUTH WALL row 2
- Z=60  ·  ·  🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲  ·  · TREE BORDER ROW 1
- Z=64  ·  ·  🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲  ·  · TREE BORDER ROW 2
- Z=68  ·  ·  🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲  ·  · TREE BORDER ROW 3
-```
-
-**Legend**: ⛰ Mountain/Hill | 🪨 Rock | 🌲 Tree/Forest | ║═ Cobblestone Road | 🗼 Zone Landmark Tower | 🏰 Castle | 🏛 Shrine/Watchtower
+## Design Goals
+1. **Zones are king** — every design decision serves zone findability
+2. **Larger world** — more exploration, each zone journey feels like a mini-adventure
+3. **Cobblestone walkways** — wide, clear paths that kids naturally follow
+4. **Themed corridors** — the approach to each zone builds anticipation with themed props
+5. **Points of interest** — terrain features between zones reward exploration
+6. **Distinct zones** — each zone looks unique from a distance (silhouette + color + ground)
 
 ---
 
-## Road Network Detail
+## World Dimensions
+
+| Constant | Old Value | New Value |
+|----------|-----------|-----------|
+| Player bounds X | [-40, 40] | **[-55, 55]** |
+| Player bounds Z | [-65, 45] | **[-80, 55]** |
+| World size | 80 × 110u | **110 × 135u** |
+| Walk speed | 8 u/s | 8 u/s (unchanged) |
+| Run speed | 14 u/s | 14 u/s (unchanged) |
+| Player spawn | [0, 0, 0] | [0, 0, 0] (unchanged) |
+| Zone trigger | 3.0u | 3.0u (unchanged) |
+
+---
+
+## Zone Positions (NEW)
+
+| Zone | Old Position | New Position | Direction | Distance | Run Time |
+|------|-------------|-------------|-----------|----------|----------|
+| skeleton-birthday | [0, 0, -55] | **[0, 0, -70]** | North | 70u | **5.0s** |
+| knight-space | [25, 0, -25] | **[38, 0, -38]** | NE | 53.7u | **3.8s** |
+| barbarian-school | [35, 0, 0] | **[48, 0, 5]** | East | 48.3u | **3.5s** |
+| skeleton-pizza | [25, 0, 25] | **[38, 0, 38]** | SE | 53.7u | **3.8s** |
+| adventurers-picnic | [0, 0, 35] | **[0, 0, 48]** | South | 48u | **3.4s** |
+| dungeon-concert | [-25, 0, 25] | **[-38, 0, 38]** | SW | 53.7u | **3.8s** |
+| mage-kitchen | [-35, 0, 0] | **[-48, 0, 5]** | West | 48.3u | **3.5s** |
+
+All ring zones: 3.4–3.8s running (sweet spot). Dungeon: 5.0s (epic journey).
+
+---
+
+## Master Map
+
+```
+              X=-70     X=-55       X=-30      X=0       X=+30      X=+55      X=+70
+              :         |           :          :         :           |          :
+ Z=-95  🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲  TREE BORDER (3 rows)
+              :         |           :          :         :           |          :
+ Z=-88  ⛰ ⛰ ⛰ ⛰ ⛰ · ⛰ ⛰ ⛰ · ⛰ ⛰ ⛰ ⛰ ⛰ ⛰ ⛰ · ⛰ ⛰ ⛰ · ⛰ ⛰ ⛰  PERIMETER MOUNTAINS
+              :         |           :          :         :           |          :
+ Z=-83  ·  ·  ·  ·  ·  ⛰  ·  ⛰🌲·  🌲  ·  ·  ·  🌲 ·🌲⛰  ·  ⛰·  ·  ·  · FAR NORTH CLIFFS
+              :         |        ⛰  ·  ·  ·  ⛰       :           |          :
+ Z=-78  ·  ·  ·  ·  ·  ⛰  · ⛰⛰ · · · · · · ⛰⛰ · ⛰·  ·  ·  · DUNGEON CLIFF BOWL
+              :         |     ⛰ ·  ·  ·  ·  ·  ⛰    :           |          :
+ Z=-75  ·  ·  ·  ·  ·  · 🏰⛰  ·  ·  ·  ·  ·  ⛰   ·  ·  ·  · 🏰 Castle (31.8u)
+              :         | [-12,  :          :         :           |          :
+ Z=-73  ─ ─ ─ ─ ─ ─ ─ ─│─-75]─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─│─ ─ ─ ─ ─ ─
+              :         |        :          :         :           |          :
+ Z=-70  ·  ·  ·  ·  ·  ·  ⛰ ╔══💀DUNGEON══╗ ⛰  ·  ·  ·  ·  · ZONE [0,0,-70]
+              :         |     ⛰ ║ walls+torch║ ⛰     :           |          :
+ Z=-67  ·  ·  ·  ·  ·  ·  ⛰ ╚═════════════╝ ⛰ ·  ·  ·  ·  ·  ·
+              :         |      ⛰  ·🪨  🪨·  ⛰        :           |          :
+ Z=-63  ·  ·  ·  ·  ·  ·  · ⛰ · · · · · ⛰ ·  ·  ·  ·  ·  ·  · ENTRANCE
+              :         |       🪨  ║   ║  🪨          :           |          :
+ Z=-58  ·  ·  ·  ·  ·  ·  ·  🪨  ║   ║  🪨 ·  ·  ·  ·  ·  ·  · APPROACH CLIFFS
+              :         |       ⛰  ║   ║  ⛰           :           |          :
+ Z=-53  ·  ·  ·  ·  ·  ·  ·  ⛰  ║   ║  ⛰  ·  ·  ·  ·  ·  ·  ·
+              :         |          ║N-S║               :           |          :
+ Z=-48  ·  ·  ·  ·  ·  🌲  ·  🪨 ║   ║ 🪨  ·  🌲  ·  ·  ·  ·  · ROCKY PASS
+              :         |   🌲     ║   ║      🌲      :           |          :
+ Z=-43  ·  ·  ·  ·  🌲  🌲  ·  · ║   ║  ·  ·  🌲  🌲 ·  ·  ·  · FOREST THICKENS
+              :         | 🌲   ╔═══╬NE ╬═══╗  🌲     :           |          :
+ Z=-38  ·  ·  ·  ·  🌲  ·  · ╔╝  ║   ║  ╚╗·  ·  🗼🚀·  ·  ·  · ← SPACE [38,0,-38]
+              :         |  🌲╔╝   ║   ║   ╚╗🌲      :           |          : 🗼 Tower_A_blue
+ Z=-33  ·  ·  ·  ·  ·  · ╔╝ ·   ║   ║   · ╚╗ ·  ·  ·  ·  ·  ·
+              :         |╔╝       ║   ║      ╚╗      :           |          :
+ Z=-28  ·  ·  ·  ·  ·  ╔╝  ·  ⛰ ║   ║ ⛰  · ╚╗ ·  ·  ·  ·  · STARGAZER HILL
+              :         ╔╝        ║   ║        ╚╗     :           |          :
+ Z=-23  ·  ·  ·  ·  · ╔╝  ·  ·  ║   ║  ·  ·  ╚╗·  ·  ·  ·  ·
+              :       ╔╝  🌲      ║   ║      🌲  ╚╗   :           |          :
+ Z=-18  ·  ·  ·  · ╔═╝  ·  ·  · ║   ║  ·  ·  · ╚═╗·  ·  ·  ·
+              :    ╔╝             ║   ║              ╚╗ :           |          :
+ Z=-13  ·  ·  · ╔╝  ·  ·  [STB]·║   ║·[HmA] ·  ·  ╚╗  ·  ·  ·
+              : ╔╝      [HmB]    ║   ║              ╚╗:           |          :
+ Z=-8   · · ·╔╝· ·[TAV]· · [STG]║   ║· ·[WCT]· · · ╚╗· · · · ·
+              ╔╝                  ║   ║                ╚╗          |          :
+ Z=-5   ·  ·╔╝  ·  ·  · [TWN]·  ║   ║  ·  ·  ·  ·  · ╚╗ ·  ·  ·
+             ║W  ·  ·  ·  ·  ·  ·║   ║·  ·  ·  ·  ·  ·  ║E      :
+════════🧙══╬════════════════════╬═══╬════════════════════╬══📚═══════ Z=0
+             ║  ·  ·  ·  ·  ·  ·║   ║·  ·  ·  ·  ·  ·   ║        :
+ Z=5    🗼  ·╚╗[WM]·[BK]·[WL]· ║   ║·[MKT]·[CH]·  ·  ╔╝·  🗼  · 🗼=Tower_B_green / Tower_B_red
+   [-48,5]   ╚╗  ·  ·  ·  ·  ·  ║   ║  ·  ·  ·  ·  · ╔╝  [48,5] :
+              :╚╗ [HmA]  ·  ·  ·║   ║· ☆POND ·[HmB]╔╝:           |          :
+ Z=12   ·  ·  ·╚╗ ·  ·  ·  ·  ·║   ║·  ·  ·  ·  ╔╝·  ·  ·  ·  ·
+              :  ╚╗     🌺MEADOW ║   ║  ·  ·  · ╔╝   :           |          :
+ Z=17   ·  ·  ·  ╚╗ ·🌺·  ·  · ║   ║  ·  ·  ╔╝ ·  ·  ·  ·  ·  · MEADOW & POND
+              :    ╚╗  ·  ·  ·  ·║   ║· ·  · ╔╝      :           |          :
+ Z=22   ·  ·  ·  · ╚═╗ ·  ⛰  · ║   ║  ⛰ ·╔═╝·  ·  ·  ·  ·  ·
+              :       ╚╗         ║   ║     ╔╝         :           |          :
+ Z=27   ·  ·  ·  ·  · ╚╗  ·  · ║   ║ · ╔╝·  ·  ·  ·  ·  ·  ·  ·
+              :         ╚╗       ║   ║  ╔╝            :           |          :
+ Z=32   ·  ·  ·  ·  ·  ·╚═╗·  ·║   ║╔═╝·  ·  ·  ·  ·  ·  ·  ·  · RING ROAD
+              :         | ╚═╬SW══╬═══╬══SE╬═╗         :           |          :
+ Z=35   ·  ·  ·  ·  ·  · ╚╗·  ·║   ║·  ·╔╝ ·  ·  ·  ·  ·  ·  ·
+              :         |  ╚╗   ·║   ║·   ╔╝          :           |          :
+ Z=38   ·  ·  ·  ·  🗼🎸  ╚╗· ·║   ║·  ╔╝  ·  🍕🏛 ·  ·  ·  · ← CONCERT [-38,0,38]
+              :   [-38,  |  ╚╗   ║   ║  ╔╝           :           |          :     PIZZA [38,0,38]
+              :    38]   |   ╚═══╬═══╬═══╝            :           |          :
+ Z=42   ·  ·  ·  ·  ·  🌲  ·  ·║   ║·  ·  🌲  ·  ·  ·  ·  ·  ·
+              :         | 🌲     ║   ║       🌲       :           |          :
+ Z=45   ·  ·  ·  ·  🌲  🌲  ·  ║   ║  ·  🌲  🌲·  ·  ·  ·  ·  ·
+              :         |  🌲    ║   ║     🌲          :           |          :
+ Z=48   ·  ·  ·  ·  ·  ·  🌲 · 🏛🧺 · 🌲·  ·  ·  ·  ·  ·  ·  · ← PARK [0,0,48]
+              :         |        [0,0,48]              :           |          :
+ Z=52   ·  ·  ·  ·  ·  🌲  ·  ·  ·  ·  ·  · 🌲·  ·  ·  ·  ·  ·
+              :         |           :          :         :           |          :
+ Z=55   ═══════════════════════════════════════════════════════════════ PLAYER BOUND (south)
+              :         |           :          :         :           |          :
+ Z=58   ⛰  ⛰  ⛰  · ⛰  ⛰  · ⛰  ⛰  ⛰  · ⛰  ⛰  · ⛰  ⛰  ⛰  ·  PERIMETER
+ Z=65   🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲🌲  TREE BORDER
+              X=-55                X=0                  X=+55
+```
+
+---
+
+## Road Network (NEW)
 
 ```
                               NORTH
                                 │
-                           ║════║════║  Main N-S Road (3 cols wide, Z=-36 to Z=18)
-                           ║    ║    ║
-                           ║    ║    ║
-                      ╔════╬════╬════╬════╗
-                    ╔═╝    ║    ║    ║    ╚═╗
-                  ╔═╝      ║    ║    ║      ╚═╗
-    W spoke ════╬═╝    ╔═══╬════╬════╬═══╗    ╚═╬════ E spoke
-   [-35,0]  ════╬═╗    ║   ║    ║    ║   ║    ╔═╬════ [35,0]
-                  ╚═╗   ║   ║  ORIGIN║   ║  ╔═╝
-                    ╚═╗ ║Ring║ [0,0,0]║Ring╔═╝
-        SW spoke ═══╗ ╚═╬═══╬════╬════╬═══╬═╝ ╔═══ NE spoke
-       [-25,25] ════╬═══╝   ║    ║    ║   ╚═══╬════ [25,-25]
-                            ║    ║    ║
-                            ║    ║    ║
-              SE spoke ═════╬════╬════╬═════
-             [25,25]  ══════╝    ║    ╚══════
-                                 ║
-                              S spoke
-                              [0,35]
+                           ║════║════║════║════║  Grand Boulevard (5 tiles wide)
+                           ║    ║    ║    ║    ║  Z = -50 to +40
+                           ║    ║    ║    ║    ║
+                     ╔═════╬════╬════╬════╬════╬═════╗
+                   ╔═╝     ║    ║    ║    ║    ║     ╚═╗    NE spoke (3 wide)
+                 ╔═╝       ║    ║    ║    ║    ║       ╚═╗
+    W spoke ═══╬═╝    ╔════╬════╬════╬════╬════╬════╗    ╚═╬═══ E spoke
+   [-48,5] ═══╬═╗    ║    ║    ║    ║    ║    ║    ║    ╔═╬═══ [48,5]
+                 ╚═╗  ║Ring║    ║    ║    ║    ║Ring║  ╔═╝      (3 wide each)
+                   ╚═╗║Road║    ║ ORIGIN ║    ║Road║╔═╝
+        SW spoke ══╗ ╚╬════╬════╬════╬════╬════╬════╬╝ ╔══ SE spoke
+       [-38,38] ═══╬══╝    ║    ║    ║    ║    ║    ╚══╬═══ [38,38]
+                            ║    ║    ║    ║    ║
+                            ║    ║    ║    ║    ║
+                            ╚════╬════╬════╬════╝
+                                 ║    ║    ║          S spoke → [0,48]
+                                 ║    ║    ║
+                              SOUTH
 
-    Ring Road: Circle at R=30, halfWidth=2.0 (skips Z < -35)
-    Spoke halfWidth: 2.0
-    Main Road: cols [-1, 0, +1], Z range [-36, 18]
-    All roads: cobblestone tiles at scale 1.8
+    Grand Boulevard: 5 hex columns wide (-2 to +2), Z = -50 to +40
+    Spoke Roads:     3 hex columns wide, from village center to each zone
+    Ring Road:       At R ≈ 42, 3 hex columns wide (skips Z < -45 for dungeon)
+    Junction Plazas: 5×5 cobblestone squares where spokes meet ring road
+```
+
+### Road Widths
+| Road | Old Width | New Width |
+|------|-----------|-----------|
+| Grand Boulevard (N-S) | 3 cols | **5 cols** |
+| Spoke roads | halfWidth 2.0 | **halfWidth 3.5** (≈3 cols) |
+| Ring road | halfWidth 2.0 | **halfWidth 3.5** |
+
+---
+
+## Village Center (NEW — tighter, square-focused)
+
+The village is a compact town square with buildings facing inward, centered at origin.
+Buildings arranged in a rough square from X[-25, 25] × Z[-12, 12].
+
+```
+    X=-30    X=-22    X=-14    X=-8    X=0     X=+8    X=+14    X=+22   X=+30
+      |        |        |       |      ║        |        |        |       |
+Z=-12 ·  ·  · │ ·  · [HmB]·  ·│·  ·  ║  · [STB]│·  · [HmA]·  ·│·  ·  ·│
+      ·       │       │  7.0   │      ║   7.0  │       │   7.0  │       │
+Z=-10 ·  ·  · │ ·  · [STG]·  ·│·  ·  ║  ·  ·  ·│·  ·  ·│·  ·  ·│·  ·  ·│
+      ·       │       │  5.6   │      ║        │       │        │       │
+Z=-7  ·  ·  · │ · [TAV]  ·  ·│·  ·  ║  ·  ·  ·│·  ·  ·│·  ·  ·│·  ·  ·│
+      ·       │       │  7.0   │      ║        │       │        │       │
+Z=-5  ·  ·  · │ ·  ·  ·│·  ·  │[TWN] ║  ·  ·  ·│·  ·  ·│·  ·  ·│·  ·  ·│
+      ·       │       │       │  7.7  ║        │       │        │       │
+Z=-3  ·  ·  · │ ·  ·  ·│·  ·  │·  ·  ║  ·  ·  ·│·  ·  ·│·  ·  ·│[WCT]·│
+      ·       │       │       │      ║        │       │        │  7.0  │
+      ·       │       │       │   ═══╬════════╬═══    │        │       │
+══════╬═══════╬═══════╬═══════╬══════╬   WELL ╬══════╬═══════╬═══════╬════ Z=0
+      ·       │       │       │   ═══╬════════╬═══    │        │       │
+Z=3   ·  ·  · │ ·  ·  ·│·  ·  │·  ·  ║  ·  ·  ·│·  ·  ·│·  ·  ·│·  ·  ·│
+      ·       │       │       │      ║        │       │        │       │
+Z=5   ·  [WM] │ · [BK] ·│·  ·  │·  ·  ║  ·  ·  ·│ [MKT] ·│·  · [CH]│·  ·  ·│
+      ·  7.7  │       │  7.0   │      ║        │   7.0  │        │  7.7  │
+Z=8   ·  ·  · │ ·  ·  ·│·  ·  │·  ·  ║  ·  ·  ·│·  ·  ·│·  ·  ·│·  ·  ·│
+      ·       │       │       │      ║        │       │        │       │
+Z=10  · [HmA] │ ·  ·  ·│·  ·  │·  ·  ║  ☆POND ·│·  ·  ·│·  · [HmB]│·  ·  ·│
+      ·  6.3  │       │       │      ║ [12,0,14]│      │   6.3  │       │
+Z=12  ·  ·  · │ ·  ·  ·│·  ·  │·  ·  ║  ·  ·  ·│·  ·  ·│·  ·  ·│·  ·  ·│
+
+BUILDING KEY:
+  TWN  = Townhall       7.7  [12, 0, -5]      (village focal point, faces south)
+  TAV  = Tavern         7.0  [-16, 0, -7]      (left of main road)
+  MKT  = Market         7.0  [16, 0, 5]        (right of main road, faces road)
+  WL   = Well           2.5  [0, 0, 0]         (exact center, properly scaled!)
+  BK   = Blacksmith     7.0  [-14, 0, 5]       (left side)
+  HmA  = Home_A         7.0  [20, 0, -12]      (NE corner) + 6.3 [-22, 0, 10] (SW)
+  HmB  = Home_B         7.0  [-10, 0, -12]     (NW area) + 6.3 [22, 0, 10] (SE)
+  CH   = Church         7.7  [24, 0, 5]        (right side, tall spire)
+  WM   = Windmill       7.7  [-24, 0, 5]       (left side, tall blades)
+  STB  = Stables        7.0  [8, 0, -12]       (near road, N side)
+  WCT  = Watchtower     7.0  [26, 0, -3]       (guard post, NE)
+  STG  = Stage          5.6  [-8, 0, -10]      (performance area)
 ```
 
 ---
 
-## Village Center Detail (Z=-15 to Z=15, X=-33 to X=33)
+## Exploration Areas (NEW — between village and zones)
+
+These fill the R=18–38 ring with interesting terrain:
+
+### Stargazer Hill (NE quadrant, X=15-25, Z=-25 to -15)
+- 2 large hills with trees (`hills_A_trees`, `hills_B_trees` at scale 6-7)
+- 3 rocks scattered around
+- Elevated viewpoint toward space zone
+
+### Rocky Pass (N corridor, X=-10 to 10, Z=-30 to -48)
+- Flanking cliffs grow from small rocks to large boulders approaching dungeon
+- 6-8 rocks + 4 hills, increasing scale northward
+- Creates a dramatic narrowing path
+
+### Flower Meadow (W quadrant, X=-25 to -15, Z=5 to 20)
+- 4-5 flower patches (`flower_A`, `flower_B` at scale 7)
+- 2 small trees, 1 hill for variety
+- Gentle, inviting path toward kitchen
+
+### Pond & Bridge (center-south, X=8-18, Z=12-20)
+- Expanded pond: 5 water tiles, 7 coast tiles
+- Bridge crossing
+- Water lilies and plants
+- Natural landmark between village and southern zones
+
+### Training Grounds (E quadrant, X=25-35, Z=-5 to 10)
+- Haybales, targets, weapon racks
+- Practice area near school spoke road
+- 4-5 props creating a mini-area
+
+### Market Road (SE quadrant, X=15-25, Z=20-30)
+- Barrels, crates, sacks along the spoke to pizza zone
+- Wheelbarrow, trough — delivery theme
+- 4-5 props suggesting a supply route
+
+---
+
+## Zone Approach Corridors (NEW — 6-8 props each in last 15u)
+
+Each spoke road gets themed decoration in the final stretch before the zone.
+Props placed every 4-5u, alternating sides of the road.
+
+### To Space Zone (NE spoke, X=25-38, Z=-25 to -38)
+| Distance from zone | Left side | Right side |
+|---|---|---|
+| 15u out | crate_A (7.0) | target (7.0) |
+| 10u out | barrel (7.0) | bucket_arrows (7.0) |
+| 5u out | flag_blue (15.0) | flag_blue (15.0) |
+
+### To School Zone (E spoke, X=35-48, Z=0 to 5)
+| Distance from zone | Left side | Right side |
+|---|---|---|
+| 15u out | haybale (7.0) | target (7.0) |
+| 10u out | bucket_arrows (7.0) | crate_B (7.0) |
+| 5u out | flag_red (15.0) | flag_red (15.0) |
+
+### To Pizza Zone (SE spoke, X=25-38, Z=25 to 38)
+| Distance from zone | Left side | Right side |
+|---|---|---|
+| 15u out | barrel (7.0) | crate_A (7.0) |
+| 10u out | sack (7.0) | wheelbarrow (7.0) |
+| 5u out | flag_yellow (15.0) | flag_yellow (15.0) |
+
+### To Park Zone (S spoke, X=-3 to 3, Z=35 to 48)
+| Distance from zone | Left side | Right side |
+|---|---|---|
+| 15u out | flower_A (7.0) | flower_B (7.0) |
+| 10u out | trees_small (5.0) | rock_B (5.0) |
+| 5u out | flag_green (15.0) | flag_green (15.0) |
+
+### To Concert Zone (SW spoke, X=-25 to -38, Z=25 to 38)
+| Distance from zone | Left side | Right side |
+|---|---|---|
+| 15u out | tent (7.0) | weaponrack (7.0) |
+| 10u out | barrel (7.0) | crate_B (7.0) |
+| 5u out | flag_red (15.0) | flag_red (15.0) |
+
+### To Kitchen Zone (W spoke, X=-35 to -48, Z=0 to 5)
+| Distance from zone | Left side | Right side |
+|---|---|---|
+| 15u out | sack (7.0) | bucket_water (7.0) |
+| 10u out | barrel (7.0) | crate_A (7.0) |
+| 5u out | flag_green (15.0) | flag_green (15.0) |
+
+### To Dungeon (N boulevard, X=-3 to 3, Z=-50 to -63)
+Dungeon approach is special — handled by DungeonCliffs approach corridor.
+Additional props along the boulevard:
+| Distance from zone | Left side | Right side |
+|---|---|---|
+| 20u out | rock_C (5.0) | rock_D (5.0) |
+| 15u out | hill_A (5.5) | hill_B (5.5) |
+| 10u out | rock_E (6.0) | rock_A (6.0) |
+| 5u out | flag_red (15.0) | flag_red (15.0) |
+
+---
+
+## Junction Plazas (NEW — 5 intersections where spokes meet ring road)
+
+At each spoke-ring intersection (R≈42), place a 5×5 cobblestone plaza with:
+- 1 zone-colored flag (scale 15.0) in the center
+- 2 lanterns flanking
+- 1 barrel or crate for detail
+
+| Junction | Position (approx) | Flag Color |
+|---|---|---|
+| NE junction | [30, 0, -30] | blue |
+| E junction | [42, 0, 3] | red |
+| SE junction | [30, 0, 30] | yellow |
+| SW junction | [-30, 0, 30] | red |
+| W junction | [-42, 0, 3] | green |
+
+---
+
+## Zone Ground Material (NEW)
+
+Hex tiles within 10u of each zone center use `TILES.transition` instead of grass.
+This creates a visible darker ground area approaching each zone.
 
 ```
-    X=-33   X=-25   X=-18   X=-10   X=0    X=10    X=18    X=25   X=33
-      |       |       |       |      |       |       |       |      |
-Z=-14 ·  ·  · │·  · [HmB]·  ·│·  · [STG]·  │· [STB]·│·  · [HmA]│ · ·
-      ·       │       │7.0    │      │5.6    │  7.0   │       │7.0  │
-Z=-12 ·  ·  · │·  ·  ·│·  ·  ·│·  ·  ·│·  ·  ·│·  ·  ·│·  ·  ·│·  ·
-      ·       │       │       │      │       │       │       │      │
-Z=-10 ·  ·  · │·  ·  ·│·  ·  ·│[STG] ·│·  ·  ·│·  ·  ·│·  ·  ·│·  ·
-      ·       │       │       │      │       │       │       │      │
-Z=-8  ·  ·  · │·  ·  ·│·  · [WCT]·  │·  ·  ·│·  ·  ·│·  ·  ·│[WCT]
-      ·       │       │       │  7.0 │       │       │       │  7.0 │
-Z=-7  ·  ·  · │·  · [TAV]·  ·│·  ·  ·│·  ·  ·│·  ·  ·│·  ·  ·│·  ·
-      ·       │       │7.0    │      │       │       │       │      │
-Z=-5  ·  ·  · │·  ·  ·│·  ·  ·│·  [TWN]║  ·  ·│·  ·  ·│·  ·  ·│·  ·
-      ·       │       │       │   7.7║       │       │       │      │
-      ·       │       │       │      ║       │       │       │      │
-Z=-2  ·  [WM] │·  ·  ·│·  ·  ·│·  ·  ║  ·  ·│·  ·  ·│·  ·  ·│·[CH]
-      ·  7.7  │       │       │      ║       │       │       │  7.7 │
-Z=0   ·  ·  · │·  [BK]·│·[WL] ·│·  ·  ║  ·  ·│·  ·  ·│·  ·  ·│·  ·
-      ·       │   7.0  │  7.0  │      ║       │       │       │      │
-Z=2   ·  ·  · │·  ·  ·│·  ·  ·│·  ·  ║  ·  ·│·  ·  ·│·  ·  ·│·  ·
-      ·       │       │       │      ║       │       │       │      │
-Z=7   ·  ·  · │·  [BK]·│·  ·  ·│·  ·  ║ [MKT]·│·  ·  ·│·  ·  ·│·  ·
-      ·       │   7.0  │       │      ║  7.0  │       │       │      │
-Z=9   ·  ·  · │·  ·  ·│·  ·  ·│·  ·  ║  ·  ·│·  ·  ·│·  ·  ·│·  ·
-      ·       │       │       │      ║       │       │       │      │
-Z=12  ·  · [HmA]·  ·  ·│·  ·  ·│·  ·  ☆POND ·│·  ·  ·│·  · [HmB]·  ·
-      ·    6.3│       │       │   [12,0,18]   │       │  6.3 │      │
-Z=14  ·  ·  · │·  ·  ·│·  ·  ·│·  ·  ·│·  ·  ·│·  ·  ·│·  ·  ·│·  ·
-
-Building Key (all blue variant):
-  TWN = Townhall      14.52u tall  scale 7.7   [18, 0, -5]
-  TAV = Tavern          9.78u tall  scale 7.0   [-18, 0, -7]
-  MKT = Market          6.87u tall  scale 7.0   [14, 0, 9]
-  WL  = Well            5.78u tall  scale 7.0   [-8, 0, 2]     ⚠ TOO TALL (target ~1.5u)
-  BK  = Blacksmith      6.90u tall  scale 7.0   [-24, 0, 7]
-  HmA = Home_A          5.86u tall  scale 7.0   [24,0,-12] & [-28,0,14] @ 6.3
-  HmB = Home_B          8.06u tall  scale 7.0   [-15,0,-14] & [28,0,12] @ 6.3
-  CH  = Church         12.67u tall  scale 7.7   [28, 0, 2]
-  WM  = Windmill       11.23u tall  scale 7.7   [-30, 0, 0]
-  STB = Stables         4.28u tall  scale 7.0   [10, 0, -12]
-  WCT = Watchtower      7.79u tall  scale 7.0   [32, 0, -8]
-  STG = Stage           2.00u tall  scale 5.6   [-6, 0, -10]
+           Grass ░░░░░░░ Transition ▓▓▓▓ Zone ████
+                 ░░░░░░░░░▓▓▓▓▓▓▓▓████████
+                 ░░░░░░░░░▓▓▓▓▓▓▓▓████████
+                 ░░░░░░░░░▓▓▓▓▓▓▓▓████████
+                            10u     trigger
 ```
 
 ---
 
-## Zone Detail Maps
+## Zone Landmarks (NEW positions — match new zone centers)
 
-### 1. DUNGEON ZONE — skeleton-birthday [0, 0, -55]
-
-```
-    X=-12    X=-8     X=-4     X=0      X=+4     X=+8    X=+12
-      |       |        |       |        |        |        |
-Z=-63 ·  ·  · │ ·  ·  ·│·  ·  ·│·  ·  · │·  ·  ·│·  ·  ·│·  ·  ·  WALLS
-Z=-62 ·  ·  · │ ═══════════════════════════════════│·  ·  ·  9 wall_half
-      ·       │ ║ ban   ban     ban   ban ║        │              + 1 doorway
-Z=-60 · 🏰·  │ ║ [B]·  [B]· [DOOR] [B]· [B] ║   ·│·  ·  ·
-      · Castle│ ║                          ║        │
-Z=-58 ·  ·  · │ ║ [P]·  ·│·  ·  ·│·  · [P]║        │  PILLARS
-      ·       │ ║  ·  ·  ·│·  ·  ·│·  ·  ·║        │
-Z=-56 ·  ·  · │ ║ 🔥·  [P]│·  ⬡  ·│[P]· 🔥║        │  ⬡ = zone trigger
-      ·       │ ║        │  floor │        ║        │  🔥 = torch
-Z=-55 ·  ·  · │ ║ ·  ·  ·│· tiles·│·  ·  ·║        │  ← CENTER
-      ·       │ ║  ·  ·  ·│·  ·  ·│·  ·  ·║        │
-Z=-53 ·  ·  · │ ║ 🔥·  [P]│·  ·  ·│[P]· 🔥║        │
-      ·       │ ║ 🛢 ·  ·│·  ·  ·│·  · 🛢║        │  🛢 = barrels
-Z=-51 ·  ·  · │ ║[P]· 💰 ·│·  ·  ·│· 💰·[P]║        │  💰 = chest
-      ·       │ ╚═════════╩═══════╩═════════╝       │
-Z=-49 ·  ·  · │ · 🚩·  ·  ·  ·  ·  ·  · 🚩·        │  🚩 = flag_red
-      ·       │ · ⚔️·  ·  ·  ·  ·  ·  · 🎯·        │  ⚔️ = weaponrack  🎯 = target
-Z=-47 ·  ·  · │ ·  ·  ·  ·  ·  ·  ·  ·  ·  ·       │
-
-    Lights: 4 pointLights (orange #ff6600, #ff4400), intensity 2-3
-    Floor: 35 tiles (7x5 grid), dungeon/floor_tile_large
-    Banners: 4 across back wall (blue, red, green, red patterns)
-```
-
-### 2. SPACE ZONE — knight-space [25, 0, -25]
-
-```
-    X=19     X=21     X=23    X=25     X=27     X=29     X=31
-      |       |        |       |        |        |        |
-Z=-31 ·  ·  · │ ·  ·  ·│·  ·[SOL]·  ·  ·│·  ·  ·│·  ·  ·│  [SOL]=solarpanel
-      ·       │       │    ·  │  [DOME] │        │        │  [DOME]=dome
-Z=-29 ·  ·  · │ ·  ·  ·│·  ·  ·│·  ·  · │·  ·  ·│·  ·  ·│
-      ·       │ [MOD_A]│ [TUN] │        │ [MOD_B]│        │  [MOD]=basemodule
-Z=-28 ·  ·  · │ ·  ·  ·│·  ·  ·│·  ·  · │·  ·  ·│·  ·  ·│  [TUN]=tunnel
-      ·       │       │        │        │        │        │
-Z=-26 ·  ·  · │ ·  ·  ·│·  ·  ·│·  ⬡  · │·  ·  ·│·  ·  ·│  ⬡ = zone trigger
-      ·       │[CONT] │        │ [PAD]  │        │[CARGO]│  [PAD]=landing_pad
-Z=-25 ·  ·  · │ ·  ·  ·│·  ·  ·│·  ·  · │·  ·  ·│·  ·  ·│  ← CENTER
-      ·       │       │        │        │        │        │
-Z=-23 ·  ·  · │ ·  ·  ·│·  · [DROP]·  · │·  ·  ·│·  ·  ·│  [DROP]=dropship
-      ·       │       │        │  1.3u! │        │        │  ⚠ TINY (needs 2-3x)
-
-    Lights: 2 pointLights (blue #38BDF8, purple #7C3AED)
-    ⚠ ALL OBJECTS VERY SMALL — dropship 1.3u, modules 1.0u, dome 1.0u
-    RECOMMENDATION: Scale space objects 2-3x to be visible from village
-```
-
-### 3. SCHOOL ZONE — barbarian-school [35, 0, 0]
-
-```
-    X=29     X=31     X=33    X=35     X=37     X=39     X=41
-      |       |        |       |        |        |        |
-Z=-5  ·  ·  · │ ═══════════════════════════════════│·  ·  ·│  fence (4 sections)
-      ·       │ ║ ·  ·  ·│· [TBL]·│·  ·  ·║       │  🗼   │  🗼=Tower_B_red
-Z=-3  ·  ·  · │ ║[SWG]·  ·│·  ·  ·│·  · [SLD]║   │ [-4]  │  [SWG]=swing
-      ·       │ ║  ·  ·  ·│·  ·  ·│·  ·  ·║       │       │  [SLD]=slide
-Z=-1  ·  ·[🌲]│ ║ ·  ·  ·│·  ·  ·│·  ·  ·║ [🌲]  │       │  [TBL]=picnic_table
-      ·       │ ║        │  [MGR] │        ║       │       │  [MGR]=merry_go_round
-Z=0   ·  ·  · │ ║ ·  ·  ·│·  ⬡  ·│·  ·  ·║       │       │  ⬡ = zone trigger
-      ·       │ ║        │        │        ║       │       │
-Z=3   ·  ·  · │ ║[SSAW]· ·│·  ·  ·│·  · [SBX]║   │       │  [SSAW]=seesaw
-      ·       │ ║        │        │        ║       │       │  [SBX]=sandbox
-Z=5   ·  ·  · │ ═══════════════════════════════════│       │  fence
-      ·       │        │        │        │        │        │
-
-    No lights (outdoor daylight)
-    Enclosed by fence_straight_long (4 sections)
-```
-
-### 4. PIZZA ZONE — skeleton-pizza [25, 0, 25]
-
-```
-    X=21     X=23     X=25    X=27     X=29     X=31
-      |       |        |       |        |        |
-Z=21  ·  ·  · │ ═══════════════════════════│·  ·  ·  3 walls + doorway
-      ·       │ ║ [WALL][DOOR][WALL] ║     │       │
-Z=23  ·  ·  · │ ║ [CTR][CTR_D][CTR] ║     │  🏛   │  🏛=Shrine_yellow
-      ·       │ ║  counters          ║     │ [30]  │
-Z=24  · [CRT] │ ║ ·  ·  ·│·  ·  ·  ·║    │       │  [CRT]=crate (cheese/tomato)
-      ·       │ ║        │  ⬡       ║     │       │  ⬡ = zone trigger
-Z=25  · [CRT] │ ║ ·  ·  ·│·  ·  ·  ·║    │       │  ← CENTER
-      ·       │ ║        │          ║     │       │
-Z=27  ·  ·  · │ ·  ·[CHR]·│·  ·  ·│[CHR]·│       │  [CHR]=chairs
-      ·       │ ·  ·  ·  ·│·  🍽  ·│·  ·  │       │  🍽=plate
-
-    Lights: 2 pointLights (warm #FF8C42, yellow #FBBF24)
-    ⚠ Looks similar to Kitchen from distance — needs unique identifier
-```
-
-### 5. PARK ZONE — adventurers-picnic [0, 0, 35]
-
-```
-    X=-7     X=-5     X=-3    X=0      X=+3     X=+5     X=+7
-      |       |        |       |        |        |        |
-Z=29  ·  ·  · │ ·  ·  ·│·  ·  ·│·  ·  · │·  ·  ·│·  ·  ·│·  ·  ·
-      ·       │       │        │        │        │        │
-Z=30  ·  ·[🌲]│[🌲]· [BSH]│[🌲]·[🌲]│[🌲]· [BSH]│[🌲]·[🌲]│·  ·  ·  TREE RING
-      ·       │       │  🌸   │    🌸  │        │        │  🌸=flower
-Z=32  ·  ·  · │[LNTRN]·│·  ·  ·│· [FNT]·│·  ·  ·│[LNTRN]│·  ·  ·  [FNT]=fountain
-      ·       │       │        │        │        │        │
-Z=33  ·  ·  · │ ·  ·  ·│·  ·  ·│·  ·  · │·  ·  ·│·  ·  ·│·  ·  ·
-      ·       │       │ [BNCH] │   ⬡    │ [BNCH]│        │  ⬡ = zone trigger
-Z=35  ·  ·[🌲]│ ·  ·  ·│·  ·  ·│·  ·  · │·  ·  ·│·  ·  ·│[🌲]·  ·  ← CENTER
-      ·       │       │        │        │        │        │
-Z=37  ·  ·  · │[HEDGE]═══════════════════════[HEDGE]│·  ·  ·  HEDGES along sides
-      ·       │       │        │        │        │        │
-Z=38  ·  ·  · │ ·  ·  ·│·  ·  ·│·  ·  · │·  ·  ·│·  ·  ·│  🏛nearby
-              |       │        │        │        │        │  🏛=Watchtower_green [8,0,40]
-
-    No extra lights (outdoor daylight + lanterns)
-```
-
-### 6. CONCERT ZONE — dungeon-concert [-25, 0, 25]
-
-```
-    X=-31    X=-29    X=-27   X=-25    X=-23    X=-21    X=-19
-      |       |        |       |        |        |        |
-Z=21  ·  ·  · │ ══════════════════════════════════│·  ·  ·  5 wall_half
-      ·       │ ║ 🔥[BAN_B][BAN_R][BAN_G]🔥║      │       │
-Z=23  ·  ·  · │ ║ [PIL]║══ STAGE_A ══║[PIL]║      │       │  [PIL]=pillar (1.3x)
-      ·       │ ║      ║  12.9u wide  ║     ║      │       │  STAGE=stage_A (7.0)
-Z=25  ·  ·  · │ ·  ·  ·│·  ·  ⬡  ·  ·│·  ·  ·   │  🗼   │  ⬡ = zone trigger
-      ·       │       │        │        │        │ [-31,  │  🗼=Tower_A_yellow
-Z=27  ·  ·  · │ ·  ·  ·│·  audience ·  │·  ·  ·   │  30]  │
-      ·       │       │   area  │        │        │        │
-Z=29  ·  ·  · │ ·  ·  ·│·  ·  ·│·  ·  · │·  ·  ·│·  ·  ·│
-
-    Lights: 3 pointLights (purple #7C3AED, pink #EC4899, blue #38BDF8)
-    Banners: blue, red, green patterns across back wall
-```
-
-### 7. KITCHEN ZONE — mage-kitchen [-35, 0, 0]
-
-```
-    X=-41    X=-39    X=-37   X=-35    X=-33    X=-31    X=-29
-      |       |        |       |        |        |        |
-Z=-4  ·  🗼  │ ═══════════════════════════════════│·  ·  ·  3 walls + doorway
-      · [-41, │ ║[WALL][DOOR][WALL]║               │       │
-Z=-3  ·  -4]  │ ║[CTR_A][SINK][CTR_B]║[STOV]║[FRDG]│       │  [STOV]=stove
-      ·       │ ║  countertops     ║       ║       │       │  [FRDG]=fridge
-Z=-2  ·  ·  · │ ║ ·  ·  ·│·  ·  ·│·  ·  ·║       │       │
-      ·       │ ║        │       │        ║       │       │
-Z=0   ·  ·  · │ ║ ·  ·  ·│·  ⬡  ·│·  ·  ·║       │       │  ⬡ = zone trigger
-      ·       │ ║        │       │        ║       │       │  ← CENTER
-Z=1   ·  ·  · │ ║[CHR]·  │[TABLE]│  ·[CHR]║       │       │  [TABLE]=table_A
-      ·       │ ║  ·  · 🍳│·  ·🫖│·  ·  ·║       │       │  🍳=pot 🫖=kettle
-Z=3   ·  ·  · │ ·  ·  ·  ·│·  ·  ·│·  ·  ·│       │       │
-
-    Lights: 1 pointLight (warm yellow #FBBF24)
-    🗼=Tower_B_green (19.9u tall) — zone landmark
-```
+| Zone | Landmark | Position | Scale | Height |
+|------|----------|----------|-------|--------|
+| skeleton-birthday | Castle_red | [-12, 0, -75] | 8.0 | 31.8u |
+| knight-space | Tower_A_blue | [44, 0, -42] | 8.0 | 17.5u |
+| barbarian-school | Tower_B_red | [54, 0, 1] | 8.0 | 19.9u |
+| skeleton-pizza | Shrine_yellow | [44, 0, 42] | **12.0** | 10.2u |
+| adventurers-picnic | Watchtower_green | [6, 0, 53] | **10.0** | 11.1u |
+| dungeon-concert | Tower_A_yellow | [-44, 0, 42] | 8.0 | 17.5u |
+| mage-kitchen | Tower_B_green | [-54, 0, 1] | 8.0 | 19.9u |
 
 ---
 
-## Zone Landmark Positions & Heights
+## Zone Detail (mostly unchanged internally, NEW positions)
 
-```
-                          NORTH
-                            |
-                     🏰 Castle_red
-                     [-10, 0, -60]
-                      31.83u tall
-                            |
-                            |
-            ╔═══════════════╬═══════════════╗
-           ╔╝               |               ╚╗
-          ╔╝                |                ╚╗
-  🗼 Tower_B_green          |           🗼 Tower_A_blue
-  [-41, 0, -4]              |           [31, 0, -30]
-  19.88u tall               |           17.53u tall
-          ╚╗                |                ╔╝
-           ╚╗      ┌── VILLAGE ──┐          ╔╝
-            ╚══════│   CENTER    │══════════╝
-                   │  [0, 0, 0]  │
-            ╔══════│             │══════════╗
-           ╔╝      └─────────────┘          ╚╗
-  🗼 Tower_A_yellow         |           🏛 Shrine_yellow
-  [-31, 0, 30]              |           [31, 0, 30]
-  17.53u tall               |           6.83u tall ⚠ SHORT
-           ╚╗               |               ╔╝
-            ╚═══════════════╬═══════════════╝
-                            |
-                     🏛 Watchtower_green
-                     [8, 0, 40]
-                      8.90u tall
-                            |
-                          SOUTH
+Each zone keeps its internal layout (walls, props, furniture) but moves to its new center.
+Space zone uses scale 2.5 for all objects (already implemented).
 
-Visibility from village center (Z=0):
-  Castle:     31.8u — visible over everything (12x char height)
-  Towers A/B: 17-20u — clearly visible above 9-14u village buildings
-  Watchtower:  8.9u — visible but short, similar to village buildings
-  Shrine:      6.8u — ⚠ barely visible above village scale (needs boost)
-```
+### Pizza Zone — NEW distinguishing features
+- Add `DECORATION.tent` at [0, 0, -6] scale 7.0 — visible red/warm canopy from distance
+- Warm orange accent pointLight at [0, 5, 0] visible from afar
+
+### Kitchen Zone — NEW distinguishing features
+- Add a tall `DECORATION.barrel` stack: 3 barrels at [4, 0, -4], [4, 0.8, -4], [4, 1.6, -4]
+- Green/purple accent pointLight at [0, 5, 0] — magical kitchen glow
 
 ---
 
-## Perimeter Layers (cross-section from center to edge)
+## Perimeter (adjusted for larger world)
 
-```
-  Center                                                         Edge
-  X=0        X=18      X=33       X=38-42     X=44-52   X=55-63
-   |          |         |           |           |          |
-   Village    Buildings  Last       Forest      Mountains  Tree
-   Center     end        scatter    Ring        & Cliffs   Border
-   |          |         |           |           |          |
-   ·  buildings ·  rocks/hills · 🌲🌲🌲🌲 · ⛰⛰⛰⛰ · 🌲🌲🌲🌲
-   ·          ·         ·           ·           ·          ·
-   |    14u   |   15u   |    6u     |    12u    |   8u     |
-   |          |         |           |           |          |
-   Player can walk here              Player bounds at X=40
-                                     (2u inside forest ring)
+### Mountain/Cliff Wall
+| Edge | Old X/Z | New X/Z |
+|------|---------|---------|
+| East wall | X = 44-52 | **X = 58-68** |
+| West wall | X = -44 to -52 | **X = -58 to -68** |
+| South wall | Z = 48-60 | **Z = 58-72** |
+| North wall | Z = -70 to -85 | **Z = -85 to -95** |
 
-North cross-section (special — dungeon):
-  Z=0        Z=-20     Z=-27      Z=-45       Z=-55      Z=-70      Z=-85
-   |          |         |           |           |          |          |
-   Village    Open      Approach   Entrance    Dungeon    Cliff      Mountains
-   Center     field     cliffs     boulders    Zone       bowl       (far back)
-   |          |         🪨⛰🪨     🪨  🪨       ║walls║     ⛰⛰⛰       ⛰⛰⛰
-```
+### Impenetrable Forest Ring
+| Ring | Old Radius | New Radius |
+|------|-----------|-----------|
+| Inner ring | R = 38-42 | **R = 52-56** |
+| Middle ring | R = 38-48 | **R = 52-62** |
+| Outer ring | R = 52-60 | **R = 65-75** |
 
----
+### Tree Border (3 rows)
+| Edge | Old Position | New Position |
+|------|-------------|-------------|
+| East | X = 55-63 | **X = 70-78** |
+| West | X = -55 to -63 | **X = -70 to -78** |
+| South | Z = 60-68 | **Z = 70-78** |
+| North | Z = -80 to -88 | **Z = -92 to -100** |
 
-## Decoration Density Map
-
-```
-    X=-40              X=-20             X=0              X=+20             X=+40
-      |                  |                |                 |                 |
-Z=-60 ░░░░░░░░░░░░░░░░░░░░██████████████████░░░░░░░░░░░░░░░░░░  DUNGEON (dense)
-      ░░░░░░░░░░░░░░░░░░░░██████████████████░░░░░░░░░░░░░░░░░░
-Z=-50 ░░░░░░░░░░░░░░░░░░░░░░░░░░████░░░░░░░░░░░░░░░░░░░░░░░░░  approach (sparse→dense)
-      ░░░░░░░░░░░░░░░░░░░░░░░░░░░██░░░░░░░░░░░░░░░░░░░░░░░░░░
-Z=-40 ░░░░░░░░░░░░░░░░░░░░░░░░░░░██░░░░░░░░░░░░░░░░░░░░░░░░░░
-      ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-Z=-30 ░░░░░░░░░░░░░░░░▒▒▒▒▒▒░░░░░░░░░░░░░▒▒▒▒▒░░░░░░░░░░░░░░  scatter (light)
-      ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-Z=-20 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-      ░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░
-Z=-10 ░░░░░░░░░░░░░░░░████████████████████████████░░░░░░░░░░░░░  VILLAGE CENTER (dense)
-      ░░░░░░░░░░░░░░██████████████████████████████████░░░░░░░░░
-Z=0   ░░░░▒▒▒▒▒▒░░████████████████████████████████████░░▒▒▒▒░░  <-- zones on ring
-      ░░░░░KITCHEN░████████████████████████████████████░░SCHOOL░
-Z=10  ░░░░░░░░░░░░░░░░████████████████████████████████░░░░░░░░░
-      ░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░
-Z=20  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  scatter (light)
-      ░░░░▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒░░░░░
-Z=30  ░░░░CONCERT░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░PIZZA░░░░░░  <-- zones on ring
-      ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-Z=40  ░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒PARK▒▒▒░░░░░░░░░░░░░░░░░░░░░░
-      ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-
-  Legend: ░ = empty grass  ▒ = light scatter (2-5 objects)  █ = dense (6+ objects)
-```
+### Dungeon Cliffs (adjusted)
+| Section | Old Z | New Z |
+|---------|-------|-------|
+| Back wall | Z = -68 to -72 | **Z = -78 to -82** |
+| Left/Right walls | X = ±18-28 | **X = ±18-30** |
+| Approach cliffs | Z = -27 to -45 | **Z = -50 to -63** |
+| Entrance boulders | Z = -45 | **Z = -63** |
 
 ---
 
-## Run-Time Distance Matrix (seconds at 14 u/s)
+## Key Numbers Reference
 
-```
-From → To          Distance    Run Time    Walk Time
-─────────────────────────────────────────────────────
-Origin → Space       35.4u       2.5s        4.4s
-Origin → School      35.0u       2.5s        4.4s
-Origin → Pizza       35.4u       2.5s        4.4s
-Origin → Park        35.0u       2.5s        4.4s
-Origin → Concert     35.4u       2.5s        4.4s
-Origin → Kitchen     35.0u       2.5s        4.4s
-Origin → Dungeon     55.0u       3.9s        6.9s
-Space → School       29.2u       2.1s        3.6s
-School → Pizza       25.0u       1.8s        3.1s
-Pizza → Park         26.9u       1.9s        3.4s
-Park → Concert       26.9u       1.9s        3.4s
-Concert → Kitchen    27.0u       1.9s        3.4s
-Kitchen → Space      47.2u       3.4s        5.9s
-Any ring → Dungeon   ~60-70u     4.3-5.0s    7.5-8.7s
-```
-
----
-
-## Object Count Summary
-
-| Layer | Component | Object Count | Notes |
-|-------|-----------|:------------:|-------|
-| Terrain | HexTerrain | ~9,800 | 9,600 grass + ~200 cobblestone |
-| Buildings | VillageCenter | 32 | 14 buildings + 13 props + 5 trees |
-| Zones | DungeonZone | ~76 | 9 walls + 6 pillars + 35 floor + 6 torches + 8 props + 4 banners + 4 lights + 4 entrance markers |
-| Zones | ParkZone | ~20 | 9 trees + 2 flowers + 2 benches + fountain + 2 lanterns + 2 hedges + 2 bushes |
-| Zones | SpaceZone | ~13 | pad + 2 modules + tunnel + dropship + 2 cargo + solar + dome + 2 lights |
-| Zones | SchoolZone | ~13 | swing + slide + merry-go-round + seesaw + sandbox + 2 trees + 4 fences + table |
-| Zones | PizzaZone | ~13 | 3 walls + 3 counters + 2 crates + 2 chairs + plate + 2 lights |
-| Zones | ConcertZone | ~16 | 5 walls + stage + 2 pillars + 3 banners + 2 torches + 3 lights |
-| Zones | KitchenZone | ~13 | 3 walls + 3 counters + stove + fridge + table + 2 chairs + 2 props + 1 light |
-| Landmarks | ZoneLandmarks | 7 | 1 castle + 2 tower_A + 2 tower_B + 1 shrine + 1 watchtower |
-| Roads | RoadDecoration | ~30 | 3 flags + 4 props + 2 trees + ~20 lanterns + 12 zone flags |
-| Scatter | TerrainScatter | ~37 | 32 procedural + 5 strategic hills |
-| Water | VillagePond | 12 | 3 water + 5 coast + 2 lilies + 2 plants + 1 bridge |
-| Approach | ZoneApproachDecor | 12 | 2 per zone (6 zones) |
-| Perimeter | VillagePerimeter | ~75 | mountains, hills, rocks around all 4 edges + corners |
-| Forest | ImpenetrableForest | ~50 | 3 concentric rings of procedural trees |
-| Border | TreeBorder | ~240 | 3 rows x 4 edges, spacing 5u |
-| Debug | DebugClearanceRings | 0 | Toggle with `.` key (dev only) |
-| Atmosphere | VillageAtmosphere | 7 | sky + fog + 3 lights + 7 clouds |
-| **TOTAL** | | **~10,450** | Dominated by hex tiles (~9,800) |
-
----
-
-## Known Scale Issues (from SME Analysis)
-
-| Object | Measured | Target | Issue | Fix |
-|--------|----------|--------|-------|-----|
-| Well | 5.78u | 1.3-1.8u | 3.2x too tall | Scale 7.0 → ~2.5 |
-| Flags (all) | 1.94u | 3.9-6.5u | 2x too short | Scale 7.0 → ~15-20 |
-| Space dropship | 1.30u | 3-5u | Barely visible | Scale 1.0 → 2.5-3.0 |
-| Space modules | 1.00u | 2-3u | Barely visible | Scale 1.0 → 2.0-2.5 |
-| Space dome | 1.00u | 2-3u | Barely visible | Scale 1.0 → 2.0-2.5 |
-| Shrine_yellow | 6.83u | 10-15u | Short landmark | Scale 8.0 → 12-15 |
-| Watchtower_green | 8.90u | 10-15u | Short landmark | Scale 8.0 → 10-12 |
+| Constant | Value |
+|----------|-------|
+| Character height | 2.56u |
+| Village building scale | 7.0 |
+| Zone landmark scale | 8.0-12.0 |
+| Flag scale | 15.0 |
+| Well scale | 2.5 |
+| Space zone scale | 2.5 |
+| Walk speed | 8 u/s |
+| Run speed | 14 u/s |
+| Player bounds | X[-55,55] Z[-80,55] |
+| Zone trigger distance | 3.0u |
+| Hex tile size | 2.0u wide |
+| Cobblestone scale | 1.8 |
+| Grand Boulevard width | 5 hex cols |
+| Spoke/Ring road width | halfWidth 3.5 |
+| Zone ground radius | 10u (transition tiles) |
+| Forest inner ring | R = 52-56 |
+| Zone approach props | 6-8 per zone, last 15u |

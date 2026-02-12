@@ -18,7 +18,7 @@ import { collidesWithAny } from './collision-registry'
 
 const WALK_SPEED = 8
 const RUN_SPEED = 14
-const BOUNDS = { minX: -40, maxX: 40, minZ: -65, maxZ: 45 }
+const BOUNDS = { minX: -55, maxX: 55, minZ: -80, maxZ: 55 }
 const PLAYER_RADIUS = 0.5 // character collision radius
 
 interface PlayerCharacterProps {

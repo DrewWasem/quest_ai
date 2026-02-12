@@ -15,7 +15,6 @@ import * as THREE from 'three'
 import { Character3D, type Character3DHandle } from './Character3D'
 import { useGameStore } from '../stores/gameStore'
 import { collidesWithAny } from './collision-registry'
-import { resolveCollisions, VILLAGE_COLLIDERS } from './collision-map'
 
 const WALK_SPEED = 8
 const RUN_SPEED = 14
@@ -115,11 +114,6 @@ export function PlayerCharacter({ enabled, onPositionUpdate }: PlayerCharacterPr
         }
         // Both blocked = stop (player is stuck against a corner)
       }
-
-      // Collision resolution — push out of static objects
-      const resolved = resolveCollisions(pos.x, pos.z, VILLAGE_COLLIDERS)
-      pos.x = resolved.x
-      pos.z = resolved.z
 
       // Clamp to bounds
       pos.x = THREE.MathUtils.clamp(pos.x, BOUNDS.minX, BOUNDS.maxX)

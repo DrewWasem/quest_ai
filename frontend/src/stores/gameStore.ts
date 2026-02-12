@@ -289,3 +289,8 @@ export const useGameStore = create<GameState>((set, get) => ({
     set((s) => ({ cameraYaw: s.cameraYaw + deltaYaw }));
   },
 }));
+
+// Expose store to window in dev mode for E2E testing (Puppeteer)
+if (import.meta.env.DEV) {
+  (window as any).__gameStore = useGameStore;
+}

@@ -299,32 +299,32 @@ function VillagePerimeter() {
       <Piece model={DECORATION.mountain_B} position={[0, 0, 75]} scale={9.0} />
       <Piece model={DECORATION.mountain_C} position={[-40, 0, 72]} rotation={[0, Math.PI / 3, 0]} scale={8.0} />
 
-      {/* Hills — medium distance ring (avoiding canyon/bowl zone) */}
-      <Piece model={DECORATION.hills_trees} position={[38, 0, 22]} scale={6.0} />
+      {/* Hills — medium distance ring (pushed away from zone centers) */}
+      <Piece model={DECORATION.hills_trees} position={[45, 0, 30]} scale={6.0} />
       <Piece model={DECORATION.hill_A} position={[-38, 0, 45]} scale={5.0} />
-      <Piece model={DECORATION.hills_trees} position={[-42, 0, 5]} scale={6.0} />
-      <Piece model={DECORATION.hill_A} position={[42, 0, -5]} scale={5.0} />
-      <Piece model={DECORATION.hill_C} position={[48, 0, 30]} scale={5.0} />
+      <Piece model={DECORATION.hills_trees} position={[-50, 0, 5]} scale={6.0} />
+      <Piece model={DECORATION.hill_A} position={[50, 0, -5]} scale={5.0} />
+      <Piece model={DECORATION.hill_C} position={[48, 0, 38]} scale={5.0} />
       <Piece model={DECORATION.hills_B_trees} position={[-48, 0, 50]} scale={6.0} />
       <Piece model={DECORATION.hill_B} position={[45, 0, 55]} scale={5.5} />
-      <Piece model={DECORATION.hill_A} position={[50, 0, -15]} scale={5.5} />
-      <Piece model={DECORATION.hills_trees} position={[-50, 0, -12]} scale={6.0} />
+      <Piece model={DECORATION.hill_A} position={[50, 0, -20]} scale={5.5} />
+      <Piece model={DECORATION.hills_trees} position={[-55, 0, -12]} scale={6.0} />
       <Piece model={DECORATION.hills_B_trees} position={[25, 0, 58]} scale={5.5} />
 
-      {/* Dense tree clusters along the edges (avoiding north canyon) */}
-      <Piece model={DECORATION.trees_medium} position={[35, 0, 45]} scale={6.0} />
-      <Piece model={DECORATION.trees_B_large} position={[-35, 0, 18]} scale={6.0} />
-      <Piece model={DECORATION.trees_medium} position={[35, 0, -18]} scale={6.0} />
-      <Piece model={DECORATION.trees_large} position={[-40, 0, -10]} scale={6.0} />
-      <Piece model={DECORATION.trees_B_large} position={[40, 0, 10]} scale={6.0} />
+      {/* Dense tree clusters — pushed behind zone areas */}
+      <Piece model={DECORATION.trees_medium} position={[42, 0, 45]} scale={6.0} />
+      <Piece model={DECORATION.trees_B_large} position={[-42, 0, 38]} scale={6.0} />
+      <Piece model={DECORATION.trees_medium} position={[40, 0, -35]} scale={6.0} />
+      <Piece model={DECORATION.trees_large} position={[-50, 0, -10]} scale={6.0} />
+      <Piece model={DECORATION.trees_B_large} position={[50, 0, 10]} scale={6.0} />
       <Piece model={DECORATION.trees_large} position={[-32, 0, 55]} scale={5.0} />
 
-      {/* Rocks scattered around edges (avoiding canyon/bowl overlap) */}
-      <Piece model={DECORATION.rock_B} position={[28, 0, 32]} scale={7.0} />
+      {/* Rocks scattered around edges (away from zones) */}
+      <Piece model={DECORATION.rock_B} position={[38, 0, 42]} scale={7.0} />
       <Piece model={DECORATION.rock_A} position={[-32, 0, 58]} scale={6.0} />
-      <Piece model={DECORATION.rock_D} position={[-42, 0, 38]} scale={5.5} />
-      <Piece model={DECORATION.rock_D} position={[48, 0, 18]} scale={5.0} />
-      <Piece model={DECORATION.rock_E} position={[-48, 0, 20]} scale={5.5} />
+      <Piece model={DECORATION.rock_D} position={[-45, 0, 42]} scale={5.5} />
+      <Piece model={DECORATION.rock_D} position={[50, 0, 18]} scale={5.0} />
+      <Piece model={DECORATION.rock_E} position={[-50, 0, 25]} scale={5.5} />
       <Piece model={DECORATION.rock_A} position={[15, 0, 60]} scale={6.0} />
     </group>
   )
@@ -366,6 +366,18 @@ function ImpenetrableForest() {
         || Math.min(diffS, 2 * Math.PI - diffS) < southHalf
   }
 
+  // Skip trees that are too close to any quest zone center (would block camera view)
+  const ZONE_CLEARANCE = 15 // units — enough for camera to see zone props
+  const zoneCentersArr = Object.values(ZONE_CENTERS)
+  const isNearZone = (x: number, z: number): boolean => {
+    for (const [cx, , cz] of zoneCentersArr) {
+      const dx = x - cx
+      const dz = z - cz
+      if (dx * dx + dz * dz < ZONE_CLEARANCE * ZONE_CLEARANCE) return true
+    }
+    return false
+  }
+
   const trees = useMemo(() => {
     const result: { model: string; position: [number, number, number]; rotation: [number, number, number]; scale: number }[] = []
 
@@ -377,6 +389,7 @@ function ImpenetrableForest() {
       const r = 38 + (i % 3) * 2.0
       const x = Math.cos(angle) * r
       const z = Math.sin(angle) * r
+      if (isNearZone(x, z)) continue
       result.push({
         model: pick(i, [DECORATION.trees_large, DECORATION.trees_B_large, DECORATION.trees_medium, DECORATION.tree_A]),
         position: [x, 0, z],
@@ -393,6 +406,7 @@ function ImpenetrableForest() {
       const r = 38 + (i % 4) * 3
       const x = Math.cos(angle) * r
       const z = Math.sin(angle) * r
+      if (isNearZone(x, z)) continue
       result.push({
         model: pick(i + 3, treeModels),
         position: [x, 0, z],
@@ -402,12 +416,16 @@ function ImpenetrableForest() {
       // Double up every other position for density
       if (i % 2 === 0) {
         const offset = 2.5 + (i % 3)
-        result.push({
-          model: pick(i + 7, treeModels),
-          position: [x + offset, 0, z + offset],
-          rotation: [0, rot(i + 100), 0],
-          scale: 7.0 + (i % 3) * 0.8,
-        })
+        const x2 = x + offset
+        const z2 = z + offset
+        if (!isNearZone(x2, z2)) {
+          result.push({
+            model: pick(i + 7, treeModels),
+            position: [x2, 0, z2],
+            rotation: [0, rot(i + 100), 0],
+            scale: 7.0 + (i % 3) * 0.8,
+          })
+        }
       }
     }
 
@@ -419,6 +437,7 @@ function ImpenetrableForest() {
       const r = 52 + (i % 3) * 4
       const x = Math.cos(angle) * r
       const z = Math.sin(angle) * r
+      if (isNearZone(x, z)) continue
       result.push({
         model: pick(i + 5, [DECORATION.trees_large, DECORATION.trees_B_large, DECORATION.tree_A, DECORATION.tree_B]),
         position: [x, 0, z],

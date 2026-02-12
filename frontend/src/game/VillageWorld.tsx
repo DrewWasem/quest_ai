@@ -156,7 +156,7 @@ const SPAWN_EXCLUSIONS: [number, number, number][] = [
   [-16, -7, 5],   // Tavern
   [16, 5, 4],     // Market
   [0, 0, 3],      // Well
-  [-14, 5, 5],    // Blacksmith
+  [-9.3, 25.2, 5],  // Blacksmith
   [20, -12, 4],   // Home A
   [-10, -12, 4],  // Home B
   [-22, 10, 4],   // Home A (small)
@@ -167,7 +167,7 @@ const SPAWN_EXCLUSIONS: [number, number, number][] = [
   [26, -3, 3],    // Watchtower
   [-8, -10, 4],   // Stage
   // Pond
-  [12, 14, 4],
+  [16, 18, 4],
   // Zone landmarks (new positions)
   [-12, -75, 5],  [44, -42, 3],  [54, 1, 3],  [44, 42, 3],
   [6, 53, 3],     [-44, 42, 3],  [-54, 1, 3],
@@ -457,8 +457,8 @@ function VillageCenter() {
       {/* Well — village center landmark */}
       <Piece model={BUILDINGS.well} position={[0, 0, 0]} scale={2.5} />
 
-      {/* Blacksmith — left side */}
-      <Piece model={BUILDINGS.blacksmith} position={[-14, 0, 5]} rotation={[0, Math.PI / 2, 0]} scale={s} />
+      {/* Blacksmith — south-west of center */}
+      <Piece model={BUILDINGS.blacksmith} position={[-9.3, 0, 25.2]} rotation={[0, Math.PI / 2, 0]} scale={s} />
 
       {/* Homes — spread around the village square */}
       <Piece model={BUILDINGS.home_A} position={[20, 0, -12]} rotation={[0, -Math.PI / 2, 0]} scale={s} />
@@ -487,9 +487,9 @@ function VillageCenter() {
       <Piece model={DECORATION.haybale} position={[-10, 0, 10]} scale={d} />
       <Piece model={DECORATION.wheelbarrow} position={[6, 0, -7]} scale={d} />
       <Piece model={DECORATION.sack} position={[-6, 0, 7]} scale={d} />
-      <Piece model={DECORATION.bucket_water} position={[-2, 0, 1]} scale={d} />
+      <Piece model={DECORATION.bucket_water} position={[-7, 0, 1]} scale={d} />
       <Piece model={DECORATION.trough} position={[8, 0, 6]} scale={d} />
-      <Piece model={DECORATION.flag_blue} position={[2, 0, -12]} scale={15.0} />
+      <Piece model={DECORATION.flag_blue} position={[6, 0, -12]} scale={15.0} />
 
       {/* Trees around the village edges */}
       <Piece model={DECORATION.tree_A} position={[-26, 0, -2]} scale={d} />
@@ -1261,7 +1261,7 @@ function RoadDecoration() {
       {/* skeleton-pizza (SE) — yellow */}
       <Piece model={DECORATION.flag_yellow} position={[22, 0, 22]} scale={15.0} />
       {/* adventurers-picnic (S) — green */}
-      <Piece model={DECORATION.flag_green} position={[0, 0, 35]} scale={15.0} />
+      <Piece model={DECORATION.flag_green} position={[6, 0, 38]} scale={15.0} />
       {/* dungeon-concert (SW) — red */}
       <Piece model={DECORATION.flag_red} position={[-22, 0, 22]} scale={15.0} />
       {/* mage-kitchen (W) — green */}
@@ -1338,11 +1338,11 @@ function ExplorationAreas() {
       <Piece model={DECORATION.weaponrack} position={[34, 0, 0]} scale={d} />
 
       {/* ── Market Road (SE quadrant, X=15-25, Z=20-30) ── */}
-      <Piece model={DECORATION.barrel} position={[18, 0, 22]} scale={d} />
-      <Piece model={DECORATION.crate_A} position={[22, 0, 24]} scale={d} />
-      <Piece model={DECORATION.sack} position={[20, 0, 27]} scale={d} />
-      <Piece model={DECORATION.wheelbarrow} position={[16, 0, 25]} scale={d} />
-      <Piece model={DECORATION.trough} position={[24, 0, 28]} scale={d} />
+      <Piece model={DECORATION.barrel} position={[18, 0, 26]} scale={d} />
+      <Piece model={DECORATION.crate_A} position={[25, 0, 27]} scale={d} />
+      <Piece model={DECORATION.sack} position={[20, 0, 29]} scale={d} />
+      <Piece model={DECORATION.wheelbarrow} position={[16, 0, 27]} scale={d} />
+      <Piece model={DECORATION.trough} position={[27, 0, 31]} scale={d} />
 
       {/* ── Extra scatter for variety ── */}
       <Piece model={DECORATION.hills_C_trees} position={[-18, 0, -22]} scale={5.0} />
@@ -1359,7 +1359,7 @@ function ExplorationAreas() {
 // ============================================================================
 
 function VillagePond() {
-  const pondCenter: [number, number, number] = [12, 0, 14]
+  const pondCenter: [number, number, number] = [16, 0, 18]
   return (
     <group name="village-pond" position={pondCenter}>
       {/* Water hex tiles (slightly above ground to prevent z-fighting) */}

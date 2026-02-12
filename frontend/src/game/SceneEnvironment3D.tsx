@@ -295,41 +295,45 @@ const TASK_ENVIRONMENTS: Record<string, EnvironmentPiece[]> = {
     { model: 'tiny-treats/pretty-park/bench.gltf', position: [0, 0, 3], rotation: [0, Math.PI, 0] },
   ],
 
-  // ─── T7: Adventurers' Picnic — Forest Park ────────────────────────────────
+  // ─── T7: Forest Mystery — Enchanted Clearing ─────────────────────────────
   'adventurers-picnic': [
-    // Ring of trees (surrounding the clearing)
-    { model: 'tiny-treats/pretty-park/tree_large.gltf', position: [-6, 0, -4], scale: 1.4 },
-    { model: 'kaykit/packs/forest_nature/Tree_1_A_Color1.gltf', position: [-4, 0, -5], scale: 1.2 },
-    { model: 'tiny-treats/pretty-park/tree.gltf', position: [-2, 0, -6], scale: 1.3 },
-    { model: 'kaykit/packs/forest_nature/Tree_2_A_Color1.gltf', position: [0, 0, -6], scale: 1.0 },
-    { model: 'tiny-treats/pretty-park/tree_large.gltf', position: [2, 0, -5.5], scale: 1.5 },
-    { model: 'kaykit/packs/forest_nature/Tree_3_A_Color1.gltf', position: [4, 0, -5], scale: 1.1 },
-    { model: 'tiny-treats/pretty-park/tree.gltf', position: [6, 0, -3], scale: 1.3 },
-    { model: 'kaykit/packs/forest_nature/Tree_1_B_Color1.gltf', position: [7, 0, 0], scale: 1.0 },
-    { model: 'tiny-treats/pretty-park/tree_large.gltf', position: [-7, 0, 0], scale: 1.2 },
-    // Bushes filling gaps
-    { model: 'tiny-treats/pretty-park/bush.gltf', position: [-5, 0, -3] },
-    { model: 'tiny-treats/pretty-park/bush_large.gltf', position: [5, 0, -4] },
-    { model: 'kaykit/packs/forest_nature/Bush_1_A_Color1.gltf', position: [-3, 0, -4.5] },
-    { model: 'kaykit/packs/forest_nature/Bush_2_A_Color1.gltf', position: [3, 0, -4.5] },
-    // Flowers scattered
-    { model: 'tiny-treats/pretty-park/flower_A.gltf', position: [-4, 0, -2] },
-    { model: 'tiny-treats/pretty-park/flower_B.gltf', position: [4, 0, -1.5] },
-    { model: 'tiny-treats/pretty-park/flower_A.gltf', position: [-2, 0, 3] },
-    // Rocks
-    { model: 'kaykit/packs/forest_nature/Rock_1_A_Color1.gltf', position: [-5, 0, 1] },
-    { model: 'kaykit/packs/forest_nature/Rock_1_C_Color1.gltf', position: [5.5, 0, 1.5] },
-    // Grass patches
-    { model: 'tiny-treats/pretty-park/grass_A.gltf', position: [-3, 0, 0] },
-    { model: 'tiny-treats/pretty-park/grass_B.gltf', position: [3, 0, 0] },
-    { model: 'tiny-treats/pretty-park/grass_A.gltf', position: [0, 0, 2.5] },
-    // Hedges along sides
-    { model: 'tiny-treats/pretty-park/hedge_straight_long.gltf', position: [-6, 0, 3], rotation: [0, Math.PI / 2, 0] },
-    { model: 'tiny-treats/pretty-park/hedge_straight_long.gltf', position: [6, 0, 3], rotation: [0, -Math.PI / 2, 0] },
-    // Park bench (fountain is in VillageWorld ParkZone — no duplicate needed)
-    { model: 'tiny-treats/pretty-park/bench.gltf', position: [-4, 0, 2], rotation: [0, Math.PI / 4, 0] },
-    // Street lantern
-    { model: 'tiny-treats/pretty-park/street_lantern.gltf', position: [-5, 0, 0] },
+    // Dense tree ring surrounding the clearing
+    { model: 'kaykit/packs/forest_nature/Tree_1_A_Color1.gltf', position: [-6, 0, -5], scale: 1.3 },
+    { model: 'kaykit/packs/forest_nature/Tree_2_A_Color1.gltf', position: [-3, 0, -6], scale: 1.1 },
+    { model: 'kaykit/packs/forest_nature/Tree_3_A_Color1.gltf', position: [3, 0, -6], scale: 1.2 },
+    { model: 'kaykit/packs/forest_nature/Tree_1_B_Color1.gltf', position: [6, 0, -5], scale: 1.3 },
+    { model: 'kaykit/packs/forest_nature/Tree_2_B_Color4.gltf', position: [7, 0, -1], scale: 1.0 },
+    { model: 'kaykit/packs/forest_nature/Tree_3_C_Color2.gltf', position: [-7, 0, -1], scale: 1.1 },
+    { model: 'kaykit/packs/forest_nature/Tree_1_A_Color1.gltf', position: [7, 0, 3], scale: 1.2 },
+    { model: 'kaykit/packs/forest_nature/Tree_2_A_Color1.gltf', position: [-7, 0, 3], scale: 1.0 },
+    // Dead trees for mystery
+    { model: 'quaternius/nature/DeadTree_1.gltf', position: [-5, 0, 4], scale: 1.0 },
+    { model: 'quaternius/nature/DeadTree_3.gltf', position: [5.5, 0, 5], scale: 0.9 },
+    // Central campfire
+    { model: 'poly-pizza/misc/small-camping-bundle/Campfire.glb', position: [0, 0, 0], scale: 2.0 },
+    // Crystal arc (the magical source)
+    { model: 'poly-pizza/nature/crystal-pack/Crystal.glb', position: [-2.5, 0, 3], scale: 0.25, rotation: [0, 0.4, 0] },
+    { model: 'poly-pizza/nature/crystal-pack/Crystal-dxCmHfpqc5.glb', position: [0, 0, 4], scale: 0.3 },
+    { model: 'poly-pizza/nature/crystal-pack/Crystal-WzWPKHFMkL.glb', position: [2.5, 0, 3], scale: 0.25, rotation: [0, -0.3, 0] },
+    // Lit torches flanking
+    { model: 'kaykit/packs/dungeon/torch_lit.gltf', position: [-4, 0, -1], scale: 2.0 },
+    { model: 'kaykit/packs/dungeon/torch_lit.gltf', position: [4, 0, -1], scale: 2.0 },
+    // Stumps around the fire
+    { model: 'tiny-treats/fun-playground/stepping_stumps_B_large.gltf', position: [-2, 0, -2], scale: 1.5 },
+    { model: 'tiny-treats/fun-playground/stepping_stumps_B.gltf', position: [2, 0, -2], scale: 1.5 },
+    { model: 'poly-pizza/misc/small-camping-bundle/Log.glb', position: [3, 0, -1.5], scale: 1.5, rotation: [0, Math.PI / 3, 0] },
+    // Mushrooms scattered
+    { model: 'quaternius/nature/Mushroom_Common.gltf', position: [-4.5, 0, 2], scale: 2.0 },
+    { model: 'quaternius/nature/Mushroom_Common.gltf', position: [5, 0, 1], scale: 1.5 },
+    { model: 'quaternius/nature/Mushroom_Laetiporus.gltf', position: [-6, 0, -3], scale: 1.8 },
+    // Rocks framing edges
+    { model: 'kaykit/packs/forest_nature/Rock_1_C_Color1.gltf', position: [-5.5, 0, 1], scale: 1.2 },
+    { model: 'kaykit/packs/forest_nature/Rock_3_A_Color2.gltf', position: [6, 0, 2], scale: 1.0 },
+    { model: 'kaykit/packs/forest_nature/Rock_1_A_Color1.gltf', position: [0, 0, -5], scale: 0.8 },
+    // Ferns and ground cover
+    { model: 'quaternius/nature/Fern_1.gltf', position: [-3, 0, -3.5], scale: 1.0 },
+    { model: 'quaternius/nature/Fern_1.gltf', position: [3.5, 0, -3], scale: 0.8 },
+    { model: 'quaternius/nature/Bush_Flowers.gltf', position: [-6, 0, 1], scale: 0.7 },
   ],
 }
 

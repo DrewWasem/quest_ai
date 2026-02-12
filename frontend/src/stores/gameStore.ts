@@ -33,6 +33,7 @@ interface GameState {
   isTransitioning: boolean;
   playerPosition: [number, number, number];
   cameraYaw: number;
+  cameraZoom: number;
 
   // Actions
   setInput: (input: string) => void;
@@ -44,6 +45,7 @@ interface GameState {
   exitZone: () => void;
   updatePlayerPosition: (pos: [number, number, number]) => void;
   rotateCameraYaw: (deltaYaw: number) => void;
+  adjustCameraZoom: (delta: number) => void;
   clearBadgeUnlocks: () => void;
 }
 
@@ -100,6 +102,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   isTransitioning: false,
   playerPosition: [0, 0, 0],
   cameraYaw: 0,
+  cameraZoom: 14,
 
   setInput: (input: string) => set({ userInput: input }),
 
@@ -217,6 +220,12 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   rotateCameraYaw: (deltaYaw: number) => {
     set((s) => ({ cameraYaw: s.cameraYaw + deltaYaw }));
+  },
+
+  adjustCameraZoom: (delta: number) => {
+    set((s) => ({
+      cameraZoom: Math.max(8, Math.min(60, s.cameraZoom * (1 + delta * 0.08))),
+    }));
   },
 }));
 

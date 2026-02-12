@@ -819,14 +819,14 @@ function DungeonCliffs() {
   // Open only at the south (Z≈-63) where the road enters
   return (
     <group name="dungeon-cliffs">
-      {/* ── Back wall (north, behind dungeon Z=-78 to -82) ── */}
-      <Piece model={DECORATION.mountain_A} position={[0, 0, -82]} scale={13.0} />
-      <Piece model={DECORATION.mountain_B} position={[-18, 0, -80]} scale={11.0} />
-      <Piece model={DECORATION.mountain_C} position={[18, 0, -80]} scale={11.0} />
-      <Piece model={DECORATION.hill_C} position={[-9, 0, -78]} scale={9.0} />
-      <Piece model={DECORATION.hill_A} position={[9, 0, -78]} scale={9.0} />
-      <Piece model={DECORATION.rock_C} position={[-4, 0, -77]} scale={7.0} />
-      <Piece model={DECORATION.rock_D} position={[4, 0, -77]} scale={7.0} />
+      {/* ── Back wall (north, behind dungeon Z=-84 to -92) ── */}
+      <Piece model={DECORATION.mountain_A} position={[0, 0, -92]} scale={13.0} />
+      <Piece model={DECORATION.mountain_B} position={[-18, 0, -90]} scale={11.0} />
+      <Piece model={DECORATION.mountain_C} position={[18, 0, -90]} scale={11.0} />
+      <Piece model={DECORATION.hill_C} position={[-9, 0, -86]} scale={9.0} />
+      <Piece model={DECORATION.hill_A} position={[9, 0, -86]} scale={9.0} />
+      <Piece model={DECORATION.rock_C} position={[-4, 0, -84]} scale={7.0} />
+      <Piece model={DECORATION.rock_D} position={[4, 0, -84]} scale={7.0} />
 
       {/* ── Left wall (west, X=-18 to -30) ── */}
       <Piece model={DECORATION.mountain_A} position={[-25, 0, -76]} rotation={[0, Math.PI / 4, 0]} scale={11.0} />
@@ -872,9 +872,9 @@ function DungeonCliffs() {
       <Piece model={DECORATION.tree_B} position={[22, 0, -78]} scale={10.0} />
       <Piece model={DECORATION.tree_A} position={[-30, 0, -70]} scale={9.0} />
       <Piece model={DECORATION.tree_B} position={[30, 0, -70]} scale={9.0} />
-      <Piece model={DECORATION.tree_A} position={[0, 0, -84]} scale={10.0} />
-      <Piece model={DECORATION.tree_B} position={[-12, 0, -82]} scale={9.0} />
-      <Piece model={DECORATION.tree_A} position={[12, 0, -82]} scale={9.0} />
+      <Piece model={DECORATION.tree_A} position={[0, 0, -94]} scale={10.0} />
+      <Piece model={DECORATION.tree_B} position={[-12, 0, -92]} scale={9.0} />
+      <Piece model={DECORATION.tree_A} position={[12, 0, -92]} scale={9.0} />
     </group>
   )
 }
@@ -973,29 +973,33 @@ function DungeonZone() {
 
 function ParkZone() {
   const center = ZONE_CENTERS['adventurers-picnic']
-  const ts = 0.8 // tree scale — smaller than close-up view
 
   return (
     <group name="park-zone" position={center}>
-      {/* Side trees */}
-      <Piece model={DECORATION.tree_B} position={[7, 0, 0]} scale={0.9} />
-      <Piece model="tiny-treats/pretty-park/tree_large.gltf" position={[-7, 0, 0]} scale={ts} />
+      {/* Central campfire — focal point of the clearing */}
+      <Piece model="poly-pizza/misc/small-camping-bundle/Campfire.glb" position={[0, 0, 0]} scale={2.0} />
 
-      {/* Flowers */}
-      <Piece model="tiny-treats/pretty-park/flower_A.gltf" position={[-3, 0, -2]} />
-      <Piece model="tiny-treats/pretty-park/flower_B.gltf" position={[3, 0, -1.5]} />
+      {/* Crystal arc behind campfire (south side, visible from center camera) */}
+      <Piece model="poly-pizza/nature/crystal-pack/Crystal.glb" position={[-3, 0, 3]} scale={0.25} rotation={[0, 0.4, 0]} />
+      <Piece model="poly-pizza/nature/crystal-pack/Crystal-dxCmHfpqc5.glb" position={[0, 0, 4]} scale={0.3} />
+      <Piece model="poly-pizza/nature/crystal-pack/Crystal-WzWPKHFMkL.glb" position={[3, 0, 3]} scale={0.25} rotation={[0, -0.3, 0]} />
 
-      {/* Park benches and fountain (fountain offset right so it doesn't block play area) */}
-      <Piece model="tiny-treats/pretty-park/bench.gltf" position={[-4, 0, 2]} rotation={[0, Math.PI / 4, 0]} />
-      <Piece model="tiny-treats/pretty-park/bench.gltf" position={[4, 0, 1]} rotation={[0, -Math.PI / 4, 0]} />
-      <Piece model="tiny-treats/pretty-park/fountain.gltf" position={[4, 0, -3]} scale={0.8} />
-      <Piece model="tiny-treats/pretty-park/street_lantern.gltf" position={[-5, 0, 0]} />
-      <Piece model="tiny-treats/pretty-park/street_lantern.gltf" position={[5, 0, 0]} />
+      {/* Lit torches flanking the clearing */}
+      <Piece model="kaykit/packs/dungeon/torch_lit.gltf" position={[-5, 0, -1]} scale={2.0} />
+      <Piece model="kaykit/packs/dungeon/torch_lit.gltf" position={[5, 0, -1]} scale={2.0} />
 
-      {/* Hedges along sides */}
-      <Piece model="tiny-treats/pretty-park/hedge_straight_long.gltf" position={[-6, 0, 3]} rotation={[0, Math.PI / 2, 0]} />
-      <Piece model="tiny-treats/pretty-park/hedge_straight_long.gltf" position={[6, 0, 3]} rotation={[0, -Math.PI / 2, 0]} />
+      {/* Stumps for seating around the fire */}
+      <Piece model="tiny-treats/fun-playground/stepping_stumps_B_large.gltf" position={[-2.5, 0, -2]} scale={1.5} />
+      <Piece model="tiny-treats/fun-playground/stepping_stumps_B.gltf" position={[2.5, 0, -2]} scale={1.5} />
 
+      {/* Mushrooms scattered around the clearing */}
+      <Piece model="quaternius/nature/Mushroom_Common.gltf" position={[-4, 0, 2]} scale={2.0} />
+      <Piece model="quaternius/nature/Mushroom_Common.gltf" position={[4.5, 0, 1.5]} scale={1.5} />
+      <Piece model="quaternius/nature/Mushroom_Laetiporus.gltf" position={[-6, 0, 0]} scale={1.8} />
+
+      {/* Rocks framing the edges */}
+      <Piece model="kaykit/packs/forest_nature/Rock_1_C_Color1.gltf" position={[-6, 0, 3]} scale={1.2} />
+      <Piece model="kaykit/packs/forest_nature/Rock_3_A_Color2.gltf" position={[6, 0, 2.5]} scale={1.0} />
     </group>
   )
 }
@@ -1278,16 +1282,34 @@ function RoadDecoration() {
 function ZoneLandmarks() {
   return (
     <group name="zone-landmarks">
-      {/* skeleton-birthday: Red castle, offset behind dungeon */}
-      <Piece model={BUILDINGS.castle_red} position={[-12, 0, -75]} scale={8.0} />
+      {/* skeleton-birthday: Red castle, front emerging from dungeon back wall center */}
+      <Piece model={BUILDINGS.castle_red} position={[0, 0, -84]} scale={8.0} />
       {/* knight-space: Blue tower */}
       <Piece model={BUILDINGS.tower_A_blue} position={[44, 0, -42]} scale={8.0} />
       {/* barbarian-school: Red tower */}
       <Piece model={BUILDINGS.tower_B_red} position={[54, 0, 1]} scale={8.0} />
       {/* skeleton-pizza: Yellow shrine (scale 12 = ~10u) */}
       <Piece model={BUILDINGS.shrine_yellow} position={[44, 0, 42]} scale={12.0} />
-      {/* adventurers-picnic: Green watchtower (scale 10 = ~11u) */}
-      <Piece model={BUILDINGS.watchtower_green} position={[6, 0, 53]} scale={10.0} />
+      {/* adventurers-picnic: Green watchtowers flanking road */}
+      <Piece model={BUILDINGS.watchtower_green} position={[11, 0, 53]} scale={10.0} />
+      <Piece model={BUILDINGS.watchtower_green} position={[-11, 0, 53]} scale={10.0} />
+      {/* adventurers-picnic: Dense forest behind zone */}
+      <Piece model={DECORATION.trees_large} position={[0, 0, 56]} scale={5.0} />
+      <Piece model={DECORATION.trees_B_large} position={[-8, 0, 58]} scale={5.5} />
+      <Piece model={DECORATION.trees_large} position={[8, 0, 58]} scale={5.0} />
+      <Piece model={DECORATION.tree_A} position={[-16, 0, 56]} scale={5.5} />
+      <Piece model={DECORATION.tree_B} position={[16, 0, 56]} scale={5.5} />
+      <Piece model={DECORATION.trees_B_medium} position={[-22, 0, 58]} scale={5.0} />
+      <Piece model={DECORATION.trees_medium} position={[22, 0, 58]} scale={5.0} />
+      <Piece model={DECORATION.trees_B_large} position={[-4, 0, 62]} scale={6.0} />
+      <Piece model={DECORATION.trees_large} position={[4, 0, 62]} scale={6.0} />
+      <Piece model={DECORATION.tree_A} position={[-14, 0, 62]} scale={6.0} />
+      <Piece model={DECORATION.tree_B} position={[14, 0, 62]} scale={6.0} />
+      <Piece model={DECORATION.trees_medium} position={[-24, 0, 62]} scale={5.5} />
+      <Piece model={DECORATION.trees_B_medium} position={[24, 0, 62]} scale={5.5} />
+      <Piece model={DECORATION.trees_B_large} position={[0, 0, 66]} scale={6.5} />
+      <Piece model={DECORATION.trees_large} position={[-12, 0, 66]} scale={6.0} />
+      <Piece model={DECORATION.trees_large} position={[12, 0, 66]} scale={6.0} />
       {/* dungeon-concert: Yellow tower */}
       <Piece model={BUILDINGS.tower_A_yellow} position={[-44, 0, 42]} scale={8.0} />
       {/* mage-kitchen: Green tower */}

@@ -345,10 +345,15 @@ export const TASK_ENVIRONMENTS: Record<string, EnvironmentProp[]> = {
     { id: 'env-table', path: 'kaykit/packs/dungeon/table_long.gltf', position: [0, 0, -4], scale: 0.8 },
   ],
   'adventurers-picnic': [
-    { id: 'env-tree-l', path: 'tiny-treats/pretty-park/tree.gltf', position: [-5, 0, -3], scale: 2.0 },
-    { id: 'env-tree-r', path: 'tiny-treats/pretty-park/tree_large.gltf', position: [5, 0, -4], scale: 2.0 },
-    { id: 'env-blanket', path: 'tiny-treats/pleasant-picnic/picnic_blanket_red.gltf', position: [0, 0.2, -1], scale: 2.0 },
-    { id: 'env-bush', path: 'tiny-treats/pretty-park/bush.gltf', position: [-3, 0, -4], scale: 1.5 },
+    { id: 'env-campfire', path: 'poly-pizza/misc/small-camping-bundle/Campfire.glb', position: [0, 0, 0], scale: 2.0 },
+    { id: 'env-crystal-l', path: 'poly-pizza/nature/crystal-pack/Crystal.glb', position: [-2.5, 0, -3], scale: 0.25 },
+    { id: 'env-crystal-c', path: 'poly-pizza/nature/crystal-pack/Crystal-dxCmHfpqc5.glb', position: [0, 0, -4], scale: 0.3 },
+    { id: 'env-crystal-r', path: 'poly-pizza/nature/crystal-pack/Crystal-WzWPKHFMkL.glb', position: [2.5, 0, -3], scale: 0.25 },
+    { id: 'env-torch-l', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [-4, 0, 1], scale: 2.0 },
+    { id: 'env-torch-r', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [4, 0, 1], scale: 2.0 },
+    { id: 'env-stump-l', path: 'tiny-treats/fun-playground/stepping_stumps_B_large.gltf', position: [-2, 0, 2], scale: 1.5 },
+    { id: 'env-stump-r', path: 'tiny-treats/fun-playground/stepping_stumps_B.gltf', position: [2, 0, 2], scale: 1.5 },
+    { id: 'env-mushroom', path: 'quaternius/nature/Mushroom_Common.gltf', position: [-4.5, 0, -2], scale: 2.0 },
   ],
 }
 
@@ -360,6 +365,7 @@ interface HeroCharacter {
   id: string
   characterId: CharacterKey
   position: Position
+  rotation?: [number, number, number]
 }
 
 const TASK_HERO_CHARACTERS: Record<string, HeroCharacter[]> = {
@@ -387,8 +393,8 @@ const TASK_HERO_CHARACTERS: Record<string, HeroCharacter[]> = {
     { id: 'hero-clown', characterId: 'clown', position: 'right' },
   ],
   'adventurers-picnic': [
-    { id: 'hero-ranger', characterId: 'ranger', position: 'left' },
-    { id: 'hero-druid', characterId: 'druid', position: 'right' },
+    { id: 'hero-ranger', characterId: 'ranger', position: 'left', rotation: [0, Math.PI, 0] },
+    { id: 'hero-druid', characterId: 'druid', position: 'right', rotation: [0, Math.PI, 0] },
   ],
 }
 
@@ -432,6 +438,7 @@ interface ActiveActor {
   modelPath?: string
   proceduralType?: string  // "balloon"
   position: [number, number, number]
+  rotation?: [number, number, number]
   animation?: string
   scale?: number
   color?: string           // for procedural items
@@ -600,6 +607,7 @@ export default function ScenePlayer3D({ script, taskId, onComplete }: ScenePlaye
       type: 'character' as const,
       characterId: hero.characterId,
       position: zonePosition(currentZone, POSITION_MAP[hero.position] || [0, 0, 0]),
+      rotation: hero.rotation,
       animation: 'Idle_A',
     }))
     setActors(heroActors)
@@ -1132,6 +1140,7 @@ export default function ScenePlayer3D({ script, taskId, onComplete }: ScenePlaye
               <Character3D
                 characterId={actor.characterId}
                 position={actor.position}
+                rotation={actor.rotation}
                 currentAnimation={actor.animation}
                 ref={(ref) => {
                   if (ref) actorRefs.current.set(actor.id, ref)

@@ -265,7 +265,7 @@ function HexTerrain() {
   return (
     <group name="hex-terrain">
       {tiles.map((tile, i) => (
-        <Piece key={`tile-${i}`} model={tile.model} position={tile.position} rotation={tile.rotation} />
+        <Piece key={`tile-${i}`} model={tile.model} position={tile.position} rotation={tile.rotation} scale={[1, 0.1, 1]} />
       ))}
     </group>
   )

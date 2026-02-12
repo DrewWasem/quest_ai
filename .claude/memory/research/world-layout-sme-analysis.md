@@ -1,364 +1,406 @@
-# Prompt Quest World Layout — SME Analysis
+# Prompt Quest World Layout — SME Analysis v2
 
-**Date**: 2026-02-11
-**Scope**: Gap analysis comparing current VillageWorld layout against kid-game hub-world best practices
-**Sources**: Spatial inventory of VillageWorld.tsx + game design research (Mario 64, Spyro, Banjo-Kazooie, A Hat in Time, LEGO games)
-
----
-
-## Executive Summary
-
-The current world has strong foundations — 7 themed zones in a circular ring, a detailed medieval village center, dramatic dungeon approach with cliffs, and a three-ring forest boundary system. However, **the world is approximately 2-3x too large for the target audience (ages 8-10)**, zone entrances lack visual distinctness from the center, and the flat terrain creates navigation confusion from the isometric camera. The most impactful improvements are: shrinking the world radius, adding unique landmark silhouettes per zone, and introducing height variation.
+**Date**: 2026-02-12
+**Scope**: Complete layout analysis with measured object sizes, full object catalog, zone findability focus
+**SMEs**: child-game-design (v2.0), 3d-game-development (v1.0), 3d-scale-tester (v1.0)
+**Data source**: `window.__measureScene()` live measurements + VillageWorld.tsx code audit
 
 ---
 
-## 1. Current World Metrics vs Best Practices
+## 1. Measured Object Sizes (from running game)
 
-### Scale Comparison
+### Player Character
+| Object | Height | Width | Depth |
+|--------|--------|-------|-------|
+| Knight (Rig_Medium) | **2.56u** | 1.24u | 1.33u |
 
-| Metric | Current Value | Best Practice | Gap | Severity |
-|--------|--------------|---------------|-----|----------|
-| Character height | 2.61 units | 1.0 unit (reference) | — | — |
-| Village building height | ~18 units (scale 7×) | 5.2-7.8 units (2-3× char) | ~2.5× too tall | **HIGH** |
-| Hub center to nearest zone | 25 units (~10 char-lengths) | 15-20 char-lengths (39-52u) | OK for NE/SE/SW, **too far for N** | MEDIUM |
-| Hub center to dungeon (N) | 55 units (~21 char-lengths) | 15-20 char-lengths | **~30% too far** | **HIGH** |
-| Total playable area | 80×110 = 8,800 sq units | ~60×60 = 3,600 sq units | **~2.4× too large** | **CRITICAL** |
-| Path width (main road) | 3 hex cols ≈ 4.5 units (~1.7 char-widths) | 4-5 char-widths (10-13u) | **~2.5× too narrow** | **HIGH** |
-| Village center extent | X[-32,32] Z[-14,15] ≈ 64×29 | 21-31 unit radius (compact) | Width OK, but elongated N-S by road | LOW |
-| World radius (playable) | 65 units (to dungeon) | 25-35 units total | **~2× too large** | **CRITICAL** |
-| Walk time center→dungeon | ~7 sec walk / ~4 sec run | 3-8 sec max | Borderline at run speed | MEDIUM |
+### Village Center Buildings (scale 7.0)
+| Building | Height | Width | Depth | Char Ratio |
+|----------|--------|-------|-------|:----------:|
+| Townhall | 14.52u | 12.04u | 11.05u | 5.7x |
+| Church | 12.67u | 8.89u | 7.92u | 4.9x |
+| Windmill | 11.23u | 10.56u | 9.63u | 4.4x |
+| Tavern | 9.78u | 12.39u | 12.39u | 3.8x |
+| Home_B | 8.06u | 8.23u | 8.75u | 3.1x |
+| Watchtower | 7.79u | 10.34u | 10.34u | 3.0x |
+| Blacksmith | 6.90u | 8.72u | 9.01u | 2.7x |
+| Market | 6.87u | 14.27u | 15.51u | 2.7x |
+| Home_A | 5.86u | 7.01u | 7.15u | 2.3x |
+| Well | 5.78u | 4.56u | 5.26u | 2.3x |
+| Stables | 4.28u | 13.01u | 14.92u | 1.7x |
+| Stage | 2.00u | 7.33u | 6.13u | 0.8x |
 
-### Character-to-Object Ratios (char = 2.61u)
+### Zone Landmarks (scale 8.0)
+| Landmark | Height | Width | Zone |
+|----------|--------|-------|------|
+| Castle (red) | 31.83u | 15.80u | skeleton-birthday |
+| Tower_B (red) | 19.88u | 9.58u | barbarian-school |
+| Tower_B (green) | 19.88u | 9.58u | mage-kitchen |
+| Tower_A (blue) | 17.53u | 7.95u | knight-space |
+| Tower_A (yellow) | 17.53u | 7.95u | dungeon-concert |
+| Watchtower (green) | 8.90u | 8.36u | adventurers-picnic |
+| Shrine (yellow) | 6.83u | 9.24u | skeleton-pizza |
 
-| Ratio | Current | Best Practice | Status |
-|-------|---------|---------------|--------|
-| Char:Building | 1:6.9 (18u buildings) | 1:2-3 | **Too tall** — buildings dominate, player feels ant-sized |
-| Char:Tree | 1:4.6-6.1 (scale 5.6-7.5) | 1:2.5-4 | Slightly oversized |
-| Char:Path width | 1:1.7 (4.5u road) | 1:3-5 | **Way too narrow** |
-| Char:Landmark | N/A (no distinct landmarks) | 1:5-8 | **Missing entirely** |
-| Char:Fence/wall | ~1:2.7 (scale 7 walls) | 1:0.5-0.7 | **Too tall** — walls block all sightlines |
+### Props (scale 7.0)
+| Prop | Height | Width |
+|------|--------|-------|
+| Street lantern | 4.50u | 0.94u |
+| Tent | 3.61u | 3.61u |
+| Target | 2.11u | 1.68u |
+| Flag (all colors) | 1.94u | 1.85u |
+| Weaponrack | 1.68u | 1.40u |
+| Bucket arrows | 1.62u | 0.98u |
+| Barrel | 1.48u | 1.41u |
+| Crate_A | 1.47u | 1.47u |
+| Wheelbarrow | 1.32u | 1.67u |
+| Haybale | 1.26u | 2.80u |
+| Crate_B | 0.98u | 0.98u |
+| Bucket water | 0.74u | 0.98u |
+| Trough | 0.74u | 1.40u |
+| Sack | 0.45u | 0.75u |
 
-### Key Insight: The Scale 7× Problem
-Buildings are scaled 7× to match the character model proportions (established in a prior session). But this means **everything is 7× original, including walls, fences, and props**. A fence that should be waist-high (1.3u) is instead 9.1u — taller than the character. This breaks sightlines from the center.
+### Nature (at scale 7-8)
+| Nature | Height | Width | Notes |
+|--------|--------|-------|-------|
+| Mountain_A | 23.94u | 29.02u | Largest background |
+| Mountain_C | 21.12u | 26.31u | |
+| Mountain_B | 20.20u | 28.60u | |
+| Trees_B_medium | 11.27u | 24.46u | Widest tree cluster |
+| Trees_A_medium | 10.36u | 19.95u | |
+| Trees_B_large | 10.34u | 19.57u | |
+| Trees_A_large | 8.89u | 20.25u | |
+| Bridge_A | 8.75u | 13.47u | |
+| Hills_B_trees | 7.53u | 8.10u | |
+| Hills_A_trees | 6.66u | 8.78u | |
+| Trees_A_small | 6.21u | 7.99u | |
+| Trees_B_small | 6.91u | 11.95u | |
+| Hills_C_trees | 5.83u | 7.63u | |
+| Hill_C | 3.24u | 8.89u | |
+| Hill_B | 1.88u | 4.48u | |
+| Hill_A | 1.54u | 5.55u | |
+| Rock_E | 1.07u | 2.68u | |
+| Rock_B | 0.87u | 1.86u | |
+| Rock_C | 0.78u | 1.88u | |
+| Rock_D | 0.73u | 1.29u | |
+| Rock_A | 0.28u | 1.64u | |
 
----
-
-## 2. Gap Analysis by Category
-
-### A. Spatial Readability — Grade: D
-
-**Issues:**
-1. **No unique landmark silhouettes per zone.** From village center, all zones look like variations of "small structures at a distance." Research says each zone needs ONE tall, unique, impossible-to-miss landmark visible from center
-2. **Flat terrain.** The entire playable area is at Y=0. Research recommends 0.5-2 character-heights of undulation (1.3-5.2 units)
-3. **Building heights block sightlines.** Scale-7 buildings in the village (18u tall) completely block views to zone entrances from inside the village
-4. **No color coding in terrain.** All zones sit on the same green hex-grass tiles. Best practice: each zone's ground color should shift (purple for dungeon, blue for space, etc.)
-
-**What works:**
-- Zone emojis and colors defined in ZONE_META
-- North corridor through forest is visually clear
-- Dungeon cliffs create strong directional marker
-
-### B. Zone Transitions — Grade: C
-
-**Issues:**
-1. **Proximity-based auto-entry (3.0u trigger)** — Players get sucked into zones by walking near them. Research strongly recommends explicit interaction (gate/portal approach) especially for kids who "veer off paths constantly"
-2. **No visual gradient approaching zones.** The hex-grass terrain is uniform until you're inside the zone. Research recommends 3-5 second walk corridors with gradually shifting theme
-3. **No signposts or wayfinding at path junctions.** Research: "T-intersections should always have a visible landmark at the decision point"
-
-**What works:**
-- Dungeon approach with cliff walls creates dramatic transition
-- Zone intro scripts provide narrative context
-- Cooldown timer prevents immediate re-entry after exit
-
-### C. World Size — Grade: F
-
-**The most critical issue.** Research is unanimous: "Make it 50% smaller than you think. A child walking for more than 10 seconds without reaching something interesting will lose engagement."
-
-Current measurements:
-- Center to dungeon: 55 units = ~7 sec running, ~10 sec walking
-- Center to far zones (E/W at 35u): ~4.5 sec running
-- Total traversal north-south: 100 units = ~12 sec running
-
-The dungeon is the special case — it's intentionally far with a dramatic approach. But the **overall playable area of 8,800 sq units is 2.4× the recommended ~3,600 sq units.** This means vast empty stretches between the village and zones.
-
-### D. Visual Density — Grade: C+
-
-**Issues:**
-1. **Empty stretches between village and zones.** The area between village buildings (X±32) and zone entrances (radius 25-35) is mostly just hex-grass with sparse road decoration
-2. **Road decoration only covers Z[-12, 26]** — the northern and southern portions of the road have no decoration
-3. **Forest ring is a hard, opaque wall** rather than a natural density gradient
-
-**What works:**
-- Village center has good density — 14 buildings + 14 props
-- Dungeon zone is well-furnished (35 floor tiles, 8 props, 6 torches, 4 banners)
-- Park zone has varied objects (trees, benches, fountain, hedges)
-
-### E. Path Design — Grade: C-
-
-**Issues:**
-1. **Path is perfectly straight.** A single north-south road with zero curvature. Research: "Perfectly straight paths feel artificial and boring. A gentle S-curve adds visual interest"
-2. **No ring road connecting zones.** Research specifically recommends a ring road with spoke paths, not just a single axis road
-3. **No secondary paths.** Only the main N-S road exists. No paths to E/W zones (Space, School, Kitchen, Concert, Pizza)
-4. **Path too narrow** for character scale (1.7× char width vs recommended 3-5×)
-5. **No breadcrumbs along paths** (collectibles, light sources, particles)
-
-**What works:**
-- Road has clear hex-tile contrast vs grass
-- Road extends the full playable length
-
-### F. Boundaries — Grade: B+
-
-**Issues:**
-1. **Player bounds (minZ=-65) are very close to dungeon cliffs** — feels tight
-2. **No water features** (research recommends water as a secondary boundary layer)
-3. **East/West bounds (X=±40) are invisible** — the forest ring is at R=38-62 but the player bound is at ±40, so players hit an invisible wall before the forest in many directions
-
-**What works:**
-- Three-ring forest system with corridor exclusions — naturalistic and effective
-- Dungeon cliff bowl — dramatic and clearly communicates boundary
-- Perimeter mountains at edges
-- No invisible walls on the main N-S axis (forest corridors + bounds aligned)
-
-### G. Vertical Interest — Grade: D-
-
-**Issues:**
-1. **The entire playable area is at Y=0.** This is the single biggest visual problem from an isometric camera. Research: "Flat hub worlds are disorienting from isometric/overhead cameras because everything is at the same visual depth"
-2. **No elevated zone entrances.** Research: "Raised zone entrances create natural sightlines"
-3. **No bridges, stairs, or multi-level structures**
-4. **No terrain undulation.** The hex grid is flat
-
-**What works:**
-- Dungeon cliff bowl adds dramatic height at the north edge
-- Perimeter mountains provide distant vertical backdrop
-- Clouds at Y=25-45 add some vertical interest
-
-### H. Zone Distinctiveness — Grade: C
-
-**Issues:**
-1. **Most zones are tiny** (12×12 to 10×8 local units). SpaceZone has a landing pad and base modules; SchoolZone has playground equipment; PizzaZone has counter and chairs — but from a distance, they all read as "a few small objects in grass"
-2. **No zone-specific terrain coloring.** All zones sit on default green hex-grass
-3. **No themed entrance archways/gates.** Research: "A visually distinct archway marks 'you're entering the fire zone'"
-4. **ConcertZone stage uses a hex building (stage_A)** at scale 7 — this is one of the taller zone features, which is good
-
-**What works:**
-- Each zone uses thematically appropriate props (space modules, kitchen counters, playground equipment)
-- Dungeon zone has the most complete theming (walls, pillars, banners, torches, ambient lighting)
-- Zone-specific point lights provide color differentiation
+### Zone-Specific Objects
+| Zone Object | Height | Width | Depth |
+|-------------|--------|-------|-------|
+| **Dungeon** | | | |
+| Pillar decorated | 5.20u | 2.90u | 2.22u |
+| Wall half | 4.00u | 2.00u | 1.00u |
+| Wall doorway | 4.00u | 4.00u | 0.50u |
+| Banner | 2.24u | 1.05u | 0.22u |
+| Torch lit | 1.13u | 0.55u | 0.55u |
+| Barrel large | 0.80u | 0.72u | 0.72u |
+| Chest gold | 0.52u | 0.68u | 0.58u |
+| **Park** | | | |
+| Tree large | 4.23u | 2.48u | 2.48u |
+| Tree | 2.89u | 1.98u | 1.89u |
+| Hedge | 1.50u | 1.50u | 4.00u |
+| Bench | 1.41u | 2.35u | 2.35u |
+| Fountain | 1.28u | 3.20u | 3.20u |
+| **School** | | | |
+| Slide | 4.00u | 2.76u | 5.91u |
+| Swing | 3.94u | 6.00u | 3.06u |
+| Merry-go-round | 2.50u | 4.00u | 4.00u |
+| Fence | 2.00u | 2.40u | 0.40u |
+| **Space** | | | |
+| Dropship | 1.30u | 3.00u | 2.30u |
+| Base modules | 1.00u | 2.25u | 2.18u |
+| Dome | 1.00u | 1.90u | 1.90u |
+| Landing pad | 0.50u | 2.50u | 2.50u |
+| **Kitchen** | | | |
+| Wall tiles | 4.00u | 2.00u | 0.50u |
+| Fridge | 3.00u | 2.04u | 1.62u |
+| Stove | 1.30u | 2.00u | 1.68u |
+| Counter | 1.00u | 2.00u | 1.50u |
+| **Pizza** | | | |
+| Wall | 4.00u | 4.00u | 0.50u |
+| Counter decorated | 1.91u | 2.00u | 2.04u |
+| Crate cheese/tomatoes | 0.95u | 2.00u | 2.00u |
+| **Concert** | | | |
+| Stage_A | 5.60u | 12.90u | 6.23u |
 
 ---
 
-## 3. Prioritized Recommendations
+## 2. World Layout — Current State
 
-### Priority 1: CRITICAL (Do First)
+### Coordinate System
+- **Player bounds**: X [-40, 40], Z [-65, 45] (80 × 110 units)
+- **Walk speed**: 8 u/s, **Run speed**: 14 u/s
+- **Player spawn**: [0, 0, 0]
+- **Zone trigger**: 3.0 unit proximity
 
-#### 1A. Shrink the World
-**Problem:** 8,800 sq unit playable area is 2.4× too large
-**Solution:** Bring outer zones inward from radius 35 to radius 18-22
-- Move zone centers: `knight-space [15,0,-15]`, `barbarian-school [20,0,0]`, `skeleton-pizza [15,0,15]`, `adventurers-picnic [0,0,20]`, `dungeon-concert [-15,0,15]`, `mage-kitchen [-20,0,0]`
-- Keep dungeon at [0,0,-40] (shorter approach but still dramatic)
-- Shrink player bounds to X[-30,30] Z[-50,30]
-- Reduces playable area to ~4,800 sq units (~55% reduction)
-**Impact:** Walk times drop to 2-4 seconds per zone. Kids maintain engagement.
+### Zone Positions (from gameStore.ts)
+| Zone | Position | Direction | Distance from Origin | Run Time |
+|------|----------|-----------|---------------------|----------|
+| skeleton-birthday | [0, 0, -55] | North | 55u | ~3.9s |
+| knight-space | [25, 0, -25] | NE | 35.4u | ~2.5s |
+| barbarian-school | [35, 0, 0] | East | 35u | ~2.5s |
+| skeleton-pizza | [25, 0, 25] | SE | 35.4u | ~2.5s |
+| adventurers-picnic | [0, 0, 35] | South | 35u | ~2.5s |
+| dungeon-concert | [-25, 0, 25] | SW | 35.4u | ~2.5s |
+| mage-kitchen | [-35, 0, 0] | West | 35u | ~2.5s |
 
-#### 1B. Add Unique Zone Landmark Silhouettes
-**Problem:** Zones are indistinguishable from village center
-**Solution:** Each zone gets ONE tall, unique landmark piece at 2-3× the zone's other objects:
-- Dungeon: Already has cliff bowl (good)
-- Space: Tall antenna/tower piece (5-6u)
-- School: Clock tower or flagpole (4-5u)
-- Pizza: Giant spinning pizza sign / tall chimney (4-5u)
-- Park: Large tree or fountain column (4-5u)
-- Concert: Speaker tower or stage lighting rig (5-6u)
-- Kitchen: Tall chimney with steam/smoke (4-5u)
-**Impact:** Players can orient from center. "I want to go to the one with the rocket tower"
+### Roads
+- **Main N-S road**: Cobblestone, 3 hex columns wide (cols -1 to +1), Z range -36 to 18, scale 1.8
+- **Spoke roads**: 5 spokes from origin to NE/E/SE/SW/W zones, half-width 2.0
+- **Ring road**: Circle at radius ~30, half-width 2.0 (skips Z < -35 for dungeon area)
 
-#### 1C. Widen the Path
-**Problem:** Path is 4.5u wide with 2.61u character = 1.7× ratio (need 3-5×)
-**Solution:** Expand road from 3 hex columns to 5 hex columns (cols -2 to +2)
-- New width: ~7.5 units = 2.87× character width
-- Better, though still below ideal. Alternatively, use larger hex tiles
-**Impact:** Kids stay on path more easily, camera never makes path ambiguous
-
-### Priority 2: HIGH (Do Next)
-
-#### 2A. Add Height Variation
-**Problem:** Everything at Y=0, world reads as flat pancake from camera
-**Solution:**
-- Raise village center by 1-2u (slight hill)
-- Zone entrances sit at Y=0 (natural level)
-- Add gentle terrain undulation along paths (Y=0 to Y=0.5 variation)
-- Dungeon approach dips down slightly (descending into the dungeon)
-**Impact:** Dramatically improves depth perception from isometric camera
-
-#### 2B. Create Ring Road Connecting Zones
-**Problem:** Only one N-S road; no paths to 5 of 7 zones
-**Solution:** Add a curved ring road at radius ~20 connecting all zone entrances
-- Spoke paths from center to 3-4 key zones (N, E, W, S)
-- Ring road connects remaining zones
-- Width: 3 hex columns (secondary path)
-**Impact:** Players have clear routes to every zone, not just north/south
-
-#### 2C. Add Zone-Specific Ground Colors
-**Problem:** All zones sit on identical green grass
-**Solution:** Replace grass hex tiles within ~8u of each zone center with themed tiles:
-- Dungeon: dark stone/gravel tiles
-- Space: metallic/grey tiles
-- School: sandy/playground tiles
-- Pizza: warm terracotta tiles
-- Park: lush garden tiles (different green)
-- Concert: dark purple/stage tiles
-- Kitchen: checkered/tile pattern
-**Impact:** Zones are distinguishable even before seeing props. Color guides navigation
-
-#### 2D. Add Zone Entrance Archways
-**Problem:** No clear "entering a zone" signal; proximity auto-triggers
-**Solution:**
-- Place a themed archway/gate at each zone entrance (2 pillars + connecting beam)
-- Use zone's color for the archway tint
-- Consider switching from auto-trigger to interaction-based entry (press E/Space near archway)
-**Impact:** Prevents accidental zone entry, adds visual wayfinding markers
-
-### Priority 3: MEDIUM (Polish)
-
-#### 3A. Break Path Straightness
-Add gentle curves to the main road. Instead of straight col [-2,2] road, offset middle sections by ±1 column every 8-10 rows to create S-curves.
-
-#### 3B. Add Wayfinding Breadcrumbs
-- Lanterns/torches along paths every 4-5 units
-- Small signpost pieces at path junctions pointing to zones
-- Particle effects (fireflies, sparkles) near zone entrances
-
-#### 3C. Fill Empty Stretches
-The area between village (X±32) and zones has little content. Add:
-- Scattered props (haybales, crates, flowers) along paths
-- Small NPC placement spots (benches, campfires)
-- Terrain variety (flower patches, rock clusters)
-
-#### 3D. Add Water Feature
-A small stream or pond near the village adds:
-- Visual interest and ambient sound potential
-- Natural secondary boundary element
-- Reflection effects for visual polish
-
-#### 3E. Progressive Zone Disclosure
-Not all 7 zones need to be "active" at start. Consider:
-- 3 zones glowing/lit initially (N, E, S)
-- Others visually muted (grey/fog) until progression
-- Prevents "7 choices, where do I start?" overwhelm
-
-### Priority 4: LOW (Nice-to-Have)
-
-#### 4A. Arrival Lookout Point
-Place player spawn at a slightly elevated NW position looking down at the village. First impression = panoramic view of the whole world.
-
-#### 4B. Multi-Level Village Structures
-Add a bridge connecting two buildings, or a raised walkway/balcony. Creates depth layers visible from isometric camera.
-
-#### 4C. NPC Placement Along Paths
-Stationary character models at key junctions. Kids gravitate toward characters.
-
-#### 4D. Moving Elements
-Butterflies, floating particles, windmill rotation — small animated elements that draw the eye along intended paths.
+### Boundary Layers (outside → inside)
+1. **Tree Border** (3 rows): X ±55-63, Z 60-68 / Z -80 to -88
+2. **Cliff/Mountain Perimeter**: X ±44-55, Z 48-65 / Z -70 to -85
+3. **Impenetrable Forest** (3 rings): R = 38-62
+4. **Player bounds**: X ±40, Z -65 to 45
 
 ---
 
-## 4. ASCII Map: Current Layout
+## 3. Complete Object Catalog by Component
+
+### HexTerrain
+- ~9,600 grass tiles (cols -45 to 45, rows -55 to 50)
+- ~200+ cobblestone road tiles (main road + spoke roads + ring road) at scale 1.8
+- All have `noCollision`
+
+### VillageCenter (14 buildings + 13 props + 5 trees)
+| # | Object | Position | Scale |
+|---|--------|----------|-------|
+| 1 | Townhall | [18, 0, -5] | 7.7 |
+| 2 | Tavern | [-18, 0, -7] | 7.0 |
+| 3 | Market | [14, 0, 9] | 7.0 |
+| 4 | Well | [-8, 0, 2] | 7.0 |
+| 5 | Blacksmith | [-24, 0, 7] | 7.0 |
+| 6 | Home_A | [24, 0, -12] | 7.0 |
+| 7 | Home_B | [-15, 0, -14] | 7.0 |
+| 8 | Home_A | [-28, 0, 14] | 6.3 |
+| 9 | Home_B | [28, 0, 12] | 6.3 |
+| 10 | Church | [28, 0, 2] | 7.7 |
+| 11 | Windmill | [-30, 0, 0] | 7.7 |
+| 12 | Stables | [10, 0, -12] | 7.0 |
+| 13 | Watchtower | [32, 0, -8] | 7.0 |
+| 14 | Stage | [-6, 0, -10] | 5.6 |
+| + | 8 decoration props | various | 7.0 |
+| + | 5 trees around edges | various | 5.6-7.0 |
+
+### VillagePerimeter (~75 pieces)
+- **East wall**: 15 pieces (X 44-52, Z -55 to 46)
+- **West wall**: 15 pieces (X -44 to -52, Z -55 to 46)
+- **South wall**: 10 + 5 background row
+- **North wall**: 5 large mountains + 6 gap-fillers
+- **Corners**: 8 pieces (NE/NW/SE/SW)
+
+### ImpenetrableForest (~50 procedural trees)
+- Inner ring: R=38-42, 14 positions
+- Middle ring: R=38-48, 20 positions + doubles
+- Outer ring: R=52-60, 16 positions
+- Skips corridors (7 directions) and zone clearance (15u)
+
+### TreeBorder (~240 procedural trees)
+- 3 rows × 4 edges, spacing 5u
+- East: X=55/59/63, West: X=-55/-59/-63
+- South: Z=60/64/68, North: Z=-80/-84/-88
+- Scale 8.0-9.4
+
+### DungeonCliffs (~40 pieces)
+- Back wall: 7 mountains/hills/rocks (Z=-67 to -72)
+- Left/Right walls: 6 each (X=±18-28)
+- Approach cliffs: 7+7 (Z=-27 to -45)
+- Entrance boulders: 2
+- Cliff-top trees: 7
+
+### ZoneLandmarks (7 tall buildings)
+- One per zone, positioned near each zone center, scale 8.0
+- Tallest: Castle (31.8u), shortest: Shrine (6.8u)
+
+### RoadDecoration (~30 pieces)
+- 3 flags along main road
+- 4 props along road
+- 2 road-side trees
+- ~20 lanterns (along all spoke roads, scale 1.5)
+- 12 zone-colored flags near entrances (2 per non-dungeon zone)
+
+### TerrainScatter (~37 pieces)
+- 32 procedural (rocks, hills, small trees at R=18-32)
+- 5 strategic hills for vertical interest
+
+### VillagePond (12 pieces)
+- Center: [12, 0, 18]
+- 3 water tiles + 5 coast tiles + 2 lilies + 2 plants + 1 bridge
+
+### ZoneApproachDecor (12 pieces)
+- 2 themed props per zone approach
+
+### Quest Zones (7 zones, ~100 pieces total)
+- **DungeonZone**: 9 walls + 6 pillars + 35 floor tiles + 6 torches + 8 props + 4 banners + 4 lights + 4 entrance markers
+- **ParkZone**: 9 trees/bushes + 2 flowers + 2 benches + 1 fountain + 2 lanterns + 2 hedges
+- **SpaceZone**: 1 landing pad + 2 modules + 1 tunnel + 1 dropship + 2 cargo + 1 solar + 1 dome + 2 lights
+- **SchoolZone**: 1 swing + 1 slide + 1 merry-go-round + 1 seesaw + 1 sandbox + 2 trees + 4 fences + 1 table
+- **PizzaZone**: walls + counters + crates + chairs + plates
+- **ConcertZone**: stage + dungeon walls/pillars/torches/props
+- **KitchenZone**: walls + counters + stove + fridge + table + chairs + pots
+
+---
+
+## 4. SME Analysis
+
+### Child Game Design SME Assessment
+
+**Zone Findability — Grade: B+**
+
+The zones ARE findable. Here's why:
+
+1. **Walk times are excellent**: 2.5s running to any ring zone, 3.9s to dungeon. All within the 3-8s sweet spot.
+2. **Cobblestone roads point directly to zones**: Main N-S road + spoke roads + ring road form clear pathways. Kids can follow the cobblestones.
+3. **Zone landmarks work**: Each zone has a tall colored building (17-32u) visible above village buildings (5-15u). The castle, towers, and shrine create distinct silhouettes.
+4. **Glowing quest circles**: Ground-level glowing rings at each zone center provide the final wayfinding signal.
+5. **Zone-colored flags**: Paired flags near each zone approach reinforce "something is here."
+
+**What could improve zone findability further:**
+- The **space zone** objects are tiny (dropship 1.3u, modules 1.0u) — from the village center camera distance, they're barely visible. Consider scaling up or adding a taller landmark element.
+- The **pizza zone** and **kitchen zone** share similar wall/counter objects — from a distance they look identical. Different visual signatures would help.
+- Zone approach corridors are bare grass with just 2 props each — more themed decoration along the spoke road approaching each zone would build anticipation.
+
+**World Size — Grade: A**
+
+The world size is appropriate. Key data:
+- 6 of 7 zones reachable in 2.5s running
+- Village center is dense with 14 buildings filling the core
+- Exploration between village and zones has scatter objects, hills, roads
+- The dungeon at 55u north is the "special" destination with a dramatic cliff approach — the longer journey IS the design
+
+### 3D Game Development SME Assessment
+
+**Object Scale Ratios — Grade: B+**
+
+Comparing measured heights to scale-reference.md targets:
+
+| Object | Measured | Target Range | Status |
+|--------|----------|-------------|--------|
+| Home_A | 5.86u (2.3x char) | 6.5-7.8u (2.5-3x) | Slightly short |
+| Tavern | 9.78u (3.8x char) | 7.8-10.4u (3-4x) | Good |
+| Townhall | 14.52u (5.7x char) | 10.4-15.7u (4-6x) | Good |
+| Church | 12.67u (4.9x char) | 10.4-13.1u (4-5x) | Good |
+| Windmill | 11.23u (4.4x char) | 10.4-13.1u (4-5x) | Good |
+| Stables | 4.28u (1.7x char) | 5.2-6.5u (2-2.5x) | Slightly short |
+| Well | 5.78u (2.3x char) | 1.3-1.8u (0.5-0.7x) | **Way too tall** |
+| Barrel | 1.48u (0.6x char) | 0.8-1.3u (0.3-0.5x) | Slightly tall |
+| Flag | 1.94u (0.8x char) | 3.9-6.5u (1.5-2.5x) | Too short |
+
+The well at 5.78u is a known issue — at scale 7.0 it's character height when it should be waist-high. Flags are too short to serve as wayfinding. Most buildings are in range.
+
+**Performance Concerns:**
+- ~9,600 hex tiles + ~400 placed objects + ~290 procedural trees/border = high draw call count
+- 4 point lights in dungeon + 2 in space + 4 concert = 10 point lights (at budget limit)
+- Shadow map covers [-100, 100] which is tight for the 80×110 world
+
+---
+
+## 5. Layout Improvement Recommendations
+
+### Priority 1: Make Zones Pop
+
+**1A. Scale up zone-specific objects**
+The space zone is especially tiny. Scale zone objects up so they're visible from the village:
+- Space: scale dropship, modules, dome to 2.0-3.0 (currently 1.0)
+- Pizza/Kitchen: add a unique tall prop to differentiate them
+
+**1B. Thicken zone approach corridors**
+Currently just 2 props each. Add 4-6 themed props along each spoke road in the last 10-15u approaching each zone. The cobblestones lead you there — decoration confirms you're arriving.
+
+**1C. Add zone-specific ground material**
+Replace grass hex tiles near each zone with themed tiles:
+- Dungeon: use `hex_transition` tiles (darker)
+- Space: use metallic/grey appearance (via custom material tint or different tile)
+- Others: tint or pattern variation
+
+### Priority 2: Enhance Cobblestone Walkways
+
+**2A. Widen spoke roads**
+Currently half-width 2.0 on spoke roads vs 3 hex columns on main road. Widen spokes to match the main road width so all paths feel deliberate.
+
+**2B. Add road-edge decoration along spokes**
+Lanterns already exist along spokes. Add small props (flowers, rocks, haybales) every 8-10u along spoke road edges for visual richness.
+
+### Priority 3: Polish
+
+**3A. Fix well scale**
+Reduce well scale from 7.0 to ~2.5 (target: ~1.5u tall, waist-height)
+
+**3B. Increase flag scale**
+Increase zone approach flags from 7.0 to ~15-20 (target: ~4-6u, visible from distance)
+
+**3C. Add signpost-like objects at road junctions**
+Where spoke roads meet the ring road, place a flag + prop cluster so kids recognize the intersection.
+
+---
+
+## 6. Available Unused Assets (from asset-inventory.md)
+
+### High-Value Unused Packs for World Enhancement
+| Pack | Models | Potential Use |
+|------|--------|---------------|
+| forest_nature | 1,580 unused | Dense natural decoration, different tree styles |
+| platformer | 525 | Colorful platforms, could mark zone entrances |
+| resource | 132 | Rocks, gems — path decoration |
+| city_builder | 73 | Modern buildings for contrast zones |
+| Quaternius Nature (zip) | thousands | More tree/bush/rock variety |
+| Cartoon City (zip) | ~50 | Signboards, billboards for wayfinding |
+
+### Character Assets Available (28 deployed, 16 in zip)
+All 28 deployed characters use Rig_Medium skeleton. Could be placed as stationary NPCs at zone entrances or along roads for wayfinding ("talk to the skeleton to find the party!").
+
+---
+
+## 7. ASCII Map — Current Layout
 
 ```
                     NORTH (-Z)
                         |
-         -65 ┌──────────────────────────────────────┐
-             │   ▓▓▓   DUNGEON CLIFF BOWL   ▓▓▓    │ Mountains (scale 11-13)
-         -72 │ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
-         -55 │     ╔═══════════════════╗            │
-             │  ▓▓ ║  DUNGEON ZONE 💀  ║ ▓▓        │ [0,0,-55]
-         -45 │  ▓▓ ║   18u × 10u      ║ ▓▓        │ Cliff bowl wraps around
-             │  ▓▓ ╚═══════════════════╝ ▓▓        │
-         -27 │     ⌐ Approach Cliffs  ¬             │ Cliffs start Z=-27
-             │🌲🌲🌲🌲🌲  ║ ROAD ║  🌲🌲🌲🌲🌲     │ Forest ring R=38-62
-         -25 │🌲🌲       🚀 SPACE          🌲🌲    │ [25,0,-25]
-             │  🌲🌲      [25,0,-25]     🌲🌲      │
-         -15 │    🌲🌲                 🌲🌲         │
-             │                                      │
-          -5 │    ┌─── VILLAGE CENTER ───┐          │
-             │    │ Townhall  Church     │          │ 14 buildings @ scale 7
-     W    0  │🧙 │ Well  Tavern Market  │ 📚      │ Kitchen[-35,0,0] School[35,0,0]
-             │[-35]│ Blacksmith Stables  │ [35]     │
-         +10 │    │ Homes  Windmill     │          │
-             │    └──────────────────────┘          │
-         +20 │  🌲🌲  🎸          🍕   🌲🌲       │ Concert[-25,0,25] Pizza[25,0,25]
-             │      [-25,0,25]  [25,0,25]           │
-         +30 │    🌲🌲🌲  ║ ROAD ║  🌲🌲🌲        │
-         +35 │           🧺 PARK              │ [0,0,35]
-             │          [0,0,35]                │
-         +45 │ 🏔  🏔  🌲🌲🌲🌲🌲🌲🌲  🏔  🏔   │ South boundary
-             └──────────────────────────────────────┘
-            -40               0                   +40
-          WEST (-X)     ←────→     EAST (+X)
+   Z=-65 ┌──────────────────────────────────────────┐ Player bound
+         │     ▓▓▓▓ DUNGEON CLIFFS ▓▓▓▓            │
+   Z=-55 │      ╔══ DUNGEON 💀 ══╗  🏰Castle       │ [0,0,-55]
+         │   ▓▓ ║  walls+torches ║ ▓▓              │
+   Z=-45 │   ▓▓ ╚════════════════╝ ▓▓              │
+         │      ⌐ Approach Cliffs ¬                 │
+         │🌲🌲🌲   ║ COBBLE  ║   🌲🌲🌲           │ Forest ring
+   Z=-25 │  🌲    🗼Space🚀        🌲               │ [25,0,-25]
+         │       [25,0,-25]                          │
+         │                                           │
+   Z=-5  │    ┌──── VILLAGE CENTER ────┐             │
+         │🧙  │ Townhall Church Wind- │    📚       │ Kitchen[-35] School[35]
+   Z=0   │🗼  │ mill  Tavern Market   │   🗼        │
+         │[-35]│ Blacksmith Stables   │  [35]        │
+   Z=10  │    └────────────────────────┘             │
+         │                                           │
+   Z=25  │  🗼Concert🎸        🍕Pizza🏛            │ [-25,0,25] [25,0,25]
+         │  [-25,0,25]    ☆Pond   [25,0,25]         │
+         │🌲🌲🌲   ║ COBBLE  ║   🌲🌲🌲           │
+   Z=35  │         🏛Park🧺                         │ [0,0,35]
+         │         [0,0,35]                          │
+   Z=45  │ 🏔🏔🌲🌲🌲🌲🌲🌲🌲🌲🏔🏔             │ Player bound
+         └──────────────────────────────────────────┘
+        X=-40              0                     X=+40
 ```
 
-## 5. ASCII Map: Recommended Layout (After Priority 1-2 Changes)
-
-```
-                    NORTH (-Z)
-                        |
-         -50 ┌──────────────────────────────┐
-             │  ▓▓▓ DUNGEON CLIFFS ▓▓▓     │ (compressed bowl)
-         -40 │  ▓╔═══════════════╗▓         │ DungeonZone [0,0,-40]
-             │  ▓║  DUNGEON 💀   ║▓         │
-             │  ▓╚═══════════════╝▓         │
-         -30 │    ⌐  Cliffs  ¬              │
-             │🌲🌲 ║ ROAD  ║ 🌲🌲          │
-         -20 │  🌲  ╱        ╲  🌲          │ Ring road curves
-             │     ╱ 🚀SPACE  ╲             │ [15,0,-15]
-         -10 │    ╱              ╲           │
-             │   │  ┌─VILLAGE─┐   │         │ Compact village
-     W    0  │🧙│  │  Center  │  │📚       │ Kitchen[-20,0,0]  School[20,0,0]
-             │[-20] │  (hill)  │ [20]       │ Center raised 1-2u
-         +10 │   │  └─────────┘   │         │
-             │    ╲              ╱           │
-         +15 │  🎸 ╲          ╱ 🍕          │ Concert[-15,0,15] Pizza[15,0,15]
-             │     ╲  ║ROAD║ ╱              │
-         +20 │  🌲🌲 ║     ║ 🌲🌲          │
-             │       🧺 PARK                │ [0,0,20]
-         +30 │ 🏔  🌲🌲🌲🌲🌲🌲🌲  🏔     │
-             └──────────────────────────────┘
-            -30              0             +30
-
-     Zones pulled to radius 15-20  |  Ring road connecting all
-     Village compact (~20u diam)   |  5-col wide road (~7.5u)
-     Center raised for sightlines  |  ~4,200 sq unit playable area
-```
+Key: 🗼=Zone landmark tower  🏰=Castle  🏛=Shrine/watchtower  🌲=Forest  🏔=Mountain  ☆=Feature
 
 ---
 
-## 6. Quick-Win Implementation Checklist
+## 8. Key Numbers Reference
 
-These changes can be made in VillageWorld.tsx + gameStore.ts:
-
-- [ ] **Shrink zone radii** in ZONE_CENTERS (gameStore.ts)
-- [ ] **Shrink player bounds** in PlayerCharacter.tsx
-- [ ] **Widen road** from 3 to 5 hex columns (HexTerrain)
-- [ ] **Add one tall landmark per zone** (new Piece placements per zone component)
-- [ ] **Push forest ring inward** to match new smaller radius (ImpenetrableForest)
-- [ ] **Compress dungeon approach** (DungeonCliffs + DungeonZone position)
-- [ ] **Add ring road hex tiles** at radius ~18 connecting zones
-- [ ] **Add zone ground color** (different hex tile types near zone centers)
-- [ ] **Add entrance archways** (2 pillars per zone entrance)
-- [ ] **Add path decoration** (lanterns every 4-5u along roads)
-
----
-
-## 7. Key Numbers to Remember
-
-| Design Constant | Value | Source |
-|----------------|-------|--------|
-| Character height | 2.61u | Measured in game |
-| Ideal building height | 5.2-7.8u (2-3× char) | Game design research |
-| Ideal path width | 8-13u (3-5× char) | Game design research |
-| Ideal hub radius | 15-20 char-lengths (39-52u) | Game design research |
-| Max walk time to zone | 3-8 seconds | Game design research |
-| Zone trigger distance | 3.0u (current) | gameStore.ts |
-| Ideal terrain undulation | 1.3-5.2u (0.5-2× char) | Game design research |
-| Min landmark height | 13-21u (5-8× char) | Game design research |
-| Ideal zone count (initial) | 3 open, rest locked | Progressive disclosure |
+| Constant | Value | Source |
+|----------|-------|--------|
+| Character height | 2.56u | Measured |
+| Village building scale | 7.0 (props: 7.0) | VillageWorld.tsx |
+| Zone landmark scale | 8.0 | VillageWorld.tsx |
+| Walk speed | 8 u/s | PlayerCharacter.tsx |
+| Run speed | 14 u/s | PlayerCharacter.tsx |
+| Player bounds | X[-40,40] Z[-65,45] | PlayerCharacter.tsx |
+| Zone trigger distance | 3.0u | gameStore.ts |
+| Hex tile size | 2.0u wide | VillageWorld.tsx |
+| Cobblestone road scale | 1.8 | VillageWorld.tsx |
+| Forest corridor N half-width | 0.50 rad | ImpenetrableForest |
+| Zone clearance (forest) | 15u | ImpenetrableForest |
+| Collision box shrink | 0.7× (30% reduction) | Piece component |

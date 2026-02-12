@@ -237,8 +237,9 @@ function HexTerrain() {
     }
 
     // Main N-S road — 3 columns wide (col -1 to +1)
+    // Ends at row 18 (Z≈31) so road stops before the Park Zone at Z=35
     const roadCols = [-1, 0, 1]
-    for (let row = -36; row <= 24; row++) {
+    for (let row = -36; row <= 18; row++) {
       for (const col of roadCols) {
         addRoad(col, row, TILES.road_A)
       }
@@ -719,10 +720,10 @@ function ParkZone() {
       <Piece model="tiny-treats/pretty-park/flower_A.gltf" position={[-3, 0, -2]} />
       <Piece model="tiny-treats/pretty-park/flower_B.gltf" position={[3, 0, -1.5]} />
 
-      {/* Park bench and fountain */}
+      {/* Park benches and fountain (fountain offset right so it doesn't block play area) */}
       <Piece model="tiny-treats/pretty-park/bench.gltf" position={[-4, 0, 2]} rotation={[0, Math.PI / 4, 0]} />
       <Piece model="tiny-treats/pretty-park/bench.gltf" position={[4, 0, 1]} rotation={[0, -Math.PI / 4, 0]} />
-      <Piece model="tiny-treats/pretty-park/fountain.gltf" position={[0, 0, -2]} scale={0.8} />
+      <Piece model="tiny-treats/pretty-park/fountain.gltf" position={[4, 0, -3]} scale={0.8} />
       <Piece model="tiny-treats/pretty-park/street_lantern.gltf" position={[-5, 0, 0]} />
       <Piece model="tiny-treats/pretty-park/street_lantern.gltf" position={[5, 0, 0]} />
 
@@ -997,35 +998,6 @@ function ZoneLandmarks() {
       <Piece model={BUILDINGS.tower_A_yellow} position={[-31, 0, 30]} scale={8.0} />
       {/* mage-kitchen: Green tower */}
       <Piece model={BUILDINGS.tower_B_green} position={[-41, 0, -4]} scale={8.0} />
-    </group>
-  )
-}
-
-// ============================================================================
-// ZONE ARCHWAYS — Pillar gates marking entrance to each zone
-// ============================================================================
-
-function ZoneArchways() {
-  return (
-    <group name="zone-archways">
-      {/* knight-space (NE) */}
-      <Piece model={BUILDINGS.wall_gate} position={[22, 0, -22]} rotation={[0, Math.PI / 4, 0]} scale={7.0} />
-      <Piece model={BUILDINGS.wall_gate} position={[28, 0, -28]} rotation={[0, Math.PI / 4, 0]} scale={7.0} />
-      {/* barbarian-school (E) */}
-      <Piece model={BUILDINGS.wall_gate} position={[30, 0, -3]} rotation={[0, Math.PI / 2, 0]} scale={7.0} />
-      <Piece model={BUILDINGS.wall_gate} position={[30, 0, 3]} rotation={[0, Math.PI / 2, 0]} scale={7.0} />
-      {/* skeleton-pizza (SE) */}
-      <Piece model={BUILDINGS.wall_gate} position={[22, 0, 22]} rotation={[0, -Math.PI / 4, 0]} scale={7.0} />
-      <Piece model={BUILDINGS.wall_gate} position={[28, 0, 28]} rotation={[0, -Math.PI / 4, 0]} scale={7.0} />
-      {/* adventurers-picnic (S) */}
-      <Piece model={BUILDINGS.wall_gate} position={[-3, 0, 30]} rotation={[0, 0, 0]} scale={7.0} />
-      <Piece model={BUILDINGS.wall_gate} position={[3, 0, 30]} rotation={[0, 0, 0]} scale={7.0} />
-      {/* dungeon-concert (SW) */}
-      <Piece model={BUILDINGS.wall_gate} position={[-22, 0, 22]} rotation={[0, 3 * Math.PI / 4, 0]} scale={7.0} />
-      <Piece model={BUILDINGS.wall_gate} position={[-28, 0, 28]} rotation={[0, 3 * Math.PI / 4, 0]} scale={7.0} />
-      {/* mage-kitchen (W) */}
-      <Piece model={BUILDINGS.wall_gate} position={[-30, 0, -3]} rotation={[0, -Math.PI / 2, 0]} scale={7.0} />
-      <Piece model={BUILDINGS.wall_gate} position={[-30, 0, 3]} rotation={[0, -Math.PI / 2, 0]} scale={7.0} />
     </group>
   )
 }

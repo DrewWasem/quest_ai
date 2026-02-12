@@ -18,11 +18,13 @@
  * plus existing task environment pieces offset to zone positions.
  */
 
-import { memo, useMemo, Suspense } from 'react'
+import { memo, useMemo, useRef, useState, useEffect, useCallback, Suspense } from 'react'
+import { useFrame } from '@react-three/fiber'
 import { useGLTF, Sky, Cloud, Clouds } from '@react-three/drei'
 import * as THREE from 'three'
 import { ASSET_BASE } from '../data/asset-manifest'
 import { ZONE_CENTERS, ZONE_META } from '../stores/gameStore'
+import { registerCollision, unregisterCollision, getCollisionBoxes, getGeneration, type CollisionBox } from './collision-registry'
 import { QuestZoneCircle } from './QuestZoneCircle'
 
 // ============================================================================
@@ -144,85 +146,36 @@ const DECORATION = {
 }
 
 // ============================================================================
-// OBJECT CLEARANCE MAP — avoidance radii scaled to object size
+// SPAWN AVOIDANCE — approximate building positions for scatter/forest placement
+// Runtime player collision uses auto-measured GLTF bounding boxes (collision-registry.ts)
 // ============================================================================
 
-// [x, z, radius] — radius based on object scale and footprint
-const OBJECT_CLEARANCES: [number, number, number][] = [
-  // ── Village Center Buildings (scale 7.0, large footprints) ──
-  [18, -5, 8],     // Town Hall (biggest)
-  [-18, -7, 6],    // Tavern
-  [14, 9, 5],      // Market
-  [-8, 2, 4],      // Well
-  [-24, 7, 5],     // Blacksmith
-  [24, -12, 5],    // Home A
-  [-15, -14, 5],   // Home B (moved)
-  [-28, 14, 4],    // Home A (small)
-  [28, 12, 4],     // Home B (small)
-  [28, 2, 7],      // Church (tall)
-  [-30, 0, 7],     // Windmill (tall)
-  [10, -12, 5],    // Stables
-  [32, -8, 4],     // Watchtower
-  [-6, -10, 5],    // Stage
-
-  // ── Village Center Decoration (scale 7.0, small footprints) ──
-  [-12, -2, 3],    // Barrel
-  [8, 2, 3],       // Crate A
-  [-12, 12, 3],    // Haybale
-  [6, -7, 2],      // Wheelbarrow
-  [-9, 7, 2],      // Sack
-  [-6, 1, 2],      // Bucket Water
-  [6, 6, 3],       // Trough
-  [2, -12, 2],     // Flag Blue
-
-  // ── Village Center Trees (scale 6-7, medium canopy) ──
-  [-32, -2, 5],    // Tree A
-  [32, -2, 5],     // Tree B
-  [-30, 12, 4],    // Trees Small
-  [30, -10, 4],    // Trees Small
-  [20, 15, 4],     // Tree B
-
-  // ── Zone Landmarks (scale 8.0, tall buildings) ──
-  [-10, -60, 7],   // Red Castle
-  [31, -30, 5],    // Blue Tower
-  [41, -4, 5],     // Red Tower
-  [31, 30, 5],     // Yellow Shrine
-  [8, 40, 5],      // Green Watchtower
-  [-31, 30, 5],    // Yellow Tower
-  [-41, -4, 5],    // Green Tower
-
-  // ── Village Pond ──
-  [12, 18, 6],     // Pond center + bridge
-
-  // ── Road Decoration (scale 7.0) ──
-  [-8, 18, 4],     // Tree A on road
-  [8, 22, 4],      // Tree B on road
-
-  // ── Zone Approach Decor (scale 7.0) ──
-  [20, -20, 3],    // Crate A (NE)
-  [24, -18, 3],    // Target (NE)
-  [28, -6, 3],     // Haybale (E)
-  [28, 6, 3],      // Bucket Arrows (E)
-  [20, 20, 3],     // Barrel (SE)
-  [24, 22, 3],     // Crate B (SE)
-  [-5, 28, 3],     // Flower A (S)
-  [5, 28, 3],      // Flower B (S)
-  [-20, 20, 3],    // Weapon Rack (SW)
-  [-24, 22, 3],    // Tent (SW)
-  [-28, -6, 3],    // Sack (W)
-  [-28, 6, 3],     // Bucket Water (W)
-
-  // ── Strategic Hills (scale 4.5-5.5) ──
-  [15, -12, 5],
-  [-15, 15, 5],
-  [20, 12, 4],
-  [-12, -20, 5],
-  [8, 22, 4],
+const SPAWN_EXCLUSIONS: [number, number, number][] = [
+  // Village center buildings (approx center x, z, radius)
+  [18, -5, 6],    // Town Hall
+  [-18, -7, 5],   // Tavern
+  [14, 9, 4],     // Market
+  [-8, 2, 3],     // Well
+  [-24, 7, 5],    // Blacksmith
+  [24, -12, 4],   // Home A
+  [-15, -14, 4],  // Home B
+  [-28, 14, 4],   // Home A (small)
+  [28, 12, 4],    // Home B (small)
+  [28, 2, 5],     // Church
+  [-30, 0, 5],    // Windmill
+  [10, -12, 5],   // Stables
+  [32, -8, 3],    // Watchtower
+  [-6, -10, 4],   // Stage
+  // Pond
+  [12, 18, 4],
+  // Zone landmarks
+  [-10, -60, 5],  [31, -30, 3],  [41, -4, 3],  [31, 30, 3],
+  [8, 40, 3],     [-31, 30, 3],  [-41, -4, 3],
 ]
 
-/** Check if a position is too close to any placed object */
+/** Check if position is too close to a known structure (scatter/forest avoidance only) */
 function isNearObject(x: number, z: number, padding: number = 0): boolean {
-  for (const [ox, oz, r] of OBJECT_CLEARANCES) {
+  for (const [ox, oz, r] of SPAWN_EXCLUSIONS) {
     const dx = x - ox
     const dz = z - oz
     if (dx * dx + dz * dz < (r + padding) * (r + padding)) return true
@@ -239,10 +192,13 @@ interface PieceProps {
   position: [number, number, number]
   rotation?: [number, number, number]
   scale?: number | [number, number, number]
+  noCollision?: boolean
 }
 
-const Piece = memo(({ model, position, rotation, scale = 1 }: PieceProps) => {
+const Piece = memo(({ model, position, rotation, scale = 1, noCollision }: PieceProps) => {
+  const groupRef = useRef<THREE.Group>(null!)
   const { scene } = useGLTF(ASSET_BASE + model)
+  const boxesRef = useRef<CollisionBox[]>([])
 
   const cloned = useMemo(() => {
     const clone = scene.clone(true)
@@ -259,8 +215,119 @@ const Piece = memo(({ model, position, rotation, scale = 1 }: PieceProps) => {
     ? scale
     : [scale, scale, scale]
 
+  // Auto-register ground-level footprint for player collision.
+  // Per-mesh boxes, with grid subdivision for large single-mesh models
+  // (e.g. stables where building+horses+fences are baked into one mesh).
+  useEffect(() => {
+    if (noCollision || !groupRef.current) return
+
+    groupRef.current.updateWorldMatrix(true, true)
+
+    // Full bounding box to find ground level and total height
+    const fullBox = new THREE.Box3().setFromObject(groupRef.current)
+    const fullSize = fullBox.getSize(new THREE.Vector3())
+
+    // Skip nearly flat objects (floor tiles, ground decals)
+    if (fullSize.y < 0.2) return
+
+    // Ground slice: bottom 20% of height, clamped to [0.5, 2.0] world units
+    const sliceHeight = Math.max(0.5, Math.min(fullSize.y * 0.2, 2.0))
+    const groundThreshold = fullBox.min.y + sliceHeight
+
+    const registered: CollisionBox[] = []
+    const vtx = new THREE.Vector3()
+    const GRID_CELL = 2.0 // grid cell size for subdividing large meshes
+
+    const registerBox = (minX: number, maxX: number, minZ: number, maxZ: number) => {
+      const w = maxX - minX
+      const d = maxZ - minZ
+      if (w < 0.2 && d < 0.2) return
+      const cb: CollisionBox = {
+        cx: (minX + maxX) / 2,
+        cz: (minZ + maxZ) / 2,
+        halfW: w / 2 * 0.7,
+        halfD: d / 2 * 0.7,
+        minY: fullBox.min.y,
+        maxY: fullBox.max.y,
+      }
+      registerCollision(cb)
+      registered.push(cb)
+    }
+
+    // Per-mesh collision
+    groupRef.current.traverse((child: any) => {
+      if (!child.isMesh || !child.geometry) return
+      const posAttr = child.geometry.attributes.position
+      if (!posAttr) return
+
+      // Collect ground-level vertices
+      const groundVerts: { x: number; z: number }[] = []
+      const matrix = child.matrixWorld
+      for (let i = 0; i < posAttr.count; i++) {
+        vtx.set(posAttr.getX(i), posAttr.getY(i), posAttr.getZ(i))
+        vtx.applyMatrix4(matrix)
+        if (vtx.y <= groundThreshold) {
+          groundVerts.push({ x: vtx.x, z: vtx.z })
+        }
+      }
+
+      if (groundVerts.length === 0) return
+
+      // Compute overall extent
+      let minX = Infinity, maxX = -Infinity
+      let minZ = Infinity, maxZ = -Infinity
+      for (const v of groundVerts) {
+        if (v.x < minX) minX = v.x
+        if (v.x > maxX) maxX = v.x
+        if (v.z < minZ) minZ = v.z
+        if (v.z > maxZ) maxZ = v.z
+      }
+
+      const w = maxX - minX
+      const d = maxZ - minZ
+      if (w < 0.3 && d < 0.3) return
+
+      // Small footprint → one box
+      if (w <= 4 && d <= 4) {
+        registerBox(minX, maxX, minZ, maxZ)
+        return
+      }
+
+      // Large footprint → subdivide into grid cells so gaps between
+      // sub-objects (horses vs building vs fences) become walkable
+      const cells = new Map<string, { minX: number; maxX: number; minZ: number; maxZ: number }>()
+      for (const v of groundVerts) {
+        const gx = Math.floor(v.x / GRID_CELL)
+        const gz = Math.floor(v.z / GRID_CELL)
+        const key = `${gx},${gz}`
+        const cell = cells.get(key)
+        if (cell) {
+          if (v.x < cell.minX) cell.minX = v.x
+          if (v.x > cell.maxX) cell.maxX = v.x
+          if (v.z < cell.minZ) cell.minZ = v.z
+          if (v.z > cell.maxZ) cell.maxZ = v.z
+        } else {
+          cells.set(key, { minX: v.x, maxX: v.x, minZ: v.z, maxZ: v.z })
+        }
+      }
+
+      for (const cell of cells.values()) {
+        registerBox(cell.minX, cell.maxX, cell.minZ, cell.maxZ)
+      }
+    })
+
+    boxesRef.current = registered
+
+    return () => {
+      for (const cb of boxesRef.current) {
+        unregisterCollision(cb)
+      }
+      boxesRef.current = []
+    }
+  }, [noCollision])
+
   return (
-    <group position={position} rotation={rotation || [0, 0, 0]} scale={scaleArr}>
+    <group ref={groupRef} position={position} rotation={rotation || [0, 0, 0]} scale={scaleArr}>
       <primitive object={cloned} />
     </group>
   )
@@ -350,7 +417,7 @@ function HexTerrain() {
   return (
     <group name="hex-terrain">
       {tiles.map((tile, i) => (
-        <Piece key={`tile-${i}`} model={tile.model} position={tile.position} rotation={tile.rotation} />
+        <Piece key={`tile-${i}`} model={tile.model} position={tile.position} rotation={tile.rotation} noCollision />
       ))}
     </group>
   )
@@ -738,7 +805,7 @@ function DungeonZone() {
       {/* Floor tiles — expanded grid covering the full courtyard */}
       {[-6, -4, -2, 0, 2, 4, 6].map(x =>
         [-6, -4, -2, 0, 2].map(z => (
-          <Piece key={`floor-${x}-${z}`} model="kaykit/packs/dungeon/floor_tile_large.gltf" position={[x, 0.01, z]} />
+          <Piece key={`floor-${x}-${z}`} model="kaykit/packs/dungeon/floor_tile_large.gltf" position={[x, 0.01, z]} noCollision />
         ))
       )}
 
@@ -1337,6 +1404,66 @@ function VillageAtmosphere() {
 }
 
 // ============================================================================
+// DEBUG: COLLISION BOX VISUALIZER — toggle with . (period) key
+// Shows auto-measured bounding boxes from collision registry
+// ============================================================================
+
+function DebugClearanceRings() {
+  const [visible, setVisible] = useState(false)
+
+  const toggle = useCallback((e: KeyboardEvent) => {
+    if (e.code === 'Period') setVisible(v => !v)
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('keydown', toggle)
+    return () => window.removeEventListener('keydown', toggle)
+  }, [toggle])
+
+  if (!visible) return null
+
+  return <DebugCollisionBoxes />
+}
+
+function DebugCollisionBoxes() {
+  const meshRef = useRef<THREE.InstancedMesh>(null!)
+  const lastGenRef = useRef(-1)
+
+  const [geo] = useState(() => new THREE.PlaneGeometry(1, 1))
+  const [mat] = useState(() => new THREE.MeshBasicMaterial({
+    color: 0xff3333,
+    transparent: true,
+    opacity: 0.4,
+    side: THREE.DoubleSide,
+    depthWrite: false,
+  }))
+
+  useFrame(() => {
+    if (!meshRef.current) return
+    const gen = getGeneration()
+    if (gen === lastGenRef.current) return
+    lastGenRef.current = gen
+
+    const boxes = getCollisionBoxes()
+    const count = Math.min(boxes.length, 2000)
+    const dummy = new THREE.Object3D()
+
+    for (let i = 0; i < count; i++) {
+      const box = boxes[i]
+      dummy.position.set(box.cx, 0.15, box.cz)
+      dummy.rotation.set(-Math.PI / 2, 0, 0)
+      dummy.scale.set(box.halfW * 2, box.halfD * 2, 1)
+      dummy.updateMatrix()
+      meshRef.current.setMatrixAt(i, dummy.matrix)
+    }
+    meshRef.current.count = count
+    meshRef.current.instanceMatrix.needsUpdate = true
+  })
+
+  return <instancedMesh ref={meshRef} args={[geo, mat, 2000]} />
+}
+
+// ============================================================================
 // MAIN COMPONENT
 // ============================================================================
 
@@ -1447,6 +1574,9 @@ export function VillageWorld() {
           />
         )
       })}
+
+      {/* Debug: collision radius rings — press . to toggle */}
+      <DebugClearanceRings />
     </group>
   )
 }

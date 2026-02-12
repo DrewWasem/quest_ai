@@ -729,6 +729,101 @@ function ImpenetrableForest() {
 }
 
 // ============================================================================
+// TREE BORDER — 3 dense rows of trees just inside the world edge
+// ============================================================================
+
+function TreeBorder() {
+  const treeModels = [
+    DECORATION.tree_A,
+    DECORATION.tree_B,
+    DECORATION.trees_large,
+    DECORATION.trees_medium,
+    DECORATION.trees_B_large,
+    DECORATION.trees_B_medium,
+  ]
+
+  const trees = useMemo(() => {
+    const result: { model: string; position: [number, number, number]; rotation: [number, number, number]; scale: number }[] = []
+    const pick = (i: number) => treeModels[i % treeModels.length]
+    const rot = (i: number) => ((i * 137.5) % 360) * (Math.PI / 180)
+    let idx = 0
+
+    const SPACING = 5
+    const ROWS = [0, 4, 8] // offset from innermost row (all beyond player bounds)
+    const SCALE = 8.0
+
+    // Slight jitter so rows don't look perfectly aligned
+    const jitter = (i: number) => ((i * 17) % 5) * 0.6 - 1.5
+
+    // ── EAST EDGE (X = 55 → 63) ──
+    for (const rowOff of ROWS) {
+      const x = 55 + rowOff
+      for (let z = -75; z <= 60; z += SPACING) {
+        result.push({
+          model: pick(idx),
+          position: [x, 0, z + jitter(idx)],
+          rotation: [0, rot(idx), 0],
+          scale: SCALE + (idx % 3) * 0.8,
+        })
+        idx++
+      }
+    }
+
+    // ── WEST EDGE (X = -55 → -63) ──
+    for (const rowOff of ROWS) {
+      const x = -(55 + rowOff)
+      for (let z = -75; z <= 60; z += SPACING) {
+        result.push({
+          model: pick(idx),
+          position: [x, 0, z + jitter(idx)],
+          rotation: [0, rot(idx), 0],
+          scale: SCALE + (idx % 3) * 0.8,
+        })
+        idx++
+      }
+    }
+
+    // ── SOUTH EDGE (Z = 60 → 68) ──
+    for (const rowOff of ROWS) {
+      const z = 60 + rowOff
+      for (let x = -65; x <= 65; x += SPACING) {
+        result.push({
+          model: pick(idx),
+          position: [x + jitter(idx), 0, z],
+          rotation: [0, rot(idx), 0],
+          scale: SCALE + (idx % 3) * 0.8,
+        })
+        idx++
+      }
+    }
+
+    // ── NORTH EDGE (Z = -80 → -88) ──
+    for (const rowOff of ROWS) {
+      const z = -(80 + rowOff)
+      for (let x = -65; x <= 65; x += SPACING) {
+        result.push({
+          model: pick(idx),
+          position: [x + jitter(idx), 0, z],
+          rotation: [0, rot(idx), 0],
+          scale: SCALE + (idx % 3) * 0.8,
+        })
+        idx++
+      }
+    }
+
+    return result
+  }, [])
+
+  return (
+    <group name="tree-border">
+      {trees.map((t, i) => (
+        <Piece key={`tborder-${i}`} model={t.model} position={t.position} rotation={t.rotation} scale={t.scale} />
+      ))}
+    </group>
+  )
+}
+
+// ============================================================================
 // DUNGEON CLIFFS — Mountain/cliff bowl enclosing the dungeon from all sides
 // ============================================================================
 
@@ -1528,6 +1623,11 @@ export function VillageWorld() {
       {/* Dense forest ring hiding world edges */}
       <Suspense fallback={null}>
         <ImpenetrableForest />
+      </Suspense>
+
+      {/* 3 rows of trees along each world edge */}
+      <Suspense fallback={null}>
+        <TreeBorder />
       </Suspense>
 
       {/* Cliff bowl enclosing the dungeon */}

@@ -47,10 +47,10 @@ const HEX = 'kaykit/packs/medieval_hex/'
 
 const TILES = {
   grass: HEX + 'tiles/base/hex_grass.gltf',
-  road_A: HEX + 'tiles/roads/hex_road_A.gltf',
-  road_B: HEX + 'tiles/roads/hex_road_B.gltf',
-  road_C: HEX + 'tiles/roads/hex_road_C.gltf',
-  road_D: HEX + 'tiles/roads/hex_road_D.gltf',
+  road_A: 'tiny-treats/pretty-park/cobble_stones.gltf',
+  road_B: 'tiny-treats/pretty-park/cobble_stones.gltf',
+  road_C: 'tiny-treats/pretty-park/cobble_stones.gltf',
+  road_D: 'tiny-treats/pretty-park/cobble_stones.gltf',
   water: HEX + 'tiles/base/hex_water.gltf',
   coast_A: HEX + 'tiles/coast/hex_coast_A.gltf',
   coast_B: HEX + 'tiles/coast/hex_coast_B.gltf',
@@ -218,44 +218,41 @@ function HexTerrain() {
   // Generate a grid of hex tiles covering the village area
   const tiles = useMemo(() => {
     const result: { model: string; position: [number, number, number]; rotation?: [number, number, number] }[] = []
-    const placed = new Set<string>()
+    const roadPositions = new Set<string>()
 
-    const addTile = (col: number, row: number, model: string) => {
-      const key = `${col},${row}`
-      if (placed.has(key)) return
-      placed.add(key)
-      result.push({ model, position: hexToWorld(col, row) })
+    // 1. Grass everywhere first
+    for (let col = -45; col <= 45; col++) {
+      for (let row = -55; row <= 50; row++) {
+        result.push({ model: TILES.grass, position: hexToWorld(col, row) })
+      }
     }
 
-    // Road tiles — 5 columns wide (col -2 to +2) for a wider main road
-    // Extended north to row -36 (Z≈-62) to reach the dungeon
-    const roadCols = [-2, -1, 0, 1, 2]
+    // 2. Road tiles layered on top of grass
+    const addRoad = (col: number, row: number, model: string) => {
+      const key = `${col},${row}`
+      if (roadPositions.has(key)) return
+      roadPositions.add(key)
+      const [wx, , wz] = hexToWorld(col, row)
+      result.push({ model, position: [wx, 0.05, wz] })
+    }
+
+    // Main N-S road — 3 columns wide (col -1 to +1)
+    const roadCols = [-1, 0, 1]
     for (let row = -36; row <= 24; row++) {
       for (const col of roadCols) {
-        const model = col === 0 ? TILES.road_A : (Math.abs(col) === 1 ? TILES.road_B : TILES.road_C)
-        addTile(col, row, model)
+        addRoad(col, row, TILES.road_A)
       }
     }
 
-    // Spoke roads + ring road: check each hex cell in the full grid
+    // Spoke roads + ring road
     for (let col = -45; col <= 45; col++) {
       for (let row = -55; row <= 50; row++) {
-        const key = `${col},${row}`
-        if (placed.has(key)) continue
         const [wx, , wz] = hexToWorld(col, row)
-        const onSpoke = isOnSpoke(wx, wz, 3.0)
-        const onRing = isOnRingRoad(wx, wz, 3.0)
+        const onSpoke = isOnSpoke(wx, wz, 2.0)
+        const onRing = isOnRingRoad(wx, wz, 2.0)
         if (onSpoke || onRing) {
-          const model = onRing ? TILES.road_C : TILES.road_B
-          addTile(col, row, model)
+          addRoad(col, row, TILES.road_A)
         }
-      }
-    }
-
-    // Fill remaining cells with grass
-    for (let col = -45; col <= 45; col++) {
-      for (let row = -55; row <= 50; row++) {
-        addTile(col, row, TILES.grass)
       }
     }
 
@@ -1317,10 +1314,6 @@ export function VillageWorld() {
         <ZoneLandmarks />
       </Suspense>
 
-      {/* Zone entrance archways */}
-      <Suspense fallback={null}>
-        <ZoneArchways />
-      </Suspense>
 
       {/* Road decoration (lanterns, flags, props) */}
       <Suspense fallback={null}>

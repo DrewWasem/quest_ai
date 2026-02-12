@@ -144,6 +144,93 @@ const DECORATION = {
 }
 
 // ============================================================================
+// OBJECT CLEARANCE MAP — avoidance radii scaled to object size
+// ============================================================================
+
+// [x, z, radius] — radius based on object scale and footprint
+const OBJECT_CLEARANCES: [number, number, number][] = [
+  // ── Village Center Buildings (scale 7.0, large footprints) ──
+  [18, -5, 8],     // Town Hall (biggest)
+  [-18, -7, 6],    // Tavern
+  [14, 9, 5],      // Market
+  [-8, 2, 4],      // Well
+  [-24, 7, 5],     // Blacksmith
+  [24, -12, 5],    // Home A
+  [-15, -14, 5],   // Home B (moved)
+  [-28, 14, 4],    // Home A (small)
+  [28, 12, 4],     // Home B (small)
+  [28, 2, 7],      // Church (tall)
+  [-30, 0, 7],     // Windmill (tall)
+  [10, -12, 5],    // Stables
+  [32, -8, 4],     // Watchtower
+  [-6, -10, 5],    // Stage
+
+  // ── Village Center Decoration (scale 7.0, small footprints) ──
+  [-12, -2, 3],    // Barrel
+  [8, 2, 3],       // Crate A
+  [-12, 12, 3],    // Haybale
+  [6, -7, 2],      // Wheelbarrow
+  [-9, 7, 2],      // Sack
+  [-6, 1, 2],      // Bucket Water
+  [6, 6, 3],       // Trough
+  [2, -12, 2],     // Flag Blue
+
+  // ── Village Center Trees (scale 6-7, medium canopy) ──
+  [-32, -2, 5],    // Tree A
+  [32, -2, 5],     // Tree B
+  [-30, 12, 4],    // Trees Small
+  [30, -10, 4],    // Trees Small
+  [20, 15, 4],     // Tree B
+
+  // ── Zone Landmarks (scale 8.0, tall buildings) ──
+  [-10, -60, 7],   // Red Castle
+  [31, -30, 5],    // Blue Tower
+  [41, -4, 5],     // Red Tower
+  [31, 30, 5],     // Yellow Shrine
+  [8, 40, 5],      // Green Watchtower
+  [-31, 30, 5],    // Yellow Tower
+  [-41, -4, 5],    // Green Tower
+
+  // ── Village Pond ──
+  [12, 18, 6],     // Pond center + bridge
+
+  // ── Road Decoration (scale 7.0) ──
+  [-8, 18, 4],     // Tree A on road
+  [8, 22, 4],      // Tree B on road
+
+  // ── Zone Approach Decor (scale 7.0) ──
+  [20, -20, 3],    // Crate A (NE)
+  [24, -18, 3],    // Target (NE)
+  [28, -6, 3],     // Haybale (E)
+  [28, 6, 3],      // Bucket Arrows (E)
+  [20, 20, 3],     // Barrel (SE)
+  [24, 22, 3],     // Crate B (SE)
+  [-5, 28, 3],     // Flower A (S)
+  [5, 28, 3],      // Flower B (S)
+  [-20, 20, 3],    // Weapon Rack (SW)
+  [-24, 22, 3],    // Tent (SW)
+  [-28, -6, 3],    // Sack (W)
+  [-28, 6, 3],     // Bucket Water (W)
+
+  // ── Strategic Hills (scale 4.5-5.5) ──
+  [15, -12, 5],
+  [-15, 15, 5],
+  [20, 12, 4],
+  [-12, -20, 5],
+  [8, 22, 4],
+]
+
+/** Check if a position is too close to any placed object */
+function isNearObject(x: number, z: number, padding: number = 0): boolean {
+  for (const [ox, oz, r] of OBJECT_CLEARANCES) {
+    const dx = x - ox
+    const dz = z - oz
+    if (dx * dx + dz * dz < (r + padding) * (r + padding)) return true
+  }
+  return false
+}
+
+// ============================================================================
 // REUSABLE PIECE COMPONENT
 // ============================================================================
 
@@ -465,6 +552,7 @@ function ImpenetrableForest() {
       const x = Math.cos(angle) * r
       const z = Math.sin(angle) * r
       if (isNearZone(x, z)) continue
+      if (isNearObject(x, z, 2.0)) continue
       result.push({
         model: pick(i, [DECORATION.trees_large, DECORATION.trees_B_large, DECORATION.trees_medium, DECORATION.tree_A]),
         position: [x, 0, z],
@@ -482,6 +570,7 @@ function ImpenetrableForest() {
       const x = Math.cos(angle) * r
       const z = Math.sin(angle) * r
       if (isNearZone(x, z)) continue
+      if (isNearObject(x, z, 2.0)) continue
       result.push({
         model: pick(i + 3, treeModels),
         position: [x, 0, z],
@@ -493,7 +582,7 @@ function ImpenetrableForest() {
         const offset = 2.5 + (i % 3)
         const x2 = x + offset
         const z2 = z + offset
-        if (!isNearZone(x2, z2)) {
+        if (!isNearZone(x2, z2) && !isNearObject(x2, z2, 2.0)) {
           result.push({
             model: pick(i + 7, treeModels),
             position: [x2, 0, z2],
@@ -513,6 +602,7 @@ function ImpenetrableForest() {
       const x = Math.cos(angle) * r
       const z = Math.sin(angle) * r
       if (isNearZone(x, z)) continue
+      if (isNearObject(x, z, 2.0)) continue
       result.push({
         model: pick(i + 5, [DECORATION.trees_large, DECORATION.trees_B_large, DECORATION.tree_A, DECORATION.tree_B]),
         position: [x, 0, z],
@@ -1002,35 +1092,6 @@ function ZoneLandmarks() {
 }
 
 // ============================================================================
-// ZONE ARCHWAYS — Pillar gates marking entrance to each zone
-// ============================================================================
-
-function ZoneArchways() {
-  return (
-    <group name="zone-archways">
-      {/* knight-space (NE) */}
-      <Piece model={BUILDINGS.wall_gate} position={[22, 0, -22]} rotation={[0, Math.PI / 4, 0]} scale={7.0} />
-      <Piece model={BUILDINGS.wall_gate} position={[28, 0, -28]} rotation={[0, Math.PI / 4, 0]} scale={7.0} />
-      {/* barbarian-school (E) */}
-      <Piece model={BUILDINGS.wall_gate} position={[30, 0, -3]} rotation={[0, Math.PI / 2, 0]} scale={7.0} />
-      <Piece model={BUILDINGS.wall_gate} position={[30, 0, 3]} rotation={[0, Math.PI / 2, 0]} scale={7.0} />
-      {/* skeleton-pizza (SE) */}
-      <Piece model={BUILDINGS.wall_gate} position={[22, 0, 22]} rotation={[0, -Math.PI / 4, 0]} scale={7.0} />
-      <Piece model={BUILDINGS.wall_gate} position={[28, 0, 28]} rotation={[0, -Math.PI / 4, 0]} scale={7.0} />
-      {/* adventurers-picnic (S) */}
-      <Piece model={BUILDINGS.wall_gate} position={[-3, 0, 30]} rotation={[0, 0, 0]} scale={7.0} />
-      <Piece model={BUILDINGS.wall_gate} position={[3, 0, 30]} rotation={[0, 0, 0]} scale={7.0} />
-      {/* dungeon-concert (SW) */}
-      <Piece model={BUILDINGS.wall_gate} position={[-22, 0, 22]} rotation={[0, 3 * Math.PI / 4, 0]} scale={7.0} />
-      <Piece model={BUILDINGS.wall_gate} position={[-28, 0, 28]} rotation={[0, 3 * Math.PI / 4, 0]} scale={7.0} />
-      {/* mage-kitchen (W) */}
-      <Piece model={BUILDINGS.wall_gate} position={[-30, 0, -3]} rotation={[0, -Math.PI / 2, 0]} scale={7.0} />
-      <Piece model={BUILDINGS.wall_gate} position={[-30, 0, 3]} rotation={[0, -Math.PI / 2, 0]} scale={7.0} />
-    </group>
-  )
-}
-
-// ============================================================================
 // TERRAIN SCATTER — Rocks, hills, trees between village and zones
 // ============================================================================
 
@@ -1063,8 +1124,8 @@ function TerrainScatter() {
         ([cx, , cz]) => Math.sqrt((x - cx) ** 2 + (z - cz) ** 2) < 12
       )
       if (tooCloseToZone) continue
-      // Clear trees/scatter near (-25.6, -16.8)
-      if (Math.sqrt((x - -25.6) ** 2 + (z - -16.8) ** 2) < 4) continue
+      // Skip if too close to any placed object (size-based clearance)
+      if (isNearObject(x, z, 2.0)) continue
 
       result.push({
         model: scatterModels[i % scatterModels.length],

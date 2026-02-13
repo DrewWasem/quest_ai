@@ -24,6 +24,18 @@ import type { SceneScript, Action, Position, SpawnGroupAction } from '../types/s
 import { CHARACTERS, ANIMAL_MODELS, type CharacterKey } from '../data/asset-manifest'
 import { useGameStore, ZONE_CENTERS } from '../stores/gameStore'
 
+// Compute character facing for a zone — face toward village center (0,0,0)
+let _zoneCharRotationCache: Record<string, [number, number, number]> | null = null
+function getZoneCharRotation(zoneId: string): [number, number, number] | undefined {
+  if (!_zoneCharRotationCache) {
+    _zoneCharRotationCache = {}
+    for (const [id, center] of Object.entries(ZONE_CENTERS)) {
+      _zoneCharRotationCache[id] = [0, Math.atan2(-center[0], -center[2]), 0]
+    }
+  }
+  return _zoneCharRotationCache[zoneId]
+}
+
 // Mini error boundary: renders nothing if a child (e.g. GLTF load) throws
 class SafeModel extends Component<{ children: ReactNode }, { hasError: boolean }> {
   state = { hasError: false }
@@ -36,21 +48,42 @@ class SafeModel extends Component<{ children: ReactNode }, { hasError: boolean }
 // POSITION MAPPING
 // ============================================================================
 
+// Characters spawn in the FRONT half (positive Z = closer to camera).
+// Props sit in the BACK half (negative Z = backdrop behind characters).
+// This prevents characters from clipping into environment objects.
 const LOCAL_POSITION_MAP: Record<Position, [number, number, number]> = {
-  left: [-3, 0, 0],
-  center: [0, 0, 0],
-  right: [3, 0, 0],
-  top: [0, 2, -2],
-  bottom: [0, 0, 2],
-  'off-left': [-6, 0, 0],
-  'off-right': [6, 0, 0],
+  left: [-4, 0, 1.5],
+  center: [0, 0, 1],
+  right: [4, 0, 1.5],
+  top: [0, 0, -1],
+  bottom: [0, 0, 3.5],
+  'off-left': [-7, 0, 1],
+  'off-right': [7, 0, 1],
   'off-top': [0, 5, 0],
 }
 
 // Kept for backward compatibility — resolves to zone-relative positions at runtime
 const POSITION_MAP = LOCAL_POSITION_MAP
 
-/** Offset a local position by the current zone center */
+// Lazy-cached per-zone rotation angles (zone faces toward village center)
+let _zoneAngles: Record<string, number> | null = null
+function getZoneAngle(zoneId: string): number {
+  if (!_zoneAngles) {
+    _zoneAngles = {}
+    for (const [id, center] of Object.entries(ZONE_CENTERS)) {
+      // Angle from zone center toward village origin [0,0,0]
+      _zoneAngles[id] = Math.atan2(-center[0], -center[2])
+    }
+  }
+  return _zoneAngles[zoneId] ?? 0
+}
+
+/**
+ * Rotate a local position by the zone's facing angle, then offset by zone center.
+ * Local coords: +Z = toward camera (front), -Z = away from camera (back),
+ * +X = stage-right, -X = stage-left.
+ * This ensures "front" always faces the camera regardless of zone orientation.
+ */
 function zonePosition(
   zoneId: string | null,
   localPos: [number, number, number]
@@ -58,7 +91,13 @@ function zonePosition(
   if (!zoneId) return localPos
   const center = ZONE_CENTERS[zoneId]
   if (!center) return localPos
-  return [center[0] + localPos[0], localPos[1], center[2] + localPos[2]]
+  const angle = getZoneAngle(zoneId)
+  const cosA = Math.cos(angle)
+  const sinA = Math.sin(angle)
+  // Rotate local XZ by zone facing angle
+  const rx = localPos[0] * cosA - localPos[2] * sinA
+  const rz = localPos[0] * sinA + localPos[2] * cosA
+  return [center[0] + rx, localPos[1], center[2] + rz]
 }
 
 // ============================================================================
@@ -310,50 +349,51 @@ interface EnvironmentProp {
   scale?: number
 }
 
+// Environment props form a BACKDROP behind characters.
+// Props live at Z ≤ -3 (back). Characters live at Z ≥ 0 (front).
+// Side-dressing can go at large |X| (≥ 6) at any Z.
 export const TASK_ENVIRONMENTS: Record<string, EnvironmentProp[]> = {
   'skeleton-birthday': [
-    { id: 'env-torch-l', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [-5, 0, -3], scale: 2.0 },
-    { id: 'env-torch-r', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [5, 0, -3], scale: 2.0 },
-    { id: 'env-barrel', path: 'kaykit/packs/dungeon/barrel_large.gltf', position: [-4, 0, -2], scale: 0.8 },
-    { id: 'env-banner', path: 'kaykit/packs/dungeon/banner_blue.gltf', position: [0, 0, -4], scale: 0.6 },
+    { id: 'env-torch-l', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [-6, 0, -4], scale: 2.0 },
+    { id: 'env-torch-r', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [6, 0, -4], scale: 2.0 },
+    { id: 'env-barrel-l', path: 'kaykit/packs/dungeon/barrel_large.gltf', position: [-6, 0, -2], scale: 0.8 },
+    { id: 'env-barrel-r', path: 'kaykit/packs/dungeon/barrel_large.gltf', position: [6, 0, -2], scale: 0.8 },
+    { id: 'env-banner', path: 'kaykit/packs/dungeon/banner_blue.gltf', position: [0, 0, -5], scale: 0.6 },
+    { id: 'env-banner-r', path: 'kaykit/packs/dungeon/banner_red.gltf', position: [3, 0, -5], scale: 0.6 },
   ],
   'knight-space': [
-    { id: 'env-module', path: 'kaykit/packs/space_base/basemodule_A.gltf', position: [0, 0, -4], scale: 0.8 },
-    { id: 'env-panel', path: 'kaykit/packs/space_base/solarpanel.gltf', position: [-4, 0, -2], scale: 0.8 },
-    { id: 'env-cargo', path: 'kaykit/packs/space_base/cargo_A.gltf', position: [4, 0, -2], scale: 0.8 },
+    { id: 'env-module', path: 'kaykit/packs/space_base/basemodule_A.gltf', position: [0, 0, -5], scale: 0.8 },
+    { id: 'env-panel', path: 'kaykit/packs/space_base/solarpanel.gltf', position: [-6, 0, -3], scale: 0.8 },
+    { id: 'env-cargo', path: 'kaykit/packs/space_base/cargo_A.gltf', position: [6, 0, -3], scale: 0.8 },
   ],
-  'mage-kitchen': [
-    { id: 'env-stove', path: 'tiny-treats/charming-kitchen/stove.gltf', position: [-3, 0, -3], scale: 1.5 },
-    { id: 'env-fridge', path: 'tiny-treats/charming-kitchen/fridge.gltf', position: [3, 0, -3], scale: 1.5 },
-    { id: 'env-cabinet', path: 'tiny-treats/charming-kitchen/wall_cabinet_straight.gltf', position: [0, 0, -4], scale: 1.5 },
-  ],
+  'mage-kitchen': [],
   'barbarian-school': [
-    { id: 'env-slide', path: 'tiny-treats/fun-playground/slide_A.gltf', position: [-4, 0, -3], scale: 1.2 },
-    { id: 'env-seesaw', path: 'tiny-treats/fun-playground/seesaw_large.gltf', position: [4, 0, -3], scale: 1.2 },
-    { id: 'env-sandbox', path: 'tiny-treats/fun-playground/sandbox_square_decorated.gltf', position: [0, 0, -4], scale: 1.0 },
+    { id: 'env-slide', path: 'tiny-treats/fun-playground/slide_A.gltf', position: [-6, 0, -4], scale: 1.2 },
+    { id: 'env-seesaw', path: 'tiny-treats/fun-playground/seesaw_large.gltf', position: [6, 0, -4], scale: 1.2 },
+    { id: 'env-sandbox', path: 'tiny-treats/fun-playground/sandbox_square_decorated.gltf', position: [0, 0, -5], scale: 1.0 },
   ],
   'dungeon-concert': [
-    { id: 'env-torch-l', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [-5, 0, -3], scale: 2.0 },
-    { id: 'env-torch-r', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [5, 0, -3], scale: 2.0 },
-    { id: 'env-table', path: 'kaykit/packs/dungeon/table_long.gltf', position: [0, 0, -4], scale: 0.8 },
-    { id: 'env-barrel-l', path: 'kaykit/packs/dungeon/barrel_large.gltf', position: [-3, 0, -2], scale: 0.8 },
-    { id: 'env-barrel-r', path: 'kaykit/packs/dungeon/barrel_large.gltf', position: [3, 0, -2], scale: 0.8 },
+    { id: 'env-torch-l', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [-6, 0, -4], scale: 2.0 },
+    { id: 'env-torch-r', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [6, 0, -4], scale: 2.0 },
+    { id: 'env-table', path: 'kaykit/packs/dungeon/table_long.gltf', position: [0, 0, -5], scale: 0.8 },
+    { id: 'env-barrel-l', path: 'kaykit/packs/dungeon/barrel_large.gltf', position: [-6, 0, -2], scale: 0.8 },
+    { id: 'env-barrel-r', path: 'kaykit/packs/dungeon/barrel_large.gltf', position: [6, 0, -2], scale: 0.8 },
   ],
   'skeleton-pizza': [
-    { id: 'env-stove', path: 'tiny-treats/charming-kitchen/stove.gltf', position: [-4, 0, -3], scale: 1.5 },
-    { id: 'env-oven', path: 'kaykit/packs/restaurant/oven.gltf', position: [4, 0, -3], scale: 0.8 },
-    { id: 'env-table', path: 'kaykit/packs/dungeon/table_long.gltf', position: [0, 0, -4], scale: 0.8 },
+    { id: 'env-stove', path: 'tiny-treats/charming-kitchen/stove.gltf', position: [-5, 0, -4], scale: 1.5 },
+    { id: 'env-oven', path: 'kaykit/packs/restaurant/oven.gltf', position: [5, 0, -4], scale: 0.8 },
+    { id: 'env-table', path: 'kaykit/packs/dungeon/table_long.gltf', position: [0, 0, -5], scale: 0.8 },
   ],
   'adventurers-picnic': [
-    { id: 'env-campfire', path: 'poly-pizza/misc/small-camping-bundle/Campfire.glb', position: [0, 0, 0], scale: 2.0 },
-    { id: 'env-crystal-l', path: 'poly-pizza/nature/crystal-pack/Crystal.glb', position: [-2.5, 0, -3], scale: 0.25 },
-    { id: 'env-crystal-c', path: 'poly-pizza/nature/crystal-pack/Crystal-dxCmHfpqc5.glb', position: [0, 0, -4], scale: 0.3 },
-    { id: 'env-crystal-r', path: 'poly-pizza/nature/crystal-pack/Crystal-WzWPKHFMkL.glb', position: [2.5, 0, -3], scale: 0.25 },
-    { id: 'env-torch-l', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [-4, 0, 1], scale: 2.0 },
-    { id: 'env-torch-r', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [4, 0, 1], scale: 2.0 },
-    { id: 'env-stump-l', path: 'tiny-treats/fun-playground/stepping_stumps_B_large.gltf', position: [-2, 0, 2], scale: 1.5 },
-    { id: 'env-stump-r', path: 'tiny-treats/fun-playground/stepping_stumps_B.gltf', position: [2, 0, 2], scale: 1.5 },
-    { id: 'env-mushroom', path: 'quaternius/nature/Mushroom_Common.gltf', position: [-4.5, 0, -2], scale: 2.0 },
+    { id: 'env-campfire', path: 'poly-pizza/misc/small-camping-bundle/Campfire.glb', position: [0, 0, -2], scale: 2.0 },
+    { id: 'env-crystal-l', path: 'poly-pizza/nature/crystal-pack/Crystal.glb', position: [-3, 0, -4], scale: 0.25 },
+    { id: 'env-crystal-c', path: 'poly-pizza/nature/crystal-pack/Crystal-dxCmHfpqc5.glb', position: [0, 0, -5], scale: 0.3 },
+    { id: 'env-crystal-r', path: 'poly-pizza/nature/crystal-pack/Crystal-WzWPKHFMkL.glb', position: [3, 0, -4], scale: 0.25 },
+    { id: 'env-torch-l', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [-6, 0, -3], scale: 2.0 },
+    { id: 'env-torch-r', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [6, 0, -3], scale: 2.0 },
+    { id: 'env-stump-l', path: 'tiny-treats/fun-playground/stepping_stumps_B_large.gltf', position: [-6, 0, 0], scale: 1.5 },
+    { id: 'env-stump-r', path: 'tiny-treats/fun-playground/stepping_stumps_B.gltf', position: [6, 0, 0], scale: 1.5 },
+    { id: 'env-mushroom', path: 'quaternius/nature/Mushroom_Common.gltf', position: [-6, 0, -5], scale: 2.0 },
   ],
 }
 
@@ -393,8 +433,8 @@ const TASK_HERO_CHARACTERS: Record<string, HeroCharacter[]> = {
     { id: 'hero-clown', characterId: 'clown', position: 'right' },
   ],
   'adventurers-picnic': [
-    { id: 'hero-ranger', characterId: 'ranger', position: 'left', rotation: [0, Math.PI, 0] },
-    { id: 'hero-druid', characterId: 'druid', position: 'right', rotation: [0, Math.PI, 0] },
+    { id: 'hero-ranger', characterId: 'ranger', position: 'left' },
+    { id: 'hero-druid', characterId: 'druid', position: 'right' },
   ],
 }
 
@@ -607,7 +647,7 @@ export default function ScenePlayer3D({ script, taskId, onComplete }: ScenePlaye
       type: 'character' as const,
       characterId: hero.characterId,
       position: zonePosition(currentZone, POSITION_MAP[hero.position] || [0, 0, 0]),
-      rotation: hero.rotation,
+      rotation: hero.rotation || (currentZone ? getZoneCharRotation(currentZone) : undefined),
       animation: 'Idle_A',
     }))
     setActors(heroActors)
@@ -639,11 +679,27 @@ export default function ScenePlayer3D({ script, taskId, onComplete }: ScenePlaye
     playingRef.current = true
 
     // Clear previous scene actors (keep env props)
-    setActors([])
     setEffects([])
     setEmotes([])
     spawnedIds.current.clear()
     actorPositionsRef.current.clear()
+
+    // Inject player knight into the scene (facing camera, with a reaction anim)
+    const playerKnight: ActiveActor = {
+      id: 'player-knight',
+      type: 'character',
+      characterId: 'knight',
+      position: zonePosition(currentZone, POSITION_MAP['bottom'] || [0, 0, 2]),
+      rotation: currentZone ? getZoneCharRotation(currentZone) : undefined,
+      animation: 'Idle_A',
+    }
+    setActors([playerKnight])
+    spawnedIds.current.add('player-knight')
+
+    // Pick a player animation based on success level
+    const playerAnim = script.success_level === 'FULL_SUCCESS' ? 'Cheering'
+      : script.success_level === 'PARTIAL_SUCCESS' ? 'Waving'
+      : 'Interact'
 
     // Create abort controller for cleanup
     const abortController = new AbortController()
@@ -657,6 +713,11 @@ export default function ScenePlayer3D({ script, taskId, onComplete }: ScenePlaye
     } else if (script.success_level === 'FUNNY_FAIL') {
       SoundManager3D.play('fail')
     }
+
+    // Animate the player knight after a brief delay
+    setTimeout(() => {
+      handleAnimate('player-knight', playerAnim)
+    }, 300)
 
     // Execute action queue
     executeActions(script.actions, abortController.signal)
@@ -786,6 +847,7 @@ export default function ScenePlayer3D({ script, taskId, onComplete }: ScenePlaye
         type: 'character',
         characterId: characterId!,
         position: pos,
+        rotation: currentZone ? getZoneCharRotation(currentZone) : undefined,
         animation: 'Spawn_Ground',
       }
     } else if (isAnimal) {

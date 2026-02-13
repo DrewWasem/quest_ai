@@ -121,8 +121,6 @@ const DECORATION = {
   crate_A: HEX + 'decoration/props/crate_A_big.gltf',
   crate_B: HEX + 'decoration/props/crate_B_small.gltf',
   haybale: HEX + 'decoration/props/haybale.gltf',
-  flag_blue: HEX + 'decoration/props/flag_blue.gltf',
-  flag_red: HEX + 'decoration/props/flag_red.gltf',
   weaponrack: HEX + 'decoration/props/weaponrack.gltf',
   wheelbarrow: HEX + 'decoration/props/wheelbarrow.gltf',
   sack: HEX + 'decoration/props/sack.gltf',
@@ -131,8 +129,6 @@ const DECORATION = {
   target: HEX + 'decoration/props/target.gltf',
   tent: HEX + 'decoration/props/tent.gltf',
   bucket_arrows: HEX + 'decoration/props/bucket_arrows.gltf',
-  flag_green: HEX + 'decoration/props/flag_green.gltf',
-  flag_yellow: HEX + 'decoration/props/flag_yellow.gltf',
   // Water decoration
   waterlily_A: HEX + 'decoration/nature/waterlily_A.gltf',
   waterlily_B: HEX + 'decoration/nature/waterlily_B.gltf',
@@ -361,6 +357,12 @@ function isOnSpoke(x: number, z: number, halfWidth: number): boolean {
   return false
 }
 
+/** Check if world position is inside the kitchen zone (used to filter out lanterns) */
+function isInKitchenZone(wx: number, wz: number): boolean {
+  // Kitchen center [-48, 5], structure spans X:-6..+4, Z:-5..+5 relative
+  return wx >= -55 && wx <= -43 && wz >= -1 && wz <= 11
+}
+
 /** Check if world position is on the ring road (circle at radius ~42) */
 function isOnRingRoad(x: number, z: number, halfWidth: number): boolean {
   if (z < -45) return false // Skip ring in dungeon approach area
@@ -474,8 +476,6 @@ function VillageCenter() {
       <Piece model={DECORATION.sack} position={[-8, 0, 14]} scale={d} />
       <Piece model={DECORATION.bucket_water} position={[-11, 0, -3]} scale={d} />
       <Piece model={DECORATION.trough} position={[13, 0, 5]} scale={d} />
-      <Piece model={DECORATION.flag_blue} position={[6, 0, -12]} scale={15.0} />
-
       {/* Trees around the village edges */}
       <Piece model={DECORATION.tree_A} position={[-26, 0, -2]} scale={d} />
       <Piece model={DECORATION.tree_B} position={[28, 0, -2]} scale={d} />
@@ -959,8 +959,6 @@ function DungeonZone() {
       <pointLight color="#ff6600" intensity={2} distance={10} decay={2} position={[0, 2, 0]} />
 
       {/* Approach decoration — entrance markers */}
-      <Piece model={DECORATION.flag_red} position={[-8, 0, 4]} scale={15.0} />
-      <Piece model={DECORATION.flag_red} position={[8, 0, 4]} scale={15.0} />
       <Piece model={DECORATION.weaponrack} position={[-6, 0, 3]} scale={7.0} />
       <Piece model={DECORATION.target} position={[6, 0, 3]} scale={7.0} />
     </group>
@@ -1106,31 +1104,31 @@ function PizzaZone() {
 
 function ConcertZone() {
   const center = ZONE_CENTERS['dungeon-concert']
-
+  // Camera comes from village center (NE). Backdrop must be on the far side (SW, +Z).
   return (
     <group name="concert-zone" position={center}>
-      {/* Stage area — dungeon stone walls as backdrop */}
-      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[-4, 0, -4]} />
-      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[-2, 0, -4]} />
-      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[0, 0, -4]} />
-      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[2, 0, -4]} />
-      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[4, 0, -4]} />
-      {/* Stage platform (hex pack) */}
-      <Piece model={BUILDINGS.stage_A} position={[0, 0, -2]} scale={7.0} />
-      {/* Decorated pillars as "speaker stacks" */}
-      <Piece model="kaykit/packs/dungeon/pillar_decorated.gltf" position={[-5, 0, -2]} scale={1.3} />
-      <Piece model="kaykit/packs/dungeon/pillar_decorated.gltf" position={[5, 0, -2]} scale={1.3} />
-      {/* Banners as concert decorations */}
-      <Piece model="kaykit/packs/dungeon/banner_patternA_blue.gltf" position={[-3, 1.5, -3.8]} scale={0.7} />
-      <Piece model="kaykit/packs/dungeon/banner_patternB_red.gltf" position={[0, 1.5, -3.8]} scale={0.7} />
-      <Piece model="kaykit/packs/dungeon/banner_patternA_green.gltf" position={[3, 1.5, -3.8]} scale={0.7} />
-      {/* Torches for atmosphere */}
-      <Piece model="kaykit/packs/dungeon/torch_lit.gltf" position={[-5, 0, -4]} />
-      <Piece model="kaykit/packs/dungeon/torch_lit.gltf" position={[5, 0, -4]} />
-      {/* Concert stage lights — colorful! */}
-      <pointLight color="#7C3AED" intensity={4} distance={12} decay={2} position={[-3, 4, -2]} />
-      <pointLight color="#EC4899" intensity={4} distance={12} decay={2} position={[3, 4, -2]} />
-      <pointLight color="#38BDF8" intensity={3} distance={10} decay={2} position={[0, 5, -3]} />
+      {/* Stage backdrop — dungeon walls on far side from camera */}
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[-4, 0, 6]} />
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[-2, 0, 6]} />
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[0, 0, 6]} />
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[2, 0, 6]} />
+      <Piece model="kaykit/packs/dungeon/wall_half.gltf" position={[4, 0, 6]} />
+      {/* Stage platform */}
+      <Piece model={BUILDINGS.stage_A} position={[0, 0, 4]} scale={7.0} />
+      {/* Decorated pillars flanking the stage */}
+      <Piece model="kaykit/packs/dungeon/pillar_decorated.gltf" position={[-5, 0, 4]} scale={1.3} />
+      <Piece model="kaykit/packs/dungeon/pillar_decorated.gltf" position={[5, 0, 4]} scale={1.3} />
+      {/* Banners on the back wall */}
+      <Piece model="kaykit/packs/dungeon/banner_patternA_blue.gltf" position={[-3, 1.5, 5.8]} scale={0.7} />
+      <Piece model="kaykit/packs/dungeon/banner_patternB_red.gltf" position={[0, 1.5, 5.8]} scale={0.7} />
+      <Piece model="kaykit/packs/dungeon/banner_patternA_green.gltf" position={[3, 1.5, 5.8]} scale={0.7} />
+      {/* Torches flanking the walls */}
+      <Piece model="kaykit/packs/dungeon/torch_lit.gltf" position={[-5, 0, 6]} />
+      <Piece model="kaykit/packs/dungeon/torch_lit.gltf" position={[5, 0, 6]} />
+      {/* Stage lights */}
+      <pointLight color="#7C3AED" intensity={4} distance={12} decay={2} position={[-3, 4, 4]} />
+      <pointLight color="#EC4899" intensity={4} distance={12} decay={2} position={[3, 4, 4]} />
+      <pointLight color="#38BDF8" intensity={3} distance={10} decay={2} position={[0, 5, 5]} />
     </group>
   )
 }
@@ -1141,34 +1139,110 @@ function ConcertZone() {
 
 function KitchenZone() {
   const center = ZONE_CENTERS['mage-kitchen']
-
+  // Camera from east (+X), looking west. L-shape: back wall (west) + side wall (south).
+  // North and east walls removed — diorama cutaway so camera sees in.
+  const k = 'tiny-treats/charming-kitchen/'
+  const b = 'tiny-treats/baked-goods/'
+  const bi = 'tiny-treats/bakery-interior/'
+  const hp = 'tiny-treats/house-plants/'
   return (
     <group name="kitchen-zone" position={center}>
-      {/* Kitchen walls (L-shape) */}
-      <Piece model="tiny-treats/charming-kitchen/wall_tiles_kitchen_straight.gltf" position={[-3, 0, -4]} />
-      <Piece model="tiny-treats/charming-kitchen/wall_tiles_kitchen_doorway.gltf" position={[0, 0, -4]} />
-      <Piece model="tiny-treats/charming-kitchen/wall_tiles_kitchen_straight.gltf" position={[3, 0, -4]} />
-      {/* Countertops */}
-      <Piece model="tiny-treats/charming-kitchen/countertop_straight_A.gltf" position={[-3, 0, -3]} />
-      <Piece model="tiny-treats/charming-kitchen/countertop_sink.gltf" position={[-1, 0, -3]} />
-      <Piece model="tiny-treats/charming-kitchen/countertop_straight_B.gltf" position={[1, 0, -3]} />
-      {/* Stove and fridge */}
-      <Piece model="tiny-treats/charming-kitchen/stove.gltf" position={[3, 0, -3]} />
-      <Piece model="tiny-treats/charming-kitchen/fridge.gltf" position={[-5, 0, -3]} />
-      {/* Table and chairs */}
-      <Piece model="tiny-treats/charming-kitchen/table_A.gltf" position={[0, 0, 1]} />
-      <Piece model="tiny-treats/charming-kitchen/chair.gltf" position={[-1.5, 0, 1]} />
-      <Piece model="tiny-treats/charming-kitchen/chair.gltf" position={[1.5, 0, 1]} rotation={[0, Math.PI, 0]} />
-      {/* Kitchen props */}
-      <Piece model="tiny-treats/charming-kitchen/pot.gltf" position={[3, 0.9, -3]} />
-      <Piece model="tiny-treats/charming-kitchen/kettle.gltf" position={[-3, 0.9, -3]} />
-      {/* Distinguishing feature: barrel stack — chimney-like vertical element */}
-      <Piece model={DECORATION.barrel} position={[4, 0, -4]} scale={7.0} />
-      <Piece model={DECORATION.barrel} position={[4, 0.8, -4]} scale={7.0} />
-      <Piece model={DECORATION.barrel} position={[4, 1.6, -4]} scale={7.0} />
-      {/* Green/purple magical kitchen glow — visible from afar */}
-      <pointLight color="#A855F7" intensity={4} distance={15} decay={2} position={[0, 5, 0]} />
-      <pointLight color="#FBBF24" intensity={2} distance={8} decay={2} position={[0, 2, -1]} />
+      {/* ── BACK WALL (west, X=-6) — 5 tiled segments with windows ── */}
+      <Piece model={k + 'wall_modular_tiles_kitchen_straight_A.gltf'} position={[-6, 0, -4]} rotation={[0, Math.PI / 2, 0]} />
+      <Piece model={k + 'wall_modular_tiles_kitchen_window_large_A.gltf'} position={[-6, 0, -2]} rotation={[0, Math.PI / 2, 0]} />
+      <Piece model={k + 'wall_modular_tiles_kitchen_straight_B.gltf'} position={[-6, 0, 0]} rotation={[0, Math.PI / 2, 0]} />
+      <Piece model={k + 'wall_modular_tiles_kitchen_window_large_B.gltf'} position={[-6, 0, 2]} rotation={[0, Math.PI / 2, 0]} />
+      <Piece model={k + 'wall_modular_tiles_kitchen_straight_A.gltf'} position={[-6, 0, 4]} rotation={[0, Math.PI / 2, 0]} />
+
+      {/* Blinds on the two windows */}
+      <Piece model={k + 'blinds_kitchen.gltf'} position={[-5.9, 1.2, -2]} rotation={[0, Math.PI / 2, 0]} noCollision />
+      <Piece model={k + 'blinds_kitchen.gltf'} position={[-5.9, 1.2, 2]} rotation={[0, Math.PI / 2, 0]} noCollision />
+
+      {/* ── SIDE WALL (south, Z=-5) — L-arm with doorway ── */}
+      <Piece model={k + 'wall_modular_tiles_kitchen_corner_inner_A.gltf'} position={[-6, 0, -5]} rotation={[0, Math.PI, 0]} />
+      <Piece model={k + 'wall_modular_tiles_kitchen_straight_A.gltf'} position={[-4, 0, -5]} />
+      <Piece model={k + 'wall_modular_tiles_kitchen_doorway.gltf'} position={[-2, 0, -5]} />
+
+      {/* NO north wall, NO east wall — diorama cutaway for camera */}
+
+      {/* ── COUNTERS — L-shape run ── */}
+      {/* Long run along back wall (X=-5) */}
+      <Piece model={k + 'countertop_straight_A.gltf'} position={[-5, 0, -1]} rotation={[0, Math.PI / 2, 0]} />
+      <Piece model={k + 'countertop_sink.gltf'} position={[-5, 0, 0]} rotation={[0, Math.PI / 2, 0]} />
+      <Piece model={k + 'countertop_straight_B.gltf'} position={[-5, 0, 1]} rotation={[0, Math.PI / 2, 0]} />
+      <Piece model={k + 'countertop_straight_C.gltf'} position={[-5, 0, 3]} rotation={[0, Math.PI / 2, 0]} />
+      {/* L-arm along south wall (Z=-4) with corner connector */}
+      <Piece model={k + 'countertop_corner_inner.gltf'} position={[-5, 0, -3]} rotation={[0, Math.PI, 0]} />
+      <Piece model={k + 'countertop_straight_A.gltf'} position={[-4, 0, -4]} />
+      <Piece model={k + 'countertop_straight_B.gltf'} position={[-3, 0, -4]} />
+
+      {/* ── WALL CABINETS (above back-wall counters) ── */}
+      <Piece model={k + 'wall_cabinet_straight.gltf'} position={[-5.8, 1.8, -1]} rotation={[0, Math.PI / 2, 0]} noCollision />
+      <Piece model={k + 'wall_cabinet_straight.gltf'} position={[-5.8, 1.8, 1]} rotation={[0, Math.PI / 2, 0]} noCollision />
+      <Piece model={k + 'wall_cabinet_straight.gltf'} position={[-5.8, 1.8, 3]} rotation={[0, Math.PI / 2, 0]} noCollision />
+      {/* Wall shelf with hooks + knife rack for variety */}
+      <Piece model={k + 'wall_shelf_kitchen_hooks_decorated.gltf'} position={[-5.8, 1.5, -3]} rotation={[0, Math.PI / 2, 0]} noCollision />
+      <Piece model={k + 'wall_knife_rack.gltf'} position={[-5.8, 1.5, 3.8]} rotation={[0, Math.PI / 2, 0]} noCollision />
+      {/* Paper towel holder on south wall */}
+      <Piece model={k + 'papertowel_holder.gltf'} position={[-3.5, 1.2, -4.8]} noCollision />
+
+      {/* ── APPLIANCES ── */}
+      {/* Stove at end of L-arm (facing into kitchen) with extractor hood */}
+      <Piece model={k + 'stove.gltf'} position={[-2, 0, -4]} />
+      <Piece model={k + 'extractor_hood.gltf'} position={[-2, 2.2, -4.3]} noCollision />
+      {/* Fridge at far right of back wall (tallest item, anchors corner) */}
+      <Piece model={k + 'fridge.gltf'} position={[-5, 0, 4.5]} rotation={[0, Math.PI / 2, 0]} />
+      {/* Toaster on L-arm counter */}
+      <Piece model={k + 'toaster.gltf'} position={[-4, 0.9, -4]} noCollision />
+
+      {/* ── COUNTER CLUTTER (on surfaces, Y≈0.9) ── */}
+      {/* Back wall counters */}
+      <Piece model={k + 'dishrack_plates.gltf'} position={[-5, 0.9, -0.5]} noCollision />
+      <Piece model={k + 'utensils_cup.gltf'} position={[-4.8, 0.9, 1.3]} noCollision />
+      <Piece model={k + 'kettle.gltf'} position={[-5, 0.9, 3.2]} noCollision />
+      <Piece model={k + 'container_kitchen_A_blue.gltf'} position={[-4.8, 0.9, 0.6]} noCollision />
+      <Piece model={k + 'container_kitchen_B_red.gltf'} position={[-4.7, 0.9, 1.8]} noCollision />
+      <Piece model={k + 'mug_blue.gltf'} position={[-4.9, 0.9, 2.5]} noCollision />
+      <Piece model={k + 'mug_red.gltf'} position={[-5.1, 0.9, -1.3]} noCollision />
+      {/* L-arm counters */}
+      <Piece model={k + 'cuttingboard.gltf'} position={[-3.2, 0.9, -3.8]} noCollision />
+      <Piece model={k + 'pan.gltf'} position={[-4.3, 0.9, -3.8]} noCollision />
+      <Piece model={k + 'pot.gltf'} position={[-2.2, 0.9, -3.8]} noCollision />
+      <Piece model={k + 'lid.gltf'} position={[-2.5, 0.9, -4.2]} noCollision />
+      {/* Food on counters */}
+      <Piece model={b + 'bread.gltf'} position={[-5, 0.9, 0.8]} noCollision />
+      <Piece model={b + 'pie_apple.gltf'} position={[-5, 0.9, 2.8]} noCollision />
+
+      {/* ── CENTER ISLAND — magical prep table (focal point) ── */}
+      <Piece model={k + 'table_B.gltf'} position={[-1.5, 0, 1]} />
+      <Piece model={bi + 'mixing_bowl.gltf'} position={[-1.8, 0.9, 1.3]} noCollision />
+      <Piece model={k + 'spoon.gltf'} position={[-1.2, 0.9, 0.7]} noCollision />
+      <Piece model={b + 'cake_birthday.gltf'} position={[-1.5, 0.9, 1]} noCollision />
+      <Piece model={k + 'mug_yellow.gltf'} position={[-1, 0.9, 1.5]} noCollision />
+
+      {/* ── MAGICAL FLOOR MESS (cooking gone wrong!) ── */}
+      <Piece model={bi + 'flour_sack_open.gltf'} position={[-3.5, 0, -1]} rotation={[0, 0.5, 0]} noCollision />
+      <Piece model={bi + 'dough_ball.gltf'} position={[-2.8, 0, -0.5]} noCollision />
+      <Piece model={bi + 'egg_A.gltf'} position={[0, 0, -2]} noCollision />
+      <Piece model={bi + 'egg_B.gltf'} position={[0.5, 0, 2]} noCollision />
+      <Piece model={bi + 'basket_A.gltf'} position={[1, 0, -3]} noCollision />
+      <Piece model={b + 'bread_roll.gltf'} position={[1, 0, -2.5]} noCollision />
+      <Piece model={k + 'oven_glove.gltf'} position={[-4, 0, -1.5]} noCollision />
+      <Piece model={k + 'plate.gltf'} position={[0.5, 0, 3]} noCollision />
+      <Piece model={k + 'spatula.gltf'} position={[-0.5, 0, -0.5]} noCollision />
+
+      {/* ── DECORATIVE TOUCHES ── */}
+      <Piece model={hp + 'monstera_plant_small_potted.gltf'} position={[-5.5, 0, 4.8]} noCollision />
+
+      {/* ── MAGICAL KITCHEN ATMOSPHERE ── */}
+      {/* Warm amber over cooking L-arm */}
+      <pointLight color="#FBBF24" intensity={5} distance={12} decay={2} position={[-3, 3, -3]} />
+      {/* Purple magical glow from center island (the magic is loose!) */}
+      <pointLight color="#A855F7" intensity={6} distance={16} decay={2} position={[-1, 4, 1]} />
+      {/* Cool blue accent from the open side */}
+      <pointLight color="#38BDF8" intensity={3} distance={10} decay={2} position={[2, 3, 3]} />
+      {/* Soft warm fill light overhead */}
+      <pointLight color="#FDE68A" intensity={2} distance={20} decay={2} position={[-2, 6, 0]} />
     </group>
   )
 }
@@ -1207,10 +1281,12 @@ function RoadDecoration() {
     }
 
     // Remove lamp posts within 6 units of each other, keeping the one closer to center
+    // Also remove any lanterns inside the kitchen zone
     const MIN_DIST = 6
     const filtered: typeof result = []
     for (const lamp of result) {
       const [lx, , lz] = lamp.position
+      if (isInKitchenZone(lx, lz)) continue
       const lDistSq = lx * lx + lz * lz
       let tooClose = false
       for (let i = filtered.length - 1; i >= 0; i--) {
@@ -1238,11 +1314,6 @@ function RoadDecoration() {
 
   return (
     <group name="road-decoration">
-      {/* Signposts along the boulevard */}
-      <Piece model={DECORATION.flag_blue} position={[6, 0, -15]} scale={15.0} />
-      <Piece model={DECORATION.flag_blue} position={[6, 0, 15]} scale={15.0} />
-      <Piece model={DECORATION.flag_blue} position={[6, 0, 35]} scale={15.0} />
-
       {/* Props along the boulevard — offset to grass beside road */}
       <Piece model={DECORATION.crate_B} position={[-8, 0, 20]} scale={d} />
       <Piece model={DECORATION.haybale} position={[12, 0, -6]} scale={d} />
@@ -1258,19 +1329,6 @@ function RoadDecoration() {
         <Piece key={`lantern-${i}`} model={DECORATION.street_lantern} position={l.position} rotation={l.rotation} scale={1.5} />
       ))}
 
-      {/* Zone-colored flags — road-side markers (offset 5u perpendicular to spoke) */}
-      {/* knight-space (NE) — blue */}
-      <Piece model={DECORATION.flag_blue} position={[25, 0, -18]} scale={15.0} />
-      {/* barbarian-school (E) — red */}
-      <Piece model={DECORATION.flag_red} position={[31, 0, 8]} scale={15.0} />
-      {/* skeleton-pizza (SE) — yellow */}
-      <Piece model={DECORATION.flag_yellow} position={[18, 0, 26]} scale={15.0} />
-      {/* adventurers-picnic (S) — green */}
-      <Piece model={DECORATION.flag_green} position={[8, 0, 36]} scale={15.0} />
-      {/* dungeon-concert (SW) — red */}
-      <Piece model={DECORATION.flag_red} position={[-26, 0, 18]} scale={15.0} />
-      {/* mage-kitchen (W) — green */}
-      <Piece model={DECORATION.flag_green} position={[-33, 0, -2]} scale={15.0} />
     </group>
   )
 }
@@ -1412,7 +1470,6 @@ function VillagePond() {
 
 function ZoneApproachDecor() {
   const d = 7.0
-  const f = 15.0 // flag scale
 
   // Helper: compute position along a spoke road at given distance from zone, with perpendicular offset
   const along = (target: [number, number], distFromZone: number, perpOffset: number): [number, number, number] => {
@@ -1430,49 +1487,31 @@ function ZoneApproachDecor() {
       <Piece model={DECORATION.target} position={along([38, -38], 20, 6)} scale={d} />
       <Piece model={DECORATION.barrel} position={along([38, -38], 8, -6)} scale={d} />
       <Piece model={DECORATION.bucket_arrows} position={along([38, -38], 8, 6)} scale={d} />
-      <Piece model={DECORATION.flag_blue} position={along([38, -38], 5, -5)} scale={f} />
-      <Piece model={DECORATION.flag_blue} position={along([38, -38], 5, 5)} scale={f} />
-
       {/* ── School Zone (E) — training ── */}
       <Piece model={DECORATION.haybale} position={along([48, 5], 20, -6)} scale={d} />
       <Piece model={DECORATION.target} position={along([48, 5], 20, 6)} scale={d} />
       <Piece model={DECORATION.bucket_arrows} position={along([48, 5], 22, -6)} scale={d} />
       <Piece model={DECORATION.crate_B} position={along([48, 5], 22, 6)} scale={d} />
-      <Piece model={DECORATION.flag_red} position={along([48, 5], 2, -5)} scale={f} />
-      <Piece model={DECORATION.flag_red} position={along([48, 5], 2, 5)} scale={f} />
-
       {/* ── Pizza Zone (SE) — delivery/food ── */}
       <Piece model={DECORATION.barrel} position={along([38, 38], 20, -6)} scale={d} />
       <Piece model={DECORATION.crate_A} position={along([38, 38], 20, 6)} scale={d} />
       <Piece model={DECORATION.sack} position={along([38, 38], 8, -6)} scale={d} />
       <Piece model={DECORATION.wheelbarrow} position={along([38, 38], 8, 6)} scale={d} />
-      <Piece model={DECORATION.flag_yellow} position={along([38, 38], 5, -5)} scale={f} />
-      <Piece model={DECORATION.flag_yellow} position={along([38, 38], 5, 5)} scale={f} />
-
       {/* ── Park Zone (S) — nature/picnic ── */}
       <Piece model={DECORATION.flower_A} position={[-7, 0, 35]} scale={d} />
       <Piece model={DECORATION.flower_B} position={[7, 0, 35]} scale={d} />
       <Piece model={DECORATION.trees_small} position={[-7, 0, 37]} scale={5.0} />
       <Piece model={DECORATION.rock_B} position={[7, 0, 37]} scale={5.0} />
-      <Piece model={DECORATION.flag_green} position={[-6, 0, 47]} scale={f} />
-      <Piece model={DECORATION.flag_green} position={[6, 0, 47]} scale={f} />
-
       {/* ── Concert Zone (SW) — gathering/camp ── */}
       <Piece model={DECORATION.tent} position={along([-38, 38], 20, -6)} scale={d} />
       <Piece model={DECORATION.weaponrack} position={along([-38, 38], 20, 6)} scale={d} />
       <Piece model={DECORATION.barrel} position={along([-38, 38], 8, -6)} scale={d} />
       <Piece model={DECORATION.crate_B} position={along([-38, 38], 8, 6)} scale={d} />
-      <Piece model={DECORATION.flag_red} position={along([-38, 38], 5, -5)} scale={f} />
-      <Piece model={DECORATION.flag_red} position={along([-38, 38], 5, 5)} scale={f} />
-
       {/* ── Kitchen Zone (W) — cooking supplies ── */}
       <Piece model={DECORATION.sack} position={along([-48, 5], 20, -6)} scale={d} />
       <Piece model={DECORATION.bucket_water} position={along([-48, 5], 20, 6)} scale={d} />
       <Piece model={DECORATION.barrel} position={along([-48, 5], 22, -6)} scale={d} />
       <Piece model={DECORATION.crate_A} position={along([-48, 5], 22, 6)} scale={d} />
-      <Piece model={DECORATION.flag_green} position={along([-48, 5], 2, -5)} scale={f} />
-      <Piece model={DECORATION.flag_green} position={along([-48, 5], 2, 5)} scale={f} />
-
       {/* ── Dungeon approach (N boulevard) — flanking props on grass ── */}
       <Piece model={DECORATION.rock_C} position={[-7, 0, -50]} scale={5.0} />
       <Piece model={DECORATION.rock_D} position={[7, 0, -50]} scale={5.0} />
@@ -1480,8 +1519,6 @@ function ZoneApproachDecor() {
       <Piece model={DECORATION.hill_B} position={[7, 0, -55]} scale={5.5} />
       <Piece model={DECORATION.rock_E} position={[-7, 0, -60]} scale={6.0} />
       <Piece model={DECORATION.rock_A} position={[7, 0, -60]} scale={6.0} />
-      <Piece model={DECORATION.flag_red} position={[-6, 0, -64]} scale={f} />
-      <Piece model={DECORATION.flag_red} position={[6, 0, -64]} scale={f} />
     </group>
   )
 }
@@ -1491,21 +1528,18 @@ function ZoneApproachDecor() {
 // ============================================================================
 
 function JunctionPlazas() {
-  const f = 15.0
-  // Junctions outside ring road (R≈49, off spokes)
-  const junctions: { pos: [number, number, number]; flag: string }[] = [
-    { pos: [40, 0, -29], flag: DECORATION.flag_blue },    // NE
-    { pos: [49, 0, 10], flag: DECORATION.flag_red },       // E
-    { pos: [29, 0, 40], flag: DECORATION.flag_yellow },   // SE
-    { pos: [-29, 0, 40], flag: DECORATION.flag_red },     // SW
-    { pos: [-49, 0, 10], flag: DECORATION.flag_green },    // W
+  const junctions: [number, number, number][] = [
+    [40, 0, -29],   // NE
+    [49, 0, 10],    // E
+    [29, 0, 40],    // SE
+    [-29, 0, 40],   // SW
+    // W junction [-49, 0, 10] omitted — inside kitchen zone
   ]
 
   return (
     <group name="junction-plazas">
-      {junctions.map((j, i) => (
-        <group key={`junction-${i}`} position={j.pos}>
-          <Piece model={j.flag} position={[0, 0, 0]} scale={f} />
+      {junctions.map((pos, i) => (
+        <group key={`junction-${i}`} position={pos}>
           <Piece model={DECORATION.street_lantern} position={[-3, 0, 0]} scale={1.5} />
           <Piece model={DECORATION.street_lantern} position={[3, 0, 0]} scale={1.5} />
           <Piece model={DECORATION.barrel} position={[2, 0, 2]} scale={7.0} />

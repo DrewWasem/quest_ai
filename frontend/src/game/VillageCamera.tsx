@@ -15,15 +15,32 @@ import { useRef, useEffect } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import * as THREE from 'three'
-import { useGameStore } from '../stores/gameStore'
+import { useGameStore, ZONE_CENTERS } from '../stores/gameStore'
 
 // Follow offset for third-person village walking
 const FOLLOW_HEIGHT = 8
-const ZONE_CAMERA_OFFSET = new THREE.Vector3(0, 8, 14)
+const CAMERA_DISTANCE = 14
+const DEFAULT_ZONE_OFFSET = new THREE.Vector3(0, 8, CAMERA_DISTANCE)
 
-// Per-zone camera offset overrides (camera from village center direction)
-const ZONE_CAMERA_OVERRIDES: Record<string, THREE.Vector3> = {
-  'adventurers-picnic': new THREE.Vector3(0, 8, -14),
+// Lazily compute per-zone camera offset from village center direction
+let _zoneCameraOffsets: Record<string, THREE.Vector3> | null = null
+function getZoneCameraOffset(zoneId: string): THREE.Vector3 {
+  if (!_zoneCameraOffsets) {
+    _zoneCameraOffsets = {}
+    for (const [id, center] of Object.entries(ZONE_CENTERS)) {
+      const dx = -center[0]
+      const dz = -center[2]
+      const len = Math.sqrt(dx * dx + dz * dz)
+      if (len > 0) {
+        _zoneCameraOffsets[id] = new THREE.Vector3(
+          (dx / len) * CAMERA_DISTANCE,
+          8,
+          (dz / len) * CAMERA_DISTANCE,
+        )
+      }
+    }
+  }
+  return _zoneCameraOffsets[zoneId] || DEFAULT_ZONE_OFFSET
 }
 
 // Orbit settings (zone mode only)
@@ -170,8 +187,7 @@ export function VillageCamera() {
 
     let endPos: THREE.Vector3
     if (currentZone) {
-      const offset = ZONE_CAMERA_OVERRIDES[currentZone] || ZONE_CAMERA_OFFSET
-      endPos = endTarget.clone().add(offset)
+      endPos = endTarget.clone().add(getZoneCameraOffset(currentZone))
     } else {
       // Returning to village — use yaw-rotated offset
       _followOffset.set(

@@ -18,9 +18,9 @@ import * as THREE from 'three'
 import { useGameStore, ZONE_CENTERS } from '../stores/gameStore'
 
 // Follow offset for third-person village walking
-const FOLLOW_HEIGHT = 8
-const CAMERA_DISTANCE = 14
-const DEFAULT_ZONE_OFFSET = new THREE.Vector3(0, 8, CAMERA_DISTANCE)
+const FOLLOW_HEIGHT = 6
+const CAMERA_DISTANCE = 12
+const DEFAULT_ZONE_OFFSET = new THREE.Vector3(0, 6, CAMERA_DISTANCE)
 
 // Lazily compute per-zone camera offset from village center direction
 let _zoneCameraOffsets: Record<string, THREE.Vector3> | null = null
@@ -249,10 +249,11 @@ export function VillageCamera() {
     if (!currentZone) {
       controls.enabled = false
 
-      // Compute yaw-rotated follow offset
+      // Compute yaw-rotated follow offset — height scales with zoom
+      const dynamicHeight = FOLLOW_HEIGHT * (cameraZoom / CAMERA_DISTANCE)
       _followOffset.set(
         Math.sin(cameraYaw) * cameraZoom,
-        FOLLOW_HEIGHT,
+        dynamicHeight,
         Math.cos(cameraYaw) * cameraZoom,
       )
 

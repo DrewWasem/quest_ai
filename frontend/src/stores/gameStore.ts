@@ -39,6 +39,10 @@ interface GameState {
   cameraYaw: number;
   cameraZoom: number;
 
+  // Cinematic intro animation override for the player character
+  introAnimation: string | null;
+  introPlayerYaw: number | null;
+
   // Actions
   setInput: (input: string) => void;
   submitInput: () => Promise<void>;
@@ -53,6 +57,7 @@ interface GameState {
   rotateCameraYaw: (deltaYaw: number) => void;
   adjustCameraZoom: (delta: number) => void;
   clearBadgeUnlocks: () => void;
+  setIntroAnimation: (anim: string | null, yaw?: number | null) => void;
 }
 
 // Zone center positions in world space — ring at R~48-53, dungeon at Z=-70
@@ -62,7 +67,7 @@ export const ZONE_CENTERS: Record<string, [number, number, number]> = {
   'barbarian-school':  [48, 0, 5],
   'skeleton-pizza':    [38, 0, 38],
   'adventurers-picnic':[0, 0, 48],
-  'dungeon-concert':   [-38, 0, 38],
+  'dungeon-concert':   [-35, 0, 35],
   'mage-kitchen':      [-48, 0, 5],
 };
 
@@ -109,7 +114,9 @@ export const useGameStore = create<GameState>((set, get) => ({
   isTransitioning: false,
   playerPosition: [0, 0, 0],
   cameraYaw: 0,
-  cameraZoom: 14,
+  cameraZoom: 12,
+  introAnimation: null,
+  introPlayerYaw: null,
 
   setInput: (input: string) => set({ userInput: input }),
 
@@ -175,6 +182,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   clearError: () => set({ error: null }),
   toggleMute: () => set((s) => ({ isMuted: !s.isMuted })),
   clearBadgeUnlocks: () => set({ badgeUnlocks: [] }),
+  setIntroAnimation: (anim, yaw) => set({ introAnimation: anim, introPlayerYaw: yaw ?? null }),
 
   enterZone: (zoneId: string) => {
     const center = ZONE_CENTERS[zoneId];
@@ -233,7 +241,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   adjustCameraZoom: (delta: number) => {
     set((s) => ({
-      cameraZoom: Math.max(8, Math.min(60, s.cameraZoom * (1 + delta * 0.08))),
+      cameraZoom: Math.max(5, Math.min(60, s.cameraZoom * (1 + delta * 0.08))),
     }));
   },
 }));

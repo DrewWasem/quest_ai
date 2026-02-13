@@ -52,7 +52,8 @@ class SafeModel extends Component<{ children: ReactNode }, { hasError: boolean }
 // Characters spawn in the FRONT half (positive Z = closer to camera).
 // Props sit in the BACK half (negative Z = backdrop behind characters).
 // This prevents characters from clipping into environment objects.
-const LOCAL_POSITION_MAP: Record<Position, [number, number, number]> = {
+const LOCAL_POSITION_MAP: Record<string, [number, number, number]> = {
+  // Original 8 positions
   left: [-4, 0, 1.5],
   center: [0, 0, 1],
   right: [4, 0, 1.5],
@@ -61,7 +62,31 @@ const LOCAL_POSITION_MAP: Record<Position, [number, number, number]> = {
   'off-left': [-7, 0, 1],
   'off-right': [7, 0, 1],
   'off-top': [0, 5, 0],
+
+  // Downstage (front row, Z=1.5 — closest to camera)
+  'ds-far-left':  [-4.5, 0, 1.5],
+  'ds-left':      [-2.0, 0, 1.5],
+  'ds-center':    [0, 0, 1.5],
+  'ds-right':     [2.0, 0, 1.5],
+  'ds-far-right': [4.5, 0, 1.5],
+
+  // Center stage (mid row, Z=0)
+  'cs-far-left':  [-4.5, 0, 0],
+  'cs-left':      [-2.0, 0, 0],
+  'cs-center':    [0, 0, 0],
+  'cs-right':     [2.0, 0, 0],
+  'cs-far-right': [4.5, 0, 0],
+
+  // Upstage (back row, Z=-1.5 — furthest from camera)
+  'us-far-left':  [-4.5, 0, -1.5],
+  'us-left':      [-2.0, 0, -1.5],
+  'us-center':    [0, 0, -1.5],
+  'us-right':     [2.0, 0, -1.5],
+  'us-far-right': [4.5, 0, -1.5],
 }
+
+/** Exported as STAGE_MARKS for use in blocking-templates.ts */
+export { LOCAL_POSITION_MAP as STAGE_MARKS }
 
 // Kept for backward compatibility — resolves to zone-relative positions at runtime
 const POSITION_MAP = LOCAL_POSITION_MAP
@@ -971,6 +996,7 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
           target: (va.character ?? va.asset ?? '') as any,
           to: (va.to ?? va.position ?? 'center') as any,
           style: va.style ?? 'linear',
+          duration_ms: va.duration ? va.duration * 1000 : undefined,
         }
       case 'animate':
         return {
@@ -1061,12 +1087,16 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
     const pos = zonePosition(currentZone, localPos)
     const actorId = target
 
+    // Strip numeric suffix for model resolution (cat_1 → cat) but keep full ID for tracking
+    const baseId = actorId.replace(/_\d+$/, '')
+
     // Resolve target type: character → animal → procedural → prop
-    const characterId = resolveCharacterId(actorId)
+    const characterId = resolveCharacterId(actorId) ?? resolveCharacterId(baseId)
     const isCharacter = characterId !== null
-    const isAnimal = !isCharacter && isAnimalModel(actorId)
-    const isProcedural = !isCharacter && !isAnimal && actorId === 'balloon'
-    const propPath = !isCharacter && !isAnimal && !isProcedural ? resolvePropPath(actorId) : null
+    const isAnimal = !isCharacter && (isAnimalModel(actorId) || isAnimalModel(baseId))
+    const isProcedural = !isCharacter && !isAnimal && (actorId === 'balloon' || baseId === 'balloon')
+    const propPath = !isCharacter && !isAnimal && !isProcedural
+      ? (resolvePropPath(actorId) ?? resolvePropPath(baseId)) : null
 
     // Skip if we can't resolve the target at all
     if (!isCharacter && !isAnimal && !isProcedural && !propPath) {
@@ -1088,7 +1118,7 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
       newActor = {
         id: actorId,
         type: 'animal',
-        modelPath: ANIMAL_MODELS[actorId],
+        modelPath: ANIMAL_MODELS[actorId] ?? ANIMAL_MODELS[baseId],
         position: pos,
         scale: 0.8,
       }
@@ -1106,7 +1136,7 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
         type: 'prop',
         modelPath: propPath!,
         position: pos,
-        scale: resolvePropScale(actorId),
+        scale: resolvePropScale(actorId) || resolvePropScale(baseId),
       }
     }
 
@@ -1160,8 +1190,15 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
     const distance = Math.sqrt(dx * dx + dz * dz)
     const duration = durationMs || Math.round(Math.min(Math.max(distance / 4.0 * 1000, 600), 2500))
 
-    // Also trigger walking animation for characters
+    // Face movement direction + trigger walking animation for characters
     if (currentActor.type === 'character') {
+      const moveAngle = Math.atan2(
+        newPos[0] - startPos[0],
+        newPos[2] - startPos[2]
+      )
+      setActors(prev => prev.map(a =>
+        a.id === target ? { ...a, rotation: [0, moveAngle, 0] as [number, number, number] } : a
+      ))
       handleAnimate(target, 'Walking_A')
     }
 
@@ -1180,9 +1217,12 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
         resolve: () => {
           // Update position ref when tween completes
           actorPositionsRef.current.set(target, newPos)
-          // Return to idle after move
+          // Return to idle + face camera after move
           if (currentActor.type === 'character') {
-            handleAnimate(target, 'Idle_A')
+            const cameraRotation = currentZone ? getZoneCharRotation(currentZone) : undefined
+            setActors(prev => prev.map(a =>
+              a.id === target ? { ...a, rotation: cameraRotation, animation: 'Idle_A' } : a
+            ))
           }
           resolve()
         },

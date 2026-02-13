@@ -3,15 +3,19 @@
  *
  * Replaces PromptInput when a quest stage uses the Mad Libs format.
  * Shows template sentence with clickable blanks, option grid pickers,
- * and GO/Randomize/New Words buttons.
+ * and GO/Randomize/New Sentence buttons.
+ *
+ * Architecture: Dropdowns are hardcoded (defaultOptions). Sentence templates
+ * and vignette selection are Haiku-assisted with instant fallbacks.
  */
 
 import { useState, useEffect, useCallback } from 'react';
 import { useGameStore } from '../stores/gameStore';
 import { useTTS } from '../hooks/useTTS';
 import type { QuestStage, SlotOption, Vignette } from '../types/madlibs';
-import { resolveVignette, buildVignetteScript } from '../services/vignette-resolver';
-import { generateOptions } from '../services/option-generator';
+import { buildVignetteScript } from '../services/vignette-resolver';
+import { selectVignette } from '../services/vignette-selector';
+import { generateSentenceTemplate } from '../services/sentence-generator';
 import FeedbackCard from './FeedbackCard';
 
 interface MadLibsInputProps {
@@ -27,14 +31,14 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
 
   const { speak } = useTTS();
 
-  // Per-slot options (may be default or Claude-generated)
-  const [slotOptions, setSlotOptions] = useState<Record<string, SlotOption[]>>(() => {
-    const initial: Record<string, SlotOption[]> = {};
-    for (const slot of stage.template.slots) {
-      initial[slot.id] = slot.defaultOptions;
-    }
-    return initial;
-  });
+  // Hardcoded slot options from defaultOptions (no dynamic generation)
+  const slotOptions: Record<string, SlotOption[]> = {};
+  for (const slot of stage.template.slots) {
+    slotOptions[slot.id] = slot.defaultOptions;
+  }
+
+  // Current sentence template (may be Haiku-generated or fallback)
+  const [currentSentence, setCurrentSentence] = useState(stage.template.sentence);
 
   // Selected tag per slot
   const [selectedTags, setSelectedTags] = useState<Record<string, string>>({});
@@ -42,7 +46,7 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
   // Which slot picker is currently open
   const [openSlot, setOpenSlot] = useState<string | null>(null);
 
-  // Loading state for option generation
+  // Loading state for sentence generation
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Feedback state after vignette plays
@@ -57,14 +61,14 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
   // Playing state
   const [isPlaying, setIsPlaying] = useState(false);
 
-  // Generate fresh options on mount (hidden behind intro text)
+  // Generate fresh sentence template on mount
   useEffect(() => {
     let cancelled = false;
     setIsGenerating(true);
 
-    generateOptions(stage, 0).then(options => {
+    generateSentenceTemplate(stage).then(sentence => {
       if (!cancelled) {
-        setSlotOptions(options);
+        setCurrentSentence(sentence);
         setIsGenerating(false);
       }
     });
@@ -78,6 +82,7 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
     setFeedback(null);
     setOpenSlot(null);
     setIsPlaying(false);
+    setCurrentSentence(stage.template.sentence);
   }, [stage.id]);
 
   const handleSelectTag = useCallback((slotId: string, tag: string) => {
@@ -96,18 +101,18 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
     setOpenSlot(null);
   }, [stage, slotOptions]);
 
-  const handleRefreshOptions = useCallback(async () => {
+  const handleRefreshSentence = useCallback(async () => {
     setIsGenerating(true);
     try {
-      const options = await generateOptions(stage, discoveredIds.size);
-      setSlotOptions(options);
+      const sentence = await generateSentenceTemplate(stage);
+      setCurrentSentence(sentence);
     } catch {
-      // Keep current options
+      // Keep current sentence
     }
     setIsGenerating(false);
-  }, [stage, discoveredIds.size]);
+  }, [stage]);
 
-  const handleGo = useCallback(() => {
+  const handleGo = useCallback(async () => {
     // Check all slots have a selection
     const allSelected = stage.template.slots.every(s => selectedTags[s.id]);
     if (!allSelected) return;
@@ -115,21 +120,21 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
     setIsPlaying(true);
     setFeedback(null);
 
-    // Resolve vignette from tags
-    const vignette = resolveVignette(selectedTags, stage);
-    const script = buildVignetteScript(vignette, selectedTags);
-
-    // Track discovery
-    setDiscoveredIds(prev => new Set([...prev, vignette.id]));
-
     // Build filled sentence for display
-    let filledSentence = stage.template.sentence;
+    let filledSentence = currentSentence;
     for (const slot of stage.template.slots) {
       const tag = selectedTags[slot.id];
       const option = (slotOptions[slot.id] ?? slot.defaultOptions).find(o => o.tag === tag);
       const label = option?.label ?? tag;
       filledSentence = filledSentence.replace(`{${slot.id}}`, `**${label}**`);
     }
+
+    // Haiku-assisted vignette selection (falls back to rank #1)
+    const vignette = await selectVignette(selectedTags, filledSentence, stage);
+    const script = buildVignetteScript(vignette, selectedTags);
+
+    // Track discovery
+    setDiscoveredIds(prev => new Set([...prev, vignette.id]));
 
     // Send to playback engine
     setLastScript(script);
@@ -149,7 +154,7 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
       setFeedback({ vignette, filledSentence });
       setIsPlaying(false);
     }, Math.min(totalDuration + 500, 8000));
-  }, [selectedTags, stage, slotOptions, setLastScript, setVignetteSteps, speak]);
+  }, [selectedTags, stage, slotOptions, currentSentence, setLastScript, setVignetteSteps, speak]);
 
   const handleTryAgain = useCallback(() => {
     setFeedback(null);
@@ -183,7 +188,7 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
         <>
           <div className="mb-4">
             <TemplateSentence
-              sentence={stage.template.sentence}
+              sentence={currentSentence}
               slots={stage.template.slots}
               selectedTags={selectedTags}
               slotOptions={slotOptions}
@@ -201,7 +206,6 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
               selectedTag={selectedTags[openSlot]}
               onSelect={(tag) => handleSelectTag(openSlot, tag)}
               onClose={() => setOpenSlot(null)}
-              isGenerating={isGenerating}
             />
           )}
 
@@ -219,7 +223,7 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
             </button>
 
             <button
-              onClick={handleRefreshOptions}
+              onClick={handleRefreshSentence}
               disabled={isPlaying || isGenerating}
               className="btn-game text-sm px-4 py-2.5 rounded-xl border-2
                 bg-white/60 text-quest-text-mid border-quest-border
@@ -235,7 +239,7 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
                   Loading...
                 </span>
               ) : (
-                <>{'\u{1F504}'} New Words!</>
+                <>{'\u{1F504}'} New Sentence!</>
               )}
             </button>
 
@@ -339,14 +343,12 @@ function SlotPicker({
   selectedTag,
   onSelect,
   onClose,
-  isGenerating,
 }: {
   slot: import('../types/madlibs').TemplateSlot;
   options: SlotOption[];
   selectedTag?: string;
   onSelect: (tag: string) => void;
   onClose: () => void;
-  isGenerating: boolean;
 }) {
   return (
     <div className="mb-3 animate-slide-up">
@@ -363,32 +365,22 @@ function SlotPicker({
       </div>
 
       <div className="grid grid-cols-3 gap-2">
-        {isGenerating ? (
-          // Shimmer placeholders
-          Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-14 rounded-xl bg-quest-border/30 animate-pulse"
-            />
-          ))
-        ) : (
-          options.map((option) => (
-            <button
-              key={option.tag}
-              onClick={() => onSelect(option.tag)}
-              className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border-2 transition-all duration-150
-                font-heading font-semibold text-sm
-                ${selectedTag === option.tag
-                  ? 'bg-quest-purple/15 border-quest-purple text-quest-purple shadow-md scale-105'
-                  : 'bg-white/70 border-quest-border text-quest-text-dark hover:border-quest-purple/40 hover:bg-white hover:scale-102'
-                }
-              `}
-            >
-              <span className="text-lg">{option.icon}</span>
-              <span className="truncate">{option.label}</span>
-            </button>
-          ))
-        )}
+        {options.map((option) => (
+          <button
+            key={option.tag}
+            onClick={() => onSelect(option.tag)}
+            className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border-2 transition-all duration-150
+              font-heading font-semibold text-sm
+              ${selectedTag === option.tag
+                ? 'bg-quest-purple/15 border-quest-purple text-quest-purple shadow-md scale-105'
+                : 'bg-white/70 border-quest-border text-quest-text-dark hover:border-quest-purple/40 hover:bg-white hover:scale-102'
+              }
+            `}
+          >
+            <span className="text-lg">{option.icon}</span>
+            <span className="truncate">{option.label}</span>
+          </button>
+        ))}
       </div>
     </div>
   );

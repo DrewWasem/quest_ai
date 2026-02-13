@@ -3,6 +3,7 @@ import { Suspense, useEffect, useCallback, ReactNode } from 'react';
 import * as THREE from 'three';
 import { VillageWorld } from './VillageWorld';
 import { VillageCamera } from './VillageCamera';
+import CinematicIntro from './CinematicIntro';
 import { PlayerCharacter } from './PlayerCharacter';
 import { useGameStore } from '../stores/gameStore';
 
@@ -55,6 +56,8 @@ function SceneMeasurer() {
 
 interface R3FGameProps {
   children?: ReactNode;
+  playingIntro?: boolean;
+  onIntroComplete?: () => void;
 }
 
 /** Reads store state inside Canvas to control player */
@@ -89,7 +92,7 @@ function DebugCoords() {
   )
 }
 
-export default function R3FGame({ children }: R3FGameProps) {
+export default function R3FGame({ children, playingIntro, onIntroComplete }: R3FGameProps) {
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
       {import.meta.env.DEV && <DebugCoords />}
@@ -97,9 +100,16 @@ export default function R3FGame({ children }: R3FGameProps) {
         shadows
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: false }}
+        onCreated={({ gl: renderer }) => {
+          renderer.setClearColor('#87CEEB', 1)
+        }}
       >
-        {/* Camera with zone transition support */}
-        <VillageCamera />
+        {/* Cinematic intro OR normal camera — never both */}
+        {playingIntro && onIntroComplete ? (
+          <CinematicIntro onComplete={onIntroComplete} />
+        ) : (
+          <VillageCamera />
+        )}
         {import.meta.env.DEV && <SceneMeasurer />}
 
         {/* Persistent village world with all zones */}

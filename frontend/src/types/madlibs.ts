@@ -119,6 +119,7 @@ export interface VignetteFeedback {
 
 export interface Vignette {
   id: string;
+  description: string;  // 1-sentence summary for Haiku-based vignette selection
   trigger: ComboTrigger;
   tier: ReactionTier;
   promptScore: PromptScore;

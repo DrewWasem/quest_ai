@@ -7,6 +7,10 @@
  */
 
 import type { Vignette } from '../../types/madlibs';
+import {
+  setupProps, enterFromWing, enterGroup, dramaticReveal,
+  jugglingEntrance, composeBlocking, MARK,
+} from '../blocking-templates';
 
 // ─── STAGE 1 VIGNETTES ──────────────────────────────────────────────────────
 
@@ -15,121 +19,92 @@ export const SKELETON_BIRTHDAY_STAGE_1: Vignette[] = [
   // ── PERFECT: cake + magic_show + spooky ────────────────────────────────────
   {
     id: 'skel_bday_1_perfect_cake_magic_spooky',
+    description: 'A wizard conjures a magic cake for a spooky skeleton birthday with candles, skulls, and confetti.',
     trigger: { food: 'cake', entertainment: 'magic_show', vibe: 'spooky' },
     tier: 'spectacular',
     promptScore: 'perfect',
-    steps: [
-      // Scene setup
-      {
-        parallel: [
-          { action: 'spawn', asset: 'table_long', position: 'center' },
-          { action: 'spawn', asset: 'candle_triple', position: 'left' },
-          { action: 'spawn', asset: 'candle_triple', position: 'right' },
-          { action: 'sfx', sound: 'spawn' },
+    steps: composeBlocking(
+      // Props first — table + candles on stage marks
+      setupProps([
+        { asset: 'table_long', mark: MARK.US_CENTER },
+        { asset: 'candle_triple', mark: MARK.US_LEFT },
+        { asset: 'candle_triple', mark: MARK.US_RIGHT },
+      ]),
+      // Birthday skeleton walks in from left wing to center
+      enterFromWing('skeleton_warrior', 'left', MARK.CS_CENTER, {
+        arrivalAnim: 'taunt', emote: '🎂',
+      }),
+      // Guests file in from right wing
+      enterGroup(
+        [
+          { character: 'skeleton_mage', mark: MARK.DS_LEFT },
+          { character: 'skeleton_minion', mark: MARK.DS_RIGHT },
+          { character: 'knight', mark: MARK.DS_FAR_RIGHT },
         ],
-        delayAfter: 0.5,
-      },
-      // Birthday skeleton rises from ground
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'skeleton_warrior', position: 'center', anim: 'skel_spawn' },
-          { action: 'react', effect: 'explosion-cartoon', position: 'center' },
-          { action: 'sfx', sound: 'spawn' },
-        ],
-        delayAfter: 0.8,
-      },
-      // Skeleton taunts excitedly
-      {
-        parallel: [
-          { action: 'animate', character: 'skeleton_warrior', anim: 'taunt' },
-          { action: 'emote', character: 'skeleton_warrior', emoji: '🎂' },
-        ],
-        delayAfter: 0.5,
-      },
-      // Guests arrive
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'skeleton_mage', position: 'left', anim: 'spawn_air' },
-          { action: 'spawn_character', character: 'skeleton_minion', position: 'right', anim: 'spawn_air' },
-          { action: 'spawn_character', character: 'knight', position: 'bottom', anim: 'spawn_ground' },
-          { action: 'sfx', sound: 'spawn' },
-          { action: 'react', effect: 'sparkle-magic', position: 'center' },
-        ],
-        delayAfter: 0.5,
-      },
-      // Guests wave
-      {
-        parallel: [
-          { action: 'animate', character: 'skeleton_mage', anim: 'wave' },
-          { action: 'animate', character: 'skeleton_minion', anim: 'wave' },
-          { action: 'animate', character: 'knight', anim: 'celebrate' },
-        ],
-        delayAfter: 0.6,
-      },
-      // Wizard enters dramatically
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'mage', position: 'right', anim: 'spawn_air' },
-          { action: 'react', effect: 'sparkle-magic', position: 'right' },
-          { action: 'sfx', sound: 'react' },
-        ],
-        delayAfter: 0.4,
-      },
+        'right',
+        { arrivalAnim: 'wave' },
+      ),
+      // Wizard drops from fly space — dramatic reveal
+      dramaticReveal('mage', MARK.CS_RIGHT, {
+        preEffects: ['sparkle-magic'],
+        revealAnim: 'cast_long',
+        cameraShake: 0.3,
+      }),
       // Wizard casts spell
-      {
+      [{
         parallel: [
           { action: 'animate', character: 'mage', anim: 'cast_long' },
-          { action: 'react', effect: 'sparkle-magic', position: 'center' },
+          { action: 'react', effect: 'sparkle-magic', position: MARK.CS_CENTER },
           { action: 'sfx', sound: 'react' },
           { action: 'camera_shake', intensity: 0.3, duration: 1.5 },
         ],
         delayAfter: 1.5,
-      },
+      }],
       // CAKE APPEARS
-      {
+      [{
         parallel: [
-          { action: 'spawn', asset: 'cookie', position: 'center' },
-          { action: 'react', effect: 'explosion-cartoon', position: 'center' },
-          { action: 'react', effect: 'sparkle-magic', position: 'center' },
+          { action: 'spawn', asset: 'cookie', position: MARK.CS_CENTER },
+          { action: 'react', effect: 'explosion-cartoon', position: MARK.CS_CENTER },
+          { action: 'react', effect: 'sparkle-magic', position: MARK.CS_CENTER },
           { action: 'sfx', sound: 'success' },
           { action: 'camera_shake', intensity: 0.6, duration: 0.5 },
           { action: 'screen_flash', color: 'white', duration: 0.2 },
           { action: 'text_popup', text: '✨ MAGIC CAKE! ✨', position: 'top', size: 'huge' },
         ],
         delayAfter: 0.3,
-      },
+      }],
       // Everyone celebrates
-      {
+      [{
         parallel: [
           { action: 'crowd_react', characters: 'all', anim: 'celebrate' },
           { action: 'animate', character: 'mage', anim: 'taunt' },
           { action: 'sfx', sound: 'success' },
-          { action: 'react', effect: 'confetti-burst', position: 'center' },
+          { action: 'react', effect: 'confetti-burst', position: MARK.CS_CENTER },
         ],
         delayAfter: 0.8,
-      },
-      // Spooky finale — skull cake topper
-      {
+      }],
+      // Spooky finale
+      [{
         parallel: [
-          { action: 'spawn', asset: 'skull', position: 'center' },
-          { action: 'react', effect: 'fire-sneeze', position: 'center' },
+          { action: 'spawn', asset: 'skull', position: MARK.CS_CENTER },
+          { action: 'react', effect: 'fire-sneeze', position: MARK.CS_CENTER },
           { action: 'sfx', sound: 'spawn' },
         ],
         delayAfter: 0.5,
-      },
+      }],
       // Final celebration
-      {
+      [{
         parallel: [
-          { action: 'spawn', asset: 'banner_red', position: 'top' },
+          { action: 'spawn', asset: 'banner_red', position: MARK.TOP },
           { action: 'text_popup', text: '🎉 HAPPY BONE-DAY! 🎉', position: 'center', size: 'huge' },
           { action: 'crowd_react', characters: 'all', anim: 'celebrate' },
-          { action: 'react', effect: 'confetti-burst', position: 'center' },
-          { action: 'react', effect: 'hearts-float', position: 'center' },
+          { action: 'react', effect: 'confetti-burst', position: MARK.CS_CENTER },
+          { action: 'react', effect: 'hearts-float', position: MARK.CS_CENTER },
           { action: 'sfx', sound: 'success' },
         ],
         delayAfter: 2.0,
-      },
-    ],
+      }],
+    ),
     feedback: {
       title: '🌟 PERFECT PARTY!',
       message: "You planned an amazing spooky birthday! You said WHAT food (magic cake), WHAT entertainment (a magic show), and WHAT vibe (spooky). When you're specific about all the details, everything comes together perfectly!",
@@ -141,6 +116,7 @@ export const SKELETON_BIRTHDAY_STAGE_1: Vignette[] = [
   // ── CHAOTIC: pizza + music + wild ──────────────────────────────────────────
   {
     id: 'skel_bday_1_chaos_pizza_music_wild',
+    description: 'Pizza rains from the sky as skeletons mosh and a barrel explodes at a wild music party.',
     trigger: { food: 'pizza', entertainment: 'music', vibe: 'wild' },
     tier: 'absolute_chaos',
     promptScore: 'chaotic',
@@ -257,6 +233,7 @@ export const SKELETON_BIRTHDAY_STAGE_1: Vignette[] = [
   // ── PARTIAL: any food + any entertainment + missing vibe ───────────────────
   {
     id: 'skel_bday_1_partial_no_vibe',
+    description: 'Food and entertainment arrive but nobody knows how to act without a party vibe.',
     trigger: { food: '*', entertainment: '*', vibe: 'default' },
     tier: 'subtle',
     promptScore: 'partial',
@@ -316,6 +293,7 @@ export const SKELETON_BIRTHDAY_STAGE_1: Vignette[] = [
   // ── PERFECT: feast + fireworks + epic ──────────────────────────────────────
   {
     id: 'skel_bday_1_perfect_feast_fireworks_epic',
+    description: 'An epic feast with fireworks launched by a wizard creates a legendary skeleton celebration.',
     trigger: { food: 'feast', entertainment: 'fireworks', vibe: 'epic' },
     tier: 'spectacular',
     promptScore: 'perfect',
@@ -401,6 +379,7 @@ export const SKELETON_BIRTHDAY_STAGE_1: Vignette[] = [
   // ── CHAOTIC: fruit + combat_show + silly ───────────────────────────────────
   {
     id: 'skel_bday_1_chaos_fruit_combat_silly',
+    description: 'Fruit rains down, a knight slips on a banana, and a clown laughs at the silly birthday brawl.',
     trigger: { food: 'fruit', entertainment: 'combat_show', vibe: 'silly' },
     tier: 'absolute_chaos',
     promptScore: 'chaotic',
@@ -481,6 +460,7 @@ export const SKELETON_BIRTHDAY_STAGE_1: Vignette[] = [
   // ── VIBE MATCH: any + any + spooky ─────────────────────────────────────────
   {
     id: 'skel_bday_1_vibe_spooky',
+    description: 'Candles flicker and skulls appear as spooky vibes set the mood for the skeleton party.',
     trigger: { food: '*', entertainment: '*', vibe: 'spooky' },
     tier: 'moderate',
     promptScore: 'partial',
@@ -532,6 +512,7 @@ export const SKELETON_BIRTHDAY_STAGE_1: Vignette[] = [
   // ── VIBE MATCH: any + any + fancy ──────────────────────────────────────────
   {
     id: 'skel_bday_1_vibe_fancy',
+    description: 'Pillars, a gold chest, and a red carpet create a fancy elegant skeleton celebration.',
     trigger: { food: '*', entertainment: '*', vibe: 'fancy' },
     tier: 'moderate',
     promptScore: 'partial',
@@ -582,6 +563,7 @@ export const SKELETON_BIRTHDAY_STAGE_1: Vignette[] = [
   // ── CATEGORY: any + magic_show + any ───────────────────────────────────────
   {
     id: 'skel_bday_1_cat_magic',
+    description: 'A wizard performs a magic show with sparkles and a potion for the skeleton birthday.',
     trigger: { food: '*', entertainment: 'magic_show', vibe: '*' },
     tier: 'moderate',
     promptScore: 'partial',
@@ -626,43 +608,37 @@ export const SKELETON_BIRTHDAY_STAGE_1: Vignette[] = [
 
 export const SKELETON_BIRTHDAY_DEFAULT: Vignette = {
   id: 'skel_bday_default',
+  description: 'A clown walks in juggling 3 cats, then guests arrive for a chaotic birthday party.',
   trigger: { food: '*', entertainment: '*', vibe: '*' },
   tier: 'subtle',
   promptScore: 'partial',
-  steps: [
-    {
-      parallel: [
-        { action: 'spawn_character', character: 'skeleton_warrior', position: 'center', anim: 'skel_spawn' },
-        { action: 'sfx', sound: 'spawn' },
-      ],
-      delayAfter: 0.8,
-    },
-    {
-      parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'center' },
-        { action: 'spawn', asset: 'present_red', position: 'left' },
-        { action: 'spawn', asset: 'present_blue', position: 'right' },
-        { action: 'sfx', sound: 'spawn' },
-      ],
-      delayAfter: 0.5,
-    },
-    {
-      parallel: [
-        { action: 'spawn_character', character: 'knight', position: 'left', anim: 'spawn_ground' },
-        { action: 'spawn_character', character: 'mage', position: 'right', anim: 'spawn_air' },
-      ],
-      delayAfter: 0.5,
-    },
-    {
+  steps: composeBlocking(
+    // Props: party table
+    setupProps([
+      { asset: 'table_long', mark: MARK.US_CENTER },
+      { asset: 'present', mark: MARK.US_LEFT },
+    ]),
+    // Cat juggling entrance!
+    jugglingEntrance(
+      'clown', 'left', MARK.DS_CENTER,
+      ['cat_1', 'cat_2', 'cat_3'], 'cat',
+      { charAnim: 'Cheering' },
+    ),
+    // Skeleton walks in from right
+    enterFromWing('skeleton_warrior', 'right', MARK.DS_RIGHT, {
+      arrivalAnim: 'taunt', emote: '🎉',
+    }),
+    // Final celebration
+    [{
       parallel: [
         { action: 'crowd_react', characters: 'all', anim: 'celebrate' },
-        { action: 'react', effect: 'confetti-burst', position: 'center' },
+        { action: 'react', effect: 'confetti-burst', position: MARK.CS_CENTER },
         { action: 'sfx', sound: 'success' },
         { action: 'text_popup', text: '🎉 HAPPY BIRTHDAY! 🎉', position: 'center', size: 'large' },
       ],
       delayAfter: 2.0,
-    },
-  ],
+    }],
+  ),
   feedback: {
     title: '🎂 Party Time!',
     message: "A birthday party happened! It was... fine. But imagine how much MORE fun it would be if you picked specific food, entertainment, and a vibe!",

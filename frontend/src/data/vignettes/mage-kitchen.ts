@@ -14,6 +14,7 @@ export const MAGE_KITCHEN_STAGE_1: Vignette[] = [
   // ── EXACT: fire_spell + stove + cook_perfectly ──────────────────────────────
   {
     id: 'mage_kitchen_1_perfect_fire_stove_cook',
+    description: 'A mage casts a fire spell on the stove, igniting it perfectly to cook a delicious stew.',
     trigger: { spell: 'fire_spell', appliance: 'stove', result: 'cook_perfectly' },
     tier: 'spectacular',
     promptScore: 'perfect',
@@ -104,6 +105,7 @@ export const MAGE_KITCHEN_STAGE_1: Vignette[] = [
   // ── EXACT: grow_spell + pot + multiply ──────────────────────────────────────
   {
     id: 'mage_kitchen_1_perfect_grow_pot_multiply',
+    description: 'A grow spell on a pot causes it to multiply endlessly, raining pots across the kitchen.',
     trigger: { spell: 'grow_spell', appliance: 'pot', result: 'multiply' },
     tier: 'spectacular',
     promptScore: 'perfect',
@@ -197,6 +199,7 @@ export const MAGE_KITCHEN_STAGE_1: Vignette[] = [
   // ── PAIR: * + fridge + explode ──────────────────────────────────────────────
   {
     id: 'mage_kitchen_1_chaos_fridge_explode',
+    description: 'A chaos spell makes the fridge explode, sending food raining down everywhere.',
     trigger: { spell: '*', appliance: 'fridge', result: 'explode' },
     tier: 'absolute_chaos',
     promptScore: 'chaotic',
@@ -287,6 +290,7 @@ export const MAGE_KITCHEN_STAGE_1: Vignette[] = [
   // ── CATEGORY: levitate + * + * ──────────────────────────────────────────────
   {
     id: 'mage_kitchen_1_partial_levitate',
+    description: 'A levitate spell makes all the kitchen items float but nothing else happens.',
     trigger: { spell: 'levitate', appliance: '*', result: '*' },
     tier: 'moderate',
     promptScore: 'partial',
@@ -354,6 +358,7 @@ export const MAGE_KITCHEN_STAGE_1: Vignette[] = [
 
 export const MAGE_KITCHEN_DEFAULT: Vignette = {
   id: 'mage_kitchen_default',
+  description: 'A mage casts a generic spell in the kitchen with some sparkles.',
   trigger: { spell: '*', appliance: '*', result: '*' },
   tier: 'subtle',
   promptScore: 'partial',

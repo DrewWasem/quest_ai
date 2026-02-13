@@ -1,7 +1,7 @@
 import type { SceneScript } from '../types/scene-script';
 
 const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
-const TIMEOUT_MS = 12000;
+const TIMEOUT_MS = 15000;
 
 interface ClaudeMessage {
   role: 'user' | 'assistant';
@@ -35,7 +35,7 @@ export async function callClaude(
       },
       body: JSON.stringify({
         model: 'claude-opus-4-6',
-        max_tokens: 500,
+        max_tokens: 1500,
         system: systemPrompt,
         messages: [{ role: 'user', content: userMessage }] as ClaudeMessage[],
       }),

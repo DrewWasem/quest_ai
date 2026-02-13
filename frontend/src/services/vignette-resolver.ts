@@ -71,6 +71,40 @@ function isAllWildcard(v: Vignette, slotIds: string[]): boolean {
 }
 
 /**
+ * Rank all vignettes by tag-match score for Haiku-assisted selection.
+ * Scoring: +3 exact tag match, +1 wildcard match, +2 bonus for 'perfect', -5 for default.
+ * Returns sorted descending. Always non-empty (default always included).
+ */
+export function rankVignettes(
+  selectedTags: Record<string, string>,
+  stage: QuestStage,
+): Array<{ vignette: Vignette; score: number }> {
+  const slotIds = stage.template.slots.map(s => s.id);
+  const allVignettes = [...stage.vignettes, stage.defaultVignette];
+
+  const scored = allVignettes.map(v => {
+    let score = 0;
+
+    for (const id of slotIds) {
+      const triggerVal = v.trigger[id.toLowerCase()];
+      if (triggerVal === selectedTags[id]) {
+        score += 3; // exact match
+      } else if (triggerVal === '*') {
+        score += 1; // wildcard match
+      }
+    }
+
+    if (v.promptScore === 'perfect') score += 2;
+    if (v.id === stage.defaultVignette.id) score -= 5;
+
+    return { vignette: v, score };
+  });
+
+  scored.sort((a, b) => b.score - a.score);
+  return scored;
+}
+
+/**
  * Convert a Vignette into a SceneScript for the playback engine.
  */
 export function buildVignetteScript(

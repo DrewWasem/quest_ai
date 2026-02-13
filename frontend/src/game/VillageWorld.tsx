@@ -20,7 +20,7 @@
 
 import { memo, useMemo, useRef, useState, useEffect, useCallback, Suspense } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { useGLTF, Sky, Cloud, Clouds } from '@react-three/drei'
+import { useGLTF, Cloud, Clouds } from '@react-three/drei'
 import * as THREE from 'three'
 import { ASSET_BASE } from '../data/asset-manifest'
 import { ZONE_CENTERS, ZONE_META } from '../stores/gameStore'
@@ -502,11 +502,11 @@ function VillagePerimeter() {
       <Piece model={DECORATION.hills_trees} position={[60, 0, -40]} scale={6.0} />
       <Piece model={DECORATION.hill_C} position={[62, 0, -32]} scale={6.5} />
       <Piece model={DECORATION.mountain_B} position={[66, 0, -24]} rotation={[0, Math.PI / 3, 0]} scale={7.5} />
-      <Piece model={DECORATION.rock_D} position={[60, 0, -16]} scale={6.0} />
-      <Piece model={DECORATION.hill_A} position={[64, 0, -8]} scale={6.5} />
-      <Piece model={DECORATION.mountain_C} position={[62, 0, 0]} rotation={[0, -Math.PI / 5, 0]} scale={8.0} />
-      <Piece model={DECORATION.hills_B_trees} position={[60, 0, 8]} scale={6.0} />
-      <Piece model={DECORATION.rock_B} position={[62, 0, 16]} scale={7.0} />
+      <Piece model={DECORATION.rock_D} position={[68, 0, -16]} scale={6.0} />
+      <Piece model={DECORATION.hill_A} position={[72, 0, -8]} scale={6.5} />
+      <Piece model={DECORATION.mountain_C} position={[70, 0, 0]} rotation={[0, -Math.PI / 5, 0]} scale={8.0} />
+      <Piece model={DECORATION.hills_B_trees} position={[68, 0, 8]} scale={6.0} />
+      <Piece model={DECORATION.rock_B} position={[70, 0, 16]} scale={7.0} />
       <Piece model={DECORATION.mountain_A} position={[64, 0, 24]} rotation={[0, Math.PI / 4, 0]} scale={8.0} />
       <Piece model={DECORATION.hill_B} position={[60, 0, 32]} scale={6.0} />
       <Piece model={DECORATION.mountain_B} position={[62, 0, 40]} rotation={[0, Math.PI / 4, 0]} scale={7.5} />
@@ -1014,14 +1014,14 @@ function SpaceZone() {
   return (
     <group name="space-zone" position={center}>
       {/* Landing pad */}
-      <Piece model="kaykit/packs/space_base/landingpad_large.gltf" position={[0, 0, 0]} scale={sp} />
+      <Piece model="kaykit/packs/space_base/landingpad_large.gltf" position={[9.3, 0, 7.1]} scale={sp} />
       {/* Base modules — spread out to prevent overlap at 2.5x */}
       <Piece model="kaykit/packs/space_base/basemodule_A.gltf" position={[-7, 0, -5]} scale={sp} />
       <Piece model="kaykit/packs/space_base/basemodule_B.gltf" position={[7, 0, -5]} scale={sp} />
       {/* Tunnel connecting modules */}
       <Piece model="kaykit/packs/space_base/tunnel_straight_A.gltf" position={[0, 0, -5]} scale={sp} />
       {/* Dropship on the pad */}
-      <Piece model="kaykit/packs/space_base/dropship.gltf" position={[0, 0, 4]} scale={sp} />
+      <Piece model="kaykit/packs/space_base/dropship.gltf" position={[2, 0, 8]} scale={sp} />
       {/* Cargo and containers */}
       <Piece model="kaykit/packs/space_base/containers_A.gltf" position={[-8, 0, 3]} scale={sp} />
       <Piece model="kaykit/packs/space_base/cargo_A.gltf" position={[8, 0, 2]} scale={sp} />
@@ -1045,22 +1045,14 @@ function SchoolZone() {
 
   return (
     <group name="school-zone" position={center}>
-      {/* Playground equipment */}
-      <Piece model="tiny-treats/fun-playground/swing_A_large.gltf" position={[-4, 0, -3]} />
-      <Piece model="tiny-treats/fun-playground/slide_A.gltf" position={[4, 0, -2]} />
-      <Piece model="tiny-treats/fun-playground/merry_go_round.gltf" position={[0, 0, 0]} />
-      <Piece model="tiny-treats/fun-playground/seesaw_large.gltf" position={[-3, 0, 3]} />
-      <Piece model="tiny-treats/fun-playground/sandbox_round_decorated.gltf" position={[3, 0, 3]} />
-      {/* Trees */}
-      <Piece model="tiny-treats/fun-playground/tree_large.gltf" position={[-6, 0, -1]} />
-      <Piece model="tiny-treats/fun-playground/tree_small.gltf" position={[6, 0, -1]} />
-      {/* Fence ring */}
-      <Piece model="tiny-treats/fun-playground/fence_straight_long.gltf" position={[-5, 0, -5]} />
-      <Piece model="tiny-treats/fun-playground/fence_straight_long.gltf" position={[5, 0, -5]} />
-      <Piece model="tiny-treats/fun-playground/fence_straight_long.gltf" position={[-5, 0, 5]} />
-      <Piece model="tiny-treats/fun-playground/fence_straight_long.gltf" position={[5, 0, 5]} />
+      {/* Playground equipment — pushed off the glowing circle (r≈3) */}
+      <Piece model="tiny-treats/fun-playground/swing_A_large.gltf" position={[-5, 0, -5]} />
+      <Piece model="tiny-treats/fun-playground/slide_A.gltf" position={[5, 0, -4]} />
+      <Piece model="tiny-treats/fun-playground/merry_go_round.gltf" position={[5, 0, 4]} />
+      <Piece model="tiny-treats/fun-playground/seesaw_large.gltf" position={[-5, 0, 4]} />
+      <Piece model="tiny-treats/fun-playground/sandbox_round_decorated.gltf" position={[0, 0, 6]} />
       {/* Picnic table (schoolyard) */}
-      <Piece model="tiny-treats/fun-playground/picnic_table.gltf" position={[0, 0, -5]} />
+      <Piece model="tiny-treats/fun-playground/picnic_table.gltf" position={[0, 0, -6]} />
     </group>
   )
 }
@@ -1073,7 +1065,7 @@ function PizzaZone() {
   const center = ZONE_CENTERS['skeleton-pizza']
 
   return (
-    <group name="pizza-zone" position={center}>
+    <group name="pizza-zone" position={center} rotation={[0, -3 * Math.PI / 4, 0]}>
       {/* Restaurant walls */}
       <Piece model="kaykit/packs/restaurant/wall.gltf" position={[-3, 0, -4]} />
       <Piece model="kaykit/packs/restaurant/wall_doorway.gltf" position={[0, 0, -4]} />
@@ -1287,6 +1279,8 @@ function RoadDecoration() {
     for (const lamp of result) {
       const [lx, , lz] = lamp.position
       if (isInKitchenZone(lx, lz)) continue
+      // Remove the lamp post near village center at approx (-6.3, 3.2)
+      if (Math.abs(lx - (-6)) < 1.5 && Math.abs(lz - 4) < 2) continue
       const lDistSq = lx * lx + lz * lz
       let tooClose = false
       for (let i = filtered.length - 1; i >= 0; i--) {
@@ -1345,7 +1339,7 @@ function ZoneLandmarks() {
       {/* knight-space: Blue tower */}
       <Piece model={BUILDINGS.tower_A_blue} position={[44, 0, -42]} scale={8.0} />
       {/* barbarian-school: Red tower */}
-      <Piece model={BUILDINGS.tower_B_red} position={[54, 0, 1]} scale={8.0} />
+      <Piece model={BUILDINGS.tower_B_red} position={[59, 0, 1]} scale={8.0} />
       {/* skeleton-pizza: Yellow shrine (scale 12 = ~10u) */}
       <Piece model={BUILDINGS.shrine_yellow} position={[44, 0, 42]} scale={12.0} />
       {/* adventurers-picnic: Green watchtowers flanking road */}
@@ -1556,16 +1550,11 @@ function JunctionPlazas() {
 function VillageAtmosphere() {
   return (
     <>
-      {/* Procedural sky — eliminates black void */}
-      <Sky
-        distance={450000}
-        sunPosition={[8, 15, 5]}
-        turbidity={6}
-        rayleigh={1.5}
-      />
+      {/* Solid sky-blue background */}
+      <color attach="background" args={['#87CEEB']} />
 
-      {/* Global fog — soft edges, pushed far for the larger world */}
-      <fog attach="fog" args={['#b8d8e8', 100, 400]} />
+      {/* Fog — matches sky blue so edges blend into the sky */}
+      <fog attach="fog" args={['#87CEEB', 150, 400]} />
 
       {/* Hemisphere light — warm village afternoon */}
       <hemisphereLight
@@ -1596,70 +1585,43 @@ function VillageAtmosphere() {
         position={[-8, 5, -5]}
       />
 
-      {/* Clouds — scattered across sky at varying heights */}
-      <Clouds limit={400} material={THREE.MeshLambertMaterial}>
+      {/* Clouds — small wispy clouds high up so blue sky shows through */}
+      <Clouds limit={200} material={THREE.MeshLambertMaterial}>
         <Cloud
-          segments={20}
-          bounds={[15, 2, 8] as [number, number, number]}
-          volume={8}
+          segments={10}
+          bounds={[8, 1, 4] as [number, number, number]}
+          volume={3}
           color="#ffffff"
-          opacity={0.4}
-          speed={0.15}
-          position={[-15, 30, -50] as [number, number, number]}
-        />
-        <Cloud
-          segments={15}
-          bounds={[10, 2, 5] as [number, number, number]}
-          volume={6}
-          color="#ffffff"
-          opacity={0.35}
+          opacity={0.2}
           speed={0.1}
-          position={[20, 35, -40] as [number, number, number]}
+          position={[-20, 60, -60] as [number, number, number]}
         />
         <Cloud
-          segments={18}
-          bounds={[12, 2, 7] as [number, number, number]}
-          volume={7}
+          segments={8}
+          bounds={[6, 1, 3] as [number, number, number]}
+          volume={2}
           color="#ffffff"
-          opacity={0.3}
+          opacity={0.15}
           speed={0.08}
-          position={[45, 40, 20] as [number, number, number]}
-        />
-        <Cloud
-          segments={22}
-          bounds={[18, 3, 10] as [number, number, number]}
-          volume={9}
-          color="#ffffff"
-          opacity={0.25}
-          speed={0.12}
-          position={[-40, 45, 30] as [number, number, number]}
-        />
-        <Cloud
-          segments={12}
-          bounds={[8, 2, 5] as [number, number, number]}
-          volume={5}
-          color="#ffffff"
-          opacity={0.35}
-          speed={0.18}
-          position={[30, 28, 55] as [number, number, number]}
-        />
-        <Cloud
-          segments={16}
-          bounds={[14, 2, 6] as [number, number, number]}
-          volume={7}
-          color="#ffffff"
-          opacity={0.3}
-          speed={0.06}
-          position={[-50, 38, -20] as [number, number, number]}
+          position={[30, 70, -40] as [number, number, number]}
         />
         <Cloud
           segments={10}
-          bounds={[9, 2, 4] as [number, number, number]}
-          volume={5}
+          bounds={[7, 1, 4] as [number, number, number]}
+          volume={3}
           color="#ffffff"
-          opacity={0.4}
-          speed={0.2}
-          position={[10, 25, 65] as [number, number, number]}
+          opacity={0.2}
+          speed={0.06}
+          position={[50, 65, 30] as [number, number, number]}
+        />
+        <Cloud
+          segments={6}
+          bounds={[5, 1, 3] as [number, number, number]}
+          volume={2}
+          color="#ffffff"
+          opacity={0.15}
+          speed={0.12}
+          position={[-45, 75, 40] as [number, number, number]}
         />
       </Clouds>
     </>

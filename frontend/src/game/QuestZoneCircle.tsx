@@ -11,7 +11,6 @@
 
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Html } from '@react-three/drei'
 import * as THREE from 'three'
 import { useGameStore } from '../stores/gameStore'
 
@@ -23,7 +22,7 @@ interface QuestZoneCircleProps {
   color: string
 }
 
-export function QuestZoneCircle({ zoneId, position, label, emoji, color }: QuestZoneCircleProps) {
+export function QuestZoneCircle({ zoneId, position, color }: QuestZoneCircleProps) {
   const currentZone = useGameStore((s) => s.currentZone)
   const ringRef = useRef<THREE.Mesh>(null!)
   const fillRef = useRef<THREE.Mesh>(null!)
@@ -90,15 +89,6 @@ export function QuestZoneCircle({ zoneId, position, label, emoji, color }: Quest
         decay={2}
         position={[0, 1, 0]}
       />
-
-      {/* Floating label */}
-      <Html position={[0, 4, 0]} center>
-        <div className="px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border-2 border-quest-purple/20
-                        font-heading font-bold text-sm text-quest-text-dark whitespace-nowrap select-none pointer-events-none">
-          <span className="mr-1">{emoji}</span>
-          {label}
-        </div>
-      </Html>
     </group>
   )
 }

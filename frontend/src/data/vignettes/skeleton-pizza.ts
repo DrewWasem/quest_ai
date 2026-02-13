@@ -6,6 +6,7 @@
  */
 
 import type { Vignette } from '../../types/madlibs';
+import { crossStage, setupProps, composeBlocking, MARK } from '../blocking-templates';
 
 // ─── STAGE 1 VIGNETTES ──────────────────────────────────────────────────────
 
@@ -14,6 +15,7 @@ export const SKELETON_PIZZA_STAGE_1: Vignette[] = [
   // ── EXACT: skeleton + pizza + chaotic ───────────────────────────────────────
   {
     id: 'skeleton_pizza_1_perfect_skeleton_pizza_chaotic',
+    description: 'A skeleton chef spins wildly, flinging ingredients everywhere to create a chaotic pizza masterpiece.',
     trigger: { chef: 'skeleton', dish: 'pizza', style: 'chaotic' },
     tier: 'spectacular',
     promptScore: 'perfect',
@@ -106,6 +108,7 @@ export const SKELETON_PIZZA_STAGE_1: Vignette[] = [
   // ── EXACT: superhero + cake + dramatic ──────────────────────────────────────
   {
     id: 'skeleton_pizza_1_perfect_superhero_cake_dramatic',
+    description: 'A superhero dramatically bakes a cake using super speed and heat vision powers.',
     trigger: { chef: 'superhero', dish: 'cake', style: 'dramatic' },
     tier: 'spectacular',
     promptScore: 'perfect',
@@ -198,6 +201,7 @@ export const SKELETON_PIZZA_STAGE_1: Vignette[] = [
   // ── PAIR: clown + * + explosive ─────────────────────────────────────────────
   {
     id: 'skeleton_pizza_1_chaos_clown_explosive',
+    description: 'A clown adds a secret ingredient to a pot and the entire kitchen explodes.',
     trigger: { chef: 'clown', dish: '*', style: 'explosive' },
     tier: 'absolute_chaos',
     promptScore: 'chaotic',
@@ -287,6 +291,7 @@ export const SKELETON_PIZZA_STAGE_1: Vignette[] = [
   // ── CATEGORY: * + mystery + * ───────────────────────────────────────────────
   {
     id: 'skeleton_pizza_1_partial_mystery',
+    description: 'A mysterious dish bubbles in a cauldron but nobody knows who cooked it or how.',
     trigger: { chef: '*', dish: 'mystery', style: '*' },
     tier: 'moderate',
     promptScore: 'partial',
@@ -351,33 +356,32 @@ export const SKELETON_PIZZA_STAGE_1: Vignette[] = [
 
 export const SKELETON_PIZZA_DEFAULT: Vignette = {
   id: 'skeleton_pizza_default',
+  description: 'A skeleton walks across the kitchen, grabs a pizza, and starts cooking.',
   trigger: { chef: '*', dish: '*', style: '*' },
   tier: 'subtle',
   promptScore: 'partial',
-  steps: [
-    {
-      parallel: [
-        { action: 'spawn', asset: 'stove', position: 'center' },
-        { action: 'sfx', sound: 'spawn' },
-      ],
-      delayAfter: 0.5,
-    },
-    {
-      parallel: [
-        { action: 'spawn_character', character: 'skeleton_warrior', position: 'left', anim: 'spawn_ground' },
-      ],
-      delayAfter: 0.5,
-    },
-    {
+  steps: composeBlocking(
+    // Kitchen props
+    setupProps([
+      { asset: 'stove', mark: MARK.US_CENTER },
+      { asset: 'pot', mark: MARK.US_LEFT },
+    ]),
+    // Skeleton crosses the kitchen left-to-right, stops at stove
+    crossStage('skeleton_warrior', 'left-to-right', {
+      stopAt: MARK.CS_CENTER,
+      midAction: { action: 'emote', character: 'skeleton_warrior', emoji: '👨‍🍳' },
+    }),
+    // Skeleton cooks
+    [{
       parallel: [
         { action: 'animate', character: 'skeleton_warrior', anim: 'interact' },
-        { action: 'spawn', asset: 'pizza_slice', position: 'center' },
+        { action: 'spawn', asset: 'pizza', position: MARK.CS_CENTER },
         { action: 'sfx', sound: 'success' },
         { action: 'text_popup', text: '🍕 COOKING! 🍕', position: 'center', size: 'large' },
       ],
       delayAfter: 2.0,
-    },
-  ],
+    }],
+  ),
   feedback: {
     title: '🍳 Kitchen Time!',
     message: "Someone cooked something! But WHO was the chef? WHAT did they cook? HOW did they cook it? Fill in the details!",

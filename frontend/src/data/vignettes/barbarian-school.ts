@@ -14,6 +14,7 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
   // ── EXACT: barbarian + wrestling + seesaw ───────────────────────────────────
   {
     id: 'barbarian_school_1_perfect_barbarian_wrestling_seesaw',
+    description: 'A barbarian and caveman wrestle on a seesaw until it breaks in a spectacular crash.',
     trigger: { monster: 'barbarian', activity: 'wrestling', equipment: 'seesaw' },
     tier: 'spectacular',
     promptScore: 'perfect',
@@ -114,6 +115,7 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
   // ── EXACT: ninja + hide_seek + sandbox ──────────────────────────────────────
   {
     id: 'barbarian_school_1_perfect_ninja_hide_sandbox',
+    description: 'A ninja hides in the sandbox during hide-and-seek and bursts out to surprise everyone.',
     trigger: { monster: 'ninja', activity: 'hide_seek', equipment: 'sandbox' },
     tier: 'spectacular',
     promptScore: 'perfect',
@@ -208,6 +210,7 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
   // ── PAIR: clown + * + swing ─────────────────────────────────────────────────
   {
     id: 'barbarian_school_1_chaos_clown_swing',
+    description: 'A clown attempts acrobatic tricks on the swing set, crashes, and takes a bow.',
     trigger: { monster: 'clown', activity: '*', equipment: 'swing' },
     tier: 'absolute_chaos',
     promptScore: 'chaotic',
@@ -295,6 +298,7 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
   // ── CATEGORY: * + race + * ──────────────────────────────────────────────────
   {
     id: 'barbarian_school_1_partial_race',
+    description: 'A robot and ninja have a basic race across the field with traffic cones.',
     trigger: { monster: '*', activity: 'race', equipment: '*' },
     tier: 'moderate',
     promptScore: 'partial',
@@ -361,6 +365,7 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
 
 export const BARBARIAN_SCHOOL_DEFAULT: Vignette = {
   id: 'barbarian_school_default',
+  description: 'Monsters gather at the playground for a generic recess scene.',
   trigger: { monster: '*', activity: '*', equipment: '*' },
   tier: 'subtle',
   promptScore: 'partial',

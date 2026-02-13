@@ -14,6 +14,7 @@ export const ADVENTURERS_PICNIC_STAGE_1: Vignette[] = [
   // ── EXACT: druid + glowing_plant + cast_spell ───────────────────────────────
   {
     id: 'adventurers_picnic_1_perfect_druid_plant_spell',
+    description: 'A druid discovers a glowing plant and casts a growth spell that creates a giant magic tree.',
     trigger: { adventurer: 'druid', discovery: 'glowing_plant', reaction: 'cast_spell' },
     tier: 'spectacular',
     promptScore: 'perfect',
@@ -105,6 +106,7 @@ export const ADVENTURERS_PICNIC_STAGE_1: Vignette[] = [
   // ── EXACT: whole_party + treasure + celebrate ───────────────────────────────
   {
     id: 'adventurers_picnic_1_perfect_party_treasure_celebrate',
+    description: 'The whole adventuring party finds a gold treasure chest and celebrates with raining coins.',
     trigger: { adventurer: 'whole_party', discovery: 'treasure', reaction: 'celebrate' },
     tier: 'spectacular',
     promptScore: 'perfect',
@@ -196,6 +198,7 @@ export const ADVENTURERS_PICNIC_STAGE_1: Vignette[] = [
   // ── PAIR: barbarian + * + panic ─────────────────────────────────────────────
   {
     id: 'adventurers_picnic_1_chaos_barbarian_panic',
+    description: 'A barbarian panics at a harmless bunny, swinging wildly and falling over in the forest.',
     trigger: { adventurer: 'barbarian', discovery: '*', reaction: 'panic' },
     tier: 'absolute_chaos',
     promptScore: 'chaotic',
@@ -283,6 +286,7 @@ export const ADVENTURERS_PICNIC_STAGE_1: Vignette[] = [
   // ── CATEGORY: * + magic_portal + * ──────────────────────────────────────────
   {
     id: 'adventurers_picnic_1_partial_portal',
+    description: 'A magic portal opens in a stone circle but nobody knows what to do with it.',
     trigger: { adventurer: '*', discovery: 'magic_portal', reaction: '*' },
     tier: 'moderate',
     promptScore: 'partial',
@@ -348,6 +352,7 @@ export const ADVENTURERS_PICNIC_STAGE_1: Vignette[] = [
 
 export const ADVENTURERS_PICNIC_DEFAULT: Vignette = {
   id: 'adventurers_picnic_default',
+  description: 'Adventurers gather on a picnic blanket for a generic outdoor scene.',
   trigger: { adventurer: '*', discovery: '*', reaction: '*' },
   tier: 'subtle',
   promptScore: 'partial',

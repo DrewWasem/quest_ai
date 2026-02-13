@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tuned — Complete Brand Brief</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --teal: #2E6171;
+    --teal-light: #7B9BAA;
+    --terra: #C4705A;
+    --terra-deep: #A0524A;
+    --gold: #D6A45A;
+    --sage: #5B8A5E;
+    --violet: #9B84A8;
+    --leather: #8B7355;
+    --walnut: #4A3C2E;
+    --espresso: #1B1410;
+    --cream: #FAF6F1;
+    --linen: #F0EBE3;
+    --sand: #E8DFD3;
+    --drift: #A69279;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--cream);
+    color: var(--walnut);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .serif { font-family: 'DM Serif Display', Georgia, serif; }
+
+  /* Header */
+  .header {
+    background: linear-gradient(140deg, #1B3A4B 0%, var(--teal) 40%, var(--sage) 80%, var(--drift) 100%);
+    padding: 56px 28px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px;
+    right: -30px;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: rgba(214,164,90,0.12);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px;
+    left: 40px;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: rgba(91,138,94,0.1);
+  }
+  .header-inner { position: relative; max-width: 760px; margin: 0 auto; }
+  .header .badge {
+    display: inline-block;
+    padding: 5px 16px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.14);
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .header h1 {
+    font-size: 56px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -2px;
+  }
+  .header p {
+    font-size: 17px;
+    color: rgba(255,255,255,0.85);
+    margin-top: 14px;
+    line-height: 1.65;
+    max-width: 520px;
+  }
+
+  /* Nav */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--cream);
+    border-bottom: 1px solid var(--sand);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-inner {
+    display: flex;
+    gap: 4px;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 10px 16px;
+  }
+  .nav a {
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--leather);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .nav a:hover { background: var(--sand); color: var(--walnut); }
+
+  /* Main */
+  .main { max-width: 760px; margin: 0 auto; padding: 40px 20px 100px; }
+
+  /* Sections */
+  .section { margin-bottom: 56px; scroll-margin-top: 70px; }
+  .section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+  }
+  .section .subtitle {
+    font-size: 14px;
+    color: var(--leather);
+    margin-bottom: 24px;
+  }
+
+  /* Cards */
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px;
+    border: 1px solid var(--sand);
+    margin-bottom: 16px;
+  }
+  .card.accent-teal { border-left: 4px solid var(--teal); }
+  .card.accent-terra { border-left: 4px solid var(--terra); }
+  .card.accent-gold { border-left: 4px solid var(--gold); }
+  .card.accent-sage { border-left: 4px solid var(--sage); }
+  .card.accent-violet { border-left: 4px solid var(--violet); }
+
+  .label {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+  }
+  .label.teal { color: var(--teal); }
+  .label.terra { color: var(--terra); }
+  .label.gold { color: var(--gold); }
+  .label.sage { color: var(--sage); }
+  .label.violet { color: var(--violet); }
+  .label.leather { color: var(--leather); }
+
+  /* Grid helpers */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+  .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+
+  @media (max-width: 640px) {
+    .grid-2, .grid-5, .grid-6 { grid-template-columns: repeat(3, 1fr); }
+    .header h1 { font-size: 40px; }
+  }
+
+  /* Swatches */
+  .swatch {
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .swatch:hover { transform: translateY(-3px); }
+  .swatch .dot {
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+    margin: 0 auto 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .swatch .dot.sm { width: 52px; height: 52px; border-radius: 12px; }
+  .swatch .name { font-size: 11px; font-weight: 700; color: var(--walnut); }
+  .swatch .hex { font-size: 10px; color: var(--drift); font-family: monospace; }
+  .swatch .role { font-size: 10px; color: var(--drift); margin-top: 2px; line-height: 1.3; }
+
+  /* Feature rows */
+  .feat {
+    display: flex;
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--linen);
+  }
+  .feat:last-child { border-bottom: none; }
+  .feat .ico {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .feat .name { font-size: 15px; font-weight: 700; color: var(--walnut); }
+  .feat .phrase { font-size: 13px; color: var(--leather); font-style: italic; margin-top: 2px; }
+  .feat .sub { font-size: 12px; color: var(--drift); margin-top: 4px; line-height: 1.5; }
+
+  /* Voice pairs */
+  .vpair {
+    padding: 18px;
+    border-radius: 14px;
+    background: var(--cream);
+    margin-bottom: 12px;
+  }
+  .vpair .vlabel { font-size: 12px; font-weight: 700; margin-bottom: 10px; }
+  .vpair .good-label { font-size: 10px; font-weight: 700; color: var(--sage); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .vpair .bad-label { font-size: 10px; font-weight: 700; color: var(--terra); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .vpair .example { font-size: 13px; line-height: 1.5; font-style: italic; }
+
+  /* Bullet items */
+  .bullet { font-size: 13px; padding: 6px 0; display: flex; gap: 8px; align-items: flex-start; }
+  .bullet .dot-green { color: var(--sage); font-size: 14px; line-height: 20px; }
+  .bullet .dot-red { color: var(--terra); font-size: 14px; line-height: 20px; }
+
+  /* Escalation bar */
+  .esc-bar { display: flex; gap: 8px; }
+  .esc-item {
+    flex: 1;
+    padding: 14px 10px;
+    border-radius: 12px;
+    text-align: center;
+  }
+  .esc-item .icon { font-size: 18px; margin-bottom: 4px; }
+  .esc-item .elabel { font-size: 11px; font-weight: 700; }
+
+  /* Tagline blocks */
+  .tagline-block {
+    padding: 18px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+  .tagline-block.hero { background: var(--teal); }
+  .tagline-block.hero .line { color: #fff; }
+  .tagline-block.hero .note { color: rgba(255,255,255,0.75); }
+  .tagline-block.std { background: var(--cream); }
+  .tagline-block .line { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .tagline-block .note { font-size: 12px; color: var(--leather); line-height: 1.5; }
+
+  .social-line {
+    padding: 14px;
+    border-radius: 10px;
+    background: var(--cream);
+    font-size: 13px;
+    color: var(--walnut);
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 32px 0;
+    border-top: 1px solid var(--sand);
+    margin-top: 40px;
+  }
+
+  /* Utility */
+  .tint { padding: 16px; border-radius: 12px; }
+  .mb-0 { margin-bottom: 0; }
+  p { margin: 0; }
+  p + p { margin-top: 12px; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<div class="header">
+  <div class="header-inner">
+    <div class="badge">Complete Brand Brief</div>
+    <div style="display:inline-block;margin-bottom:4px">
+      <h1 class="serif" style="margin-bottom:-4px">Tuned.</h1>
+      <svg viewBox="0 0 300 80" width="210" height="56" xmlns="http://www.w3.org/2000/svg" style="display:block;margin-left:8px"><defs>
+        <filter id="hdrWv" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <path d="M10 25C40 20,70 20,100 25S160 30,190 25S230 20,260 25" fill="none" stroke="#FAF6F1" stroke-width="3" stroke-opacity=".2" stroke-linecap="round"/>
+      <path d="M10 40C60 28,120 28,170 40S240 48,260 40" fill="none" stroke="#D6A45A" stroke-width="6" stroke-linecap="round" filter="url(#hdrWv)"/>
+      <path d="M10 55C40 60,70 60,100 55S160 50,190 55S230 60,260 55" fill="none" stroke="#FAF6F1" stroke-width="3" stroke-opacity=".2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <p>The ADHD life management app for adults who pick up every signal at once. One calm, capable place to manage your entire day — tasks, events, meds, ideas, and time.</p>
+  </div>
+</div>
+
+<!-- ═══════════ NAV ═══════════ -->
+<div class="nav">
+  <div class="nav-inner">
+    <a href="#story">Brand Story</a>
+    <a href="#positioning">Positioning</a>
+    <a href="#palette">Color System</a>
+    <a href="#type">Typography</a>
+    <a href="#voice">Voice & Tone</a>
+    <a href="#features">Feature Language</a>
+    <a href="#taglines">Taglines</a>
+    <a href="#icon">Icon & Mark</a>
+    <a href="#identity">Visual Identity</a>
+  </div>
+</div>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<div class="main">
+
+<!-- ─── BRAND STORY ─── -->
+<div class="section" id="story">
+  <h2 class="serif">Brand Story</h2>
+  <div class="subtitle">The origin, the metaphor, the soul of the product</div>
+
+  <div class="card">
+    <div class="label teal">The Name</div>
+    <p style="font-size:16px;line-height:1.75;color:#3D2E1F">
+      <strong>Tuned</strong> — as in tuned in, fine-tuned, stay tuned. Your ADHD brain is an antenna that picks up every signal at once — every sound, every idea, every worry, every brilliant tangent. The problem was never the antenna. The problem is that nobody gave you a dial. Tuned is the dial. It doesn't quiet your brain. It helps you <em>find the right frequency</em>.
+    </p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card accent-sage">
+      <div class="label sage">The Garden</div>
+      <p style="font-size:14px;line-height:1.7;color:#4A3C2E">
+        Your life is a beautiful garden that's been overgrown with thickets — tasks tangling into each other, deadlines hiding behind weeds. Tuned cuts through the overgrowth so the flowers can grow. It doesn't plant new things. It reveals what's already there.
+      </p>
+    </div>
+    <div class="card accent-gold">
+      <div class="label gold">The Balloon</div>
+      <p style="font-size:14px;line-height:1.7;color:#4A3C2E">
+        You're a balloon on an infinite string and the wind keeps changing. Tuned is the gentle current that guides you where you need to go next — without pulling you down, without letting you get too lost in the clouds. Direction without heaviness.
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label terra">The Audience</div>
+    <p style="font-size:14px;line-height:1.7;color:#4A3C2E">
+      Millennial adults (late 30s to early 40s) with ADHD — working parents juggling careers, kids in sports and school, a partner, a household, and a brain that loses track of Patriots shirt day. Many were diagnosed later in life and carry years of "why can't I just get it together?" They're self-aware, humor-forward, and exhausted by apps that add more cognitive load than they remove. They don't need another to-do list. They need one calm, capable friend who remembers everything so they don't have to.
+    </p>
+  </div>
+</div>
+
+<!-- ─── POSITIONING ─── -->
+<div class="section" id="positioning">
+  <h2 class="serif">Positioning</h2>
+  <div class="subtitle">Where Tuned sits in the market and in the mind</div>
+
+  <div class="card accent-teal">
+    <div class="label teal">Positioning Statement</div>
+    <p style="font-size:18px;line-height:1.75;font-style:italic" class="serif">
+      For adults with ADHD who are tired of juggling five apps and still missing Spirit Week, Tuned is the shame-free life management companion that handles tasks, events, meds, ideas, and time in one place — designed for the way your brain actually works, not the way productivity culture says it should.
+    </p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="label sage">Tuned Is</div>
+      <div class="bullet"><span class="dot-green">●</span>One calm home for everything</div>
+      <div class="bullet"><span class="dot-green">●</span>Shame-free — no red overdue, no broken streaks</div>
+      <div class="bullet"><span class="dot-green">●</span>Warm but never cutesy</div>
+      <div class="bullet"><span class="dot-green">●</span>Persistent when it needs to be (nagging reminders)</div>
+      <div class="bullet"><span class="dot-green">●</span>Smart about time (backward scheduling, awareness banners)</div>
+      <div class="bullet"><span class="dot-green">●</span>Zero-setup — name, wake time, first thought, done</div>
+      <div class="bullet"><span class="dot-green">●</span>Built by/for adults, not adapted from kids' apps</div>
+    </div>
+    <div class="card">
+      <div class="label terra">Tuned Is Not</div>
+      <div class="bullet"><span class="dot-red">●</span>Another generic to-do list with ADHD branding</div>
+      <div class="bullet"><span class="dot-red">●</span>Gamified to the point of gimmick</div>
+      <div class="bullet"><span class="dot-red">●</span>Clinical, diagnostic, or medical</div>
+      <div class="bullet"><span class="dot-red">●</span>"ADHD is a superpower" toxic positivity</div>
+      <div class="bullet"><span class="dot-red">●</span>Complex setup that becomes another abandoned app</div>
+      <div class="bullet"><span class="dot-red">●</span>Guilt-inducing streak trackers</div>
+      <div class="bullet"><span class="dot-red">●</span>Productivity-bro hustle culture</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label leather">Competitive White Space</div>
+    <p style="font-size:14px;line-height:1.7;color:#4A3C2E">
+      <strong>Tiimo</strong> (2025 App of the Year) is visual planning only — no meds, no brain dump, no prep chains. <strong>Inflow</strong> is CBT/coaching-focused — therapeutic, not operational. <strong>Goblin Tools</strong> is clever but fragmented single-use tools. <strong>Numo</strong> is gamified but skews young. <strong>Focusmate</strong> is body-doubling only. No one combines tasks + events + backward scheduling + medication + brain dump + persistent reminders + shame-free design in a single native app. Tuned's killer feature — <strong>Event Prep Chains</strong> with escalating daily awareness — doesn't exist anywhere. That's the wedge.
+    </p>
+  </div>
+</div>
+
+<!-- ─── COLOR SYSTEM ─── -->
+<div class="section" id="palette">
+  <h2 class="serif">Color System</h2>
+  <div class="subtitle">The full Tuned color palette with roles and usage</div>
+
+  <div class="card">
+    <div class="label leather">Palette Philosophy</div>
+    <p style="font-size:14px;line-height:1.7;color:#4A3C2E">
+      Designed for millennial adults in their early 40s — the generation raised on earthy tones, mid-century warmth, and Kinfolk magazine. This palette avoids both the neon energy of Gen Z apps and the sterile blues of corporate wellness. Instead, it draws from <strong>a golden-hour garden</strong>: deep teals for trust, warm terracotta for gentle activation, sage for growth, gold for warmth, and soft cream for breathing room. Every color should feel like Saturday morning coffee on the porch.
+    </p>
+  </div>
+
+  <!-- Primary -->
+  <div class="card">
+    <div class="label teal">Primary Brand Colors</div>
+    <div class="grid-5" style="margin-top:12px">
+      <div class="swatch"><div class="dot" style="background:#2E6171"></div><div class="name">Deep Teal</div><div class="hex">#2E6171</div><div class="role">Primary, headers, nav</div></div>
+      <div class="swatch"><div class="dot" style="background:#C4705A"></div><div class="name">Warm Terracotta</div><div class="hex">#C4705A</div><div class="role">Activation, CTAs</div></div>
+      <div class="swatch"><div class="dot" style="background:#D6A45A"></div><div class="name">Golden Hour</div><div class="hex">#D6A45A</div><div class="role">Rewards, highlights</div></div>
+      <div class="swatch"><div class="dot" style="background:#5B8A5E"></div><div class="name">Garden Sage</div><div class="hex">#5B8A5E</div><div class="role">Success, growth</div></div>
+      <div class="swatch"><div class="dot" style="background:#8B7355"></div><div class="name">Worn Leather</div><div class="hex">#8B7355</div><div class="role">Body text</div></div>
+    </div>
+  </div>
+
+  <!-- Neutrals -->
+  <div class="card">
+    <div class="label leather">Neutrals & Backgrounds</div>
+    <div class="grid-6" style="margin-top:12px">
+      <div class="swatch"><div class="dot sm" style="background:#FAF6F1;border:1px solid #E8DFD3"></div><div class="name">Warm Cream</div><div class="hex">#FAF6F1</div><div class="role">Light BG</div></div>
+      <div class="swatch"><div class="dot sm" style="background:#F0EBE3;border:1px solid #E8DFD3"></div><div class="name">Linen</div><div class="hex">#F0EBE3</div><div class="role">Cards</div></div>
+      <div class="swatch"><div class="dot sm" style="background:#E8DFD3"></div><div class="name">Sandstone</div><div class="hex">#E8DFD3</div><div class="role">Borders</div></div>
+      <div class="swatch"><div class="dot sm" style="background:#A69279"></div><div class="name">Driftwood</div><div class="hex">#A69279</div><div class="role">Secondary text</div></div>
+      <div class="swatch"><div class="dot sm" style="background:#4A3C2E"></div><div class="name">Dark Walnut</div><div class="hex">#4A3C2E</div><div class="role">Headlines</div></div>
+      <div class="swatch"><div class="dot sm" style="background:#1B1410"></div><div class="name">Espresso</div><div class="hex">#1B1410</div><div class="role">Dark mode BG</div></div>
+    </div>
+  </div>
+
+  <!-- Semantic -->
+  <div class="card">
+    <div class="label leather">Semantic Colors (In-App States)</div>
+    <div class="grid-6" style="margin-top:12px">
+      <div class="swatch"><div class="dot sm" style="background:#5B8A5E"></div><div class="name">Done</div><div class="hex">#5B8A5E</div><div class="role">Complete, taken</div></div>
+      <div class="swatch"><div class="dot sm" style="background:#D6A45A"></div><div class="name">Heads Up</div><div class="hex">#D6A45A</div><div class="role">2-3 days away</div></div>
+      <div class="swatch"><div class="dot sm" style="background:#C4705A"></div><div class="name">Pay Attention</div><div class="hex">#C4705A</div><div class="role">Tomorrow, overdue</div></div>
+      <div class="swatch"><div class="dot sm" style="background:#A0524A"></div><div class="name">Right Now</div><div class="hex">#A0524A</div><div class="role">Today, urgent</div></div>
+      <div class="swatch"><div class="dot sm" style="background:#7B9BAA"></div><div class="name">Calm Info</div><div class="hex">#7B9BAA</div><div class="role">Banners (4+ days)</div></div>
+      <div class="swatch"><div class="dot sm" style="background:#9B84A8"></div><div class="name">Soft Violet</div><div class="hex">#9B84A8</div><div class="role">Brain dump</div></div>
+    </div>
+  </div>
+
+  <!-- Escalation -->
+  <div class="card">
+    <div class="label terra">Awareness Banner Escalation (Prep Chains)</div>
+    <p style="font-size:12px;color:#8B7355;margin-bottom:16px;line-height:1.5">
+      Tuned's signature feature: daily awareness banners that visually escalate as events approach. Colors shift from calm to urgent — no words needed to communicate time pressure.
+    </p>
+    <div class="esc-bar">
+      <div class="esc-item" style="background:#7B9BAA18;border-left:4px solid #7B9BAA"><div class="icon">📅</div><div class="elabel" style="color:#7B9BAA">4+ days</div></div>
+      <div class="esc-item" style="background:#D6A45A18;border-left:4px solid #D6A45A"><div class="icon">📅</div><div class="elabel" style="color:#D6A45A">2–3 days</div></div>
+      <div class="esc-item" style="background:#C4705A18;border-left:4px solid #C4705A"><div class="icon">⏰</div><div class="elabel" style="color:#C4705A">Tomorrow</div></div>
+      <div class="esc-item" style="background:#A0524A18;border-left:4px double #A0524A"><div class="icon">⚡</div><div class="elabel" style="color:#A0524A">Today</div></div>
+      <div class="esc-item" style="background:#5B8A5E18;border-left:4px solid #5B8A5E"><div class="icon">✓</div><div class="elabel" style="color:#5B8A5E">Complete</div></div>
+    </div>
+  </div>
+
+  <!-- Light/Dark -->
+  <div class="grid-2">
+    <div class="card mb-0">
+      <div class="tint" style="background:linear-gradient(135deg,#FAF6F1,#F0EBE3);border:1px solid #E8DFD3">
+        <div style="font-size:14px;font-weight:700;color:#2C1810;margin-bottom:8px">☀ Light Mode</div>
+        <div style="font-size:12px;color:#6B5A48;line-height:1.6">
+          Warm Cream base. Linen card surfaces. Deep Teal for primary actions. Terracotta for activation (CTAs, persistent reminders). Garden Sage for all completion. Golden Hour for celebrations.
+        </div>
+      </div>
+    </div>
+    <div class="card mb-0">
+      <div class="tint" style="background:linear-gradient(135deg,#1B1410,#2C2218);border:1px solid #3D2E1F">
+        <div style="font-size:14px;font-weight:700;color:#F0EBE3;margin-bottom:8px">🌙 Dark Mode</div>
+        <div style="font-size:12px;color:#A69279;line-height:1.6">
+          Espresso base. Dark Walnut surfaces. Lighter Teal for CTAs. Muted Terracotta for nudges. Soft Violet for evening. Banner hues at 60% saturation — visible but not jarring.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── TYPOGRAPHY ─── -->
+<div class="section" id="type">
+  <h2 class="serif">Typography</h2>
+  <div class="subtitle">Font system for app UI, marketing, and communications</div>
+
+  <div class="grid-2">
+    <div class="card accent-teal">
+      <div class="label teal">Display / Headlines</div>
+      <div class="serif" style="font-size:38px;font-weight:700;color:#2C1810;letter-spacing:-1.5px;margin-bottom:12px">Stay Tuned.</div>
+      <p style="font-size:13px;color:#6B5A48;line-height:1.6">
+        <strong>Recoleta</strong> (first choice) or <strong>Fraunces</strong> — warm, rounded serifs with personality. Not stuffy, not corporate. The roundness says approachable; the serif says grown-up.
+      </p>
+      <div style="margin-top:12px;padding:10px 14px;border-radius:8px;background:#FAF6F1;font-size:12px;color:#8B7355">
+        <strong>iOS native:</strong> New York (Apple's serif) — matches perfectly, zero bundle cost.
+      </div>
+    </div>
+    <div class="card accent-terra">
+      <div class="label terra">Body / UI Text</div>
+      <div style="font-size:16px;color:#3D2E1F;line-height:1.75;margin-bottom:12px">
+        Good morning, Sarah. You've got 3 things today, meds at 8, and Spirit Week is in 2 days. You've got this.
+      </div>
+      <p style="font-size:13px;color:#6B5A48;line-height:1.6">
+        <strong>Plus Jakarta Sans</strong> (first choice) or <strong>Nunito</strong> — geometric sans with soft, rounded terminals. Clean, modern, extremely readable at small sizes.
+      </p>
+      <div style="margin-top:12px;padding:10px 14px;border-radius:8px;background:#FAF6F1;font-size:12px;color:#8B7355">
+        <strong>iOS native:</strong> SF Pro Rounded — perfect match, zero performance cost.
+      </div>
+    </div>
+  </div>
+
+  <div class="card accent-gold">
+    <div class="label gold">ADHD-Specific Typography Rules</div>
+    <div class="grid-2" style="margin-top:8px">
+      <div style="font-size:13px;line-height:1.5"><strong>Line height 1.6–1.8</strong><br><span style="color:#8B7355;font-size:12px">ADHD eyes lose their place in dense text</span></div>
+      <div style="font-size:13px;line-height:1.5"><strong>Max 7 items visible at once</strong><br><span style="color:#8B7355;font-size:12px">Miller's Law — working memory capacity</span></div>
+      <div style="font-size:13px;line-height:1.5"><strong>Left-align everything</strong><br><span style="color:#8B7355;font-size:12px">Justified text disrupts scanning patterns</span></div>
+      <div style="font-size:13px;line-height:1.5"><strong>Weight > color for hierarchy</strong><br><span style="color:#8B7355;font-size:12px">ADHD brains scan for structure, not decoration</span></div>
+      <div style="font-size:13px;line-height:1.5"><strong>Short paragraphs, generous spacing</strong><br><span style="color:#8B7355;font-size:12px">Wall of text = wall of awful</span></div>
+      <div style="font-size:13px;line-height:1.5"><strong>No all-caps body text</strong><br><span style="color:#8B7355;font-size:12px">Harder to scan, feels like shouting</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── VOICE & TONE ─── -->
+<div class="section" id="voice">
+  <h2 class="serif">Voice & Tone</h2>
+  <div class="subtitle">How Tuned sounds in every interaction</div>
+
+  <div class="card accent-teal">
+    <div class="label teal">The Tuned Voice Test</div>
+    <p class="serif" style="font-size:17px;line-height:1.75;font-style:italic">
+      Would a smart, funny friend with ADHD say this to another friend with ADHD over coffee? If it sounds like a doctor, a teacher, or a motivational poster — rewrite it. If it sounds like a text from someone who genuinely gets it — ship it.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="label leather">Four Voice Pillars</div>
+    <div class="grid-2" style="margin-top:8px">
+      <div class="tint" style="background:#FAF6F1;border-left:3px solid var(--sage)">
+        <div style="font-size:14px;font-weight:700;margin-bottom:6px">Warm Friend</div>
+        <div style="font-size:13px;color:#6B5A48;line-height:1.5">Not therapist, not coach. The friend who texts "did you take your meds?" with zero judgment.</div>
+      </div>
+      <div class="tint" style="background:#FAF6F1;border-left:3px solid var(--gold)">
+        <div style="font-size:14px;font-weight:700;margin-bottom:6px">Self-Aware Humor</div>
+        <div style="font-size:13px;color:#6B5A48;line-height:1.5">"You opened the app. That's a win. No, seriously." The ADHD community laughs at itself with love.</div>
+      </div>
+      <div class="tint" style="background:#FAF6F1;border-left:3px solid var(--terra)">
+        <div style="font-size:14px;font-weight:700;margin-bottom:6px">Gently Persistent</div>
+        <div style="font-size:13px;color:#6B5A48;line-height:1.5">Firm enough to actually work, kind enough to never shame. The reminder system IS the voice.</div>
+      </div>
+      <div class="tint" style="background:#FAF6F1;border-left:3px solid var(--violet)">
+        <div style="font-size:14px;font-weight:700;margin-bottom:6px">Quietly Celebratory</div>
+        <div style="font-size:13px;color:#6B5A48;line-height:1.5">"Three days in a row. That's real." Acknowledgment without patronizing. Points, not podiums.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Voice examples -->
+  <div class="vpair">
+    <div class="vlabel" style="color:var(--teal)">Morning Briefing</div>
+    <div class="grid-2">
+      <div><div class="good-label">✓ Tuned says</div><div class="example" style="color:#3D2E1F">"Good morning, Sarah. 3 things today, meds at 8. Spirit Week is in 2 days — Patriots shirt still needs buying."</div></div>
+      <div><div class="bad-label">✗ Tuned never says</div><div class="example" style="color:#8B7355">"⚠️ You have 3 OVERDUE tasks and 1 UPCOMING EVENT requiring preparation. Take action now."</div></div>
+    </div>
+  </div>
+  <div class="vpair">
+    <div class="vlabel" style="color:var(--terra)">Persistent Reminder</div>
+    <div class="grid-2">
+      <div><div class="good-label">✓ Tuned says</div><div class="example" style="color:#3D2E1F">"Hey — Patriots shirt. Still on the list. Reminder 3 of 5."</div></div>
+      <div><div class="bad-label">✗ Tuned never says</div><div class="example" style="color:#8B7355">"REMINDER: Task 'Buy Patriots shirt' is OVERDUE. You have failed to complete this item."</div></div>
+    </div>
+  </div>
+  <div class="vpair">
+    <div class="vlabel" style="color:var(--sage)">Task Completion</div>
+    <div class="grid-2">
+      <div><div class="good-label">✓ Tuned says</div><div class="example" style="color:#3D2E1F">"Done! Pack shirt just activated — that's tomorrow's problem though."</div></div>
+      <div><div class="bad-label">✗ Tuned never says</div><div class="example" style="color:#8B7355">"🎉🎉🎉 AMAZING JOB!!! You're a PRODUCTIVITY SUPERSTAR!!! 🌟🌟🌟"</div></div>
+    </div>
+  </div>
+  <div class="vpair">
+    <div class="vlabel" style="color:var(--gold)">Missed Medication</div>
+    <div class="grid-2">
+      <div><div class="good-label">✓ Tuned says</div><div class="example" style="color:#3D2E1F">"Morning meds — looks like today got ahead of you. Still want to take them?"</div></div>
+      <div><div class="bad-label">✗ Tuned never says</div><div class="example" style="color:#8B7355">"You missed your medication. Consistency is key to managing your condition."</div></div>
+    </div>
+  </div>
+  <div class="vpair">
+    <div class="vlabel" style="color:var(--violet)">Empty Brain Dump</div>
+    <div class="grid-2">
+      <div><div class="good-label">✓ Tuned says</div><div class="example" style="color:#3D2E1F">"All clear. Your brain's inbox is empty. Enjoy that."</div></div>
+      <div><div class="bad-label">✗ Tuned never says</div><div class="example" style="color:#8B7355">"No items to display. Add new items using the + button."</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── FEATURE LANGUAGE ─── -->
+<div class="section" id="features">
+  <h2 class="serif">Feature Language</h2>
+  <div class="subtitle">How each product feature maps to brand language</div>
+
+  <div class="card">
+    <div class="feat">
+      <div class="ico" style="background:#2E617115">🌅</div>
+      <div><div class="name">Morning Briefing</div><div class="phrase">"See what matters right now"</div><div class="sub">Time-adaptive greeting, medication cards, awareness banners, today's timeline, task list, brain dump nudge. Tuned's front door — warm, scannable, never overwhelming.</div></div>
+    </div>
+    <div class="feat">
+      <div class="ico" style="background:#C4705A15">📋</div>
+      <div><div class="name">Tasks</div><div class="phrase">"Tune your tasks"</div><div class="sub">Category filters (Home / Work / Kid / Self / Errands), priority sorting, swipe-to-complete with celebration. Max 7 visible. Title + Save minimum — everything else optional.</div></div>
+    </div>
+    <div class="feat">
+      <div class="ico" style="background:#D6A45A15">📅</div>
+      <div><div class="name">Calendar + Prep Chains</div><div class="phrase">"See what's coming — and what to do about it"</div><div class="sub">THE killer feature. Backward-schedule prep tasks from events. Cascading daily awareness with visual escalation. Dependencies auto-activate. The Spirit Week problem, solved.</div></div>
+    </div>
+    <div class="feat">
+      <div class="ico" style="background:#9B84A815">💡</div>
+      <div><div class="name">Brain Dump</div><div class="phrase">"Get it out of your head"</div><div class="sub">Capture in under 3 seconds. Cmd+Shift+Space on Mac, widget on iPhone. Items NEVER flagged overdue. Zero pressure. Swipe right = make task, left = archive.</div></div>
+    </div>
+    <div class="feat">
+      <div class="ico" style="background:#5B8A5E15">💊</div>
+      <div><div class="name">Medication Tracking</div><div class="phrase">"One tap. Done."</div><div class="sub">Large Take button in morning briefing. Amber at 30+ min overdue. Auto-decrement supply, auto-create refill task. 30-day dot grid — no streaks, no judgment.</div></div>
+    </div>
+    <div class="feat">
+      <div class="ico" style="background:#7B9BAA15">⏱</div>
+      <div><div class="name">Focus Timer</div><div class="phrase">"Find your frequency"</div><div class="sub">Visual ring that depletes (fights time blindness). Color transitions at 25% and 10%. Persistent banner across all screens. Optionally attach to a task.</div></div>
+    </div>
+    <div class="feat">
+      <div class="ico" style="background:#C4705A15">🔔</div>
+      <div><div class="name">Reminder System</div><div class="phrase">"Gently persistent"</div><div class="sub">Three types: Gentle (single), Persistent (auto-snooze 15 min × 5), Urgent (bypasses Focus modes, 5 min × 10). The nag you actually need.</div></div>
+    </div>
+    <div class="feat">
+      <div class="ico" style="background:#D6A45A15">✨</div>
+      <div><div class="name">Celebrations</div><div class="phrase">"That counts"</div><div class="sub">6 randomized animations (variable-ratio reinforcement). 10% Super chance. No punishment. No streaks. Points reset monthly — always a fresh start.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── TAGLINES ─── -->
+<div class="section" id="taglines">
+  <h2 class="serif">Taglines & Copy</h2>
+  <div class="subtitle">Ready-to-use language for marketing, App Store, and social</div>
+
+  <div class="card">
+    <div class="label teal">Primary Taglines</div>
+    <div class="tagline-block hero">
+      <div class="line serif">"Find your frequency."</div>
+      <div class="note">The hero line. Captures the antenna metaphor, implies personalization, promises clarity without fixing what's broken.</div>
+    </div>
+    <div class="tagline-block std">
+      <div class="line serif" style="color:#2C1810">"Stay Tuned."</div>
+      <div class="note">Universally known phrase repurposed. Works as tagline, push notification sign-off, and brand promise. Implies reliability.</div>
+    </div>
+    <div class="tagline-block std">
+      <div class="line serif" style="color:#2C1810;font-size:19px">"Your brain picks up everything. We help you find the signal."</div>
+      <div class="note">Longer version for App Store hero or landing page. Validates the experience before offering the solution.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label terra">App Store Copy</div>
+    <div class="tint" style="background:#FAF6F1">
+      <div style="font-size:15px;font-weight:700;margin-bottom:4px">Subtitle (30 chars)</div>
+      <div style="font-size:14px;color:#6B5A48;font-style:italic;margin-bottom:16px">ADHD Life Management — Tuned In</div>
+      <div style="font-size:15px;font-weight:700;margin-bottom:4px">Promotional Text</div>
+      <div style="font-size:14px;color:#6B5A48;line-height:1.7">
+        Tasks, events, meds, ideas, and time — one calm place for your ADHD brain. Prep chains that backward-schedule from events so you never miss Spirit Week again. Persistent reminders that actually work. Shame-free design that celebrates progress without punishing misses. Under 60 seconds to set up. Zero guilt. Just you, Tuned in.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label gold">Social & Marketing Lines</div>
+    <div class="grid-2" style="margin-top:8px">
+      <div class="social-line">"Your brain isn't broken. It's an antenna that picks up everything."</div>
+      <div class="social-line">"Other apps track what you did. Tuned tells you what's coming."</div>
+      <div class="social-line">"The app that nags you about Patriots shirt day so your kid doesn't have to."</div>
+      <div class="social-line">"60 seconds to set up. Zero accounts. One less thing to forget."</div>
+      <div class="social-line">"No red overdue labels. No broken streaks. No guilt. Just progress."</div>
+      <div class="social-line">"Built for the brain that had 3 great ideas in the shower and forgot all of them by breakfast."</div>
+      <div class="social-line">"Prep chains: because 'buy the shirt' and 'pack the shirt' are two different cognitive events."</div>
+      <div class="social-line">"Stay Tuned. We'll remember so you don't have to."</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── ICON & BRAND MARK ─── -->
+<div class="section" id="icon">
+  <h2 class="serif">Icon & Brand Mark</h2>
+  <div class="subtitle">The final 3A icon — three frequencies, one is yours</div>
+
+  <!-- App Icon — Final 3A -->
+  <div class="card" style="border:2px solid var(--gold);box-shadow:0 8px 40px rgba(214,164,90,.1)">
+    <div class="label gold">App Icon — Final (3A)</div>
+    <p style="font-size:14px;line-height:1.7;color:#4A3C2E;margin-bottom:24px">
+      Three frequency waves on a deep teal gradient. The bold gold center wave is <em>your</em> frequency — longer arc, confident stroke, warm glow. Two flanking waves in cream at low opacity have their own distinct 3-peak rhythm — clearly different signals, clearly not yours. The gold glow washes warmth toward the neighbors without the lines ever touching. Three waves. One is yours. <strong>"Find your frequency."</strong>
+    </p>
+
+    <!-- Icon + Brand Mark row -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;margin-bottom:28px">
+      <div style="text-align:center">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--drift);margin-bottom:10px">App Icon</div>
+        <div style="display:inline-flex;border-radius:22.37%;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.15)">
+          <svg viewBox="0 0 512 512" width="200" height="200" xmlns="http://www.w3.org/2000/svg"><defs>
+            <linearGradient id="bbiF" x1="0" y1="0" x2=".45" y2="1"><stop offset="0%" stop-color="#172D3A"/><stop offset="100%" stop-color="#245060"/></linearGradient>
+            <filter id="bbgF" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur in="SourceGraphic" stdDeviation="11" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <filter id="bbaF" x="-30%" y="-100%" width="160%" height="300%"><feGaussianBlur in="SourceGraphic" stdDeviation="24"/></filter>
+          </defs>
+          <rect width="512" height="512" fill="url(#bbiF)"/>
+          <path d="M50 256C140 208,220 208,300 256S420 284.8,452 256" fill="none" stroke="#D6A45A" stroke-width="26" filter="url(#bbaF)" opacity=".4"/>
+          <path d="M50 176C85 158,125 158,165 176S245 194,290 176S380 158,452 176" fill="none" stroke="#FAF6F1" stroke-width="5.5" stroke-opacity=".2" stroke-linecap="round"/>
+          <path d="M50 256C140 208,220 208,300 256S420 284.8,452 256" fill="none" stroke="#D6A45A" stroke-width="14" stroke-linecap="round" filter="url(#bbgF)"/>
+          <path d="M50 336C85 354,125 354,165 336S245 318,290 336S380 354,452 336" fill="none" stroke="#FAF6F1" stroke-width="5.5" stroke-opacity=".2" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--drift);margin-bottom:10px">Brand Mark</div>
+        <div style="display:inline-block">
+          <svg viewBox="0 0 300 300" width="200" height="200" xmlns="http://www.w3.org/2000/svg"><defs>
+            <filter id="bbbmF" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <path d="M15 122C52 115,90 115,128 122S202 129,238 122S272 115,285 122" fill="none" stroke="#2E6171" stroke-width="4" stroke-opacity=".25" stroke-linecap="round"/>
+          <path d="M15 150C78 132,142 132,195 150S267 161,285 150" fill="none" stroke="#D6A45A" stroke-width="8" stroke-linecap="round" filter="url(#bbbmF)"/>
+          <path d="M15 178C52 185,90 185,128 178S202 171,238 178S272 185,285 178" fill="none" stroke="#2E6171" stroke-width="4" stroke-opacity=".25" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scale board — dark -->
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--drift);margin-bottom:10px">Scale — Dark Background</div>
+    <div style="background:#1B1410;border-radius:14px;padding:28px 24px;display:flex;align-items:end;justify-content:center;gap:28px;flex-wrap:wrap;margin-bottom:20px">
+      <div style="text-align:center">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.25);margin-bottom:8px">App Store</div>
+        <div style="border-radius:22.37%;overflow:hidden;display:inline-block;box-shadow:0 8px 40px rgba(0,0,0,.6)">
+          <svg viewBox="0 0 512 512" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bbsd1" x1="0" y1="0" x2=".45" y2="1"><stop offset="0%" stop-color="#172D3A"/><stop offset="100%" stop-color="#245060"/></linearGradient><filter id="bbsd1g" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur in="SourceGraphic" stdDeviation="11" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><filter id="bbsd1a" x="-30%" y="-100%" width="160%" height="300%"><feGaussianBlur in="SourceGraphic" stdDeviation="24"/></filter></defs><rect width="512" height="512" fill="url(#bbsd1)"/><path d="M50 256C140 208,220 208,300 256S420 284.8,452 256" fill="none" stroke="#D6A45A" stroke-width="26" filter="url(#bbsd1a)" opacity=".4"/><path d="M50 176C85 158,125 158,165 176S245 194,290 176S380 158,452 176" fill="none" stroke="#FAF6F1" stroke-width="5.5" stroke-opacity=".2" stroke-linecap="round"/><path d="M50 256C140 208,220 208,300 256S420 284.8,452 256" fill="none" stroke="#D6A45A" stroke-width="14" stroke-linecap="round" filter="url(#bbsd1g)"/><path d="M50 336C85 354,125 354,165 336S245 318,290 336S380 354,452 336" fill="none" stroke="#FAF6F1" stroke-width="5.5" stroke-opacity=".2" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.25);margin-bottom:8px">Home</div>
+        <div style="border-radius:22.37%;overflow:hidden;display:inline-block;box-shadow:0 4px 24px rgba(0,0,0,.5);width:80px;height:80px">
+          <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bbsd2" x1="0" y1="0" x2=".45" y2="1"><stop offset="0%" stop-color="#172D3A"/><stop offset="100%" stop-color="#245060"/></linearGradient><filter id="bbsd2g" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur in="SourceGraphic" stdDeviation="14" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><filter id="bbsd2a" x="-30%" y="-100%" width="160%" height="300%"><feGaussianBlur in="SourceGraphic" stdDeviation="28"/></filter></defs><rect width="512" height="512" fill="url(#bbsd2)"/><path d="M50 256C140 208,220 208,300 256S420 284.8,452 256" fill="none" stroke="#D6A45A" stroke-width="26" filter="url(#bbsd2a)" opacity=".4"/><path d="M50 176C85 158,125 158,165 176S245 194,290 176S380 158,452 176" fill="none" stroke="#FAF6F1" stroke-width="7.5" stroke-opacity=".2" stroke-linecap="round"/><path d="M50 256C140 208,220 208,300 256S420 284.8,452 256" fill="none" stroke="#D6A45A" stroke-width="17" stroke-linecap="round" filter="url(#bbsd2g)"/><path d="M50 336C85 354,125 354,165 336S245 318,290 336S380 354,452 336" fill="none" stroke="#FAF6F1" stroke-width="7.5" stroke-opacity=".2" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.25);margin-bottom:8px">Spotlight</div>
+        <div style="border-radius:22.37%;overflow:hidden;display:inline-block;box-shadow:0 2px 12px rgba(0,0,0,.5);width:64px;height:64px">
+          <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bbsd3" x1="0" y1="0" x2=".45" y2="1"><stop offset="0%" stop-color="#172D3A"/><stop offset="100%" stop-color="#245060"/></linearGradient><filter id="bbsd3g" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur in="SourceGraphic" stdDeviation="17" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><filter id="bbsd3a" x="-30%" y="-100%" width="160%" height="300%"><feGaussianBlur in="SourceGraphic" stdDeviation="30"/></filter></defs><rect width="512" height="512" fill="url(#bbsd3)"/><path d="M50 256C140 208,220 208,300 256S420 284.8,452 256" fill="none" stroke="#D6A45A" stroke-width="26" filter="url(#bbsd3a)" opacity=".4"/><path d="M50 176C85 158,125 158,165 176S245 194,290 176S380 158,452 176" fill="none" stroke="#FAF6F1" stroke-width="8.5" stroke-opacity=".2" stroke-linecap="round"/><path d="M50 256C140 208,220 208,300 256S420 284.8,452 256" fill="none" stroke="#D6A45A" stroke-width="20" stroke-linecap="round" filter="url(#bbsd3g)"/><path d="M50 336C85 354,125 354,165 336S245 318,290 336S380 354,452 336" fill="none" stroke="#FAF6F1" stroke-width="8.5" stroke-opacity=".2" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.25);margin-bottom:8px">Notif</div>
+        <div style="border-radius:22.37%;overflow:hidden;display:inline-block;box-shadow:0 2px 10px rgba(0,0,0,.5);width:40px;height:40px">
+          <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bbsd4" x1="0" y1="0" x2=".45" y2="1"><stop offset="0%" stop-color="#172D3A"/><stop offset="100%" stop-color="#245060"/></linearGradient><filter id="bbsd4g" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur in="SourceGraphic" stdDeviation="20" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><filter id="bbsd4a" x="-30%" y="-100%" width="160%" height="300%"><feGaussianBlur in="SourceGraphic" stdDeviation="32"/></filter></defs><rect width="512" height="512" fill="url(#bbsd4)"/><path d="M50 256C140 208,220 208,300 256S420 284.8,452 256" fill="none" stroke="#D6A45A" stroke-width="26" filter="url(#bbsd4a)" opacity=".4"/><path d="M50 176C85 158,125 158,165 176S245 194,290 176S380 158,452 176" fill="none" stroke="#FAF6F1" stroke-width="9" stroke-opacity=".2" stroke-linecap="round"/><path d="M50 256C140 208,220 208,300 256S420 284.8,452 256" fill="none" stroke="#D6A45A" stroke-width="22" stroke-linecap="round" filter="url(#bbsd4g)"/><path d="M50 336C85 354,125 354,165 336S245 318,290 336S380 354,452 336" fill="none" stroke="#FAF6F1" stroke-width="9" stroke-opacity=".2" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Brand Mark usage contexts -->
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--drift);margin-bottom:10px">Brand Mark — Usage Contexts</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div style="background:#1B1410;border-radius:12px;padding:32px 24px;text-align:center">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.25);margin-bottom:12px">On Dark</div>
+        <svg viewBox="0 0 300 300" width="160" height="160" xmlns="http://www.w3.org/2000/svg"><defs><filter id="bbbmD" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><path d="M15 122C52 115,90 115,128 122S202 129,238 122S272 115,285 122" fill="none" stroke="#FAF6F1" stroke-width="4" stroke-opacity=".2" stroke-linecap="round"/><path d="M15 150C78 132,142 132,195 150S267 159,285 150" fill="none" stroke="#D6A45A" stroke-width="8" stroke-linecap="round" filter="url(#bbbmD)"/><path d="M15 178C52 185,90 185,128 178S202 171,238 178S272 185,285 178" fill="none" stroke="#FAF6F1" stroke-width="4" stroke-opacity=".2" stroke-linecap="round"/></svg>
+      </div>
+      <div style="background:#FAF6F1;border:1px solid #E8DFD3;border-radius:12px;padding:32px 24px;text-align:center">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--drift);margin-bottom:12px">On Cream</div>
+        <svg viewBox="0 0 300 300" width="160" height="160" xmlns="http://www.w3.org/2000/svg"><defs><filter id="bbbmL" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><path d="M15 122C52 115,90 115,128 122S202 129,238 122S272 115,285 122" fill="none" stroke="#2E6171" stroke-width="4" stroke-opacity=".25" stroke-linecap="round"/><path d="M15 150C78 132,142 132,195 150S267 161,285 150" fill="none" stroke="#D6A45A" stroke-width="8" stroke-linecap="round" filter="url(#bbbmL)"/><path d="M15 178C52 185,90 185,128 178S202 171,238 178S272 185,285 178" fill="none" stroke="#2E6171" stroke-width="4" stroke-opacity=".25" stroke-linecap="round"/></svg>
+      </div>
+      <div style="background:#2E6171;border-radius:12px;padding:32px 24px;text-align:center">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.4);margin-bottom:12px">On Teal</div>
+        <svg viewBox="0 0 300 300" width="160" height="160" xmlns="http://www.w3.org/2000/svg"><defs><filter id="bbbmT" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><path d="M15 122C52 115,90 115,128 122S202 129,238 122S272 115,285 122" fill="none" stroke="#FAF6F1" stroke-width="4" stroke-opacity=".25" stroke-linecap="round"/><path d="M15 150C78 132,142 132,195 150S267 159,285 150" fill="none" stroke="#D6A45A" stroke-width="8" stroke-linecap="round" filter="url(#bbbmT)"/><path d="M15 178C52 185,90 185,128 178S202 171,238 178S272 185,285 178" fill="none" stroke="#FAF6F1" stroke-width="4" stroke-opacity=".25" stroke-linecap="round"/></svg>
+      </div>
+      <div style="background:#fff;border:1px solid #E8DFD3;border-radius:12px;padding:32px 24px;text-align:center">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--drift);margin-bottom:12px">On White</div>
+        <svg viewBox="0 0 300 300" width="160" height="160" xmlns="http://www.w3.org/2000/svg"><defs><filter id="bbbmW" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><path d="M15 122C52 115,90 115,128 122S202 129,238 122S272 115,285 122" fill="none" stroke="#2E6171" stroke-width="4" stroke-opacity=".2" stroke-linecap="round"/><path d="M15 150C78 132,142 132,195 150S267 159,285 150" fill="none" stroke="#D6A45A" stroke-width="8" stroke-linecap="round" filter="url(#bbbmW)"/><path d="M15 178C52 185,90 185,128 178S202 171,238 178S272 185,285 178" fill="none" stroke="#2E6171" stroke-width="4" stroke-opacity=".2" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logo Lockup — Wordmark + Wave -->
+  <div class="card">
+    <div class="label teal">Logo Lockup — Wordmark + Brand Mark</div>
+    <p style="font-size:14px;line-height:1.7;color:#4A3C2E;margin-bottom:24px">
+      The Tuned wordmark (DM Serif Display / New York) sits above the three-wave brand mark. The gold wave acts as an underline — grounding the type with the frequency metaphor. The flanking waves use the background-appropriate neutral (cream on dark, teal on light).
+    </p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <!-- Dark lockup -->
+      <div style="background:#1B1410;border-radius:14px;padding:40px 32px;text-align:center">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.25);margin-bottom:16px">Logo — Dark</div>
+        <div style="display:inline-block">
+          <div style="font-family:'DM Serif Display',Georgia,serif;font-size:42px;font-weight:700;color:#FAF6F1;letter-spacing:-1.5px;margin-bottom:-4px">Tuned.</div>
+          <svg viewBox="0 0 300 80" width="180" height="48" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto"><defs>
+            <filter id="lkDk" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <path d="M10 25C40 20,70 20,100 25S160 30,190 25S230 20,260 25" fill="none" stroke="#FAF6F1" stroke-width="3" stroke-opacity=".2" stroke-linecap="round"/>
+          <path d="M10 40C60 28,120 28,170 40S240 48,260 40" fill="none" stroke="#D6A45A" stroke-width="6" stroke-linecap="round" filter="url(#lkDk)"/>
+          <path d="M10 55C40 60,70 60,100 55S160 50,190 55S230 60,260 55" fill="none" stroke="#FAF6F1" stroke-width="3" stroke-opacity=".2" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+      <!-- Light lockup -->
+      <div style="background:#FAF6F1;border:1px solid #E8DFD3;border-radius:14px;padding:40px 32px;text-align:center">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--drift);margin-bottom:16px">Logo — Light</div>
+        <div style="display:inline-block">
+          <div style="font-family:'DM Serif Display',Georgia,serif;font-size:42px;font-weight:700;color:#4A3C2E;letter-spacing:-1.5px;margin-bottom:-4px">Tuned.</div>
+          <svg viewBox="0 0 300 80" width="180" height="48" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto"><defs>
+            <filter id="lkLt" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <path d="M10 25C40 20,70 20,100 25S160 30,190 25S230 20,260 25" fill="none" stroke="#2E6171" stroke-width="3" stroke-opacity=".2" stroke-linecap="round"/>
+          <path d="M10 40C60 28,120 28,170 40S240 48,260 40" fill="none" stroke="#D6A45A" stroke-width="6" stroke-linecap="round" filter="url(#lkLt)"/>
+          <path d="M10 55C40 60,70 60,100 55S160 50,190 55S230 60,260 55" fill="none" stroke="#2E6171" stroke-width="3" stroke-opacity=".2" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+      <!-- Teal lockup -->
+      <div style="background:#2E6171;border-radius:14px;padding:40px 32px;text-align:center">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.4);margin-bottom:16px">Logo — On Teal</div>
+        <div style="display:inline-block">
+          <div style="font-family:'DM Serif Display',Georgia,serif;font-size:42px;font-weight:700;color:#FAF6F1;letter-spacing:-1.5px;margin-bottom:-4px">Tuned.</div>
+          <svg viewBox="0 0 300 80" width="180" height="48" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto"><defs>
+            <filter id="lkTl" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <path d="M10 25C40 20,70 20,100 25S160 30,190 25S230 20,260 25" fill="none" stroke="#FAF6F1" stroke-width="3" stroke-opacity=".25" stroke-linecap="round"/>
+          <path d="M10 40C60 28,120 28,170 40S240 48,260 40" fill="none" stroke="#D6A45A" stroke-width="6" stroke-linecap="round" filter="url(#lkTl)"/>
+          <path d="M10 55C40 60,70 60,100 55S160 50,190 55S230 60,260 55" fill="none" stroke="#FAF6F1" stroke-width="3" stroke-opacity=".25" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+      <!-- White lockup -->
+      <div style="background:#fff;border:1px solid #E8DFD3;border-radius:14px;padding:40px 32px;text-align:center">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--drift);margin-bottom:16px">Logo — On White</div>
+        <div style="display:inline-block">
+          <div style="font-family:'DM Serif Display',Georgia,serif;font-size:42px;font-weight:700;color:#4A3C2E;letter-spacing:-1.5px;margin-bottom:-4px">Tuned.</div>
+          <svg viewBox="0 0 300 80" width="180" height="48" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto"><defs>
+            <filter id="lkWh" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <path d="M10 25C40 20,70 20,100 25S160 30,190 25S230 20,260 25" fill="none" stroke="#2E6171" stroke-width="3" stroke-opacity=".2" stroke-linecap="round"/>
+          <path d="M10 40C60 28,120 28,170 40S240 48,260 40" fill="none" stroke="#D6A45A" stroke-width="6" stroke-linecap="round" filter="url(#lkWh)"/>
+          <path d="M10 55C40 60,70 60,100 55S160 50,190 55S230 60,260 55" fill="none" stroke="#2E6171" stroke-width="3" stroke-opacity=".2" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── VISUAL IDENTITY ─── -->
+<div class="section" id="identity">
+  <h2 class="serif">Visual Identity</h2>
+  <div class="subtitle">Illustration style, UI principles, and visual language</div>
+
+  <div class="card">
+    <div class="label sage">Illustration Style</div>
+    <p style="font-size:14px;line-height:1.7;color:#4A3C2E;margin-bottom:16px">
+      Organic, hand-drawn line work with subtle texture — Headspace meets Kinfolk. Soft, imperfect shapes that feel human. Botanical elements (growing things, leaves, gardens clearing) and atmospheric elements (soft radio waves, warm glows, light cutting through fog). People as warm, diverse silhouettes.
+    </p>
+    <div class="grid-4">
+      <div class="tint" style="background:#FAF6F1;text-align:center"><div style="font-size:12px;font-weight:700;color:#2E6171;margin-bottom:4px">Onboarding</div><div style="font-size:11px;color:#8B7355;line-height:1.4">Garden clearing, path appearing</div></div>
+      <div class="tint" style="background:#FAF6F1;text-align:center"><div style="font-size:12px;font-weight:700;color:#2E6171;margin-bottom:4px">Empty States</div><div style="font-size:11px;color:#8B7355;line-height:1.4">Gentle, encouraging — never "nothing here"</div></div>
+      <div class="tint" style="background:#FAF6F1;text-align:center"><div style="font-size:12px;font-weight:700;color:#2E6171;margin-bottom:4px">Celebrations</div><div style="font-size:11px;color:#8B7355;line-height:1.4">Botanical confetti: leaves, petals, seeds</div></div>
+      <div class="tint" style="background:#FAF6F1;text-align:center"><div style="font-size:12px;font-weight:700;color:#2E6171;margin-bottom:4px">Error States</div><div style="font-size:11px;color:#8B7355;line-height:1.4">Tangled vine gently unwinding</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label terra">UI Design Principles</div>
+    <div class="grid-2" style="margin-top:8px">
+      <div style="font-size:13px;line-height:1.5"><strong>Generous whitespace</strong><br><span style="color:#8B7355;font-size:12px">Breathing room reduces cognitive load. Every element earns its space.</span></div>
+      <div style="font-size:13px;line-height:1.5"><strong>Progressive disclosure</strong><br><span style="color:#8B7355;font-size:12px">Show the minimum. Reveal on interaction. Title + Save is enough.</span></div>
+      <div style="font-size:13px;line-height:1.5"><strong>No red for overdue</strong><br><span style="color:#8B7355;font-size:12px">Amber and orange escalation only. Red = shame trigger for ADHD brains.</span></div>
+      <div style="font-size:13px;line-height:1.5"><strong>Large touch targets</strong><br><span style="color:#8B7355;font-size:12px">Medication buttons, checkboxes, swipe zones — designed for distracted fingers.</span></div>
+      <div style="font-size:13px;line-height:1.5"><strong>Persistent context</strong><br><span style="color:#8B7355;font-size:12px">Timer banner, awareness banners every morning. Tuned doesn't forget.</span></div>
+      <div style="font-size:13px;line-height:1.5"><strong>Variable reward</strong><br><span style="color:#8B7355;font-size:12px">6 celebration types, randomized. 10% Super. The brain craves novelty.</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label gold">Sonic Identity</div>
+    <p style="font-size:14px;line-height:1.7;color:#4A3C2E">
+      Soft, warm tones — wind chimes, not phone pings. Completion = gentle meditation bell ding. Persistent reminders = slightly brighter but never jarring. Timer completion = a satisfied exhale. Avoid harsh buzzes, aggressive alarms, anything that triggers anxiety. The sound palette matches the visual palette: natural, warm, human.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<div class="footer">
+  <div style="display:inline-block">
+    <div class="serif" style="font-size:28px;font-weight:700;color:var(--teal);letter-spacing:-1px;margin-bottom:-2px">Tuned.</div>
+    <svg viewBox="0 0 300 80" width="140" height="38" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto"><defs>
+      <filter id="ftrWv" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <path d="M10 25C40 20,70 20,100 25S160 30,190 25S230 20,260 25" fill="none" stroke="#2E6171" stroke-width="3" stroke-opacity=".2" stroke-linecap="round"/>
+    <path d="M10 40C60 28,120 28,170 40S240 48,260 40" fill="none" stroke="#D6A45A" stroke-width="6" stroke-linecap="round" filter="url(#ftrWv)"/>
+    <path d="M10 55C40 60,70 60,100 55S160 50,190 55S230 60,260 55" fill="none" stroke="#2E6171" stroke-width="3" stroke-opacity=".2" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div style="font-size:13px;color:var(--drift);margin-top:6px">Find your frequency.</div>
+  <div style="font-size:11px;color:#C4B99A;margin-top:12px">Brand Brief v1.0 — February 2026</div>
+</div>
+
+</div>
+</body>
+</html>

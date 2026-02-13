@@ -61,6 +61,24 @@ export function PlayerCharacter({ enabled, onPositionUpdate }: PlayerCharacterPr
     }
   }, [enabled])
 
+  // Cinematic intro animation override
+  const introAnimation = useGameStore((s) => s.introAnimation)
+  const introPlayerYaw = useGameStore((s) => s.introPlayerYaw)
+  useEffect(() => {
+    if (introAnimation && characterRef.current) {
+      characterRef.current.play(introAnimation, 0.3)
+      currentAnimRef.current = introAnimation
+    } else if (!introAnimation && characterRef.current && currentAnimRef.current !== 'Idle_A') {
+      characterRef.current.play('Idle_A', 0.3)
+      currentAnimRef.current = 'Idle_A'
+    }
+  }, [introAnimation])
+  useEffect(() => {
+    if (introPlayerYaw != null && groupRef.current) {
+      groupRef.current.rotation.y = introPlayerYaw
+    }
+  }, [introPlayerYaw])
+
   // Read cameraYaw from store via ref to avoid re-renders every frame
   const cameraYawRef = useRef(0)
   useFrame(() => {
@@ -69,6 +87,8 @@ export function PlayerCharacter({ enabled, onPositionUpdate }: PlayerCharacterPr
 
   useFrame((_, delta) => {
     if (!enabled || !groupRef.current) return
+    // During cinematic intro, freeze player movement
+    if (introAnimation) return
 
     const keys = keysRef.current
     let dirX = 0
@@ -140,7 +160,7 @@ export function PlayerCharacter({ enabled, onPositionUpdate }: PlayerCharacterPr
       <Character3D
         ref={characterRef}
         characterId="knight"
-        animationPacks={['general', 'movement_basic']}
+        animationPacks={['general', 'movement_basic', 'simulation']}
         currentAnimation="Idle_A"
       />
     </group>

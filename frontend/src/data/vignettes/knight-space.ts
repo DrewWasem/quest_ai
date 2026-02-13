@@ -6,6 +6,7 @@
  */
 
 import type { Vignette } from '../../types/madlibs';
+import { enterDuo, setupProps, composeBlocking, MARK } from '../blocking-templates';
 
 // ─── STAGE 1 VIGNETTES ──────────────────────────────────────────────────────
 
@@ -14,6 +15,7 @@ export const KNIGHT_SPACE_STAGE_1: Vignette[] = [
   // ── EXACT: ranger + repair + solar_panel ───────────────────────────────────
   {
     id: 'knight_space_1_perfect_ranger_repair_solar',
+    description: 'The space ranger expertly repairs a broken solar panel and restores power to the station.',
     trigger: { crew: 'ranger', task: 'repair', tool: 'solar_panel' },
     tier: 'spectacular',
     promptScore: 'perfect',
@@ -102,6 +104,7 @@ export const KNIGHT_SPACE_STAGE_1: Vignette[] = [
   // ── EXACT: everyone + launch + rocket ───────────────────────────────────────
   {
     id: 'knight_space_1_perfect_everyone_launch_rocket',
+    description: 'The entire crew assembles for a dramatic countdown and rocket launch from the space station.',
     trigger: { crew: 'everyone', task: 'launch', tool: 'rocket' },
     tier: 'spectacular',
     promptScore: 'perfect',
@@ -192,6 +195,7 @@ export const KNIGHT_SPACE_STAGE_1: Vignette[] = [
   // ── PAIR: knight + defend + * ───────────────────────────────────────────────
   {
     id: 'knight_space_1_chaos_knight_defend',
+    description: 'A medieval knight swings a sword in space, confusing everyone at the station.',
     trigger: { crew: 'knight', task: 'defend', tool: '*' },
     tier: 'absolute_chaos',
     promptScore: 'chaotic',
@@ -277,6 +281,7 @@ export const KNIGHT_SPACE_STAGE_1: Vignette[] = [
   // ── VIBE/CATEGORY: * + * + laser ────────────────────────────────────────────
   {
     id: 'knight_space_1_partial_laser',
+    description: 'A robot fires a laser at the station but nobody knows who sent it or why.',
     trigger: { crew: '*', task: '*', tool: 'laser' },
     tier: 'moderate',
     promptScore: 'partial',
@@ -341,34 +346,29 @@ export const KNIGHT_SPACE_STAGE_1: Vignette[] = [
 
 export const KNIGHT_SPACE_DEFAULT: Vignette = {
   id: 'knight_space_default',
+  description: 'Space ranger and robot walk in from opposite wings to the space station.',
   trigger: { crew: '*', task: '*', tool: '*' },
   tier: 'subtle',
   promptScore: 'partial',
-  steps: [
-    {
+  steps: composeBlocking(
+    // Space station props
+    setupProps([{ asset: 'space_station', mark: MARK.US_CENTER }]),
+    // Duo entrance — ranger from left, robot from right
+    enterDuo(
+      'space_ranger', MARK.DS_LEFT,
+      'robot', MARK.DS_RIGHT,
+      { arrivalAnim: 'wave' },
+    ),
+    // Final scene
+    [{
       parallel: [
-        { action: 'spawn', asset: 'space_station', position: 'center' },
-        { action: 'sfx', sound: 'spawn' },
-      ],
-      delayAfter: 0.5,
-    },
-    {
-      parallel: [
-        { action: 'spawn_character', character: 'space_ranger', position: 'left', anim: 'spawn_ground' },
-        { action: 'spawn_character', character: 'robot', position: 'right', anim: 'spawn_ground' },
-      ],
-      delayAfter: 0.5,
-    },
-    {
-      parallel: [
-        { action: 'crowd_react', characters: 'all', anim: 'wave' },
-        { action: 'react', effect: 'sparkle-magic', position: 'center' },
+        { action: 'react', effect: 'sparkle-magic', position: MARK.CS_CENTER },
         { action: 'sfx', sound: 'success' },
         { action: 'text_popup', text: '🛸 SPACE MISSION! 🛸', position: 'center', size: 'large' },
       ],
       delayAfter: 2.0,
-    },
-  ],
+    }],
+  ),
   feedback: {
     title: '🛸 Space Station Online!',
     message: "Something happened at the space station! But WHO fixed it? WHAT did they do? With WHAT tool? Fill in the blanks for a real mission!",

@@ -14,6 +14,7 @@ export const DUNGEON_CONCERT_STAGE_1: Vignette[] = [
   // ── EXACT: rogue + lockpick + locked_door ───────────────────────────────────
   {
     id: 'dungeon_concert_1_perfect_rogue_lockpick_door',
+    description: 'A rogue carefully picks a dungeon lock and smoothly opens the iron door to escape.',
     trigger: { hero: 'rogue', escape_method: 'lockpick', obstacle: 'locked_door' },
     tier: 'spectacular',
     promptScore: 'perfect',
@@ -111,6 +112,7 @@ export const DUNGEON_CONCERT_STAGE_1: Vignette[] = [
   // ── EXACT: team + fight + skeleton_army ─────────────────────────────────────
   {
     id: 'dungeon_concert_1_perfect_team_fight_army',
+    description: 'A team of heroes battles a skeleton army in an epic dungeon fight with explosions.',
     trigger: { hero: 'team', escape_method: 'fight', obstacle: 'skeleton_army' },
     tier: 'spectacular',
     promptScore: 'perfect',
@@ -211,6 +213,7 @@ export const DUNGEON_CONCERT_STAGE_1: Vignette[] = [
   // ── PAIR: mage + magic + * ──────────────────────────────────────────────────
   {
     id: 'dungeon_concert_1_chaos_mage_magic',
+    description: 'A mage casts wild magic in the dungeon causing explosions everywhere with no clear target.',
     trigger: { hero: 'mage', escape_method: 'magic', obstacle: '*' },
     tier: 'absolute_chaos',
     promptScore: 'chaotic',
@@ -302,6 +305,7 @@ export const DUNGEON_CONCERT_STAGE_1: Vignette[] = [
   // ── CATEGORY: * + smash + * ─────────────────────────────────────────────────
   {
     id: 'dungeon_concert_1_partial_smash',
+    description: 'Someone smashes crates and barrels in the dungeon but the real obstacle is unclear.',
     trigger: { hero: '*', escape_method: 'smash', obstacle: '*' },
     tier: 'moderate',
     promptScore: 'partial',
@@ -367,6 +371,7 @@ export const DUNGEON_CONCERT_STAGE_1: Vignette[] = [
 
 export const DUNGEON_CONCERT_DEFAULT: Vignette = {
   id: 'dungeon_concert_default',
+  description: 'A knight walks through a torch-lit dungeon corridor with no clear escape plan.',
   trigger: { hero: '*', escape_method: '*', obstacle: '*' },
   tier: 'subtle',
   promptScore: 'partial',

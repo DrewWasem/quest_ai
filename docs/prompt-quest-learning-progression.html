@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Quest — Learning Progression: How Play Teaches Prompting</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --purple-deep: #6C3FC5;
+    --purple-mid: #8B5CF6;
+    --purple-light: #A78BFA;
+    --purple-glow: rgba(139, 92, 246, 0.15);
+    --purple-surface: #2D1B69;
+    --orange: #FF8C42;
+    --orange-light: #FFB380;
+    --orange-glow: rgba(255, 140, 66, 0.15);
+    --green: #34D399;
+    --green-deep: #10B981;
+    --green-glow: rgba(52, 211, 153, 0.12);
+    --yellow: #FBBF24;
+    --yellow-light: #FDE68A;
+    --yellow-glow: rgba(251, 191, 36, 0.12);
+    --blue: #60A5FA;
+    --blue-deep: #3B82F6;
+    --blue-glow: rgba(96, 165, 250, 0.12);
+    --pink: #F472B6;
+    --pink-light: #FBCFE8;
+    --pink-glow: rgba(244, 114, 182, 0.12);
+    --red-soft: #FCA5A5;
+    --red: #F87171;
+    --bg-deep: #0F0A1A;
+    --bg: #1A0F2E;
+    --bg-card: #231546;
+    --bg-surface: #2D1B69;
+    --border: #3D2B7A;
+    --border-light: #4C3D8F;
+    --text-bright: #FFFFFF;
+    --text-primary: #E8E0F7;
+    --text-secondary: #B8A9D4;
+    --text-dim: #8B7AAE;
+    --text-muted: #6B5C8A;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+  }
+
+  body {
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .mono { font-family: 'Space Grotesk', monospace; }
+
+  /* ─── Header ─── */
+  .header {
+    background: linear-gradient(140deg, #0A0515 0%, #1A0F2E 25%, #2D1B69 55%, #6C3FC5 85%, #FF8C42 100%);
+    padding: 72px 28px 64px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -30px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(255,140,66,0.08);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -50px; left: 80px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(139,92,246,0.1);
+  }
+  .header .stars {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1.5px 1.5px at 30% 60%, rgba(255,255,255,0.3), transparent),
+      radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(2px 2px at 70% 40%, rgba(255,255,255,0.2), transparent),
+      radial-gradient(1px 1px at 85% 75%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1.5px 1.5px at 95% 15%, rgba(255,255,255,0.3), transparent),
+      radial-gradient(1px 1px at 15% 85%, rgba(255,255,255,0.3), transparent);
+  }
+  .header-inner { position: relative; max-width: 760px; margin: 0 auto; }
+  .header .badge {
+    display: inline-block;
+    padding: 5px 16px;
+    border-radius: 20px;
+    background: rgba(255,140,66,0.2);
+    border: 1px solid rgba(255,140,66,0.35);
+    font-size: 11px; font-weight: 800;
+    color: var(--orange);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .header h1 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 48px; font-weight: 900;
+    color: #fff;
+    letter-spacing: -1px;
+    line-height: 1.1;
+  }
+  .header h1 .quest { color: var(--orange); }
+  .header h1 .dot { color: var(--green); }
+  .header p {
+    font-size: 17px;
+    color: rgba(255,255,255,0.75);
+    margin-top: 16px;
+    line-height: 1.7;
+    max-width: 600px;
+  }
+
+  /* ─── Nav ─── */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--bg-deep);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-inner {
+    display: flex; gap: 4px;
+    max-width: 760px; margin: 0 auto;
+    padding: 10px 16px;
+  }
+  .nav a {
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 12px; font-weight: 700;
+    color: var(--text-dim);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .nav a:hover { background: var(--bg-card); color: var(--orange); }
+
+  /* ─── Main ─── */
+  .main { max-width: 760px; margin: 0 auto; padding: 40px 20px 100px; }
+
+  /* ─── Sections ─── */
+  .section { margin-bottom: 56px; scroll-margin-top: 70px; }
+  .section h2 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 28px; font-weight: 900;
+    letter-spacing: -0.5px;
+    color: var(--text-bright);
+    margin-bottom: 4px;
+  }
+  .section .subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+
+  /* ─── Cards ─── */
+  .card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .card.accent-purple { border-left: 4px solid var(--purple-mid); }
+  .card.accent-orange { border-left: 4px solid var(--orange); }
+  .card.accent-green { border-left: 4px solid var(--green); }
+  .card.accent-blue { border-left: 4px solid var(--blue); }
+  .card.accent-pink { border-left: 4px solid var(--pink); }
+  .card.accent-yellow { border-left: 4px solid var(--yellow); }
+
+  .label {
+    font-size: 11px; font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+  }
+  .label.purple { color: var(--purple-light); }
+  .label.orange { color: var(--orange); }
+  .label.green { color: var(--green); }
+  .label.blue { color: var(--blue); }
+  .label.pink { color: var(--pink); }
+  .label.yellow { color: var(--yellow); }
+  .label.dim { color: var(--text-muted); }
+
+  /* ─── Grids ─── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+  @media (max-width: 640px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .header h1 { font-size: 36px; }
+  }
+
+  /* ─── Feature rows ─── */
+  .feat {
+    display: flex; gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .feat:last-child { border-bottom: none; }
+  .feat .ico {
+    width: 48px; height: 48px;
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; flex-shrink: 0;
+  }
+  .feat .name { font-size: 15px; font-weight: 800; color: var(--text-bright); }
+  .feat .phrase { font-size: 13px; color: var(--orange); font-style: italic; margin-top: 2px; }
+  .feat .sub { font-size: 12px; color: var(--text-dim); margin-top: 4px; line-height: 1.5; }
+
+  /* ─── Bullet items ─── */
+  .bullet { font-size: 13px; padding: 6px 0; display: flex; gap: 8px; align-items: flex-start; color: var(--text-secondary); }
+  .bullet .dot-green { color: var(--green); font-size: 14px; line-height: 20px; }
+  .bullet .dot-orange { color: var(--orange); font-size: 14px; line-height: 20px; }
+
+  /* ─── Tint boxes ─── */
+  .tint { padding: 16px; border-radius: var(--radius-md); }
+
+  /* ─── Do / Don't boxes ─── */
+  .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .do-box, .dont-box { padding: 20px; border-radius: var(--radius-md); }
+  .do-box { background: rgba(52, 211, 153, 0.06); border: 1px solid rgba(52, 211, 153, 0.2); }
+  .dont-box { background: rgba(248, 113, 113, 0.06); border: 1px solid rgba(248, 113, 113, 0.2); }
+
+  /* ─── Stage cards ─── */
+  .stage-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 50%;
+    font-size: 18px; font-weight: 900;
+    margin-bottom: 12px;
+  }
+  .stage-num.s1 { background: rgba(96,165,250,0.15); color: var(--blue); border: 2px solid rgba(96,165,250,0.3); }
+  .stage-num.s2 { background: rgba(139,92,246,0.15); color: var(--purple-light); border: 2px solid rgba(139,92,246,0.3); }
+  .stage-num.s3 { background: rgba(255,140,66,0.15); color: var(--orange); border: 2px solid rgba(255,140,66,0.3); }
+
+  h3 { font-size: 18px; font-weight: 800; color: var(--text-bright); margin-bottom: 6px; }
+  h4 { font-size: 14px; font-weight: 700; color: var(--text-bright); margin-bottom: 6px; margin-top: 16px; }
+
+  /* ─── Prompt example ─── */
+  .prompt-example {
+    background: var(--bg-surface);
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    margin: 12px 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-light);
+  }
+  .prompt-example .slot {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-weight: 800;
+    font-size: 13px;
+  }
+  .slot.blue { background: rgba(96,165,250,0.15); color: var(--blue); border: 1px solid rgba(96,165,250,0.3); }
+  .slot.purple { background: rgba(139,92,246,0.15); color: var(--purple-light); border: 1px solid rgba(139,92,246,0.3); }
+  .slot.orange { background: rgba(255,140,66,0.15); color: var(--orange); border: 1px solid rgba(255,140,66,0.3); }
+  .slot.green { background: rgba(52,211,153,0.15); color: var(--green); border: 1px solid rgba(52,211,153,0.3); }
+  .slot.pink { background: rgba(244,114,182,0.15); color: var(--pink); border: 1px solid rgba(244,114,182,0.3); }
+
+  /* ─── Arrow flow ─── */
+  .flow-arrow {
+    text-align: center;
+    font-size: 24px;
+    color: var(--text-muted);
+    padding: 8px 0;
+  }
+
+  /* ─── Comparison boxes ─── */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 12px 0; }
+  .compare-box {
+    padding: 16px 20px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .compare-box.vague {
+    background: rgba(248,113,113,0.06);
+    border: 1px solid rgba(248,113,113,0.15);
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
+  }
+  .compare-box.specific {
+    background: rgba(52,211,153,0.06);
+    border: 1px solid rgba(52,211,153,0.15);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  }
+  .compare-label {
+    font-size: 10px; font-weight: 800; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+
+  /* ─── Timeline ─── */
+  .timeline-item {
+    display: flex; gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .timeline-item:last-child { border-bottom: none; }
+  .timeline-dot {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .timeline-content { flex: 1; }
+
+  /* ─── Stat pills ─── */
+  .stat-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 12px 0; }
+  .stat-pill {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px; font-weight: 700;
+  }
+
+  /* ─── Tables ─── */
+  .data-table {
+    width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0;
+  }
+  .data-table th {
+    text-align: left; padding: 10px 12px;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-muted);
+    border-bottom: 2px solid var(--border);
+  }
+  .data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+  .data-table td.val { color: var(--orange); font-weight: 700; font-family: 'Space Grotesk', monospace; }
+  .data-table td.accent { font-weight: 700; }
+
+  p { margin: 0; }
+  p + p { margin-top: 12px; }
+
+  /* ─── Footer ─── */
+  .footer {
+    text-align: center;
+    padding: 32px 0;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  @media (max-width: 640px) {
+    .do-dont, .compare-grid { grid-template-columns: 1fr; }
+    .compare-box.vague { border-radius: var(--radius-md) var(--radius-md) 0 0; }
+    .compare-box.specific { border-radius: 0 0 var(--radius-md) var(--radius-md); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="stars"></div>
+  <div class="header-inner">
+    <div class="badge">Learning Progression Design</div>
+    <h1>How Play Teaches<br>Prompt <span class="quest">Engineering</span><span class="dot">.</span></h1>
+    <p>Prompt Quest uses a 3-stage progression across 7 fantasy zones to teach children ages 8&ndash;10 how to write effective prompts &mdash; without ever using the word "prompt." Every stage introduces a new skill through play, not instruction.</p>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-inner">
+    <a href="#thesis">Core Thesis</a>
+    <a href="#stage1">Stage 1</a>
+    <a href="#stage2">Stage 2</a>
+    <a href="#stage3">Stage 3</a>
+    <a href="#feedback">Feedback Loop</a>
+    <a href="#zones">7 Zones</a>
+    <a href="#scaffolding">Scaffolding</a>
+    <a href="#mapping">Skill Mapping</a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- ─── CORE THESIS ─── -->
+<div class="section" id="thesis">
+  <h2>The Core Thesis</h2>
+  <div class="subtitle">Why mad-libs teach prompting better than textboxes</div>
+
+  <div class="card accent-orange">
+    <div class="label orange">Key Insight</div>
+    <p style="font-size: 16px; font-weight: 700; color: var(--text-bright);">Prompt engineering is the skill of being specific. Children learn specificity best when they can see the <em>consequences</em> of being vague versus precise &mdash; not by reading rules about it.</p>
+    <p style="margin-top: 12px;">Prompt Quest replaces the blank textbox (overwhelming for kids) with structured fill-in-the-blank templates. Each slot teaches one dimension of specificity: WHO does it, WHAT they do, and HOW they do it. By constraining the input space, we make the relationship between input precision and output quality visible and immediate.</p>
+  </div>
+
+  <div class="grid-3" style="margin-top: 20px;">
+    <div class="card" style="text-align: center;">
+      <div style="font-size: 36px; margin-bottom: 8px;">1</div>
+      <div style="font-size: 14px; font-weight: 800; color: var(--blue);">Structure</div>
+      <div style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Fill in WHO, WHAT, WHERE</div>
+    </div>
+    <div class="card" style="text-align: center;">
+      <div style="font-size: 36px; margin-bottom: 8px;">2</div>
+      <div style="font-size: 14px; font-weight: 800; color: var(--purple-light);">Precision</div>
+      <div style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Add modifiers: HOW BIG, HOW FAST</div>
+    </div>
+    <div class="card" style="text-align: center;">
+      <div style="font-size: 36px; margin-bottom: 8px;">3</div>
+      <div style="font-size: 14px; font-weight: 800; color: var(--orange);">Composition</div>
+      <div style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Combine ideas for emergent results</div>
+    </div>
+  </div>
+
+  <div class="card accent-purple" style="margin-top: 16px;">
+    <div class="label purple">The Prompting Parallel</div>
+    <p>These three stages mirror the three skills that make adults effective at prompting AI:</p>
+    <div class="bullet"><span class="dot-green">1.</span> <strong>Give the AI a clear task</strong> &mdash; who is involved, what should happen, what's the context</div>
+    <div class="bullet"><span class="dot-green">2.</span> <strong>Add constraints and modifiers</strong> &mdash; tone, scale, urgency, style parameters</div>
+    <div class="bullet"><span class="dot-green">3.</span> <strong>Chain concepts together</strong> &mdash; combine techniques for emergent behavior, multi-step prompts</div>
+  </div>
+</div>
+
+<!-- ─── STAGE 1 ─── -->
+<div class="section" id="stage1">
+  <h2>Stage 1: Structure</h2>
+  <div class="subtitle">Learning to specify WHO, WHAT, and WHERE</div>
+
+  <div class="card accent-blue">
+    <div class="stage-num s1">1</div>
+    <h3>The Skill: Prompt Structure</h3>
+    <p>A vague request produces a vague result. Stage 1 teaches the most fundamental prompting skill: breaking a request into concrete components. Instead of "plan a party," the child specifies the food, the entertainment, and the vibe &mdash; and sees how each choice changes the outcome.</p>
+
+    <h4>How It Works</h4>
+    <p>The child fills in 3 slots in a sentence template. Each slot has 6 curated options (concrete nouns and adjectives, never abstract concepts). The combination triggers one of 30&ndash;36 pre-built vignettes with unique animations.</p>
+
+    <div class="prompt-example">
+      Plan a party with <span class="slot blue">FOOD</span> and <span class="slot blue">ENTERTAINMENT</span> for a <span class="slot blue">VIBE</span> birthday
+    </div>
+
+    <h4>Example Playthrough</h4>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background: rgba(96,165,250,0.15);">1</div>
+      <div class="timeline-content">
+        <div style="font-weight: 700; color: var(--text-bright);">Child selects: Cake + Magic Show + Spooky</div>
+        <div style="font-size: 12px; color: var(--text-dim);">Three concrete choices that form a complete prompt</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background: rgba(52,211,153,0.15);">2</div>
+      <div class="timeline-content">
+        <div style="font-weight: 700; color: var(--text-bright);">Vignette plays: floating ghost cake with disappearing candles</div>
+        <div style="font-size: 12px; color: var(--text-dim);">The specific combination creates a unique, memorable scene</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background: rgba(255,140,66,0.15);">3</div>
+      <div class="timeline-content">
+        <div style="font-weight: 700; color: var(--text-bright);">Feedback: "Great prompts answer WHO, WHAT, WHERE, and HOW"</div>
+        <div style="font-size: 12px; color: var(--text-dim);">Concrete tip reinforces the structure pattern</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label blue">What the Child Learns (Implicitly)</div>
+    <div class="bullet"><span class="dot-green">&#10003;</span> Different inputs produce different outputs &mdash; specificity matters</div>
+    <div class="bullet"><span class="dot-green">&#10003;</span> A "prompt" has parts (WHO, WHAT, WHERE) &mdash; not just one blob of text</div>
+    <div class="bullet"><span class="dot-green">&#10003;</span> Some combinations work better than others &mdash; alignment between components matters</div>
+    <div class="bullet"><span class="dot-green">&#10003;</span> Even "wrong" answers are fun &mdash; failure is safe and entertaining</div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-pill" style="background: rgba(96,165,250,0.12); color: var(--blue);">3 slots per prompt</div>
+    <div class="stat-pill" style="background: rgba(52,211,153,0.12); color: var(--green);">30&ndash;36 unique vignettes</div>
+    <div class="stat-pill" style="background: rgba(255,140,66,0.12); color: var(--orange);">6 options per slot</div>
+  </div>
+</div>
+
+<!-- ─── STAGE 2 ─── -->
+<div class="section" id="stage2">
+  <h2>Stage 2: Precision</h2>
+  <div class="subtitle">Learning that modifiers change everything</div>
+
+  <div class="card accent-purple">
+    <div class="stage-num s2">2</div>
+    <h3>The Skill: Prompt Modifiers</h3>
+    <p>Stage 2 keeps the base structure from Stage 1 but adds <strong>modifier slots</strong> &mdash; adjectives that control scale, mood, intensity, or approach. The child learns that adding "tiny" versus "MEGA" to the same base prompt produces wildly different results. This is the core of prompt engineering: constraints shape output.</p>
+
+    <h4>How It Works</h4>
+    <p>The template expands from 3 to 5 slots. The new slots are modifier dimensions: SIZE, MOOD, URGENCY, INTENSITY, or APPROACH (varying by zone). After each play, a <strong>Vague Comparison</strong> panel shows what would happen with a generic prompt versus the child's specific one.</p>
+
+    <div class="prompt-example">
+      Plan a <span class="slot purple">SIZE</span> party with <span class="slot blue">FOOD</span> and <span class="slot blue">ENTERTAINMENT</span> for a <span class="slot blue">VIBE</span> birthday where the skeleton feels <span class="slot purple">MOOD</span>
+    </div>
+
+    <div style="margin-top: 4px; font-size: 11px; color: var(--text-muted);">
+      Purple slots = new modifier slots added in Stage 2
+    </div>
+  </div>
+
+  <div class="card accent-yellow">
+    <div class="label yellow">The Vague Comparison &mdash; Stage 2's Secret Weapon</div>
+    <p>After every vignette, the feedback card shows a side-by-side comparison: "What if you just said something vague?" This makes the value of specificity <em>visible</em>.</p>
+
+    <div class="compare-grid">
+      <div class="compare-box vague">
+        <div class="compare-label" style="color: var(--red-soft);">Vague Prompt</div>
+        <p style="font-style: italic; color: var(--red-soft);">"Have a party"</p>
+        <p style="font-size: 12px; margin-top: 8px; color: var(--text-dim);">A party happens... but how big? What mood? Nobody knows!</p>
+      </div>
+      <div class="compare-box specific">
+        <div class="compare-label" style="color: var(--green);">Your Specific Prompt</div>
+        <p style="font-style: italic; color: var(--green);">"Plan a TINY party with cake where the skeleton feels SHY"</p>
+        <p style="font-size: 12px; margin-top: 8px; color: var(--text-dim);">A pocket-sized party with a tiny cake and a blushing skeleton!</p>
+      </div>
+    </div>
+
+    <p style="margin-top: 12px; font-size: 13px;">This is how professional prompt engineers think: "If I don't specify the tone, the AI will guess. If I say 'formal' vs. 'casual,' I control the output." Stage 2 teaches this instinct through contrast, not lecture.</p>
+  </div>
+
+  <div class="card">
+    <div class="label purple">What the Child Learns (Implicitly)</div>
+    <div class="bullet"><span class="dot-green">&#10003;</span> <strong>Modifiers are levers</strong> &mdash; the same base prompt + different modifier = completely different output</div>
+    <div class="bullet"><span class="dot-green">&#10003;</span> <strong>Vague = unpredictable</strong> &mdash; without modifiers, the AI (or game) guesses for you</div>
+    <div class="bullet"><span class="dot-green">&#10003;</span> <strong>Scale matters</strong> &mdash; "tiny" and "MEGA" aren't just adjectives, they're control parameters</div>
+    <div class="bullet"><span class="dot-green">&#10003;</span> <strong>Emotional tone shapes outcome</strong> &mdash; "excited" vs "shy" changes behavior, not just label</div>
+  </div>
+
+  <div class="card">
+    <div class="label dim">Modifier Slots by Zone</div>
+    <table class="data-table">
+      <thead>
+        <tr><th>Zone</th><th>Modifier 1</th><th>Modifier 2</th><th>Teaching Focus</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Skeleton's Birthday</td><td class="val">SIZE</td><td class="val">MOOD</td><td>Scale + emotional state</td></tr>
+        <tr><td>Space Station</td><td class="val">URGENCY</td><td class="val">APPROACH</td><td>Stakes + methodology</td></tr>
+        <tr><td>Monster Recess</td><td class="val">ENERGY</td><td class="val">WEATHER</td><td>Intensity + environment</td></tr>
+        <tr><td>Pizza Kitchen</td><td class="val">HEAT</td><td class="val">AMOUNT</td><td>Degree + quantity</td></tr>
+        <tr><td>Forest Picnic</td><td class="val">TIME</td><td class="val">CAUTION</td><td>Timing + risk level</td></tr>
+        <tr><td>Dungeon Escape</td><td class="val">STEALTH</td><td class="val">SPEED</td><td>Style + pacing</td></tr>
+        <tr><td>Mage Kitchen</td><td class="val">INTENSITY</td><td class="val">QUANTITY</td><td>Power level + count</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-pill" style="background: rgba(139,92,246,0.12); color: var(--purple-light);">5 slots per prompt</div>
+    <div class="stat-pill" style="background: rgba(251,191,36,0.12); color: var(--yellow);">24&ndash;25 unique vignettes</div>
+    <div class="stat-pill" style="background: rgba(244,114,182,0.12); color: var(--pink);">Vague comparison on every play</div>
+  </div>
+</div>
+
+<!-- ─── STAGE 3 ─── -->
+<div class="section" id="stage3">
+  <h2>Stage 3: Composition</h2>
+  <div class="subtitle">Learning that combining ideas creates something new</div>
+
+  <div class="card accent-orange">
+    <div class="stage-num s3">3</div>
+    <h3>The Skill: Combinatorial Thinking</h3>
+    <p>Stage 3 shifts the mental model entirely. Instead of filling in parts of a single request, the child now <strong>combines two concepts</strong> to discover emergent behaviors. Magic + Fireworks doesn't produce "magic AND fireworks" &mdash; it produces <em>Spell Explosions</em>, something neither concept alone could create.</p>
+    <p style="margin-top: 12px;">This mirrors advanced prompting: chaining techniques (e.g., "use chain-of-thought AND few-shot examples") creates capabilities that neither technique provides alone.</p>
+
+    <h4>How It Works</h4>
+    <p>The template gives two combo slots from the same category plus two context slots. The child must discover 4 secret combos to complete the stage. Progressive hints guide exploration without giving answers immediately.</p>
+
+    <div class="prompt-example">
+      Combine <span class="slot orange">ACTIVITY 1</span> with <span class="slot orange">ACTIVITY 2</span> in a <span class="slot green">SPIRIT</span> way at <span class="slot green">LOCATION</span>
+    </div>
+  </div>
+
+  <div class="card accent-green">
+    <div class="label green">The Progressive Hint System</div>
+    <p>When a child gets stuck, hints escalate from curiosity-provoking to explicit &mdash; modeling how to refine a search strategy:</p>
+
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background: rgba(96,165,250,0.15); font-size: 14px;">?</div>
+      <div class="timeline-content">
+        <div style="font-weight: 700; color: var(--blue);">Hint Level 1: Provoke Curiosity</div>
+        <div style="font-size: 13px; font-style: italic; color: var(--text-secondary);">"What happens when magic meets explosions?"</div>
+        <div style="font-size: 11px; color: var(--text-dim);">No answer given &mdash; just a question to spark thinking</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background: rgba(139,92,246,0.15); font-size: 14px;">!</div>
+      <div class="timeline-content">
+        <div style="font-weight: 700; color: var(--purple-light);">Hint Level 2: Narrow the Search</div>
+        <div style="font-size: 13px; font-style: italic; color: var(--text-secondary);">"Magic tricks that go BOOM..."</div>
+        <div style="font-size: 11px; color: var(--text-dim);">Directional guidance without the explicit answer</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background: rgba(52,211,153,0.15); font-size: 14px;">&#10003;</div>
+      <div class="timeline-content">
+        <div style="font-weight: 700; color: var(--green);">Hint Level 3: Direct Answer</div>
+        <div style="font-size: 13px; font-style: italic; color: var(--text-secondary);">"Try Magic + Fireworks = Spell Explosions!"</div>
+        <div style="font-size: 11px; color: var(--text-dim);">Prevents frustration &mdash; discovering is always better than being stuck</div>
+      </div>
+    </div>
+
+    <p style="margin-top: 12px; font-size: 13px;">This mirrors iterative prompting: start broad, refine based on output, get more specific until you find what works.</p>
+  </div>
+
+  <div class="card">
+    <div class="label orange">What the Child Learns (Implicitly)</div>
+    <div class="bullet"><span class="dot-green">&#10003;</span> <strong>Combining concepts creates emergent results</strong> &mdash; A+B produces something C that neither alone could</div>
+    <div class="bullet"><span class="dot-green">&#10003;</span> <strong>Exploration is systematic</strong> &mdash; not random guessing, but hypothesis-driven testing</div>
+    <div class="bullet"><span class="dot-green">&#10003;</span> <strong>Iteration improves results</strong> &mdash; hints model the "try, refine, try again" loop</div>
+    <div class="bullet"><span class="dot-green">&#10003;</span> <strong>Discovery is rewarding</strong> &mdash; finding hidden combos creates genuine delight</div>
+  </div>
+
+  <div class="card">
+    <div class="label dim">Example Secret Combos</div>
+    <table class="data-table">
+      <thead>
+        <tr><th>Zone</th><th>Combo</th><th>Discovery</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Skeleton's Birthday</td><td class="val">Magic + Fireworks</td><td>Spell Explosions</td></tr>
+        <tr><td>Space Station</td><td class="val">Solar Panel + Laser</td><td>Solar Laser Beam</td></tr>
+        <tr><td>Monster Recess</td><td class="val">Tag + Hide & Seek</td><td>Stealth Tag</td></tr>
+        <tr><td>Pizza Kitchen</td><td class="val">Grill + Freeze</td><td>Baked Alaska</td></tr>
+        <tr><td>Forest Picnic</td><td class="val">Investigate + Cast Spell</td><td>Arcane Discovery</td></tr>
+        <tr><td>Dungeon Escape</td><td class="val">Sneak + Fight</td><td>Shadow Strike</td></tr>
+        <tr><td>Mage Kitchen</td><td class="val">Fire + Ice</td><td>Steam Reveal</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-pill" style="background: rgba(255,140,66,0.12); color: var(--orange);">4 combos to discover</div>
+    <div class="stat-pill" style="background: rgba(52,211,153,0.12); color: var(--green);">6&ndash;7 secret vignettes</div>
+    <div class="stat-pill" style="background: rgba(139,92,246,0.12); color: var(--purple-light);">3-level progressive hints</div>
+  </div>
+</div>
+
+<!-- ─── FEEDBACK LOOP ─── -->
+<div class="section" id="feedback">
+  <h2>The Feedback Loop</h2>
+  <div class="subtitle">How every play reinforces learning without feeling like a lesson</div>
+
+  <div class="card accent-green">
+    <div class="label green">The Four-Part Feedback Card</div>
+    <p>After every vignette, the child sees a feedback card with four components designed to reinforce without lecturing:</p>
+
+    <div class="feat">
+      <div class="ico" style="background: rgba(52,211,153,0.12);">1</div>
+      <div>
+        <div class="name">Score Badge</div>
+        <div class="phrase">Emotional framing, not judgment</div>
+        <div class="sub">Four tiers: PERFECT (celebration), FUNNY FAIL (comedy), CHAOS (excitement), PARTIAL (encouragement). There is no "wrong" &mdash; only different flavors of fun. The badge uses emoji + color to communicate tone instantly.</div>
+      </div>
+    </div>
+
+    <div class="feat">
+      <div class="ico" style="background: rgba(96,165,250,0.12);">2</div>
+      <div>
+        <div class="name">Narration + Filled Sentence</div>
+        <div class="phrase">Mirror back what the child built</div>
+        <div class="sub">Shows the child's completed prompt in context: "You planned a <strong>TINY</strong> party with <strong>Cake</strong> and <strong>Magic Show</strong>." This reinforces the connection between their choices and the outcome.</div>
+      </div>
+    </div>
+
+    <div class="feat">
+      <div class="ico" style="background: rgba(139,92,246,0.12);">3</div>
+      <div>
+        <div class="name">Skill Badge + Concrete Tip</div>
+        <div class="phrase">One skill, one actionable suggestion</div>
+        <div class="sub">A purple pill shows the skill being practiced ("Specificity" or "Combo Thinking"). The tip is always concrete and actionable: "SIZE changes EVERYTHING. Try GIANT for mega chaos!" Never abstract metacognition.</div>
+      </div>
+    </div>
+
+    <div class="feat">
+      <div class="ico" style="background: rgba(251,191,36,0.12);">4</div>
+      <div>
+        <div class="name">Stage-Specific Feature</div>
+        <div class="phrase">Adapts to the current learning goal</div>
+        <div class="sub">Stage 1: discovery counter. Stage 2: vague comparison panel. Stage 3: combo progress bar. Each stage adds the feedback mechanism that best reinforces its specific skill.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="do-dont">
+    <div class="do-box">
+      <div class="compare-label" style="color: var(--green);">Feedback that works</div>
+      <div class="bullet"><span class="dot-green">&#10003;</span> "Try GIANT for mega chaos!"</div>
+      <div class="bullet"><span class="dot-green">&#10003;</span> "SIZE changes everything"</div>
+      <div class="bullet"><span class="dot-green">&#10003;</span> "What if you combine these two?"</div>
+      <div class="bullet"><span class="dot-green">&#10003;</span> "You nailed WHO, WHAT, and HOW"</div>
+    </div>
+    <div class="dont-box">
+      <div class="compare-label" style="color: var(--red-soft);">Feedback we avoid</div>
+      <div class="bullet"><span class="dot-orange">&#10007;</span> "Think about what makes a good prompt"</div>
+      <div class="bullet"><span class="dot-orange">&#10007;</span> "Be more specific next time"</div>
+      <div class="bullet"><span class="dot-orange">&#10007;</span> "Wrong answer, try again"</div>
+      <div class="bullet"><span class="dot-orange">&#10007;</span> "Consider your prompt structure"</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── 7 ZONES ─── -->
+<div class="section" id="zones">
+  <h2>The 7 Zones</h2>
+  <div class="subtitle">Same progression framework, different contexts &mdash; because transfer requires variety</div>
+
+  <div class="card accent-purple">
+    <div class="label purple">Why 7 Zones?</div>
+    <p>Learning research shows that children need to practice a skill in <strong>multiple contexts</strong> before it transfers to new situations. A child who learns specificity only through party-planning won't instinctively apply it to space missions. Seven thematically diverse zones ensure the prompting skills generalize &mdash; the child learns "being specific works everywhere," not "being specific works for parties."</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div style="font-size: 24px; margin-bottom: 8px;">&#x1F480;</div>
+      <h4 style="margin-top: 0;">Skeleton's Birthday Bash</h4>
+      <p style="font-size: 12px; color: var(--text-dim);">Plan a skeleton's party. Stage 1: food + entertainment + vibe. Stage 2: add size + mood. Stage 3: combine two activities.</p>
+      <div style="font-size: 11px; margin-top: 8px; color: var(--purple-light);">Context: Social planning, emotional tone</div>
+    </div>
+    <div class="card">
+      <div style="font-size: 24px; margin-bottom: 8px;">&#x1F680;</div>
+      <h4 style="margin-top: 0;">Space Station Emergency</h4>
+      <p style="font-size: 12px; color: var(--text-dim);">Fix a broken space station. Stage 1: crew + task + tool. Stage 2: add urgency + approach. Stage 3: combine tech items.</p>
+      <div style="font-size: 11px; margin-top: 8px; color: var(--purple-light);">Context: Problem-solving, urgency management</div>
+    </div>
+    <div class="card">
+      <div style="font-size: 24px; margin-bottom: 8px;">&#x1F93C;</div>
+      <h4 style="margin-top: 0;">Monster Recess</h4>
+      <p style="font-size: 12px; color: var(--text-dim);">Organize monster PE class. Stage 1: monster + activity + equipment. Stage 2: add energy + weather. Stage 3: combine games.</p>
+      <div style="font-size: 11px; margin-top: 8px; color: var(--purple-light);">Context: Physical activity, energy management</div>
+    </div>
+    <div class="card">
+      <div style="font-size: 24px; margin-bottom: 8px;">&#x1F355;</div>
+      <h4 style="margin-top: 0;">Pizza Pandemonium</h4>
+      <p style="font-size: 12px; color: var(--text-dim);">Run a chaotic pizza kitchen. Stage 1: chef + dish + style. Stage 2: add heat + amount. Stage 3: combine cooking techniques.</p>
+      <div style="font-size: 11px; margin-top: 8px; color: var(--purple-light);">Context: Process control, cause and effect</div>
+    </div>
+    <div class="card">
+      <div style="font-size: 24px; margin-bottom: 8px;">&#x1F3D5;&#xFE0F;</div>
+      <h4 style="margin-top: 0;">Forest Mystery</h4>
+      <p style="font-size: 12px; color: var(--text-dim);">Explore a magical forest. Stage 1: adventurer + discovery + reaction. Stage 2: add time + caution. Stage 3: combine skills.</p>
+      <div style="font-size: 11px; margin-top: 8px; color: var(--purple-light);">Context: Exploration, risk assessment</div>
+    </div>
+    <div class="card">
+      <div style="font-size: 24px; margin-bottom: 8px;">&#x1F3B5;</div>
+      <h4 style="margin-top: 0;">Dungeon Escape</h4>
+      <p style="font-size: 12px; color: var(--text-dim);">Escape a musical dungeon. Stage 1: hero + escape method + obstacle. Stage 2: add stealth + speed. Stage 3: combine methods.</p>
+      <div style="font-size: 11px; margin-top: 8px; color: var(--purple-light);">Context: Strategy, stealth vs. force tradeoffs</div>
+    </div>
+    <div class="card" style="grid-column: span 2;">
+      <div style="font-size: 24px; margin-bottom: 8px;">&#x1F9D9;</div>
+      <h4 style="margin-top: 0;">Cooking Catastrophe (Mage Kitchen)</h4>
+      <p style="font-size: 12px; color: var(--text-dim);">Cast spells on kitchen appliances. Stage 1: spell + appliance + result. Stage 2: add intensity + quantity. Stage 3: combine opposite spells (fire+ice=steam). The "flagship" zone with the most polished vignettes.</p>
+      <div style="font-size: 11px; margin-top: 8px; color: var(--purple-light);">Context: Cause and effect, power calibration</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SCAFFOLDING ─── -->
+<div class="section" id="scaffolding">
+  <h2>Scaffolding Design</h2>
+  <div class="subtitle">How complexity increases while anxiety stays low</div>
+
+  <div class="card accent-blue">
+    <div class="label blue">Principle: Additive Complexity</div>
+    <p>Each stage adds to the previous one rather than replacing it. Stage 2 keeps all Stage 1 slots and adds modifier slots. The child's existing knowledge is never invalidated &mdash; it's extended.</p>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>Dimension</th><th>Stage 1</th><th>Stage 2</th><th>Stage 3</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="accent" style="color: var(--blue);">Slots</td>
+          <td class="val">3</td>
+          <td class="val">5</td>
+          <td class="val">4</td>
+        </tr>
+        <tr>
+          <td class="accent" style="color: var(--blue);">Mental Model</td>
+          <td>Fill in blanks</td>
+          <td>Fill in blanks + tune dials</td>
+          <td>Mix ingredients</td>
+        </tr>
+        <tr>
+          <td class="accent" style="color: var(--blue);">Completion</td>
+          <td>Match specific tags</td>
+          <td>Match specific tags</td>
+          <td>Discover 4 combos</td>
+        </tr>
+        <tr>
+          <td class="accent" style="color: var(--blue);">Feedback Type</td>
+          <td>Score + tip</td>
+          <td>Score + tip + vague comparison</td>
+          <td>Score + progress bar + hints</td>
+        </tr>
+        <tr>
+          <td class="accent" style="color: var(--blue);">Cognitive Load</td>
+          <td>Low (recognition)</td>
+          <td>Medium (comparison)</td>
+          <td>High (hypothesis testing)</td>
+        </tr>
+        <tr>
+          <td class="accent" style="color: var(--blue);">Vignette Count</td>
+          <td>30&ndash;36</td>
+          <td>24&ndash;25</td>
+          <td>6&ndash;7</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card accent-green">
+    <div class="label green">Safety Nets</div>
+    <p>Every stage has mechanisms to prevent frustration:</p>
+    <div class="bullet"><span class="dot-green">&#10003;</span> <strong>Default vignettes</strong> &mdash; every tag combo resolves to <em>something</em>, even if it's a wildcard fallback</div>
+    <div class="bullet"><span class="dot-green">&#10003;</span> <strong>No wrong answers</strong> &mdash; "funny fail" is scored, animated, and celebrated</div>
+    <div class="bullet"><span class="dot-green">&#10003;</span> <strong>Discovery counter</strong> &mdash; shows progress even when not "winning"</div>
+    <div class="bullet"><span class="dot-green">&#10003;</span> <strong>Progressive hints</strong> (Stage 3) &mdash; scaffolded help that increases in specificity</div>
+    <div class="bullet"><span class="dot-green">&#10003;</span> <strong>Persistence</strong> &mdash; progress saves to localStorage, so quitting doesn't lose work</div>
+  </div>
+
+  <div class="card">
+    <div class="label dim">The Failure Spectrum</div>
+    <p>Traditional educational games have binary pass/fail. Prompt Quest uses a 4-tier spectrum where every tier is <em>entertaining</em>:</p>
+
+    <div class="grid-2" style="margin-top: 16px;">
+      <div class="tint" style="background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.2);">
+        <div style="font-size: 11px; font-weight: 800; color: var(--green); letter-spacing: 1px;">PERFECT</div>
+        <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">Aligned components, spectacular result. The child sees what a well-crafted prompt achieves.</div>
+      </div>
+      <div class="tint" style="background: rgba(96,165,250,0.08); border: 1px solid rgba(96,165,250,0.2);">
+        <div style="font-size: 11px; font-weight: 800; color: var(--blue); letter-spacing: 1px;">PARTIAL</div>
+        <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">Some components align, some don't. Shows that prompts can "sort of" work &mdash; encouraging refinement.</div>
+      </div>
+      <div class="tint" style="background: rgba(244,114,182,0.08); border: 1px solid rgba(244,114,182,0.2);">
+        <div style="font-size: 11px; font-weight: 800; color: var(--pink); letter-spacing: 1px;">FUNNY FAIL</div>
+        <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">Misaligned components produce comedy. The child <em>wants</em> to see what goes wrong. Failure becomes a feature.</div>
+      </div>
+      <div class="tint" style="background: rgba(255,140,66,0.08); border: 1px solid rgba(255,140,66,0.2);">
+        <div style="font-size: 11px; font-weight: 800; color: var(--orange); letter-spacing: 1px;">CHAOS</div>
+        <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">Maximum spectacle, maximum fun. Chaotic combos create the most dramatic animations. Kids chase chaos on purpose.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SKILL MAPPING ─── -->
+<div class="section" id="mapping">
+  <h2>Prompt Engineering Skill Map</h2>
+  <div class="subtitle">How game mechanics map to real-world prompting skills</div>
+
+  <div class="card accent-orange">
+    <div class="label orange">The Hidden Curriculum</div>
+    <p>The child never hears "prompt engineering." They think they're planning parties, fixing spaceships, and organizing monster PE class. But every mechanic teaches a real prompting skill:</p>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>Game Mechanic</th><th>Prompting Skill</th><th>Real-World Application</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Filling 3 slots</td>
+          <td class="accent" style="color: var(--blue);">Prompt structure</td>
+          <td>Breaking a request into clear components</td>
+        </tr>
+        <tr>
+          <td>Choosing concrete nouns</td>
+          <td class="accent" style="color: var(--blue);">Specificity</td>
+          <td>Using precise language instead of vague terms</td>
+        </tr>
+        <tr>
+          <td>Seeing vague comparison</td>
+          <td class="accent" style="color: var(--purple-light);">Constraint awareness</td>
+          <td>Understanding that unspecified parameters get default values</td>
+        </tr>
+        <tr>
+          <td>Adding SIZE/MOOD modifiers</td>
+          <td class="accent" style="color: var(--purple-light);">Parameter tuning</td>
+          <td>Adjusting tone, length, formality, creativity parameters</td>
+        </tr>
+        <tr>
+          <td>Trying different modifiers on same base</td>
+          <td class="accent" style="color: var(--purple-light);">A/B testing</td>
+          <td>Iterating on prompts by changing one variable at a time</td>
+        </tr>
+        <tr>
+          <td>Discovering secret combos</td>
+          <td class="accent" style="color: var(--orange);">Technique chaining</td>
+          <td>Combining prompting methods (CoT + few-shot, etc.)</td>
+        </tr>
+        <tr>
+          <td>Using progressive hints</td>
+          <td class="accent" style="color: var(--orange);">Iterative refinement</td>
+          <td>Refining prompts based on output feedback</td>
+        </tr>
+        <tr>
+          <td>Finding all 4 combos</td>
+          <td class="accent" style="color: var(--orange);">Systematic exploration</td>
+          <td>Methodically testing hypothesis instead of random attempts</td>
+        </tr>
+        <tr>
+          <td>Playing across 7 zones</td>
+          <td class="accent" style="color: var(--green);">Transfer learning</td>
+          <td>Applying prompting skills to new domains and tasks</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card accent-pink">
+    <div class="label pink">The Graduation Moment</div>
+    <p>A child who completes all 3 stages across multiple zones has internalized these instincts:</p>
+    <div class="bullet"><span class="dot-green">1.</span> <strong>"I should be specific"</strong> &mdash; from seeing vague vs. specific outcomes hundreds of times</div>
+    <div class="bullet"><span class="dot-green">2.</span> <strong>"Details change everything"</strong> &mdash; from watching modifiers transform the same base scene</div>
+    <div class="bullet"><span class="dot-green">3.</span> <strong>"I can combine ideas"</strong> &mdash; from discovering that A+B creates C, not just A and B</div>
+    <div class="bullet"><span class="dot-green">4.</span> <strong>"I should experiment"</strong> &mdash; from the reward loop of discovery and progressive hints</div>
+    <p style="margin-top: 12px;">These four instincts are exactly what make an adult effective at prompting AI. The child has learned prompt engineering without ever being told they were learning it.</p>
+  </div>
+</div>
+
+<!-- ─── NUMBERS ─── -->
+<div class="section">
+  <h2>By the Numbers</h2>
+  <div class="subtitle">Total content across all 7 zones</div>
+
+  <div class="grid-3">
+    <div class="card" style="text-align: center;">
+      <div style="font-size: 36px; font-weight: 900; color: var(--orange); font-family: 'Space Grotesk', monospace;">476</div>
+      <div style="font-size: 13px; font-weight: 700; color: var(--text-bright);">Total Vignettes</div>
+      <div style="font-size: 11px; color: var(--text-dim);">Unique animated scenes</div>
+    </div>
+    <div class="card" style="text-align: center;">
+      <div style="font-size: 36px; font-weight: 900; color: var(--purple-light); font-family: 'Space Grotesk', monospace;">21</div>
+      <div style="font-size: 13px; font-weight: 700; color: var(--text-bright);">Quest Stages</div>
+      <div style="font-size: 11px; color: var(--text-dim);">7 zones x 3 stages</div>
+    </div>
+    <div class="card" style="text-align: center;">
+      <div style="font-size: 36px; font-weight: 900; color: var(--green); font-family: 'Space Grotesk', monospace;">42</div>
+      <div style="font-size: 13px; font-weight: 700; color: var(--text-bright);">Secret Combos</div>
+      <div style="font-size: 11px; color: var(--text-dim);">Hidden discoveries to find</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p style="font-size: 12px; color: var(--text-muted);">Prompt Quest &mdash; Learning Progression Design &mdash; Claude Code Hackathon 2026</p>
+  <p style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">Built with Opus 4.6 &bull; Solo developer: Drew</p>
+</div>
+
+</div>
+</body>
+</html>

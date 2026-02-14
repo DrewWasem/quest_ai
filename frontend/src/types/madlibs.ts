@@ -48,6 +48,15 @@ export interface QuestStage {
 
   // Which tag combos count as "success" to advance
   successTags?: string[][];  // e.g. [["cake", "magic_show", "spooky"]]
+
+  // Level 3: discover N unique non-default vignettes to complete
+  comboRequired?: number;
+
+  // Level 3: progressive hints for secret combos
+  comboHints?: Array<{
+    comboTags: string[];     // The secret combo tags
+    hints: string[];          // Progressive hints (vague → specific)
+  }>;
 }
 
 // ─── VIGNETTES ───────────────────────────────────────────────────────────────
@@ -86,6 +95,7 @@ export interface VignetteAction {
   rotation?: string;
 
   // Move fields
+  from?: string;
   to?: string;
   style?: string;
   moveTo?: string;
@@ -115,6 +125,22 @@ export interface VignetteFeedback {
   message: string;     // Why this combo worked or didn't
   skillTaught: string; // "Specificity", "Sequencing", etc.
   tip: string;         // "Great prompts answer WHO, WHAT, WHERE, and HOW"
+
+  // Some vignettes embed vagueComparison inside feedback (alternative placement)
+  vagueComparison?: {
+    vagueInput: string;
+    vagueResult: string;
+  };
+}
+
+export interface VagueComparison {
+  vague?: string;             // Vague input description
+  vagueInput?: string;        // Alt field name for vague input
+  vagueResult?: string;       // What happens with vague input
+  specific?: string;          // Specific input description
+  specificResult?: string;    // What happens with specific input
+  why?: string;               // Why specificity mattered
+  difference?: string;        // Alt field for why (dungeon-concert)
 }
 
 export interface Vignette {
@@ -125,6 +151,7 @@ export interface Vignette {
   promptScore: PromptScore;
   steps: VignetteStep[];
   feedback: VignetteFeedback;
+  vagueComparison?: VagueComparison;  // Level 2: specificity comparison
 }
 
 // ─── COMEDY COMBOS ───────────────────────────────────────────────────────────

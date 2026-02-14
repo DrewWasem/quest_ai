@@ -10,7 +10,7 @@ import { useGameStore } from './stores/gameStore';
 import { preloadAllAnimations } from './game/AnimationController';
 import { WORLDS } from './data/worlds';
 import { BADGES } from './services/badge-system';
-import { getQuestStage } from './data/quest-stages';
+import { getQuestStage, getQuestStages } from './data/quest-stages';
 import CameraControls from './components/CameraControls';
 import { Minimap } from './game/Minimap';
 import ControlsOverlay from './components/ControlsOverlay';
@@ -33,10 +33,11 @@ export default function App() {
   const [playingIntro, setPlayingIntro] = useState(false);
 
   // Get the current quest stage (if any) for Mad Libs mode
+  const stageNumber = useGameStore(s => s.stageNumbers[s.currentZone ?? ''] ?? 1);
   const questStage = useMemo(() => {
     if (!currentZone) return null;
-    return getQuestStage(currentZone);
-  }, [currentZone]);
+    return getQuestStage(currentZone, stageNumber);
+  }, [currentZone, stageNumber]);
 
   // Preload shared animations on mount, then dismiss loading screen
   useEffect(() => {
@@ -98,8 +99,27 @@ export default function App() {
             )}
 
             {world && (
-              <span className="text-sm font-heading font-bold text-quest-text-dark bg-white/80 px-3 py-1.5 rounded-xl border border-quest-purple/20">
-                {world.emoji} {world.label}
+              <span className="text-sm font-heading font-bold text-quest-text-dark bg-white/80 px-3 py-1.5 rounded-xl border border-quest-purple/20 flex items-center gap-2">
+                <span>{world.emoji} {world.label}</span>
+                {currentZone && (() => {
+                  const totalStages = getQuestStages(currentZone).length;
+                  if (totalStages <= 1) return null;
+                  return (
+                    <span className="flex items-center gap-0.5 text-xs">
+                      <span className="text-quest-text-muted">Lv{stageNumber}</span>
+                      <span className="flex gap-0.5">
+                        {Array.from({ length: totalStages }, (_, i) => (
+                          <span
+                            key={i}
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              i < stageNumber ? 'bg-quest-purple' : 'bg-quest-border'
+                            }`}
+                          />
+                        ))}
+                      </span>
+                    </span>
+                  );
+                })()}
               </span>
             )}
           </div>

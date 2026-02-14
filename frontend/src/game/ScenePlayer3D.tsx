@@ -379,46 +379,21 @@ interface EnvironmentProp {
 // Props live at Z ≤ -3 (back). Characters live at Z ≥ 0 (front).
 // Side-dressing can go at large |X| (≥ 6) at any Z.
 export const TASK_ENVIRONMENTS: Record<string, EnvironmentProp[]> = {
-  'skeleton-birthday': [
-    { id: 'env-torch-l', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [-6, 0, -4], scale: 2.0 },
-    { id: 'env-torch-r', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [6, 0, -4], scale: 2.0 },
-    { id: 'env-barrel-l', path: 'kaykit/packs/dungeon/barrel_large.gltf', position: [-6, 0, -2], scale: 0.8 },
-    { id: 'env-barrel-r', path: 'kaykit/packs/dungeon/barrel_large.gltf', position: [6, 0, -2], scale: 0.8 },
-    { id: 'env-banner', path: 'kaykit/packs/dungeon/banner_blue.gltf', position: [0, 0, -5], scale: 0.6 },
-    { id: 'env-banner-r', path: 'kaykit/packs/dungeon/banner_red.gltf', position: [3, 0, -5], scale: 0.6 },
-  ],
-  'knight-space': [
-    { id: 'env-module', path: 'kaykit/packs/space_base/basemodule_A.gltf', position: [0, 0, -5], scale: 0.8 },
-    { id: 'env-panel', path: 'kaykit/packs/space_base/solarpanel.gltf', position: [-6, 0, -3], scale: 0.8 },
-    { id: 'env-cargo', path: 'kaykit/packs/space_base/cargo_A.gltf', position: [6, 0, -3], scale: 0.8 },
-  ],
-  'mage-kitchen': [],
-  'barbarian-school': [
-    { id: 'env-slide', path: 'tiny-treats/fun-playground/slide_A.gltf', position: [-6, 0, -4], scale: 1.2 },
-    { id: 'env-seesaw', path: 'tiny-treats/fun-playground/seesaw_large.gltf', position: [6, 0, -4], scale: 1.2 },
-    { id: 'env-sandbox', path: 'tiny-treats/fun-playground/sandbox_square_decorated.gltf', position: [0, 0, -5], scale: 1.0 },
-  ],
-  'dungeon-concert': [
-    { id: 'env-torch-l', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [-6, 0, -4], scale: 2.0 },
-    { id: 'env-torch-r', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [6, 0, -4], scale: 2.0 },
-    { id: 'env-table', path: 'kaykit/packs/dungeon/table_long.gltf', position: [0, 0, -5], scale: 0.8 },
-    { id: 'env-barrel-l', path: 'kaykit/packs/dungeon/barrel_large.gltf', position: [-6, 0, -2], scale: 0.8 },
-    { id: 'env-barrel-r', path: 'kaykit/packs/dungeon/barrel_large.gltf', position: [6, 0, -2], scale: 0.8 },
-  ],
-  'skeleton-pizza': [
-    { id: 'env-stove', path: 'tiny-treats/charming-kitchen/stove.gltf', position: [-5, 0, -4], scale: 1.5 },
-    { id: 'env-oven', path: 'kaykit/packs/restaurant/oven.gltf', position: [5, 0, -4], scale: 0.8 },
-    { id: 'env-table', path: 'kaykit/packs/dungeon/table_long.gltf', position: [0, 0, -5], scale: 0.8 },
-  ],
+  'skeleton-birthday': [],  // Set dressing in VillageWorld DungeonZone
+  'knight-space': [],  // Set dressing in VillageWorld ZoneLandmarks
+  'mage-kitchen': [],  // Set dressing in VillageWorld ZoneLandmarks
+  'barbarian-school': [],  // Set dressing in VillageWorld ZoneLandmarks
+  'dungeon-concert': [],  // Set dressing in VillageWorld ZoneLandmarks
+  'skeleton-pizza': [],  // Set dressing in VillageWorld ZoneLandmarks
   'adventurers-picnic': [
-    { id: 'env-campfire', path: 'poly-pizza/misc/small-camping-bundle/Campfire.glb', position: [0, 0, -2], scale: 2.0 },
+    { id: 'env-campfire', path: 'poly-pizza/misc/small-camping-bundle/Campfire.glb', position: [0, 0, -3.5], scale: 2.0 },
     { id: 'env-crystal-l', path: 'poly-pizza/nature/crystal-pack/Crystal.glb', position: [-3, 0, -4], scale: 0.25 },
     { id: 'env-crystal-c', path: 'poly-pizza/nature/crystal-pack/Crystal-dxCmHfpqc5.glb', position: [0, 0, -5], scale: 0.3 },
     { id: 'env-crystal-r', path: 'poly-pizza/nature/crystal-pack/Crystal-WzWPKHFMkL.glb', position: [3, 0, -4], scale: 0.25 },
     { id: 'env-torch-l', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [-6, 0, -3], scale: 2.0 },
     { id: 'env-torch-r', path: 'kaykit/packs/dungeon/torch_lit.gltf', position: [6, 0, -3], scale: 2.0 },
-    { id: 'env-stump-l', path: 'tiny-treats/fun-playground/stepping_stumps_B_large.gltf', position: [-6, 0, 0], scale: 1.5 },
-    { id: 'env-stump-r', path: 'tiny-treats/fun-playground/stepping_stumps_B.gltf', position: [6, 0, 0], scale: 1.5 },
+    { id: 'env-stump-l', path: 'tiny-treats/fun-playground/stepping_stumps_B_large.gltf', position: [-7, 0, 0], scale: 1.5 },
+    { id: 'env-stump-r', path: 'tiny-treats/fun-playground/stepping_stumps_B.gltf', position: [7, 0, 0], scale: 1.5 },
     { id: 'env-mushroom', path: 'quaternius/nature/Mushroom_Common.gltf', position: [-6, 0, -5], scale: 2.0 },
   ],
 }
@@ -634,6 +609,122 @@ function TweenRunner({
   })
 
   return null
+}
+
+// ============================================================================
+// STAGE FLOOR — visible platform showing the 15-mark performance area
+// ============================================================================
+
+/** The 15 stage marks organized by row for rendering */
+const STAGE_MARK_ROWS = [
+  { label: 'ds', z: 1.5,  xs: [-4.5, -2.0, 0, 2.0, 4.5], color: '#4ade80' },  // downstage — green
+  { label: 'cs', z: 0,    xs: [-4.5, -2.0, 0, 2.0, 4.5], color: '#facc15' },  // center stage — yellow
+  { label: 'us', z: -1.5, xs: [-4.5, -2.0, 0, 2.0, 4.5], color: '#60a5fa' },  // upstage — blue
+]
+
+/** Wing positions for entrance arrows */
+const WING_MARKS = [
+  { x: -7, z: 1, color: '#f87171' },  // off-left — red
+  { x: 7,  z: 1, color: '#f87171' },  // off-right — red
+]
+
+function StageFloor({ zoneId }: { zoneId: string }) {
+  // Convert local stage center [0, 0, 0] to world position
+  const stageCenter = zonePosition(zoneId, [0, 0.01, 0])
+  const angle = getZoneAngle(zoneId)
+
+  return (
+    <group position={stageCenter} rotation={[0, angle, 0]}>
+      {/* Main stage platform — semi-transparent raised floor */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
+        <planeGeometry args={[10, 4]} />
+        <meshStandardMaterial
+          color="#8B7355"
+          transparent
+          opacity={0.15}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* Stage border — thin outline */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0]}>
+        <ringGeometry args={[0, 0, 4]} />
+        <meshStandardMaterial color="#8B7355" transparent opacity={0} />
+      </mesh>
+
+      {/* Border lines — 4 edges of the stage rectangle */}
+      {/* Top edge (upstage) */}
+      <mesh position={[0, 0.02, -1.5]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[10, 0.03]} />
+        <meshStandardMaterial color="#60a5fa" emissive="#60a5fa" emissiveIntensity={0.5} transparent opacity={0.4} depthWrite={false} />
+      </mesh>
+      {/* Bottom edge (downstage) */}
+      <mesh position={[0, 0.02, 1.5]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[10, 0.03]} />
+        <meshStandardMaterial color="#4ade80" emissive="#4ade80" emissiveIntensity={0.5} transparent opacity={0.4} depthWrite={false} />
+      </mesh>
+      {/* Left edge */}
+      <mesh position={[-5, 0.02, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]}>
+        <planeGeometry args={[4, 0.03]} />
+        <meshStandardMaterial color="#a78bfa" emissive="#a78bfa" emissiveIntensity={0.3} transparent opacity={0.3} depthWrite={false} />
+      </mesh>
+      {/* Right edge */}
+      <mesh position={[5, 0.02, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]}>
+        <planeGeometry args={[4, 0.03]} />
+        <meshStandardMaterial color="#a78bfa" emissive="#a78bfa" emissiveIntensity={0.3} transparent opacity={0.3} depthWrite={false} />
+      </mesh>
+
+      {/* Row separator lines (center stage row) */}
+      <mesh position={[0, 0.015, -0.75]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[10, 0.02]} />
+        <meshStandardMaterial color="#facc15" transparent opacity={0.2} depthWrite={false} />
+      </mesh>
+      <mesh position={[0, 0.015, 0.75]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[10, 0.02]} />
+        <meshStandardMaterial color="#facc15" transparent opacity={0.2} depthWrite={false} />
+      </mesh>
+
+      {/* Stage mark dots — small circles at each of the 15 positions */}
+      {STAGE_MARK_ROWS.map((row) =>
+        row.xs.map((x) => (
+          <mesh
+            key={`mark-${row.label}-${x}`}
+            rotation={[-Math.PI / 2, 0, 0]}
+            position={[x, 0.025, row.z]}
+          >
+            <circleGeometry args={[0.12, 16]} />
+            <meshStandardMaterial
+              color={row.color}
+              emissive={row.color}
+              emissiveIntensity={0.6}
+              transparent
+              opacity={0.5}
+              depthWrite={false}
+            />
+          </mesh>
+        ))
+      )}
+
+      {/* Wing entrance markers — small red diamonds at off-left and off-right */}
+      {WING_MARKS.map((wing) => (
+        <mesh
+          key={`wing-${wing.x}`}
+          rotation={[-Math.PI / 2, 0, Math.PI / 4]}
+          position={[wing.x, 0.025, wing.z]}
+        >
+          <planeGeometry args={[0.25, 0.25]} />
+          <meshStandardMaterial
+            color={wing.color}
+            emissive={wing.color}
+            emissiveIntensity={0.8}
+            transparent
+            opacity={0.6}
+            depthWrite={false}
+          />
+        </mesh>
+      ))}
+    </group>
+  )
 }
 
 // ============================================================================
@@ -1664,6 +1755,9 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
     <>
       {/* Tween Runner (animates moves) */}
       <TweenRunner tweens={tweens} setActors={setActors} setTweens={setTweens} />
+
+      {/* Stage floor — visible platform showing the 15-mark performance area */}
+      {currentZone && <StageFloor zoneId={currentZone} />}
 
       {/* Environment backdrop props (SafeModel prevents one bad load from crashing) */}
       {envProps.map((env) => (

@@ -5,6 +5,31 @@ import type { ResponseSource } from '../services/resolver';
 import { resolveResponse } from '../services/resolver';
 import { WORLDS } from '../data/worlds';
 import { checkBadges, loadBadges, saveBadges, countSkills } from '../services/badge-system';
+import { getQuestStages } from '../data/quest-stages';
+
+// ─── LEVEL PERSISTENCE ──────────────────────────────────────────────────────
+
+const LEVELS_KEY = 'quest-ai-levels';
+
+interface LevelData {
+  stageNumbers: Record<string, number>;
+  stageCompleted: Record<string, number[]>;
+  discoveredVignettes: Record<string, string[]>;
+}
+
+function loadLevels(): LevelData {
+  try {
+    const raw = localStorage.getItem(LEVELS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch { /* corrupt data, start fresh */ }
+  return { stageNumbers: {}, stageCompleted: {}, discoveredVignettes: {} };
+}
+
+function saveLevels(data: LevelData): void {
+  try {
+    localStorage.setItem(LEVELS_KEY, JSON.stringify(data));
+  } catch { /* storage full, best-effort */ }
+}
 
 interface HistoryEntry {
   input: string;
@@ -30,6 +55,11 @@ interface GameState {
   // Badge system
   badges: Record<string, boolean>;
   badgeUnlocks: string[]; // newly unlocked badges to animate
+
+  // Level progression (per-zone)
+  stageNumbers: Record<string, number>;    // { 'mage-kitchen': 1, 'skeleton-birthday': 2, ... }
+  stageCompleted: Record<string, number[]>; // { 'mage-kitchen': [1], ... } — which stages are done
+  discoveredVignettes: Record<string, string[]>; // { 'mage-kitchen-2': ['id1','id2'], ... }
 
   // Village navigation
   currentZone: string | null;
@@ -58,6 +88,9 @@ interface GameState {
   adjustCameraZoom: (delta: number) => void;
   clearBadgeUnlocks: () => void;
   setIntroAnimation: (anim: string | null, yaw?: number | null) => void;
+  advanceStage: (zoneId: string) => void;
+  completeStage: (zoneId: string, stageNumber: number) => void;
+  recordDiscovery: (stageKey: string, vignetteId: string) => void;
 }
 
 // Zone center positions in world space — ring at R~48-53, dungeon at Z=-70
@@ -97,6 +130,8 @@ let lastExitTime = 0;
 const ZONE_REENTRY_COOLDOWN = 1500;
 const ZONE_TRIGGER_DISTANCE = 3.0;
 
+const _savedLevels = loadLevels();
+
 export const useGameStore = create<GameState>((set, get) => ({
   currentTask: 'skeleton-birthday',
   userInput: '',
@@ -109,6 +144,9 @@ export const useGameStore = create<GameState>((set, get) => ({
   vignetteSteps: null,
   badges: loadBadges(),
   badgeUnlocks: [],
+  stageNumbers: _savedLevels.stageNumbers,
+  stageCompleted: _savedLevels.stageCompleted,
+  discoveredVignettes: _savedLevels.discoveredVignettes,
   currentZone: null,
   cameraTarget: VILLAGE_CENTER,
   isTransitioning: false,
@@ -243,6 +281,61 @@ export const useGameStore = create<GameState>((set, get) => ({
     set((s) => ({
       cameraZoom: Math.max(5, Math.min(60, s.cameraZoom * (1 + delta * 0.08))),
     }));
+  },
+
+  advanceStage: (zoneId: string) => {
+    const { stageNumbers, stageCompleted, discoveredVignettes } = get();
+    const maxStages = getQuestStages(zoneId).length;
+    const current = stageNumbers[zoneId] ?? 1;
+    if (current >= maxStages) return; // already at max
+
+    const next = current + 1;
+    const updated = {
+      stageNumbers: { ...stageNumbers, [zoneId]: next },
+      stageCompleted,
+      discoveredVignettes,
+    };
+    saveLevels(updated);
+
+    // Show a "Level Up!" intro script via the scene engine
+    const nextStage = getQuestStages(zoneId).find(s => s.stageNumber === next);
+    const levelUpScript: SceneScript = {
+      success_level: 'FULL_SUCCESS',
+      narration: `Level ${next}: ${nextStage?.title ?? 'Next Level'}!`,
+      actions: [
+        { type: 'text_popup' as any, text: `Level ${next}!`, position: 'center', size: 'huge', delay_ms: 0, duration_ms: 2000 },
+      ],
+      prompt_feedback: nextStage?.intro ?? 'New challenge unlocked!',
+      guide_hint: 'Try the new options!',
+    };
+
+    set({
+      stageNumbers: updated.stageNumbers,
+      lastScript: levelUpScript,
+      vignetteSteps: null,
+    });
+  },
+
+  completeStage: (zoneId: string, stageNumber: number) => {
+    const { stageCompleted, stageNumbers, discoveredVignettes } = get();
+    const existing = stageCompleted[zoneId] ?? [];
+    if (existing.includes(stageNumber)) return; // already completed
+
+    const updatedCompleted = { ...stageCompleted, [zoneId]: [...existing, stageNumber] };
+    const data = { stageNumbers, stageCompleted: updatedCompleted, discoveredVignettes };
+    saveLevels(data);
+    set({ stageCompleted: updatedCompleted });
+  },
+
+  recordDiscovery: (stageKey: string, vignetteId: string) => {
+    const { discoveredVignettes, stageNumbers, stageCompleted } = get();
+    const existing = discoveredVignettes[stageKey] ?? [];
+    if (existing.includes(vignetteId)) return;
+
+    const updated = { ...discoveredVignettes, [stageKey]: [...existing, vignetteId] };
+    const data = { stageNumbers, stageCompleted, discoveredVignettes: updated };
+    saveLevels(data);
+    set({ discoveredVignettes: updated });
   },
 }));
 

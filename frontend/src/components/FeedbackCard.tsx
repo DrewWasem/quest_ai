@@ -5,7 +5,7 @@
  * and action buttons (Try Again / Next Stage).
  */
 
-import type { VignetteFeedback, PromptScore } from '../types/madlibs';
+import type { VignetteFeedback, PromptScore, VagueComparison } from '../types/madlibs';
 
 const SCORE_STYLES: Record<PromptScore, {
   bg: string;
@@ -52,6 +52,8 @@ interface FeedbackCardProps {
   totalVignettes: number;
   onTryAgain: () => void;
   onNextStage?: () => void;
+  comboRequired?: number;
+  vagueComparison?: VagueComparison;
 }
 
 export default function FeedbackCard({
@@ -62,6 +64,8 @@ export default function FeedbackCard({
   totalVignettes,
   onTryAgain,
   onNextStage,
+  comboRequired,
+  vagueComparison,
 }: FeedbackCardProps) {
   const style = SCORE_STYLES[promptScore] ?? SCORE_STYLES.partial;
 
@@ -101,6 +105,49 @@ export default function FeedbackCard({
           {feedback.tip}
         </p>
       </div>
+
+      {/* Level 2: "What if you were vague?" comparison — supports both placements */}
+      {(vagueComparison || feedback.vagueComparison) && (() => {
+        const vc = vagueComparison;
+        const fvc = feedback.vagueComparison;
+        const vagueText = vc?.vague ?? vc?.vagueInput ?? fvc?.vagueInput ?? '';
+        const resultText = vc?.vagueResult ?? fvc?.vagueResult ?? '';
+        const whyText = vc?.why ?? vc?.difference ?? '';
+        if (!vagueText && !resultText) return null;
+        return (
+          <div className="mt-3 p-3 rounded-lg bg-quest-yellow/10 border border-quest-yellow/30">
+            <p className="text-xs font-heading font-bold text-amber-700 mb-1">
+              {'\u{1F4A1}'} What if you just said "{vagueText}"?
+            </p>
+            <p className="text-sm text-quest-text-mid italic mb-2">
+              {'\u{2192}'} {resultText}
+            </p>
+            {whyText && (
+              <p className="text-xs text-quest-text-mid">{whyText}</p>
+            )}
+          </div>
+        );
+      })()}
+
+      {/* Level 3: Combo discovery counter */}
+      {comboRequired && (
+        <div className="mt-3 p-3 rounded-lg bg-quest-purple/10 border border-quest-purple/20">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-heading font-bold text-quest-purple">
+              {'\u{1F50D}'} Secret Combos Discovered
+            </span>
+            <span className="text-sm font-mono font-bold text-quest-purple">
+              {discoveredCount - 1 > 0 ? discoveredCount - 1 : 0}/{comboRequired}
+            </span>
+          </div>
+          <div className="mt-1.5 h-2 bg-white/50 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-quest-purple to-quest-orange rounded-full transition-all duration-500"
+              style={{ width: `${Math.min(100, ((Math.max(0, discoveredCount - 1)) / comboRequired) * 100)}%` }}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Action buttons */}
       <div className="flex items-center gap-3 mt-4">

@@ -13,8 +13,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useGameStore } from '../stores/gameStore';
 import { useTTS } from '../hooks/useTTS';
 import type { QuestStage, SlotOption, Vignette } from '../types/madlibs';
-import { buildVignetteScript } from '../services/vignette-resolver';
-import { selectVignette } from '../services/vignette-selector';
+import { buildVignetteScript, resolveVignette } from '../services/vignette-resolver';
 import { generateSentenceTemplate } from '../services/sentence-generator';
 import FeedbackCard from './FeedbackCard';
 
@@ -27,6 +26,11 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
     setLastScript,
     setVignetteSteps,
     isLoading,
+    stageCompleted,
+    advanceStage,
+    completeStage,
+    recordDiscovery,
+    discoveredVignettes,
   } = useGameStore();
 
   const { speak } = useTTS();
@@ -55,11 +59,15 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
     filledSentence: string;
   } | null>(null);
 
-  // Discovered vignettes tracking
-  const [discoveredIds, setDiscoveredIds] = useState<Set<string>>(new Set());
+  // Discovered vignettes tracking (persisted in gameStore)
+  const stageKey = `${stage.questId}-${stage.stageNumber}`;
+  const discoveredIds = new Set(discoveredVignettes[stageKey] ?? []);
 
   // Playing state
   const [isPlaying, setIsPlaying] = useState(false);
+
+  // Hint state for Level 3 combo hints
+  const [hintIndex, setHintIndex] = useState(0);
 
   // Generate fresh sentence template on mount
   useEffect(() => {
@@ -82,6 +90,7 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
     setFeedback(null);
     setOpenSlot(null);
     setIsPlaying(false);
+    setHintIndex(0);
     setCurrentSentence(stage.template.sentence);
   }, [stage.id]);
 
@@ -129,12 +138,32 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
       filledSentence = filledSentence.replace(`{${slot.id}}`, `**${label}**`);
     }
 
-    // Haiku-assisted vignette selection (falls back to rank #1)
-    const vignette = await selectVignette(selectedTags, filledSentence, stage);
+    // Deterministic vignette selection via tag matching (no API call)
+    const vignette = resolveVignette(selectedTags, stage);
     const script = buildVignetteScript(vignette, selectedTags);
 
-    // Track discovery
-    setDiscoveredIds(prev => new Set([...prev, vignette.id]));
+    // Track discovery (persisted)
+    recordDiscovery(stageKey, vignette.id);
+
+    // Check stage completion
+    if (stage.comboRequired) {
+      // Level 3: combo-count-based completion
+      const newDiscovered = new Set([...discoveredIds, vignette.id]);
+      // Don't count the default vignette
+      const nonDefault = [...newDiscovered].filter(id => id !== stage.defaultVignette.id);
+      if (nonDefault.length >= stage.comboRequired) {
+        completeStage(stage.questId, stage.stageNumber);
+      }
+    } else if (stage.successTags) {
+      // Level 1/2: success-tag-based completion
+      const selectedValues = Object.values(selectedTags);
+      const isSuccess = stage.successTags.some(combo =>
+        combo.every(tag => selectedValues.includes(tag))
+      );
+      if (isSuccess) {
+        completeStage(stage.questId, stage.stageNumber);
+      }
+    }
 
     // Send to playback engine
     setLastScript(script);
@@ -154,7 +183,7 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
       setFeedback({ vignette, filledSentence });
       setIsPlaying(false);
     }, Math.min(totalDuration + 500, 8000));
-  }, [selectedTags, stage, slotOptions, currentSentence, setLastScript, setVignetteSteps, speak]);
+  }, [selectedTags, stage, slotOptions, currentSentence, setLastScript, setVignetteSteps, speak, stageKey, recordDiscovery, discoveredIds, completeStage]);
 
   const handleTryAgain = useCallback(() => {
     setFeedback(null);
@@ -179,6 +208,13 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
             discoveredCount={discoveredIds.size}
             totalVignettes={stage.vignettes.length + 1}
             onTryAgain={handleTryAgain}
+            onNextStage={
+              (stageCompleted[stage.questId] ?? []).includes(stage.stageNumber)
+                ? () => advanceStage(stage.questId)
+                : undefined
+            }
+            comboRequired={stage.comboRequired}
+            vagueComparison={feedback.vignette.vagueComparison}
           />
         </div>
       )}
@@ -242,6 +278,36 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
                 <>{'\u{1F504}'} New Sentence!</>
               )}
             </button>
+
+            {stage.comboHints && stage.comboHints.length > 0 && (
+              <button
+                onClick={() => {
+                  // Find first undiscovered combo hint
+                  const undiscovered = stage.comboHints!.filter(
+                    h => !discoveredIds.has(
+                      stage.vignettes.find(v => {
+                        const tags = Object.values(v.trigger).filter(t => t !== '*');
+                        return h.comboTags.every(t => tags.includes(t));
+                      })?.id ?? ''
+                    )
+                  );
+                  if (undiscovered.length > 0) {
+                    const hint = undiscovered[0];
+                    const level = Math.min(hintIndex, hint.hints.length - 1);
+                    alert(hint.hints[level]);
+                    setHintIndex(prev => prev + 1);
+                  } else {
+                    alert('You found all the secret combos!');
+                  }
+                }}
+                className="btn-game text-sm px-4 py-2.5 rounded-xl border-2
+                  bg-quest-yellow/20 text-amber-700 border-quest-yellow/50
+                  hover:border-quest-yellow hover:bg-quest-yellow/30
+                  font-heading font-semibold"
+              >
+                {'\u{1F4A1}'} Hint
+              </button>
+            )}
 
             <div className="flex-1" />
 

@@ -26,6 +26,7 @@ import { ASSET_BASE } from '../data/asset-manifest'
 import { ZONE_CENTERS, ZONE_META } from '../stores/gameStore'
 import { registerCollision, unregisterCollision, getCollisionBoxes, getGeneration, type CollisionBox } from './collision-registry'
 import { QuestZoneCircle } from './QuestZoneCircle'
+import { StageFloor } from './ScenePlayer3D'
 
 // ============================================================================
 // HEX GRID HELPERS
@@ -376,25 +377,11 @@ function HexTerrain() {
     const result: { model: string; position: [number, number, number]; rotation?: [number, number, number]; scale?: number }[] = []
     const roadPositions = new Set<string>()
 
-    // Zone center positions for ground transition (x, z pairs)
-    const zoneCenters = Object.values(ZONE_CENTERS).map(([x, , z]) => [x, z] as [number, number])
-    const ZONE_TRANSITION_RADIUS = 10 // tiles within this distance use transition texture
-
-    // 1. Grass tiles everywhere (transition tiles near zone centers)
+    // 1. Grass tiles everywhere (transition tiles removed — they cause white checkerboard)
     for (let col = -55; col <= 55; col++) {
       for (let row = -60; row <= 50; row++) {
         const [wx, , wz] = hexToWorld(col, row)
-        // Check if this hex is near any zone center
-        let nearZone = false
-        for (const [cx, cz] of zoneCenters) {
-          const dx = wx - cx
-          const dz = wz - cz
-          if (dx * dx + dz * dz < ZONE_TRANSITION_RADIUS * ZONE_TRANSITION_RADIUS) {
-            nearZone = true
-            break
-          }
-        }
-        result.push({ model: nearZone ? TILES.transition : TILES.grass, position: [wx, 0, wz] })
+        result.push({ model: TILES.grass, position: [wx, 0, wz] })
       }
     }
 
@@ -1823,6 +1810,29 @@ function VillageClouds() {
 // Shows auto-measured bounding boxes from collision registry
 // ============================================================================
 
+function DebugStageGrids() {
+  const [visible, setVisible] = useState(false)
+
+  const toggle = useCallback((e: KeyboardEvent) => {
+    if (e.code === 'Slash') setVisible(v => !v)
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('keydown', toggle)
+    return () => window.removeEventListener('keydown', toggle)
+  }, [toggle])
+
+  if (!visible) return null
+
+  return (
+    <group name="debug-stage-grids">
+      {Object.keys(ZONE_CENTERS).map(zoneId => (
+        <StageFloor key={zoneId} zoneId={zoneId} />
+      ))}
+    </group>
+  )
+}
+
 function DebugClearanceRings() {
   const [visible, setVisible] = useState(false)
 
@@ -2000,6 +2010,8 @@ export function VillageWorld() {
         )
       })}
 
+      {/* Debug: stage grids at all zones — press / to toggle */}
+      <DebugStageGrids />
       {/* Debug: collision radius rings — press . to toggle */}
       <DebugClearanceRings />
     </group>

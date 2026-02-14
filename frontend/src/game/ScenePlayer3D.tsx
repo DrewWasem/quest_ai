@@ -53,14 +53,14 @@ class SafeModel extends Component<{ children: ReactNode }, { hasError: boolean }
 // Props sit in the BACK half (negative Z = backdrop behind characters).
 // This prevents characters from clipping into environment objects.
 const LOCAL_POSITION_MAP: Record<string, [number, number, number]> = {
-  // Original 8 positions
-  left: [-4, 0, 1.5],
-  center: [0, 0, 1],
-  right: [4, 0, 1.5],
-  top: [0, 0, -1],
-  bottom: [0, 0, 3.5],
-  'off-left': [-7, 0, 1],
-  'off-right': [7, 0, 1],
+  // Legacy positions — mapped onto the 15-mark stage grid
+  left: [-4.5, 0, 1.5],      // = ds-far-left
+  center: [0, 0, 0],          // = cs-center
+  right: [4.5, 0, 1.5],       // = ds-far-right
+  top: [0, 0, -1.5],          // = us-center
+  bottom: [0, 0, 1.5],        // = ds-center (audience front)
+  'off-left': [-7, 0, 0],     // wing entrance left
+  'off-right': [7, 0, 0],     // wing entrance right
   'off-top': [0, 5, 0],
 
   // Downstage (front row, Z=1.5 — closest to camera)
@@ -469,6 +469,36 @@ export function easeInOutSine(t: number): number {
 }
 
 // ============================================================================
+// AUTO-SPREAD — prevent actors from overlapping at the same stage mark
+// ============================================================================
+
+/**
+ * When multiple actors spawn at the same position mark, each subsequent actor
+ * gets a small offset so they stand side-by-side instead of clipping through
+ * each other. Offsets are in local stage space (X = stage-left/right, Z = up/downstage).
+ *
+ * Layout: actors fan out in a 2-row grid around the mark center.
+ * Offset magnitude stays < 1.0 so actors remain "near" their mark
+ * without encroaching on adjacent marks (2.0 units apart on X, 1.5 on Z).
+ */
+const SPREAD_OFFSETS: [number, number][] = [
+  [0, 0],            // 1st actor: exact mark position
+  [0.9, 0.15],       // 2nd: stage-right, slightly downstage
+  [-0.9, 0.15],      // 3rd: stage-left, slightly downstage
+  [0, -0.7],         // 4th: upstage (behind)
+  [0.9, -0.7],       // 5th: upstage-right
+  [-0.9, -0.7],      // 6th: upstage-left
+]
+
+/** Wing/entrance positions where actors are transient — skip spread */
+const WING_POSITIONS = new Set(['off-left', 'off-right', 'off-top'])
+
+/** Build a coordinate key for occupancy tracking (local space, XZ only) */
+function positionKey(localPos: [number, number, number]): string {
+  return `${localPos[0].toFixed(1)},${localPos[2].toFixed(1)}`
+}
+
+// ============================================================================
 // STATE TYPES
 // ============================================================================
 
@@ -628,98 +658,84 @@ const WING_MARKS = [
   { x: 7,  z: 1, color: '#f87171' },  // off-right — red
 ]
 
-function StageFloor({ zoneId }: { zoneId: string }) {
+export function StageFloor({ zoneId }: { zoneId: string }) {
   // Convert local stage center [0, 0, 0] to world position
-  const stageCenter = zonePosition(zoneId, [0, 0.01, 0])
+  const stageCenter = zonePosition(zoneId, [0, 0.3, 0])
   const angle = getZoneAngle(zoneId)
 
   return (
     <group position={stageCenter} rotation={[0, angle, 0]}>
-      {/* Main stage platform — semi-transparent raised floor */}
+      {/* Solid stage platform base */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
         <planeGeometry args={[10, 4]} />
         <meshStandardMaterial
-          color="#8B7355"
-          transparent
-          opacity={0.15}
-          depthWrite={false}
+          color="#3a2f25"
+          side={2}
         />
-      </mesh>
-
-      {/* Stage border — thin outline */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0]}>
-        <ringGeometry args={[0, 0, 4]} />
-        <meshStandardMaterial color="#8B7355" transparent opacity={0} />
       </mesh>
 
       {/* Border lines — 4 edges of the stage rectangle */}
       {/* Top edge (upstage) */}
-      <mesh position={[0, 0.02, -1.5]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[10, 0.03]} />
-        <meshStandardMaterial color="#60a5fa" emissive="#60a5fa" emissiveIntensity={0.5} transparent opacity={0.4} depthWrite={false} />
+      <mesh position={[0, 0.01, -1.5]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[10, 0.05]} />
+        <meshStandardMaterial color="#60a5fa" emissive="#60a5fa" emissiveIntensity={0.8} />
       </mesh>
       {/* Bottom edge (downstage) */}
-      <mesh position={[0, 0.02, 1.5]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[10, 0.03]} />
-        <meshStandardMaterial color="#4ade80" emissive="#4ade80" emissiveIntensity={0.5} transparent opacity={0.4} depthWrite={false} />
+      <mesh position={[0, 0.01, 1.5]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[10, 0.05]} />
+        <meshStandardMaterial color="#4ade80" emissive="#4ade80" emissiveIntensity={0.8} />
       </mesh>
       {/* Left edge */}
-      <mesh position={[-5, 0.02, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]}>
-        <planeGeometry args={[4, 0.03]} />
-        <meshStandardMaterial color="#a78bfa" emissive="#a78bfa" emissiveIntensity={0.3} transparent opacity={0.3} depthWrite={false} />
+      <mesh position={[-5, 0.01, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]}>
+        <planeGeometry args={[4, 0.05]} />
+        <meshStandardMaterial color="#a78bfa" emissive="#a78bfa" emissiveIntensity={0.5} />
       </mesh>
       {/* Right edge */}
-      <mesh position={[5, 0.02, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]}>
-        <planeGeometry args={[4, 0.03]} />
-        <meshStandardMaterial color="#a78bfa" emissive="#a78bfa" emissiveIntensity={0.3} transparent opacity={0.3} depthWrite={false} />
+      <mesh position={[5, 0.01, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]}>
+        <planeGeometry args={[4, 0.05]} />
+        <meshStandardMaterial color="#a78bfa" emissive="#a78bfa" emissiveIntensity={0.5} />
       </mesh>
 
-      {/* Row separator lines (center stage row) */}
-      <mesh position={[0, 0.015, -0.75]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[10, 0.02]} />
-        <meshStandardMaterial color="#facc15" transparent opacity={0.2} depthWrite={false} />
+      {/* Row separator lines */}
+      <mesh position={[0, 0.01, -0.75]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[10, 0.03]} />
+        <meshStandardMaterial color="#facc15" emissive="#facc15" emissiveIntensity={0.4} />
       </mesh>
-      <mesh position={[0, 0.015, 0.75]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[10, 0.02]} />
-        <meshStandardMaterial color="#facc15" transparent opacity={0.2} depthWrite={false} />
+      <mesh position={[0, 0.01, 0.75]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[10, 0.03]} />
+        <meshStandardMaterial color="#facc15" emissive="#facc15" emissiveIntensity={0.4} />
       </mesh>
 
-      {/* Stage mark dots — small circles at each of the 15 positions */}
+      {/* Stage mark dots — solid circles at each of the 15 positions */}
       {STAGE_MARK_ROWS.map((row) =>
         row.xs.map((x) => (
           <mesh
             key={`mark-${row.label}-${x}`}
             rotation={[-Math.PI / 2, 0, 0]}
-            position={[x, 0.025, row.z]}
+            position={[x, 0.02, row.z]}
           >
-            <circleGeometry args={[0.12, 16]} />
+            <circleGeometry args={[0.15, 16]} />
             <meshStandardMaterial
               color={row.color}
               emissive={row.color}
-              emissiveIntensity={0.6}
-              transparent
-              opacity={0.5}
-              depthWrite={false}
+              emissiveIntensity={1.0}
             />
           </mesh>
         ))
       )}
 
-      {/* Wing entrance markers — small red diamonds at off-left and off-right */}
+      {/* Wing entrance markers — solid red diamonds at off-left and off-right */}
       {WING_MARKS.map((wing) => (
         <mesh
           key={`wing-${wing.x}`}
           rotation={[-Math.PI / 2, 0, Math.PI / 4]}
-          position={[wing.x, 0.025, wing.z]}
+          position={[wing.x, 0.02, wing.z]}
         >
-          <planeGeometry args={[0.25, 0.25]} />
+          <planeGeometry args={[0.3, 0.3]} />
           <meshStandardMaterial
             color={wing.color}
             emissive={wing.color}
-            emissiveIntensity={0.8}
-            transparent
-            opacity={0.6}
-            depthWrite={false}
+            emissiveIntensity={1.0}
           />
         </mesh>
       ))}
@@ -750,6 +766,8 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
   const actorRefs = useRef<Map<string, Character3DHandle | Prop3DHandle>>(new Map())
   const spawnedIds = useRef<Set<string>>(new Set()) // Track spawned actors (avoids stale closure)
   const actorPositionsRef = useRef<Map<string, [number, number, number]>>(new Map())
+  const markOccupancy = useRef<Map<string, number>>(new Map()) // Track actors per position for auto-spread
+  const actorMarkRef = useRef<Map<string, string>>(new Map()) // actorId → posKey (for decrement on move/remove)
   const playingRef = useRef(false)
   const abortControllerRef = useRef<AbortController | null>(null)
 
@@ -773,6 +791,8 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
       setActors([])
       spawnedIds.current.clear()
       actorPositionsRef.current.clear()
+      markOccupancy.current.clear()
+      actorMarkRef.current.clear()
       return
     }
 
@@ -827,6 +847,8 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
     setEmotes([])
     spawnedIds.current.clear()
     actorPositionsRef.current.clear()
+    markOccupancy.current.clear()
+    actorMarkRef.current.clear()
 
     // Inject player knight into the scene (facing camera, with a reaction anim)
     const playerKnight: ActiveActor = {
@@ -897,11 +919,16 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
     if (playingRef.current) return
     playingRef.current = true
 
-    // Clear previous scene
+    // Clear previous scene (including stale actors from prior vignettes)
+    setActors([])
     setEffects([])
     setEmotes([])
     setTextPopups([])
     setScreenFlash(null)
+    spawnedIds.current.clear()
+    actorPositionsRef.current.clear()
+    markOccupancy.current.clear()
+    actorMarkRef.current.clear()
 
     const abortController = new AbortController()
     abortControllerRef.current = abortController
@@ -1175,7 +1202,22 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
 
   function handleSpawn(target: string, position: Position, resolvedPosition?: [number, number, number]) {
     const localPos = resolvedPosition || POSITION_MAP[position] || [0, 0, 0]
-    const pos = zonePosition(currentZone, localPos)
+
+    // Auto-spread: offset actors at occupied marks so they don't clip
+    const posKey = positionKey(localPos)
+    const isWing = WING_POSITIONS.has(position)
+    const occupancy = isWing ? 0 : (markOccupancy.current.get(posKey) || 0)
+
+    let finalLocalPos = localPos
+    if (occupancy > 0) {
+      const [ox, oz] = SPREAD_OFFSETS[Math.min(occupancy, SPREAD_OFFSETS.length - 1)]
+      finalLocalPos = [localPos[0] + ox, localPos[1], localPos[2] + oz]
+    }
+    if (!isWing) {
+      markOccupancy.current.set(posKey, occupancy + 1)
+    }
+
+    const pos = zonePosition(currentZone, finalLocalPos)
     const actorId = target
 
     // Strip numeric suffix for model resolution (cat_1 → cat) but keep full ID for tracking
@@ -1249,12 +1291,34 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
 
     spawnedIds.current.add(actorId)
     actorPositionsRef.current.set(actorId, pos)
+    if (!isWing) actorMarkRef.current.set(actorId, posKey)
     console.log(`[ScenePlayer3D] Spawned ${actorId} at ${position}${resolvedPosition ? ` [${resolvedPosition.join(', ')}]` : ''}`)
   }
 
   function handleMove(target: string, to: Position, style?: string, resolvedPosition?: [number, number, number], durationMs?: number): Promise<void> {
     const localPos = resolvedPosition || POSITION_MAP[to] || [0, 0, 0]
-    const newPos = zonePosition(currentZone, localPos)
+
+    // Auto-spread: decrement old mark, apply spread at new mark
+    const isWingDest = WING_POSITIONS.has(to)
+    const newPosKey = positionKey(localPos)
+    const oldPosKey = actorMarkRef.current.get(target)
+    if (oldPosKey) {
+      const oldCount = markOccupancy.current.get(oldPosKey) || 0
+      if (oldCount > 1) markOccupancy.current.set(oldPosKey, oldCount - 1)
+      else markOccupancy.current.delete(oldPosKey)
+    }
+    const destOccupancy = isWingDest ? 0 : (markOccupancy.current.get(newPosKey) || 0)
+    let finalLocalPos = localPos
+    if (destOccupancy > 0) {
+      const [ox, oz] = SPREAD_OFFSETS[Math.min(destOccupancy, SPREAD_OFFSETS.length - 1)]
+      finalLocalPos = [localPos[0] + ox, localPos[1], localPos[2] + oz]
+    }
+    if (!isWingDest) {
+      markOccupancy.current.set(newPosKey, destOccupancy + 1)
+      actorMarkRef.current.set(target, newPosKey)
+    }
+
+    const newPos = zonePosition(currentZone, finalLocalPos)
     let currentActor = actors.find(a => a.id === target)
 
     // Auto-spawn if actor doesn't exist yet
@@ -1424,6 +1488,14 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
   function handleRemove(target: string) {
     setActors((prev) => prev.filter((a) => a.id !== target))
     actorRefs.current.delete(target)
+    // Decrement occupancy at the actor's mark
+    const oldPosKey = actorMarkRef.current.get(target)
+    if (oldPosKey) {
+      const count = markOccupancy.current.get(oldPosKey) || 0
+      if (count > 1) markOccupancy.current.set(oldPosKey, count - 1)
+      else markOccupancy.current.delete(oldPosKey)
+      actorMarkRef.current.delete(target)
+    }
     SoundManager3D.play('remove')
     console.log(`[ScenePlayer3D] Removed ${target}`)
   }

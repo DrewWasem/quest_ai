@@ -376,25 +376,12 @@ function HexTerrain() {
     const result: { model: string; position: [number, number, number]; rotation?: [number, number, number]; scale?: number }[] = []
     const roadPositions = new Set<string>()
 
-    // Zone center positions for ground transition (x, z pairs)
-    const zoneCenters = Object.values(ZONE_CENTERS).map(([x, , z]) => [x, z] as [number, number])
-    const ZONE_TRANSITION_RADIUS = 10 // tiles within this distance use transition texture
-
-    // 1. Grass tiles everywhere (transition tiles near zone centers)
+    // 1. Grass tiles everywhere — DO NOT add zone-based transition tiles here.
+    //    Grass must remain uniform across the entire map. (Locked by design.)
     for (let col = -55; col <= 55; col++) {
       for (let row = -60; row <= 50; row++) {
         const [wx, , wz] = hexToWorld(col, row)
-        // Check if this hex is near any zone center
-        let nearZone = false
-        for (const [cx, cz] of zoneCenters) {
-          const dx = wx - cx
-          const dz = wz - cz
-          if (dx * dx + dz * dz < ZONE_TRANSITION_RADIUS * ZONE_TRANSITION_RADIUS) {
-            nearZone = true
-            break
-          }
-        }
-        result.push({ model: nearZone ? TILES.transition : TILES.grass, position: [wx, 0, wz] })
+        result.push({ model: TILES.grass, position: [wx, 0, wz] })
       }
     }
 

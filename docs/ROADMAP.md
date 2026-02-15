@@ -2,7 +2,7 @@
 
 **Builder:** Drew (solo)
 **Started:** Feb 10, 2026 (Hackathon)
-**Current Phase:** Phases 1-3 Complete — Free Play Zone Next
+**Current Phase:** Phases 1-4 Complete — Final Polish
 **Goal:** Make every zone a joy to play — vignettes that wow kids, stages that work end-to-end, and a free play zone to tie it all together.
 
 > Previous roadmaps archived at `docs/archive/ROADMAP-hackathon-v1.md`
@@ -10,9 +10,9 @@
 
 ---
 
-## Current State (Feb 15, end of day)
+## Current State (Feb 16)
 
-- 7 quest zones on a medieval village circle (1 empty slot at Northwest)
+- 8 quest zones on a medieval village circle (7 quest + 1 free-play sandbox)
 - 421 vignettes across 7 zone files
 - 53 movement templates, 588 zone props — all zones at 100% template adoption
 - 1,500+ template spreads across all vignettes (630+ added today)
@@ -172,49 +172,19 @@ Puppeteer tests deferred (requires browser automation setup).
 
 ---
 
-## Phase 4: Free Play Zone (Priority: Medium)
+## Phase 4: Free Play Zone — COMPLETE
 
-Add an 8th zone at the empty Northwest position on the village circle.
+8th zone added at Northwest `[-38, 0, -38]` — Creative Playground sandbox.
 
-### Layout
-
-```
-Village Circle (top-down):
-  North:     skeleton-birthday  [0, 0, -70]
-  NE:        knight-space       [38, 0, -38]
-  East:      barbarian-school   [48, 0, 5]
-  SE:        skeleton-pizza     [38, 0, 38]
-  South:     adventurers-picnic [0, 0, 48]
-  SW:        dungeon-concert    [-35, 0, 35]
-  West:      mage-kitchen       [-48, 0, 5]
-  NW:        FREE PLAY          [-38, 0, -38]  <-- NEW
-  Center:    Village (tavern, market, well)
-```
-
-### Design
-
-| Aspect | Decision |
-|--------|----------|
-| Zone ID | `free-play` |
-| Theme | Creative Playground — all characters, all props, no wrong answers |
-| Unlock | Available after completing any 3 zones |
-| Stages | None — pure sandbox, always Level 5 style |
-| Characters | All 28 character models available |
-| Props | Full prop library (all 588 zone props) |
-| Scoring | No success/fail — everything is FULL_SUCCESS |
-| Purpose | Reward for progression, unlimited creative expression |
-
-### Implementation Tasks
-
-| Task | Details |
-|------|---------|
-| Add zone to ZONE_CENTERS, ZONE_META, WORLDS | gameStore.ts, worlds.ts |
-| Create VillageWorld NW zone environment | VillageWorld.tsx — buildings, props, decorations |
-| Create free-play system prompt | Full creative sandbox prompt for Claude |
-| Add zone unlock logic (3 zones completed) | gameStore.ts |
-| Add QuestZoneCircle marker | QuestZoneCircle.tsx |
-| Wire up in App.tsx | Skip stage UI, go straight to prompt input |
-| Test end-to-end | Enter zone, type prompt, see scene |
+| Component | Implementation |
+|-----------|---------------|
+| Zone config | worlds.ts, gameStore.ts, asset-manifest.ts — all 26 characters, 21 curated props, all animation packs |
+| 3D environment | VillageWorld.tsx — stage platform, presents, candy canes, crystals, gingerbread house, amber/pink/purple lighting |
+| Unlock gate | Requires 3 zones at stage ≥ 4; lock indicator (gray glow + 🔒) on QuestZoneCircle |
+| Stage routing | enterZone forces stageNumbers['free-play'] = 5, routes to Level5Input |
+| System prompt | Sandbox override: always FULL_SUCCESS, celebrates creativity |
+| Fallback script | Multi-character party scene (knight + skeleton + mage) |
+| Landmark | Yellow shrine at [-44, 0, -44], NW spoke road + approach decor |
 
 ---
 
@@ -242,6 +212,7 @@ Village Circle (top-down):
 | Feb 15 PM | 12 new templates, 630+ action variety calls across all zones | Quality |
 | Feb 15 EVE | Phase 2: auto-SFX engine, prop diversification (200→380), emoji migration (151 → semantic) | Asset utilization |
 | Feb 15 LATE | Phase 3: stage audit, text-parser fix, ECE review, 14 content safety fixes | Stage verification |
+| Feb 16 AM | Phase 4: Free Play Zone — 8th zone, unlock gating, sandbox prompt, 3D environment | Free play |
 
 ---
 

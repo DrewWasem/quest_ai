@@ -12,6 +12,7 @@
  *   South (Z=+48):     Park Zone (adventurers-picnic) [0, 48]
  *   Southwest:         Concert Zone (dungeon-concert) [-38, 38]
  *   West (X=-48):      Kitchen Zone (mage-kitchen) [-48, 5]
+ *   Northwest:         Creative Playground (free-play) [-38, -38]
  *   Center (Z=0):      Village Center (tavern, market, well, etc.)
  *
  * Uses KayKit Medieval Hexagon Pack for terrain + buildings,
@@ -342,6 +343,7 @@ const SPOKE_TARGETS: [number, number][] = [
   [38, 38],    // SE → skeleton-pizza
   [-38, 38],   // SW → dungeon-concert
   [-48, 5],    // W  → mage-kitchen
+  [-38, -38],  // NW → free-play
 ]
 
 /** Check if world position (x,z) is within `halfWidth` of a line from origin to (tx,tz) */
@@ -1261,6 +1263,53 @@ function KitchenZone() {
 }
 
 // ============================================================================
+// FREE PLAY ZONE — Northwest area (creative sandbox, unlocks after 3 zones)
+// ============================================================================
+
+function FreePlayZone() {
+  const center = ZONE_CENTERS['free-play']
+  const angle = Math.atan2(-center[0], -center[2]) // face camera toward village
+  const h = 'kaykit/packs/holiday/'
+
+  return (
+    <group name="free-play-zone" position={center} rotation={[0, angle, 0]}>
+      {/* Central stage platform */}
+      <Piece model={BUILDINGS.stage_A} position={[0, 0, 0]} scale={4.0} />
+
+      {/* Colorful presents scattered around — creative playground reward theme */}
+      <Piece model={h + 'present_A_red.gltf'} position={[-4, 0, -2]} scale={1.5} />
+      <Piece model={h + 'present_B_blue.gltf'} position={[4, 0, -2]} scale={1.5} />
+      <Piece model={h + 'present_C_green.gltf'} position={[-3, 0, 3]} scale={1.2} />
+      <Piece model={h + 'present_D_yellow.gltf'} position={[3, 0, 3]} scale={1.2} />
+      <Piece model={h + 'present_E_white.gltf'} position={[-5, 0, 1]} scale={1.0} />
+      <Piece model={h + 'present_F_red.gltf'} position={[5, 0, 1]} scale={1.0} />
+
+      {/* Festive candy canes as "pillars" */}
+      <Piece model={h + 'candycane_large.gltf'} position={[-6, 0, -3]} scale={2.0} />
+      <Piece model={h + 'candycane_large.gltf'} position={[6, 0, -3]} scale={2.0} />
+
+      {/* Crystals — magical creative energy */}
+      <Piece model="poly-pizza/nature/crystal-pack/Crystal.glb" position={[-2, 0, -4]} scale={0.3} />
+      <Piece model="poly-pizza/nature/crystal-pack/Crystal-dxCmHfpqc5.glb" position={[2, 0, -4]} scale={0.3} />
+      <Piece model="poly-pizza/nature/crystal-pack/Crystal-WzWPKHFMkL.glb" position={[0, 0, -5]} scale={0.35} />
+
+      {/* Lanterns for warm glow */}
+      <Piece model={h + 'lantern_decorated.gltf'} position={[-5, 0, -1]} scale={1.5} />
+      <Piece model={h + 'lantern_decorated.gltf'} position={[5, 0, -1]} scale={1.5} />
+
+      {/* Gingerbread house — whimsical creative landmark */}
+      <Piece model={h + 'gingerbread_house_decorated.gltf'} position={[0, 0, 5]} scale={2.5} />
+
+      {/* Warm amber + pink creative atmosphere */}
+      <pointLight color="#F59E0B" intensity={5} distance={15} decay={2} position={[0, 4, 0]} />
+      <pointLight color="#EC4899" intensity={3} distance={12} decay={2} position={[-4, 3, -2]} />
+      <pointLight color="#8B5CF6" intensity={3} distance={12} decay={2} position={[4, 3, -2]} />
+      <pointLight color="#FBBF24" intensity={2} distance={18} decay={2} position={[0, 6, 2]} />
+    </group>
+  )
+}
+
+// ============================================================================
 // ROAD DECORATION — Props along the road between zones
 // ============================================================================
 
@@ -1464,6 +1513,9 @@ function ZoneLandmarks() {
 
       {/* ── mage-kitchen [-48, 0, 5]: Landmark (replaces old tower) ──
           Detail handled by KitchenZone() function */}
+
+      {/* ── free-play [-38, 0, -38]: Creative Playground landmark ── */}
+      <Piece model={BUILDINGS.shrine_yellow} position={[-44, 0, -44]} scale={8.0} />
     </group>
   )
 }
@@ -1604,6 +1656,11 @@ function ZoneApproachDecor() {
       <Piece model={DECORATION.bucket_water} position={along([-48, 5], 20, 6)} scale={d} />
       <Piece model={DECORATION.barrel} position={along([-48, 5], 22, -6)} scale={d} />
       <Piece model={DECORATION.crate_A} position={along([-48, 5], 22, 6)} scale={d} />
+      {/* ── Free Play Zone (NW) — festive/creative ── */}
+      <Piece model={DECORATION.flower_A} position={along([-38, -38], 20, -6)} scale={d} />
+      <Piece model={DECORATION.flower_B} position={along([-38, -38], 20, 6)} scale={d} />
+      <Piece model={DECORATION.barrel} position={along([-38, -38], 8, -6)} scale={d} />
+      <Piece model={DECORATION.crate_A} position={along([-38, -38], 8, 6)} scale={d} />
       {/* ── Dungeon approach (N boulevard) — flanking props on grass ── */}
       <Piece model={DECORATION.rock_C} position={[-7, 0, -50]} scale={5.0} />
       <Piece model={DECORATION.rock_D} position={[7, 0, -50]} scale={5.0} />
@@ -1993,6 +2050,11 @@ export function VillageWorld() {
       {/* Quest zone: Kitchen (west) */}
       <Suspense fallback={null}>
         <KitchenZone />
+      </Suspense>
+
+      {/* Quest zone: Creative Playground (northwest) */}
+      <Suspense fallback={null}>
+        <FreePlayZone />
       </Suspense>
 
       {/* Quest zone circles — glowing ground rings at each zone entrance */}

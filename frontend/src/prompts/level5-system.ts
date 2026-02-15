@@ -85,7 +85,13 @@ RULES:
 - FUNNY_FAIL = too vague or silly (still play something fun!)
 - prompt_feedback should celebrate what they did well + suggest ONE improvement
 - guide_hint should suggest an advanced prompting technique
-- RESPOND WITH ONLY THE JSON OBJECT`;
+- RESPOND WITH ONLY THE JSON OBJECT${zoneId === 'free-play' ? `
+
+SANDBOX MODE — IMPORTANT:
+- ALWAYS return "success_level": "FULL_SUCCESS" — this is a sandbox where everything the kid tries should work and be celebrated
+- Be extra generous and creative — no wrong answers!
+- Use the full roster of characters and props to make the most spectacular scene possible
+- Celebrate creativity over correctness` : ''}`;
 }
 
 function getFallbackPrompt(): string {

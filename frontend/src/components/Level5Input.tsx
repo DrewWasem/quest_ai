@@ -10,6 +10,7 @@ import type { Level5Stage } from '../types/madlibs';
 import { callClaude, parseSceneScript } from '../services/claude';
 import { getLevel5SystemPrompt } from '../prompts/level5-system';
 import { FALLBACK_SCRIPTS } from '../data/fallback-scripts';
+import { getLoadingVignette } from '../data/loading-vignettes';
 import type { SceneScript } from '../types/scene-script';
 
 interface Level5InputProps {
@@ -17,7 +18,7 @@ interface Level5InputProps {
 }
 
 export default function Level5Input({ stage }: Level5InputProps) {
-  const { setLastScript } = useGameStore();
+  const { setLastScript, setVignetteSteps } = useGameStore();
   const { speak } = useTTS();
 
   const [userInput, setUserInput] = useState<string>('');
@@ -34,6 +35,11 @@ export default function Level5Input({ stage }: Level5InputProps) {
     setIsGenerating(true);
     setLastResult(null);
 
+    // Play loading vignette immediately — character thinks while API runs
+    const loading = getLoadingVignette(stage.questId);
+    setLastScript(loading.script);
+    setVignetteSteps(loading.steps);
+
     try {
       const systemPrompt = getLevel5SystemPrompt(stage.systemPromptKey);
       const raw = await callClaude(systemPrompt, trimmed, {
@@ -43,6 +49,8 @@ export default function Level5Input({ stage }: Level5InputProps) {
       });
       const script = parseSceneScript(raw);
 
+      // Replace loading vignette with real response
+      setVignetteSteps(null);
       setLastScript(script);
       setLastResult({ script, source: 'live' });
 
@@ -52,6 +60,8 @@ export default function Level5Input({ stage }: Level5InputProps) {
     } catch (error) {
       console.warn('[Level5Input] API failed, using fallback:', error);
       const fallback = FALLBACK_SCRIPTS[stage.questId] ?? FALLBACK_SCRIPTS['skeleton-birthday'];
+      // Replace loading vignette with fallback
+      setVignetteSteps(null);
       setLastScript(fallback);
       setLastResult({ script: fallback, source: 'fallback' });
 
@@ -61,7 +71,7 @@ export default function Level5Input({ stage }: Level5InputProps) {
     } finally {
       setIsGenerating(false);
     }
-  }, [userInput, stage, setLastScript, speak]);
+  }, [userInput, stage, setLastScript, setVignetteSteps, speak]);
 
   const handleTryAgain = useCallback(() => {
     setLastResult(null);

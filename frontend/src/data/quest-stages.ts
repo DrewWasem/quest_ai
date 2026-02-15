@@ -2115,6 +2115,16 @@ export const LEVEL_5_STAGES: Record<string, Level5Stage> = {
     sentenceStarters: ['Make the', 'Cast a', 'Have the', 'In the kitchen,'],
     systemPromptKey: 'mage-kitchen',
   },
+  'free-play': {
+    id: 'free-play-5',
+    questId: 'free-play',
+    stageNumber: 5,
+    title: 'Creative Genius',
+    intro: "This is YOUR playground! Write anything — there are no wrong answers!",
+    promptPlaceholder: 'Make the knight ride a giant pizza while the mage shoots fireworks',
+    sentenceStarters: ['Make the', 'Have the', 'Create a scene where', 'What if'],
+    systemPromptKey: 'free-play',
+  },
 };
 
 export function getLevel4Stage(zoneId: string): Level4Stage | null {

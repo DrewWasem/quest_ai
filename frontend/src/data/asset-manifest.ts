@@ -431,6 +431,48 @@ export const TASK_ASSETS: Record<string, TaskAssets> = {
     ],
   },
 
+  'free-play': {
+    description: 'Creative Playground — all characters, curated props',
+    characters: [
+      'knight', 'barbarian', 'mage', 'ranger', 'rogue', 'rogue_hooded', 'druid', 'engineer',
+      'skeleton_warrior', 'skeleton_mage', 'skeleton_rogue', 'skeleton_minion', 'skeleton_golem', 'necromancer',
+      'space_ranger', 'ninja', 'clown', 'robot', 'robot_two', 'survivalist',
+      'witch', 'vampire', 'black_knight', 'superhero', 'caveman', 'frost_golem',
+    ],
+    animationPacks: ['general', 'movement_basic', 'movement_advanced', 'combat_melee', 'combat_ranged', 'simulation', 'special', 'tools'],
+    props: [
+      // Party (from skeleton-birthday)
+      { key: 'cake_birthday', path: 'tiny-treats/baked-goods/cake_birthday.gltf' },
+      { key: 'present_A_red', path: 'kaykit/packs/holiday/present_A_red.gltf' },
+      { key: 'present_B_blue', path: 'kaykit/packs/holiday/present_B_blue.gltf' },
+      { key: 'banner_blue', path: 'kaykit/packs/dungeon/banner_blue.gltf' },
+      { key: 'banner_red', path: 'kaykit/packs/dungeon/banner_red.gltf' },
+      // Food (from skeleton-pizza / mage-kitchen)
+      { key: 'pizza_pepperoni', path: 'kaykit/packs/restaurant/food_pizza_pepperoni_plated.gltf' },
+      { key: 'pie_apple', path: 'tiny-treats/baked-goods/pie_apple.gltf' },
+      { key: 'bread', path: 'tiny-treats/baked-goods/bread.gltf' },
+      // Kitchen (from mage-kitchen)
+      { key: 'stove', path: 'tiny-treats/charming-kitchen/stove.gltf' },
+      { key: 'pot', path: 'tiny-treats/charming-kitchen/pot.gltf' },
+      { key: 'pan', path: 'tiny-treats/charming-kitchen/pan.gltf' },
+      // Dungeon (from dungeon-concert)
+      { key: 'chest', path: 'kaykit/packs/dungeon/chest_mimic.gltf' },
+      { key: 'torch', path: 'kaykit/packs/dungeon/torch.gltf' },
+      { key: 'barrel', path: 'kaykit/packs/dungeon/barrel.gltf' },
+      { key: 'table_long', path: 'kaykit/packs/dungeon/table_long.gltf' },
+      // Music (from dungeon-concert)
+      { key: 'guitar', path: 'poly-pizza/interior/coffeehouse-lounge/Electric guitar.glb' },
+      { key: 'drums', path: 'poly-pizza/interior/coffeehouse-lounge/Drum Set.glb' },
+      { key: 'microphone', path: 'poly-pizza/interior/coffeehouse-lounge/Microphone.glb' },
+      // Nature (from adventurers-picnic)
+      { key: 'tree', path: 'tiny-treats/pretty-park/tree.gltf' },
+      { key: 'bench', path: 'tiny-treats/pretty-park/bench.gltf' },
+      { key: 'rock', path: 'kaykit/packs/forest_nature/Rock_1_A_Color1.gltf' },
+      // Playground (from barbarian-school)
+      { key: 'slide', path: 'tiny-treats/fun-playground/slide_A.gltf' },
+    ],
+  },
+
   'skeleton-pizza': {
     description: 'T6: Skeleton Pizza Delivery',
     characters: ['skeleton_warrior', 'skeleton_rogue', 'knight', 'ranger'],

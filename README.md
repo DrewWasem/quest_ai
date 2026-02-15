@@ -1,6 +1,8 @@
+<!-- Uncomment when hero screenshot is captured:
 <p align="center">
   <img src="docs/screenshots/hero.png" alt="Prompt Quest — A kid types a description and a 3D scene comes alive" width="720" />
 </p>
+-->
 
 <h1 align="center">Prompt Quest</h1>
 
@@ -193,6 +195,10 @@ This entire project — every line of code, every system prompt, every cache ent
 - **Custom hooks** — automatic TypeScript checking, context management, pre-commit validation
 
 For a detailed walkthrough of the project — architecture, educational design, the 7-day build journey, and how Opus 4.6 powers everything — see the **[Judge's Guide](docs/judges-guide.md)**.
+
+## Security & privacy
+
+No user accounts, no data collection, no cookies, no tracking. API key stays server-side via Vercel serverless proxy. All kid-facing content reviewed for age-appropriateness. See **[SECURITY.md](SECURITY.md)** for details.
 
 ## License
 

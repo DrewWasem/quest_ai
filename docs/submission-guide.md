@@ -29,6 +29,7 @@
 | Architecture | DONE | `docs/architecture-overview.md` |
 | Claude Code showcase | DONE | `docs/claude-code-showcase.md` |
 | Open source compliance | DONE | All CC0/CC-BY, non-open assets removed |
+| Security & privacy | DONE | `SECURITY.md` at repo root |
 | Build passes | DONE | 0 TS errors, 679 modules |
 
 ---
@@ -83,98 +84,92 @@ See **Video Script** below. This is the most important deliverable.
 
 ## Video Script (3:00-3:30)
 
+### Approach: Daughter Plays, Drew Narrates
+
+**Why this works:** Judges see dozens of screen-recorded demos. A real kid in the target age range (7-11) genuinely reacting to the game is unforgettable. Her laughter at a funny fail proves the product better than any slide deck.
+
+**Format:** Screen recording + audio (her voice/reactions + Drew's voiceover). Screen-only is fine — no face on camera needed.
+
+**Key principle:** Don't script her reactions. Let her genuinely respond. The funny fails are designed to land with kids — trust the product. If she laughs, that's your demo.
+
 ### Pre-Recording Checklist
 
 - [ ] Browser open to game (deployed URL or localhost)
 - [ ] Browser resized to ~1280x800, centered
 - [ ] All other windows/notifications closed
-- [ ] These prompts copied and ready to paste (Cmd+V):
+- [ ] These prompts ready (she can type them OR you pre-paste with Cmd+V):
   - `skeleton eats pizza` (FUNNY_FAIL)
   - `skeleton gets the best birthday ever` (FULL_SUCCESS)
   - `adventurers have picnic with blanket basket food and nature` (FULL_SUCCESS)
+- [ ] **Alt: Use Mad Libs mode** (Stages 1-3) — she fills in blanks, no typing pressure
 - [ ] Game refreshed to clean state
 - [ ] Audio working (SFX + music should play when entering a zone)
-- [ ] Screen recording started with mic audio
+- [ ] Screen recording started with mic capturing both voices
+- [ ] Do a 30-second practice run so she knows the basic flow (click pillar → type → watch)
 
-### SCENE 1: THE HOOK (0:00 - 0:15)
+### SCENE 1: THE HOOK (0:00 - 0:10)
 
-**Start already inside skeleton-birthday zone with a scene playing.**
+**Start with a scene already playing (pre-record or live).**
 
-> "What happens when a kid types 'skeleton gets the best birthday ever' into an AI game?"
->
-> *[Scene plays — cake, presents, skeleton cheering, confetti]*
->
-> "This. Opus 4.6 reads their description and builds a 3D animated scene — characters, props, animations, sound — all in real time."
+> **Drew (voiceover):** "What happens when a kid describes a scene to an AI?"
 
-**Why:** Opens with the most impressive visual. No intro, no "hi I'm Drew." Hook in 5 seconds.
+*[Cut to or hold on: daughter watching the scene play out, her audio reaction]*
 
-### SCENE 2: THE PROBLEM (0:15 - 0:30)
+**Why:** Opens with the real thing. No intro, no setup. A kid + the game = instant hook.
 
-> "Most AI tools for kids are text-in, text-out. But kids ages 7 to 11 don't learn from reading walls of text. They learn by doing — by seeing their ideas come alive."
->
-> "So I built Prompt Quest."
+### SCENE 2: THE SETUP (0:10 - 0:30)
 
-### SCENE 3: THE VILLAGE (0:30 - 1:15)
+> **Drew (voiceover):** "This is my daughter playing Prompt Quest — a game I built with Claude Opus 4.6. She types a description and the AI builds a 3D animated scene. But here's the twist — vague descriptions don't get error messages. They get something way better."
 
-**Navigate the village. Show the world.**
+*[She navigates to the village, clicks a glowing quest marker, camera flies in]*
 
-> "You enter a medieval village — hex terrain, buildings, mountains in the background. It's a persistent 3D world built with React Three Fiber."
+### SCENE 3: THE FUNNY FAIL (0:30 - 1:30)
 
-**Walk toward a glowing zone marker.**
+**She's in skeleton-birthday zone. She types or you paste `skeleton eats pizza`.**
 
-> "These glowing pillars are quests. There are eight zones scattered around the village — seven themed quests plus a sandbox that unlocks after you complete three."
+> **Drew (voiceover, brief):** "She needs to plan a birthday party for a skeleton. Let's see what she tries."
 
-**Click the marker. Camera flies into the zone.**
+*[Let her type or dictate. Don't rush.]*
 
-> "The camera flies you in. Now here's where the AI comes in."
+*[Scene plays — skeleton spawns, taunts, pizza appears, laugh-tears float around]*
 
-### SCENE 4: THE FUNNY FAIL (1:15 - 2:00)
+**KEY MOMENT: Capture her genuine reaction.** The skeleton eating pizza at its own birthday party is designed to be funny. If she laughs — that's your entire pitch.
 
-**Inside skeleton-birthday zone. Paste `skeleton eats pizza`.**
+> **Drew (voiceover, after scene):** "No wrong answer. No red X. The skeleton got pizza instead of cake — and the game tells her why. She wants to try again because the failure was hilarious."
 
-> "A kid needs to plan a birthday party for a skeleton. Let's see what happens with a vague description."
+*[Point to feedback panel briefly]*
 
-*[Scene plays — skeleton spawns, taunts, pizza emoji, laugh-tears]*
+### SCENE 4: THE SUCCESS (1:30 - 2:15)
 
-> "Ha — the skeleton gets pizza, but it's a birthday party, not a pizza party. Watch the feedback..."
+**She types or you paste `skeleton gets the best birthday ever`.**
 
-**Point to the feedback panel.**
+> **Drew (voiceover, brief):** "Now watch what happens with a better description."
 
-> "It says 'Skeletons love pizza, but birthdays need cake!' No grade, no wrong answer. Just a funny moment and a hint. The kid wants to try again because the failure was hilarious."
+*[Scene plays — table, cake, presents, skeleton cheering, confetti, hearts]*
 
-> "That's the core insight — failure is funnier than success. Kids retry because they want to see what happens next, not because they're told to."
+*[Capture her reaction to the celebration]*
 
-### SCENE 5: THE SUCCESS (2:00 - 2:30)
+> **Drew (voiceover):** "Cake, presents, decorations — all generated by Opus 4.6 from one sentence. The AI produces a JSON scene script referencing only the 1,686 3D models in our vocabulary contract. It literally cannot hallucinate a prop that doesn't exist."
 
-**Paste `skeleton gets the best birthday ever`.**
+### SCENE 5: SHOW VARIETY (2:15 - 2:40)
 
-> "Now with a better description..."
+**She picks another quest (adventurers-picnic). Types or you paste the picnic prompt.**
 
-*[Scene plays — table, cake, presents, banner, skeleton cheering, hearts]*
+> **Drew (voiceover):** "Eight quest zones, each with their own characters and props."
 
-> "Full party — cake, presents, decorations, and the skeleton is celebrating. The narration, the props, the animations — all generated by Opus 4.6 from one sentence."
+*[Picnic scene plays — adventurers, blanket, trees, basket]*
 
-> "Under the hood, Claude generates a JSON scene script. Every asset name is constrained to a vocabulary contract — 1,686 registered 3D models. The AI literally cannot hallucinate a prop that doesn't exist."
+> **Drew:** "Different zone, different characters, same engine."
 
-### SCENE 6: SHOW VARIETY (2:30 - 2:50)
+### SCENE 6: THE CLOSE (2:40 - 3:15)
 
-**Exit zone. Navigate to adventurers-picnic. Paste the picnic prompt.**
+**Pull camera back to village overview. Daughter can keep exploring if she wants — her background audio is fine.**
 
-> "Seven different quests, each with their own characters, props, and atmosphere."
-
-*[Picnic scene plays]*
-
-> "Different zone, different characters, same engine. Five adventurers on a blanket under a tree with a picnic basket."
-
-### SCENE 7: THE CLOSE (2:50 - 3:15)
-
-**Pull camera back to village overview.**
-
-> "Eight quest zones. Twenty-seven animated characters sharing a skeleton rig with 139 animation clips. Over four thousand 3D models. 166 pre-cached responses for instant demos. 665 audio files. All open source, all CC0."
+> **Drew (voiceover):** "Twenty-seven animated characters. Over four thousand 3D models. 166 pre-cached responses. 665 audio files. All open source."
 >
 > "I built this solo in seven days — entirely with Claude Code and Opus 4.6."
 >
-> "The Claude Code setup behind this includes seven domain-expert AI personas, a conductor workflow that orchestrates research, planning, and implementation, and a persistent memory system with 60 files that survived across 30 development sessions."
+> "The Claude Code setup includes seven domain-expert AI personas, a conductor workflow, and a persistent memory system that survived across 30 development sessions."
 >
 > *[Beat]*
 >
@@ -188,6 +183,15 @@ See **Video Script** below. This is the most important deliverable.
 - End card (last 3s): `github.com/DrewWasem/kids_ai_game | Built solo by Drew`
 - No background music needed — game provides its own
 - One continuous take > fancy editing
+
+### Tips for Recording With Your Daughter
+
+1. **Don't over-direct.** Tell her "you're planning a party for a skeleton — type what you think should happen." Her natural language IS the demo.
+2. **Mad Libs mode is your safety net.** If typing is slow or stressful, switch to Mad Libs (Stages 1-3) — she fills in blanks like "The skeleton _____ the _____." This IS a feature, not a workaround.
+3. **Let her pick the quest.** If she gravitates to a different zone than skeleton-birthday, go with it. All zones have cached responses.
+4. **Two takes max.** The first take with genuine reactions is almost always the best one. Don't chase perfection.
+5. **Her commentary > your script.** If she says something funny or insightful about the game, keep it in. Authentic kid reactions beat polished voiceover every time.
+6. **Privacy:** Screen + audio only (no face) is completely fine and keeps the focus on the game.
 
 ### If Something Breaks
 

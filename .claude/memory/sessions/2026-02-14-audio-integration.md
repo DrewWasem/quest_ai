@@ -49,6 +49,13 @@
 - Created `docs/asset-expansion-summary.md` — full asset inventory doc
 - Bundle: 2,148 kB JS (484 kB gzipped), 0 TS errors
 
+### 6. Git: PR #20 Merged
+- Created `asset-expansion` branch
+- Staged 2,815 files (~65MB)
+- Pushed to origin, created PR #20 via GitHub MCP
+- Squash merged as commit `0381b69f`
+- Local main synced, clean working tree
+
 ## Open Questions / Next Steps
 - UI asset packs not yet extracted (Fantasy UI Borders, etc.)
 - May want volume sliders in SettingsPanel

@@ -17,6 +17,7 @@ Auto-generated session summaries documenting work completed in each Claude Code 
 | [Level 4/5 Implementation](2026-02-14-level-4-5-implementation.md) | level-4, level-5, implementation, free-text, api, conductor | 2026-02-14 | 2026-02-14 |
 | [Vignette Overhaul Planning](2026-02-14-vignette-overhaul-planning.md) | vignettes, planning, assets, review, conductor, merge, research, analysis, asset-integration, implementation, emotions, sound, movement-templates, zone-props, rewrites, bug-fixes, completed | 2026-02-14 | 2026-02-14 |
 | [Vignette Overhaul Execution](2026-02-14-vignette-overhaul-execution.md) | vignettes, execution, parallel-agents, build-fixes, 5-beat-structure, zone-props | 2026-02-14 | 2026-02-14 |
+| [Audio Integration + Kenney Registration](2026-02-14-audio-integration.md) | audio, kenney, sfx, music, ogg, glb, registration, prop-paths | 2026-02-14 | 2026-02-15 |
 | [Vignette Wow Factor Audit Report](2026-02-15-vignette-wow-factor-audit.md) | vignettes, audit, wow-factor, report, quality-review, movement-templates | 2026-02-15 | 2026-02-15 |
 | [Roadmap v2 + Project Documentation](2026-02-15-roadmap-v2-and-project-doc.md) | roadmap, documentation, planning, free-play-zone, vignette-quality | 2026-02-15 | 2026-02-15 |
 | [Movement Template Migration](2026-02-15-movement-template-migration.md) | vignettes, migration, movement-templates, parallel-agents | 2026-02-15 | 2026-02-15 |

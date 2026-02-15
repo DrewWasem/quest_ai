@@ -8,8 +8,6 @@ PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
 
 # Reset context guardian flag for fresh session
 rm -f "$PROJECT_DIR/.claude/.context-guard-fired"
-# Reset message counter for fresh session
-rm -f "$MEMORY_DIR/.message-counter"
 
 # Kick off file index update in background (non-blocking)
 if [ -x "${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/update_file_index.sh" ]; then

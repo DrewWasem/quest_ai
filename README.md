@@ -89,6 +89,8 @@ Every player description flows through a **vocabulary-contract system** that con
 - **Comedy calibration** — The system prompt instructs Claude to make failures funnier than successes. A vague description about a birthday party produces a skeleton slipping on frosting, not a generic error
 - **Three-tier response** — (1) Instant cache lookup against 166 pre-computed golden responses, (2) live Opus 4.6 API call with vocabulary enforcement, (3) pre-written fallback scripts so the demo never shows an error
 - **Five difficulty levels** — Mad Libs fill-in-the-blank (levels 1-3) progresses to free-text description (levels 4-5), scaffolding kids from structured to open-ended thinking
+- **Loading vignettes** — While the AI thinks, characters act out "thinking" animations on stage so the 3D world stays alive during API calls
+- **Serverless proxy** — API key stays server-side via Vercel serverless function; the game works without any key using the built-in cache
 
 ## Run locally
 
@@ -112,15 +114,17 @@ cp ../.env.example .env
 
 | Metric | Count |
 |--------|-------|
-| Quest tasks | 7 across 2 explorable village zones |
+| Quest zones | 8 (7 themed + 1 sandbox) on a medieval village circle |
+| Hand-crafted vignettes | 421 across 7 zone files |
+| Movement templates | 53 reusable choreography patterns |
 | Golden cache entries | 166 instant demo responses |
 | 3D models | 4,270+ GLTF assets |
 | Animated characters | 28 with shared skeleton rig |
 | Animation clips | 139 (idle, walk, run, attack, dance, cheer...) |
 | Registered props | 2,186 with fuzzy name resolution |
 | Audio files | 665 OGGs + synthesized fallbacks |
+| Named emotions | 61 semantic mappings to pixel-art emotes |
 | TypeScript errors | 0 |
-| Production build | 678 modules, ~493 kB gzipped |
 
 ## Architecture
 
@@ -137,7 +141,7 @@ cp ../.env.example .env
 |  Characters (28) | Props (2,186) | Atmosphere | Audio       |
 +-------------------------------------------------------------+
 |           Three-Tier Response System                         |
-|  Cache (166) --> Claude Opus 4.6 --> Fallback (13)          |
+|  Cache (166) --> Claude Opus 4.6 --> Fallback (14)          |
 +-------------------------------------------------------------+
 ```
 
@@ -145,7 +149,7 @@ cp ../.env.example .env
 
 **Scene Player 3D** — Executes scene scripts action-by-action: spawning characters with skeletal animations, placing props with bounce entrances, triggering movement along arc/linear paths, playing emotes as pixel-art emoji bubbles, and firing particle effects with sound.
 
-**Seven Quests** — Each quest has its own atmosphere (fog, lighting, particles, music), environment props, and cast of characters:
+**Eight Quest Zones** — Each quest has its own atmosphere (fog, lighting, particles, music), environment props, and cast of characters:
 
 | # | Quest | What the kid does |
 |---|-------|----|
@@ -156,6 +160,7 @@ cp ../.env.example .env
 | 5 | Dungeon Rock Concert | Stage a concert underground |
 | 6 | Skeleton Pizza Delivery | Deliver pizza across the village |
 | 7 | Adventurers' Picnic | Set up an outdoor feast |
+| 8 | Creative Playground | Sandbox — all characters, all props, no wrong answers (unlocks after 3 zones) |
 
 ## 3D asset credits
 
@@ -172,7 +177,12 @@ All 3D assets are open-source and free for commercial use:
 
 ## Built with Claude Code
 
-This entire project — every line of code, every system prompt, every cache entry — was built using [Claude Code](https://claude.ai/code) and Claude Opus 4.6 over 7 days. The `.claude/` directory contains the orchestration setup: 7 domain-expert SMEs, 32 workflow skills, persistent memory tree, and custom hooks for typechecking and context management.
+This entire project — every line of code, every system prompt, every cache entry — was built using [Claude Code](https://claude.ai/code) and Claude Opus 4.6 over 7 days. The `.claude/` directory contains the orchestration setup:
+
+- **7 domain-expert SMEs** — story-writer, character-director, ece-professor, prompt-writer, child-game-design, 3d-game-development, 3d-scale-tester
+- **32 workflow skills** — conductor orchestration, research, planning, implementation, validation, content review, memory management
+- **Persistent memory tree** — cross-session knowledge storage for decisions, patterns, bugs, and preferences
+- **Custom hooks** — automatic TypeScript checking, context management, pre-commit validation
 
 ## License
 

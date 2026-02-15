@@ -18,6 +18,10 @@
   <img src="https://img.shields.io/badge/License-MIT-green" alt="MIT License" />
 </p>
 
+<p align="center">
+  <a href="https://quest-ai-smoky.vercel.app/"><strong>Play the live demo</strong></a>
+</p>
+
 ---
 
 ## What is this?
@@ -91,6 +95,10 @@ Every player description flows through a **vocabulary-contract system** that con
 - **Five difficulty levels** — Mad Libs fill-in-the-blank (levels 1-3) progresses to free-text description (levels 4-5), scaffolding kids from structured to open-ended thinking
 - **Loading vignettes** — While the AI thinks, characters act out "thinking" animations on stage so the 3D world stays alive during API calls
 - **Serverless proxy** — API key stays server-side via Vercel serverless function; the game works without any key using the built-in cache
+
+## Try it
+
+**[Play the live demo](https://quest-ai-smoky.vercel.app/)** — hosted on Vercel's free tier, so the initial load may take a moment while the 3D assets stream in. Once loaded, cached responses play instantly.
 
 ## Run locally
 

@@ -95,11 +95,11 @@ git clone ... && cd frontend && npm install && npm run dev
 
 ## Stats
 
-- 7 quest tasks, 2 explorable zones
+- 7 quest tasks + 1 free-play zone, 8 zones total
 - 166 golden cache entries (instant demo responses)
-- 4,270+ 3D models, 28 animated characters, 139 animation clips
+- 4,270+ 3D models, 27 animated characters, 139 animation clips
 - 665 audio files, real-time SFX + background music
-- 2,186 registered props with fuzzy name resolution
+- 1,686 registered props with fuzzy name resolution
 - 0 TypeScript errors, production build passes
 
 ## Architecture
@@ -121,7 +121,7 @@ Draft:
 Prompt Quest is an AI-powered 3D game that teaches kids (ages 7-11)
 descriptive thinking through play. Instead of typing into a chatbot,
 kids describe scenes and watch them come alive in a medieval village
-world with 28 animated characters and thousands of 3D props.
+world with 27 animated characters and thousands of 3D props.
 
 [Problem] Existing AI tools for kids are text-in, text-out — boring
 and abstract. Kids learn by doing, not by reading feedback about their
@@ -381,7 +381,7 @@ This is unusual for a hackathon project and shows deep Claude Code expertise.
 
 **Screen:** Let the celebration play out for a moment. Then:
 
-> "Under the hood, Claude generates a JSON scene script with spawn, move, animate, and react actions. Every prop name is constrained to our vocabulary contract — 2,186 registered 3D models. The AI literally cannot hallucinate an asset that doesn't exist."
+> "Under the hood, Claude generates a JSON scene script with spawn, move, animate, and react actions. Every prop name is constrained to our vocabulary contract — 1,686 registered 3D models. The AI literally cannot hallucinate an asset that doesn't exist."
 
 ---
 

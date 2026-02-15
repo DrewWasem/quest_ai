@@ -26,7 +26,7 @@ Golden Response Cache: 166 pre-computed Opus responses served instantly during d
 
 ### Village World
 - Persistent hex-tile medieval village with quest zones
-- 2 quest zones: skeleton-birthday (Z=-16), adventurers-picnic (Z=+16)
+- 8 quest zones arranged in a circle around the village center
 - Village center with buildings, road, decorations
 - Zone markers (glowing pillars) for navigation
 - Smooth camera transitions between village and zones
@@ -46,11 +46,11 @@ Golden Response Cache: 166 pre-computed Opus responses served instantly during d
 | # | Task | Characters | Zone |
 |---|------|-----------|------|
 | T1 | Skeleton's Surprise Birthday | Skeleton + Adventurers | skeleton-birthday |
-| T2 | Knight's Space Mission | Knight, SpaceRanger | — |
-| T3 | Mage vs. Kitchen | Mage, Witch | — |
-| T4 | Barbarian's School | Barbarian + all | — |
-| T5 | Dungeon Rock Concert | All + Skeleton + Clown | — |
-| T6 | Skeleton Pizza Delivery | Skeletons | — |
+| T2 | Knight's Space Mission | Knight, SpaceRanger | knight-space |
+| T3 | Mage vs. Kitchen | Mage, Witch | mage-kitchen |
+| T4 | Barbarian's School | Barbarian + all | barbarian-school |
+| T5 | Dungeon Rock Concert | All + Skeleton + Clown | dungeon-concert |
+| T6 | Skeleton Pizza Delivery | Skeletons | skeleton-pizza |
 | T7 | Adventurers' Picnic | All 5 Adventurers | adventurers-picnic |
 
 ## Commands
@@ -65,21 +65,20 @@ vercel --prod                 # Deploy to Vercel
 ## Key Reference Docs (read on demand, not always in context)
 
 - `docs/ROADMAP.md` — Post-hackathon roadmap (Phases 1-3 complete, Free Play Zone next)
-- `docs/Prompt-Quest-Backend-Architecture.html` — Claude Code primitives mapping
-- `docs/Prompt-Quest-Execution-Playbook.html` — Risk mitigation, demo failsafes
-- `docs/Prompt-Quest-Outrageous-Tasks-Asset-Library.html` — Tasks, asset library, vocabulary contract
-- `docs/Prompt-Quest-Research-Analysis.html` — Child development, hackathon strategy
+- `docs/how-it-works.md` — Technical deep dive (vocabulary contract, three-tier response, comedy pedagogy)
+- `docs/architecture-overview.md` — System architecture diagrams + data flow
+- `docs/claude-code-showcase.md` — How Claude Code extensibility built the project
 
 ## Key Files
 
 - `frontend/src/App.tsx` — Main app with header, canvas, input panel
 - `frontend/src/game/VillageWorld.tsx` — Persistent hex village with zones
 - `frontend/src/game/VillageCamera.tsx` — Camera controller with zone transitions
-- `frontend/src/game/ScenePlayer3D.tsx` — 3D action executor (~1000 lines)
+- `frontend/src/game/ScenePlayer3D.tsx` — 3D action executor (~4,500 lines)
 - `frontend/src/game/Character3D.tsx` — KayKit character with SkeletonUtils clone
 - `frontend/src/game/Prop3D.tsx` — GLTF prop component with bounce entrance
 - `frontend/src/game/AnimationController.ts` — Shared animation system (139 clips)
-- `frontend/src/game/SoundManager3D.ts` — OGG audio + synthesized fallbacks (470 lines)
+- `frontend/src/game/SoundManager3D.ts` — OGG audio + synthesized fallbacks (~510 lines)
 - `frontend/src/game/R3FGame.tsx` — R3F canvas with VillageCamera + VillageWorld
 - `frontend/src/components/PromptInput.tsx` — Free-text input + TTS + result display
 - `frontend/src/components/MadLibsInput.tsx` — Structured Mad Libs input
@@ -91,10 +90,10 @@ vercel --prod                 # Deploy to Vercel
 ## Assets
 
 - **3D Models**: 4,270+ GLTFs (KayKit, Kenney, Tiny Treats, Poly Pizza, FoodMegaPack)
-- **Characters**: 28 GLBs with shared Rig_Medium skeleton
+- **Characters**: 27 GLBs with shared Rig_Medium skeleton
 - **Animations**: 8 GLBs containing 139 clips
 - **Audio**: 665 OGGs (Kenney) + synthesized fallbacks
-- **PROP_PATHS**: 2,186 registered entries in ScenePlayer3D.tsx
+- **PROP_PATHS**: 1,686 registered entries in ScenePlayer3D.tsx
 - **Location**: `frontend/public/assets/3d/` and `frontend/public/assets/audio/`
 
 ## Scene Script Format

@@ -40,7 +40,7 @@
 │  │                                                             │ │
 │  │  ┌────────────┐ ┌────────────┐ ┌──────────────────────┐   │ │
 │  │  │ Character  │ │ Prop3D     │ │ Particle Effects     │   │ │
-│  │  │ 3D (28     │ │ (2,186     │ │ (confetti, hearts,   │   │ │
+│  │  │ 3D (27     │ │ (1,686     │ │ (confetti, hearts,   │   │ │
 │  │  │ models,    │ │ registered │ │  explosions, etc.)   │   │ │
 │  │  │ 139 anims) │ │ props)     │ │                      │   │ │
 │  │  └────────────┘ └────────────┘ └──────────────────────┘   │ │
@@ -143,7 +143,7 @@
 | Character3D | `game/Character3D.tsx` | ~300 | KayKit character with SkeletonUtils clone |
 | Prop3D | `game/Prop3D.tsx` | ~150 | GLTF prop with bounce entrance animation |
 | AnimationController | `game/AnimationController.ts` | ~200 | Shared animation system (139 clips) |
-| SoundManager3D | `game/SoundManager3D.ts` | ~470 | OGG playback + synthesized fallbacks |
+| SoundManager3D | `game/SoundManager3D.ts` | ~510 | OGG playback + synthesized fallbacks |
 | gameStore | `stores/gameStore.ts` | ~300 | Zustand state (zones, tasks, badges, history) |
 | PromptInput | `components/PromptInput.tsx` | ~250 | Free text input + TTS + result display |
 | MadLibsInput | `components/MadLibsInput.tsx` | ~200 | Structured fill-in-the-blank input |

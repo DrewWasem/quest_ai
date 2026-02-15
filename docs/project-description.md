@@ -4,13 +4,13 @@
 
 ---
 
-Prompt Quest is an AI-powered 3D game that teaches kids (ages 7-11) descriptive thinking through play. Instead of typing into a chatbot, kids describe scenes and watch them come alive in a medieval village world with 28 animated characters and thousands of 3D props.
+Prompt Quest is an AI-powered 3D game that teaches kids (ages 7-11) descriptive thinking through play. Instead of typing into a chatbot, kids describe scenes and watch them come alive in a medieval village world with 27 animated characters and thousands of 3D props.
 
 **The problem.** Existing AI tools for kids are text-in, text-out — boring and abstract. Kids learn by doing, not by reading feedback about their "prompts."
 
 **The solution.** In Prompt Quest, a kid might type "the skeleton tries to juggle three birthday cakes while riding a unicycle" and Claude Opus 4.6 generates a scene script — spawning characters, placing props, triggering animations, and writing a funny narration. The 3D scene plays out in the browser with real audio and particle effects.
 
-**How Claude is used.** Every player description goes through a three-tier response system: (1) instant cache lookup against 166 pre-computed golden responses, (2) live Opus 4.6 API call with a vocabulary-contract system prompt that constrains output to valid assets, (3) pre-written fallback scripts so the demo never shows an error. Claude generates JSON scene scripts with spawn, move, animate, emote, and react actions — each referencing only the 2,186 registered 3D models and 28 animated characters. The AI literally cannot hallucinate an asset that doesn't exist.
+**How Claude is used.** Every player description goes through a three-tier response system: (1) instant cache lookup against 166 pre-computed golden responses, (2) live Opus 4.6 API call with a vocabulary-contract system prompt that constrains output to valid assets, (3) pre-written fallback scripts so the demo never shows an error. Claude generates JSON scene scripts with spawn, move, animate, emote, and react actions — each referencing only the 1,686 registered 3D models and 27 animated characters. The AI literally cannot hallucinate an asset that doesn't exist.
 
 **Comedy-first design.** Failure is always funnier than success. When a kid's description is vague, the skeleton drops all three cakes and slips on frosting. This makes kids want to try again with more specific descriptions — teaching descriptive precision without ever saying the word "learning."
 

@@ -101,7 +101,7 @@ Boris Cherny, Cat Wu, Thariq Shihpar, Lydia Hallie, Ado Kukic, Jason Bigman
 - [ ] Show a FUNNY_FAIL (comedy is the hook — skeleton drops birthday cake, etc.)
 - [ ] Show a FULL_SUCCESS (satisfying moment)
 - [ ] Briefly explain: "Opus 4.6 reads the kid's description, generates a scene script with characters, props, animations, and a funny narration"
-- [ ] End with: "7 quests, 166 cached responses, 2,186 props, 28 animated characters, all running in the browser"
+- [ ] End with: "7 quests, 166 cached responses, 1,686 props, 27 animated characters, all running in the browser"
 - [ ] Tools: OBS Studio, QuickTime, or Loom
 
 #### C. Project Description (for submission form) -- DONE (`docs/project-description.md`)

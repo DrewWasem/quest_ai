@@ -18,7 +18,7 @@ Transformed 476 static vignettes across 7 zones into mini comic strips with move
 | No dialogue (emotes are single Unicode emoji) | Characters feel like props, not people |
 | Only 12% of emotion assets used | Missed vocabulary-building opportunity |
 | Only 4.5% of audio files registered | Scenes are mostly silent |
-| Only 5% of 3D props appear in vignettes | Scenes look empty despite 2,186 available |
+| Only 5% of 3D props appear in vignettes | Scenes look empty despite 1,686 available |
 | No scene complexity scaling | Vague and perfect prompts produce similar scenes |
 | No narrator commentary | Educational lessons are text-only, post-scene |
 

@@ -85,7 +85,7 @@ Kid types a description
 
 Every player description flows through a **vocabulary-contract system** that constrains Claude's output to valid assets:
 
-- **Scene scripts** — Claude generates JSON with `spawn`, `move`, `animate`, `emote`, and `react` actions, each referencing only assets from the 2,186-entry prop registry and 28 character models
+- **Scene scripts** — Claude generates JSON with `spawn`, `move`, `animate`, `emote`, and `react` actions, each referencing only assets from the 1,686-entry prop registry and 27 character models
 - **Comedy calibration** — The system prompt instructs Claude to make failures funnier than successes. A vague description about a birthday party produces a skeleton slipping on frosting, not a generic error
 - **Three-tier response** — (1) Instant cache lookup against 166 pre-computed golden responses, (2) live Opus 4.6 API call with vocabulary enforcement, (3) pre-written fallback scripts so the demo never shows an error
 - **Five difficulty levels** — Mad Libs fill-in-the-blank (levels 1-3) progresses to free-text description (levels 4-5), scaffolding kids from structured to open-ended thinking
@@ -119,9 +119,9 @@ cp ../.env.example .env
 | Movement templates | 53 reusable choreography patterns |
 | Golden cache entries | 166 instant demo responses |
 | 3D models | 4,270+ GLTF assets |
-| Animated characters | 28 with shared skeleton rig |
+| Animated characters | 27 with shared skeleton rig |
 | Animation clips | 139 (idle, walk, run, attack, dance, cheer...) |
-| Registered props | 2,186 with fuzzy name resolution |
+| Registered props | 1,686 with fuzzy name resolution |
 | Audio files | 665 OGGs + synthesized fallbacks |
 | Named emotions | 61 semantic mappings to pixel-art emotes |
 | TypeScript errors | 0 |
@@ -138,10 +138,10 @@ cp ../.env.example .env
 |   Camera fly     |  Zone-relative   |   TTS narration       |
 +------------------+------------------+-----------------------+
 |              React Three Fiber Canvas                        |
-|  Characters (28) | Props (2,186) | Atmosphere | Audio       |
+|  Characters (27) | Props (1,686) | Atmosphere | Audio       |
 +-------------------------------------------------------------+
 |           Three-Tier Response System                         |
-|  Cache (166) --> Claude Opus 4.6 --> Fallback (14)          |
+|  Cache (166) --> Claude Opus 4.6 --> Fallback (8)           |
 +-------------------------------------------------------------+
 ```
 

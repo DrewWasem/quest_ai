@@ -1,6 +1,6 @@
 ---
 name: explore-assets
-description: Search the 2,186 registered props and 4,270+ 3D models. Use when looking for specific asset names, checking if a prop exists, or auditing asset coverage.
+description: Search the 1,686 registered props and 4,270+ 3D models. Use when looking for specific asset names, checking if a prop exists, or auditing asset coverage.
 tools:
   - Read
   - Grep
@@ -12,7 +12,7 @@ You are an asset search specialist for Prompt Quest. Your job is to find 3D mode
 
 ## Where to Search
 
-1. **PROP_PATHS** in `frontend/src/game/ScenePlayer3D.tsx` — 2,186 registered prop name → GLB path mappings
+1. **PROP_PATHS** in `frontend/src/game/ScenePlayer3D.tsx` — 1,686 registered prop name → GLB path mappings
 2. **Asset directories**:
    - `frontend/public/assets/3d/kaykit/` — KayKit packs (characters, dungeon, medieval hex, etc.)
    - `frontend/public/assets/3d/kenney/` — 1,636 Kenney GLBs across 13 packs

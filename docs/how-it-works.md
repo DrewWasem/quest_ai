@@ -6,7 +6,7 @@
 
 Prompt Quest teaches kids (ages 7-11) descriptive thinking through play. A child types a description like *"the skeleton juggles three birthday cakes while riding a unicycle"* and Claude Opus 4.6 generates a 3D animated scene that plays out in the browser. The twist: vague descriptions produce hilarious failures, making kids *want* to try again with more detail.
 
-No chatbot. No text walls. Just a medieval village, 28 animated characters, and thousands of props waiting to be described into existence.
+No chatbot. No text walls. Just a medieval village, 27 animated characters, and thousands of props waiting to be described into existence.
 
 ## The Vocabulary Contract: How We Prevent AI Hallucination
 
@@ -29,7 +29,7 @@ RULE: ONLY use assets from the lists above — NEVER invent asset names
 
 This is dynamically generated per quest zone from `worlds.ts` — each zone has its own curated set of characters, props, and animations. Claude physically cannot reference an asset outside the contract.
 
-**The result:** 2,186 registered props, 28 characters, 139 animation clips — all addressable by name, all guaranteed to exist as loaded GLTF models.
+**The result:** 1,686 registered props, 27 characters, 139 animation clips — all addressable by name, all guaranteed to exist as loaded GLTF models.
 
 ## The Three-Tier Response System: Zero-Error Demos
 
@@ -53,7 +53,7 @@ Kid types description
          ▼
 ┌─────────────────┐
 │  Tier 3: Fallback│◄── Pre-written generic scene scripts
-│  (instant)       │    13 fallbacks covering all 7 tasks
+│  (instant)       │    8 fallbacks covering all zones
 └──────────────────┘
 ```
 
@@ -135,9 +135,9 @@ Every 3D asset is pre-loaded. Nothing is generated at runtime.
 | Food Mega Pack | 91 | CC0 |
 | Kenney Emotes | 30 | CC0 |
 
-**Character system:** 28 character GLBs share a common skeleton (`Rig_Medium`), enabling 139 animation clips to work across all characters via `SkeletonUtils.clone()`.
+**Character system:** 27 character GLBs share a common skeleton (`Rig_Medium`), enabling 139 animation clips to work across all characters via `SkeletonUtils.clone()`.
 
-**Prop resolution:** The `PROP_PATHS` registry maps 2,186 semantic names to GLTF file paths. Fuzzy matching strips suffixes and tries hyphenated variants, so Claude can say "birthday_cake" or "birthday-cake" and both resolve.
+**Prop resolution:** The `PROP_PATHS` registry maps 1,686 semantic names to GLTF file paths. Fuzzy matching strips suffixes and tries hyphenated variants, so Claude can say "birthday_cake" or "birthday-cake" and both resolve.
 
 **Audio:** 665 OGG files from Kenney with synthesized fallbacks. First play uses Web Audio API synthesis (instant), while the real audio file loads asynchronously for subsequent plays.
 
@@ -158,13 +158,13 @@ The SME system is particularly notable: when creating a new quest task, the `/co
 | Metric | Value |
 |--------|-------|
 | Quest tasks | 7 |
-| Animated characters | 28 |
+| Animated characters | 27 |
 | Animation clips | 139 |
-| Registered props | 2,186 |
+| Registered props | 1,686 |
 | 3D models total | 4,270+ |
 | Audio files | 665 |
 | Golden cache entries | 166 |
-| Fallback scripts | 13 |
+| Fallback scripts | 8 |
 | TypeScript errors | 0 |
 | Build size | 2,128 kB JS (493 kB gzipped) |
 | Development time | 7 days (solo) |

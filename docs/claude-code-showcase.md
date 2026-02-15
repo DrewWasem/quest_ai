@@ -4,7 +4,7 @@
 
 ## The Challenge
 
-Build an AI-powered 3D game for kids — in one week — that connects Claude Opus 4.6 to a real-time 3D renderer with 4,270+ models, 28 animated characters, and 139 animation clips. The game needs to be educational, age-appropriate, and genuinely fun.
+Build an AI-powered 3D game for kids — in one week — that connects Claude Opus 4.6 to a real-time 3D renderer with 4,270+ models, 27 animated characters, and 139 animation clips. The game needs to be educational, age-appropriate, and genuinely fun.
 
 One person. Seven days. No team.
 
@@ -90,7 +90,7 @@ This prevented dozens of false starts during the 7-day sprint.
 
 ## 3. Persistent Memory: Knowledge That Survives Context Windows
 
-Claude Code's context window fills up. With a 4,500-line scene executor, 2,186 prop registrations, and 7 quest zones, a single conversation can't hold everything.
+Claude Code's context window fills up. With a 4,500-line scene executor, 1,686 prop registrations, and 8 quest zones, a single conversation can't hold everything.
 
 The memory system solves this with **69 files across 10 domains**:
 

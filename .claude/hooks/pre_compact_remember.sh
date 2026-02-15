@@ -70,12 +70,7 @@ SUMMARY="$SESSIONS_DIR/.compaction-summary.md"
         done
     fi
 
-    # Message count
-    COUNTER_FILE="$MEMORY_DIR/.message-counter"
-    if [ -f "$COUNTER_FILE" ]; then
-        COUNT=$(cat "$COUNTER_FILE" 2>/dev/null)
-        echo "Messages this session before compaction: $COUNT"
-    fi
+    echo ""
 } > "$SUMMARY"
 
 exit 0

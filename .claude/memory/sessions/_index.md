@@ -14,3 +14,4 @@ Auto-generated session summaries documenting work completed in each Claude Code 
 | [Session Transfer Kit Implementation](2026-02-14-session-transfer-kit.md) | context-management, session-transfer, hooks, agents, infrastructure, testing | 2026-02-14 | 2026-02-14 |
 | [Analysis Report & Overlap Fix](2026-02-14-analysis-report-and-overlap-fix.md) | analysis, report, overlap-fix, spread-system, puppeteer, vignettes, asset-audit, asset-mapping, git-push, prop-expansion, level-4-5-planning | 2026-02-14 | 2026-02-14 |
 | [Emoji & Food Asset Integration](2026-02-14-emoji-food-integration.md) | assets, food, emoji, deployment, 3d, 2d, emotes, particles, pixel-art | 2026-02-14 | 2026-02-14 |
+| [Audio Integration + Kenney Registration](2026-02-14-audio-integration.md) | audio, kenney, sfx, music, ogg, glb, registration, prop-paths | 2026-02-14 | 2026-02-15 |

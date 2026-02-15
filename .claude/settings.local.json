@@ -41,12 +41,24 @@
         ]
       }
     ],
-    "Stop": [
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PROJECT_DIR}/.claude/hooks/post_edit_typecheck.sh\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PROJECT_DIR}/.claude/hooks/stop_remember_nudge.sh\"",
+            "command": "bash \"${CLAUDE_PROJECT_DIR}/.claude/hooks/session_end_log.sh\"",
             "timeout": 10
           }
         ]

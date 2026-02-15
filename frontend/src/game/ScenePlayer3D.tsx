@@ -100,6 +100,41 @@ export { LOCAL_POSITION_MAP as STAGE_MARKS }
 // Kept for backward compatibility — resolves to zone-relative positions at runtime
 const POSITION_MAP = LOCAL_POSITION_MAP
 
+// Auto-SFX: animation clips that should auto-trigger sound effects
+const ANIMATION_SFX_MAP: Record<string, string> = {
+  // Movement (skip Walking/Running — already well-covered by movement templates)
+  // Casting / Magic
+  Casting_Long: 'magic',
+  Ranged_Magic_Spellcasting: 'magic',
+  Ranged_Magic_Spellcasting_Long: 'magic',
+  Ranged_Magic_Summon: 'magic',
+  Ranged_Magic_Shoot: 'magic',
+  // Tools
+  Chop: 'chop',
+  Chopping: 'chop',
+  Hammering: 'impact',
+  Picking: 'impact',
+  // Combat / Impact
+  Hit_A: 'impact',
+  Hit_B: 'impact',
+  Melee_Unarmed_Attack_Punch_A: 'impact',
+  Melee_Unarmed_Attack_Kick: 'impact',
+  Melee_1H_Attack_Slice_Horizontal: 'impact',
+  Melee_1H_Attack_Chop: 'impact',
+  Melee_2H_Attack_Spin: 'impact',
+  // Throws / Jumps
+  Throw: 'whoosh',
+  Jump_Full_Long: 'whoosh',
+  Jump_Full_Short: 'whoosh',
+  // Falls
+  Death_A: 'thud',
+  Death_B: 'thud',
+  // Interactions
+  PickUp: 'impact',
+  Fishing_Cast: 'whoosh',
+  Fishing_Catch: 'coin',
+}
+
 // Lazy-cached per-zone rotation angles (zone faces toward village center)
 let _zoneAngles: Record<string, number> | null = null
 function getZoneAngle(zoneId: string): number {
@@ -2909,6 +2944,27 @@ function getEffectEmojis(effect: string): string[] {
     bubbles: ['🫧', '🫧', '🫧', '🫧', '🫧', '🫧'],
     'glow-pulse': ['✨', '💛', '✨', '💛', '✨', '💛'],
     'skull-burst': ['💀', '☠️', '💀', '☠️', '💀', '☠️'],
+    // ─── EMOTION EFFECTS ──────────────────────────────────
+    angry: ['😤', '💢', '😡', '💢', '😤', '💢', '😡'],
+    scared: ['😱', '💦', '😨', '💦', '😱', '💦', '😨'],
+    love: ['😍', '💕', '❤️', '💘', '😍', '💕', '❤️'],
+    thinking: ['🤔', '💭', '❓', '💭', '🤔', '💭', '❓'],
+    excited: ['🤩', '⚡', '✨', '🤩', '⚡', '✨', '🤩'],
+    sleepy: ['😴', '💤', '😪', '💤', '😴', '💤', '😪'],
+    proud: ['😤', '💪', '✨', '😤', '💪', '✨', '😤'],
+    confused: ['😵‍💫', '❓', '🌀', '😵‍💫', '❓', '🌀', '😵‍💫'],
+    nervous: ['😰', '💦', '😬', '💦', '😰', '💦', '😬'],
+    shocked: ['😲', '⚡', '😲', '⚡', '😲', '⚡', '😲'],
+    crying: ['😭', '💧', '😢', '💧', '😭', '💧', '😢'],
+    mischievous: ['😏', '😈', '💜', '😏', '😈', '💜', '😏'],
+    celebrating: ['🥳', '🎉', '🎊', '🥳', '🎉', '🎊', '🥳'],
+    hungry: ['🤤', '🍽️', '😋', '🤤', '🍽️', '😋', '🤤'],
+    sick: ['🤢', '💚', '🤮', '💚', '🤢', '💚', '🤮'],
+    musical: ['🎵', '🎶', '🎵', '🎶', '🎵', '🎶', '🎵'],
+    frozen: ['🥶', '❄️', '🧊', '🥶', '❄️', '🧊', '🥶'],
+    hot: ['🥵', '🔥', '♨️', '🥵', '🔥', '♨️', '🥵'],
+    dizzy: ['😵', '💫', '🌀', '😵', '💫', '🌀', '😵'],
+    sneaky: ['🤫', '👀', '🤫', '👀', '🤫', '👀', '🤫'],
   }
   return emojiMap[effect] || ['✨', '⭐', '💫', '✨', '⭐']
 }
@@ -2925,6 +2981,25 @@ function getEffectParticles(effect: string): EffectParticle[] {
     'explosion-cartoon': ['shocked', 'dizzy', 'surprised', 'mind_blown', 'shocked', 'dizzy', 'surprised'],
     'glow-pulse': ['star_eyes', 'happy', 'excited', 'star_eyes', 'happy', 'excited'],
     'skull-burst': ['ghost', 'scared', 'ghost', 'dizzy', 'ghost', 'scared'],
+    // ─── EMOTION EFFECTS (pixel-art faces) ──────────────────────
+    angry: ['angry', 'mad', 'furious', 'angry', 'grumpy', 'mad', 'angry'],
+    scared: ['scared', 'ghost', 'worried', 'scared', 'startled', 'ghost', 'scared'],
+    love: ['love_eyes', 'blushing', 'happy', 'love_eyes', 'blushing', 'happy', 'love_eyes'],
+    thinking: ['thinking', 'confused', 'curious', 'thinking', 'confused', 'thinking'],
+    excited: ['excited', 'star_eyes', 'happy', 'excited', 'triumphant', 'star_eyes', 'excited'],
+    sleepy: ['sleeping', 'exhausted', 'sleeping', 'dizzy', 'sleeping', 'exhausted'],
+    proud: ['proud', 'cool', 'determined', 'triumphant', 'proud', 'cool', 'proud'],
+    confused: ['confused', 'dizzy', 'surprised', 'curious', 'confused', 'dizzy', 'confused'],
+    nervous: ['nervous', 'worried', 'scared', 'nervous', 'worried', 'nervous'],
+    shocked: ['shocked', 'mind_blown', 'surprised', 'startled', 'shocked', 'mind_blown', 'shocked'],
+    crying: ['crying', 'sad', 'crying', 'sad', 'crying', 'sad', 'crying'],
+    mischievous: ['mischievous', 'smirk', 'wink', 'sneaky', 'mischievous', 'cheeky', 'mischievous'],
+    celebrating: ['party', 'happy', 'excited', 'party', 'star_eyes', 'happy', 'party'],
+    hungry: ['hungry', 'drooling', 'yummy', 'hungry', 'drooling', 'hungry'],
+    sick: ['sick', 'disgusted', 'dizzy', 'sick', 'disgusted', 'sick'],
+    frozen: ['frozen', 'shocked', 'frozen', 'nervous', 'frozen', 'shocked'],
+    dizzy: ['dizzy', 'confused', 'dizzy', 'surprised', 'dizzy', 'confused'],
+    sneaky: ['sneaky', 'mischievous', 'suspicious', 'sneaky', 'mischievous', 'sneaky'],
   }
 
   const emojiNames = pixelArtEffects[effect]
@@ -3123,6 +3198,7 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
   const actorMarkRef = useRef<Map<string, string>>(new Map()) // actorId → posKey (for decrement on move/remove)
   const playingRef = useRef(false)
   const abortControllerRef = useRef<AbortController | null>(null)
+  const lastAutoSfx = useRef<Record<string, number>>({}) // Dedup auto-SFX within 300ms
 
   // Current zone for position offsets
   const currentZone = useGameStore((s) => s.currentZone)
@@ -3763,6 +3839,17 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
     const ref = actorRefs.current.get(target) as Character3DHandle | undefined
     if (ref && 'play' in ref) {
       ref.play(anim)
+    }
+
+    // Auto-trigger SFX for animations (deduped to avoid double-play with manual sfx actions)
+    const autoSfx = ANIMATION_SFX_MAP[anim]
+    if (autoSfx) {
+      const now = Date.now()
+      const key = `${autoSfx}`
+      if (!lastAutoSfx.current[key] || now - lastAutoSfx.current[key] > 300) {
+        lastAutoSfx.current[key] = now
+        SoundManager3D.play(autoSfx as any)
+      }
     }
 
     console.log(`[ScenePlayer3D] Animated ${target}: ${anim}`)

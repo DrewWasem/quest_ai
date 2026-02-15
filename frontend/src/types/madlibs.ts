@@ -230,3 +230,43 @@ export interface PlayerHistory {
   favoriteTagCategories: string[];
   discoveredCombos: number;
 }
+
+// ─── LEVEL 4/5 TYPES ─────────────────────────────────────────────────────────
+
+export interface Level4Stage {
+  id: string;
+  questId: string;
+  stageNumber: 4;
+  title: string;
+  intro: string;
+  characterSlot: TemplateSlot;
+  freeTextFields: Array<{
+    id: string;
+    label: string;
+    placeholder: string;
+    maxLength: number;
+    ghostExamples: string[];
+  }>;
+  vignettes: Vignette[];
+  defaultVignette: Vignette;
+  requiredSuccesses: number;
+}
+
+export interface Level5Stage {
+  id: string;
+  questId: string;
+  stageNumber: 5;
+  title: string;
+  intro: string;
+  promptPlaceholder: string;
+  sentenceStarters: string[];
+  systemPromptKey: string;
+}
+
+export interface Level4ParsedTags {
+  character: string;
+  action?: string;
+  modifier?: string;
+  vibe?: string;
+  rawText: string;
+}

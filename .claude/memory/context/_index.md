@@ -14,3 +14,4 @@ Project architecture, domain knowledge, business logic, and reference material.
 | [Emoji Map Reference](emoji-map-reference.md) | emoji, mapping, assets, reference, joyquest, pixel-art | 2026-02-14 | 2026-02-14 |
 | [Audio System Architecture](audio-system-architecture.md) | audio, sound, music, sfx, ogg, web-audio, kenney | 2026-02-14 | 2026-02-14 |
 | [Kenney All-in-1 Deployment](kenney-all-in-1-deployment.md) | assets, kenney, 3d, audio, deployment, glb, ogg | 2026-02-14 | 2026-02-15 |
+| [Level 4/5 Architecture](level-4-5-architecture.md) | architecture, levels, progression, free-text, api, haiku, sonnet, level-4, level-5 | 2026-02-14 | 2026-02-14 |

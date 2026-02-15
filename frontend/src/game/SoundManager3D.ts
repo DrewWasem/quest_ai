@@ -22,6 +22,22 @@ type SoundName =
   | 'click'      // UI click
   | 'remove'     // Pop-out sound
   | 'intro'      // Magical reveal whoosh for task intro
+  // ─── Context-specific SFX (vignette story overhaul) ───
+  | 'footstep'   // Character walking
+  | 'impact'     // Object collision, landing
+  | 'magic'      // Spell casting, enchantment
+  | 'cooking'    // Sizzle, pot clang
+  | 'door'       // Dungeon doors creaking
+  | 'coin'       // Treasure/reward discovery
+  | 'explosion'  // Barbarian chaos, rocket launch
+  | 'laser'      // Space weapons, sci-fi beams
+  | 'engine'     // Rocket/space ship engines
+  | 'book'       // Page flip, reading
+  | 'bell'       // School bell, dinner bell
+  | 'glass'      // Potion breaking, glass shatter
+  | 'chop'       // Kitchen knife, food prep
+  | 'whoosh'     // Fast movement, dodging
+  | 'thud'       // Heavy object landing
 
 /** Maps each SFX to an array of OGG files (picks random for variety) */
 const SOUND_FILES: Record<SoundName, string[]> = {
@@ -34,6 +50,22 @@ const SOUND_FILES: Record<SoundName, string[]> = {
   click:   ['/assets/audio/ui/click_001.ogg', '/assets/audio/ui/click_002.ogg', '/assets/audio/ui/click_003.ogg'],
   remove:  ['/assets/audio/ui/minimize_001.ogg', '/assets/audio/ui/minimize_002.ogg'],
   intro:   [], // Keep synthesized — the 2s magical sweep has no single-file equivalent
+  // ─── Context-specific SFX ───
+  footstep:  ['/assets/audio/impact/footstep_wood_000.ogg', '/assets/audio/impact/footstep_wood_001.ogg', '/assets/audio/impact/footstep_wood_002.ogg'],
+  impact:    ['/assets/audio/impact/impactGeneric_light_000.ogg', '/assets/audio/impact/impactGeneric_light_001.ogg', '/assets/audio/impact/impactGeneric_light_002.ogg'],
+  magic:     ['/assets/audio/sfx/powerUp1.ogg', '/assets/audio/sfx/powerUp2.ogg', '/assets/audio/sfx/powerUp3.ogg'],
+  cooking:   ['/assets/audio/rpg/metalPot1.ogg', '/assets/audio/rpg/metalPot2.ogg', '/assets/audio/rpg/metalPot3.ogg'],
+  door:      ['/assets/audio/rpg/doorOpen_1.ogg', '/assets/audio/rpg/doorOpen_2.ogg', '/assets/audio/rpg/doorClose_1.ogg'],
+  coin:      ['/assets/audio/retro/coin1.ogg', '/assets/audio/retro/coin2.ogg', '/assets/audio/retro/coin3.ogg'],
+  explosion: ['/assets/audio/scifi/explosionCrunch_000.ogg', '/assets/audio/scifi/explosionCrunch_001.ogg', '/assets/audio/scifi/explosionCrunch_002.ogg'],
+  laser:     ['/assets/audio/scifi/laserSmall_000.ogg', '/assets/audio/scifi/laserSmall_001.ogg', '/assets/audio/scifi/laserSmall_002.ogg'],
+  engine:    ['/assets/audio/scifi/spaceEngine_000.ogg', '/assets/audio/scifi/spaceEngine_001.ogg', '/assets/audio/scifi/spaceEngine_002.ogg'],
+  book:      ['/assets/audio/rpg/bookFlip1.ogg', '/assets/audio/rpg/bookFlip2.ogg', '/assets/audio/rpg/bookFlip3.ogg'],
+  bell:      ['/assets/audio/impact/impactBell_heavy_000.ogg', '/assets/audio/impact/impactBell_heavy_001.ogg', '/assets/audio/impact/impactBell_heavy_002.ogg'],
+  glass:     ['/assets/audio/impact/impactGlass_light_000.ogg', '/assets/audio/impact/impactGlass_light_001.ogg', '/assets/audio/impact/impactGlass_light_002.ogg'],
+  chop:      ['/assets/audio/rpg/chop.ogg', '/assets/audio/rpg/knifeSlice.ogg', '/assets/audio/rpg/knifeSlice2.ogg'],
+  whoosh:    ['/assets/audio/sfx/phaseJump1.ogg', '/assets/audio/sfx/phaseJump2.ogg', '/assets/audio/sfx/phaseJump3.ogg'],
+  thud:      ['/assets/audio/impact/impactSoft_heavy_000.ogg', '/assets/audio/impact/impactSoft_heavy_001.ogg', '/assets/audio/impact/impactSoft_heavy_002.ogg'],
 }
 
 export type MusicZone =
@@ -194,6 +226,22 @@ class SoundManager3DClass {
       case 'click': this.playClick(ctx); break
       case 'remove': this.playRemove(ctx); break
       case 'intro': this.playIntro(ctx); break
+      // Context-specific SFX — reuse closest synth approximations
+      case 'footstep': this.playClick(ctx); break
+      case 'impact': this.playSpawn(ctx); break
+      case 'magic': this.playSparkle(ctx); break
+      case 'cooking': this.playClick(ctx); break
+      case 'door': this.playWhoosh(ctx); break
+      case 'coin': this.playSparkle(ctx); break
+      case 'explosion': this.playFail(ctx); break
+      case 'laser': this.playSparkle(ctx); break
+      case 'engine': this.playWhoosh(ctx); break
+      case 'book': this.playClick(ctx); break
+      case 'bell': this.playSpawn(ctx); break
+      case 'glass': this.playClick(ctx); break
+      case 'chop': this.playClick(ctx); break
+      case 'whoosh': this.playWhoosh(ctx); break
+      case 'thud': this.playSpawn(ctx); break
     }
   }
 

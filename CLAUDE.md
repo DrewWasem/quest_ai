@@ -56,7 +56,7 @@ vercel --prod        # Deploy to Vercel
 
 ## Key Reference Docs (read on demand, not always in context)
 
-- `ROADMAP.md` — 7-day solo build plan with daily gates
+- `docs/ROADMAP.md` — Post-hackathon roadmap (Phases 1-3 complete, Free Play Zone next)
 - `docs/Prompt-Quest-Backend-Architecture.html` — Claude Code primitives mapping
 - `docs/Prompt-Quest-Execution-Playbook.html` — Risk mitigation, demo failsafes
 - `docs/Prompt-Quest-Outrageous-Tasks-Asset-Library.html` — Tasks, asset library, vocabulary contract

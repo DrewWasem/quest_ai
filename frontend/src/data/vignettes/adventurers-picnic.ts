@@ -12,6 +12,15 @@
  */
 
 import type { Vignette } from '../../types/madlibs';
+import {
+  ENTER_FROM_LEFT, DROP_IN, SNEAK_IN_LEFT,
+  WALK_TO,
+  OBJECT_DROP, OBJECT_GROW_REVEAL, OBJECT_SLIDE_IN, OBJECT_SERVE,
+  OBJECT_TRANSFORM, OBJECT_SHRINK_POP,
+  CHARACTER_SPEAK, CHARACTER_THINK, EMOTIONAL_REACT, CHARACTER_EXCLAIM,
+  NARRATOR, IMPACT, CELEBRATION, DISAPPOINTMENT,
+  CROWD_CHEER, DANCE, SPELL_CAST,
+} from '../movement-templates';
 
 // ─── STAGE 1 VIGNETTES ──────────────────────────────────────────────────────
 
@@ -24,35 +33,39 @@ const RANGER_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Forest scene with glowing mushroom
+      ...NARRATOR("A glowing mushroom appears in the forest clearing!"),
       { parallel: [
         { action: 'spawn', asset: 'tree_oak', position: 'ds-left' },
         { action: 'spawn', asset: 'tree_oak', position: 'ds-right' },
-        { action: 'sfx', sound: 'spawn' },
+        { action: 'spawn', asset: 'deer', position: 'ds-far-left' },
+        { action: 'spawn', asset: 'rabbit', position: 'ds-far-right' },
+        { action: 'sfx', sound: 'whoosh' },
+      ], delayAfter: 0.3 },
+      ...OBJECT_GROW_REVEAL('mushroom_glowing', 'cs-center'),
+      ...ENTER_FROM_LEFT('ranger', 'ds-left'),
+
+      // INTENT: Ranger notices and decides to investigate
+      ...CHARACTER_SPEAK('ranger', '🔍', "What's this? Tracks lead here..."),
+
+      // ACTION: Tracking and examination
+      ...WALK_TO('ranger', 'cs-center'),
+      { parallel: [
+        { action: 'animate', character: 'ranger', anim: 'Idle_A' },
+        { action: 'emote', character: 'ranger', emoji: 'curious' },
+        { action: 'sfx', sound: 'footstep' },
       ], delayAfter: 0.5 },
-      { parallel: [
-        { action: 'spawn_character', character: 'ranger', position: 'off-left', anim: 'spawn_ground' },
-      ], delayAfter: 0.4 },
-      { parallel: [
-        { action: 'spawn', asset: 'mushroom_glowing', position: 'cs-center' },
-        { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
-        { action: 'sfx', sound: 'spawn' },
-      ], delayAfter: 0.5 },
-      { parallel: [
-        { action: 'move', character: 'ranger', to: 'ds-left', style: 'linear' },
-      ], delayAfter: 0.4 },
-      { parallel: [
-        { action: 'animate', character: 'ranger', anim: 'idle' },
-        { action: 'emote', character: 'ranger', emoji: '🔍' },
-        { action: 'react', effect: 'question-marks', position: 'cs-center' },
-      ], delayAfter: 0.6 },
-      { parallel: [
-        { action: 'react', effect: 'hearts-float', position: 'cs-center' },
-        { action: 'text_popup', text: '🔍 Tracked it! 🔍', position: 'center', size: 'large' },
-        { action: 'sfx', sound: 'success' },
-      ], delayAfter: 1.5 },
+
+      // CONSEQUENCE: Discovery reaction
+      ...EMOTIONAL_REACT('ranger', 'sparkle-magic', 'cs-center'),
+      ...CHARACTER_EXCLAIM('ranger', '🎯', "Tracked it!"),
+
+      // RESOLUTION: Success celebration
+      ...CELEBRATION(['ranger']),
+      ...NARRATOR("Matching character strengths to actions gives perfect results!"),
     ],
     feedback: {
-      title: '🔍 RANGER TRACKING!',
+      title: 'RANGER TRACKING',
       message: "Rangers excel at investigation! Their tracking skills reveal every clue.",
       skillTaught: 'Specificity',
       tip: 'Match character strengths to actions for perfect results!',
@@ -65,30 +78,44 @@ const RANGER_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Forest meadow scene
+      ...NARRATOR("The ranger finds a perfect forest meadow!"),
       { parallel: [
         { action: 'spawn', asset: 'grass_patch', position: 'cs-center' },
         { action: 'spawn', asset: 'tree_pine', position: 'ds-left' },
-        { action: 'sfx', sound: 'spawn' },
-      ], delayAfter: 0.5 },
-      { parallel: [
-        { action: 'spawn_character', character: 'ranger', position: 'off-left', anim: 'spawn_ground' },
-      ], delayAfter: 0.4 },
-      { parallel: [
-        { action: 'move', character: 'ranger', to: 'cs-center', style: 'linear' },
-      ], delayAfter: 0.4 },
+        { action: 'spawn', asset: 'flower_clump', position: 'cs-left' },
+        { action: 'spawn', asset: 'flower_group', position: 'cs-right' },
+        { action: 'spawn', asset: 'bird', position: 'ds-far-right' },
+        { action: 'sfx', sound: 'whoosh' },
+      ], delayAfter: 0.3 },
+      ...ENTER_FROM_LEFT('ranger', 'ds-left'),
+
+      // INTENT: Ranger decides to celebrate
+      ...CHARACTER_SPEAK('ranger', '🎉', "This is amazing! Time to celebrate!"),
+
+      // ACTION: Nature dance
+      ...WALK_TO('ranger', 'cs-center'),
       { parallel: [
         { action: 'animate', character: 'ranger', anim: 'Cheering' },
-        { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
-        { action: 'react', effect: 'hearts-float', position: 'center' },
-        { action: 'sfx', sound: 'success' },
-      ], delayAfter: 0.6 },
+        { action: 'sfx', sound: 'footstep' },
+      ], delayAfter: 0.8 },
+
+      // CONSEQUENCE: Nature responds
+      ...EMOTIONAL_REACT('ranger', 'hearts-float', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('bunny', 'ds-right'),
+      ...OBJECT_GROW_REVEAL('mushroom_glowing', 'ds-left'),
       { parallel: [
-        { action: 'spawn', asset: 'bunny', position: 'ds-right' },
-        { action: 'text_popup', text: '🌲 Nature Party! 🌲', position: 'center', size: 'large' },
-      ], delayAfter: 1.5 },
+        { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
+        { action: 'sfx', sound: 'coin' },
+      ], delayAfter: 0.5 },
+
+      // RESOLUTION: Nature harmony celebration
+      ...DANCE('ranger'),
+      ...CELEBRATION(['ranger']),
+      ...NARRATOR("Rangers celebrate in harmony with nature - even animals join in!"),
     ],
     feedback: {
-      title: '🌲 RANGER CELEBRATION!',
+      title: 'RANGER CELEBRATION',
       message: "Rangers celebrate in harmony with nature! Even the animals join in!",
       skillTaught: 'Specificity',
       tip: 'Each adventurer has their own celebration style!',
@@ -101,32 +128,36 @@ const RANGER_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'funny_fail',
     steps: [
+      // SETUP: Boulder appears in forest
+      ...NARRATOR("A boulder rolls into the clearing!"),
       { parallel: [
         { action: 'spawn', asset: 'tree_oak', position: 'ds-left' },
-        { action: 'spawn_character', character: 'ranger', position: 'cs-center', anim: 'spawn_ground' },
-        { action: 'sfx', sound: 'spawn' },
-      ], delayAfter: 0.5 },
-      { parallel: [
-        { action: 'spawn', asset: 'rock_boulder', position: 'cs-right' },
-        { action: 'sfx', sound: 'spawn' },
+        { action: 'sfx', sound: 'whoosh' },
       ], delayAfter: 0.3 },
+      ...DROP_IN('ranger', 'cs-center'),
+      ...OBJECT_SLIDE_IN('rock_boulder', 'off-right', 'cs-right'),
+
+      // INTENT: Ranger spots danger (but shouldn't panic!)
+      ...CHARACTER_SPEAK('ranger', '😱', "Aaah! A boulder!"),
+
+      // ACTION: Panic reaction (not ranger-like)
       { parallel: [
         { action: 'animate', character: 'ranger', anim: 'get_hit' },
-        { action: 'emote', character: 'ranger', emoji: '😱' },
-        { action: 'react', effect: 'stars-spin', position: 'cs-center' },
-        { action: 'sfx', sound: 'fail' },
-      ], delayAfter: 0.5 },
-      { parallel: [
-        { action: 'animate', character: 'ranger', anim: 'walk' },
+        { action: 'emote', character: 'ranger', emoji: 'scared' },
         { action: 'camera_shake', intensity: 0.4, duration: 0.8 },
+        { action: 'sfx', sound: 'impact' },
       ], delayAfter: 0.6 },
-      { parallel: [
-        { action: 'text_popup', text: '😱 Rangers DON\'T panic! 😱', position: 'center', size: 'large' },
-        { action: 'react', effect: 'question-marks', position: 'center' },
-      ], delayAfter: 1.5 },
+
+      // CONSEQUENCE: Confusion - rangers don't panic!
+      ...EMOTIONAL_REACT('ranger', 'question-marks', 'cs-center'),
+      ...IMPACT(),
+
+      // RESOLUTION: Funny fail
+      ...DISAPPOINTMENT(['ranger']),
+      ...NARRATOR("Rangers stay calm! Try 'investigate' or 'set_trap' instead."),
     ],
     feedback: {
-      title: '😱 RANGER PANIC?!',
+      title: 'RANGER PANIC',
       message: "Rangers are supposed to be calm! Panic doesn't match their character.",
       skillTaught: 'Specificity',
       tip: 'Try investigate or set_trap — those fit ranger skills better!',
@@ -139,29 +170,37 @@ const RANGER_VIGNETTES: Vignette[] = [
     tier: 'subtle',
     promptScore: 'funny_fail',
     steps: [
+      // SETUP: Meadow scene
+      ...NARRATOR("The ranger prepares to cast a spell..."),
       { parallel: [
         { action: 'spawn', asset: 'grass_patch', position: 'cs-center' },
-        { action: 'spawn_character', character: 'ranger', position: 'off-left', anim: 'spawn_ground' },
-        { action: 'sfx', sound: 'spawn' },
-      ], delayAfter: 0.5 },
-      { parallel: [
-        { action: 'move', character: 'ranger', to: 'cs-center', style: 'linear' },
-      ], delayAfter: 0.4 },
+        { action: 'sfx', sound: 'whoosh' },
+      ], delayAfter: 0.3 },
+      ...ENTER_FROM_LEFT('ranger', 'ds-left'),
+
+      // INTENT: Ranger tries magic (wrong skill!)
+      ...CHARACTER_THINK('ranger', '🤔'),
+
+      // ACTION: Spell attempt
+      ...WALK_TO('ranger', 'cs-center'),
       { parallel: [
         { action: 'animate', character: 'ranger', anim: 'cast_spell' },
-        { action: 'emote', character: 'ranger', emoji: '🤔' },
-      ], delayAfter: 0.6 },
+        { action: 'sfx', sound: 'whoosh' },
+      ], delayAfter: 0.8 },
+
+      // CONSEQUENCE: Nothing happens
       { parallel: [
         { action: 'react', effect: 'question-marks', position: 'cs-center' },
-        { action: 'text_popup', text: '...nothing happened', position: 'center', size: 'large' },
         { action: 'sfx', sound: 'fail' },
       ], delayAfter: 0.5 },
-      { parallel: [
-        { action: 'emote', character: 'ranger', emoji: '🤷' },
-      ], delayAfter: 1.5 },
+      ...EMOTIONAL_REACT('ranger', 'question-marks', 'cs-center'),
+
+      // RESOLUTION: Funny fail
+      ...DISAPPOINTMENT(['ranger']),
+      ...NARRATOR("Rangers don't have magic! Try a druid for spellcasting."),
     ],
     feedback: {
-      title: '🤷 NO MAGIC HERE!',
+      title: 'NO MAGIC HERE',
       message: "Rangers don't have magic! Try a druid or mage for spellcasting.",
       skillTaught: 'Specificity',
       tip: 'Match actions to character abilities for better results!',
@@ -174,32 +213,44 @@ const RANGER_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Forest with rocks and trees
+      ...NARRATOR("The ranger scouts the perfect trap location!"),
       { parallel: [
         { action: 'spawn', asset: 'tree_oak', position: 'ds-left' },
         { action: 'spawn', asset: 'rock_boulder', position: 'ds-right' },
-        { action: 'sfx', sound: 'spawn' },
-      ], delayAfter: 0.5 },
-      { parallel: [
-        { action: 'spawn_character', character: 'ranger', position: 'off-left', anim: 'spawn_ground' },
-      ], delayAfter: 0.4 },
-      { parallel: [
-        { action: 'move', character: 'ranger', to: 'ds-left', style: 'linear' },
-      ], delayAfter: 0.4 },
+        { action: 'spawn', asset: 'compass', position: 'off-left' },
+        { action: 'spawn', asset: 'map', position: 'off-right' },
+        { action: 'sfx', sound: 'whoosh' },
+      ], delayAfter: 0.3 },
+      ...SNEAK_IN_LEFT('ranger', 'ds-left'),
+
+      // INTENT: Ranger plans the trap
+      ...CHARACTER_SPEAK('ranger', '🎯', "Perfect spot for a trap!"),
+
+      // ACTION: Setting trap components
       { parallel: [
         { action: 'animate', character: 'ranger', anim: 'throw' },
-        { action: 'spawn', asset: 'barrel', position: 'cs-center' },
-        { action: 'spawn', asset: 'torch', position: 'cs-left' },
-        { action: 'sfx', sound: 'spawn' },
-      ], delayAfter: 0.6 },
+        { action: 'sfx', sound: 'whoosh' },
+      ], delayAfter: 0.4 },
+      ...OBJECT_SLIDE_IN('compass', 'off-left', 'ds-far-left'),
+      ...OBJECT_GROW_REVEAL('barrel', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('torch', 'cs-left'),
+      ...OBJECT_GROW_REVEAL('flag', 'cs-right'),
+
+      // CONSEQUENCE: Trap completed
       { parallel: [
         { action: 'animate', character: 'ranger', anim: 'wave' },
         { action: 'react', effect: 'glow-pulse', position: 'cs-center' },
-        { action: 'text_popup', text: '🪤 PERFECT TRAP! 🪤', position: 'center', size: 'huge' },
-        { action: 'sfx', sound: 'success' },
-      ], delayAfter: 1.5 },
+        { action: 'sfx', sound: 'coin' },
+      ], delayAfter: 0.6 },
+      ...EMOTIONAL_REACT('ranger', 'sparkle-magic', 'ds-left'),
+
+      // RESOLUTION: Perfect match celebration
+      ...CELEBRATION(['ranger']),
+      ...NARRATOR("Rangers are trap experts! Perfect match of character and skill!"),
     ],
     feedback: {
-      title: '🪤 RANGER TRAP MASTER!',
+      title: 'RANGER TRAP MASTER',
       message: "Rangers are expert trap setters! Perfect match of character and action!",
       skillTaught: 'Specificity',
       tip: 'Rangers use nature and tools to create clever traps!',
@@ -212,32 +263,43 @@ const RANGER_VIGNETTES: Vignette[] = [
     tier: 'subtle',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Forest meadow scene
+      ...NARRATOR("The ranger finds a peaceful meadow for lunch!"),
       { parallel: [
         { action: 'spawn', asset: 'grass_patch', position: 'cs-center' },
         { action: 'spawn', asset: 'tree_pine', position: 'ds-left' },
         { action: 'spawn', asset: 'tree_pine', position: 'ds-right' },
-        { action: 'sfx', sound: 'spawn' },
-      ], delayAfter: 0.5 },
-      { parallel: [
-        { action: 'spawn_character', character: 'ranger', position: 'off-left', anim: 'spawn_ground' },
-      ], delayAfter: 0.4 },
-      { parallel: [
-        { action: 'move', character: 'ranger', to: 'cs-center', style: 'linear' },
-      ], delayAfter: 0.4 },
-      { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center' },
-        { action: 'spawn', asset: 'apple', position: 'cs-center' },
-        { action: 'sfx', sound: 'spawn' },
-      ], delayAfter: 0.5 },
+        { action: 'spawn', asset: 'fox', position: 'ds-far-left' },
+        { action: 'spawn', asset: 'fern', position: 'cs-left' },
+        { action: 'sfx', sound: 'whoosh' },
+      ], delayAfter: 0.3 },
+      ...ENTER_FROM_LEFT('ranger', 'ds-left'),
+
+      // INTENT: Ranger decides to picnic
+      ...CHARACTER_SPEAK('ranger', '😊', "Perfect spot for a nature snack!"),
+
+      // ACTION: Setting up picnic
+      ...WALK_TO('ranger', 'cs-center'),
+      ...OBJECT_SERVE('table_long', 'off-screen', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('apple_fmp', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('sandwich_food', 'cs-left'),
+      ...OBJECT_GROW_REVEAL('watermelon', 'cs-right'),
+
+      // CONSEQUENCE: Peaceful moment
+      ...DANCE('ranger'),
+      ...OBJECT_SHRINK_POP('apple'),
       { parallel: [
         { action: 'animate', character: 'ranger', anim: 'sit_floor' },
-        { action: 'react', effect: 'hearts-float', position: 'cs-center' },
-        { action: 'text_popup', text: '🍎 Nature Snack! 🍎', position: 'center', size: 'large' },
-        { action: 'sfx', sound: 'success' },
-      ], delayAfter: 1.5 },
+        { action: 'sfx', sound: 'footstep' },
+      ], delayAfter: 0.5 },
+      ...EMOTIONAL_REACT('ranger', 'hearts-float', 'cs-center'),
+
+      // RESOLUTION: Nature harmony
+      ...CELEBRATION(['ranger']),
+      ...NARRATOR("Rangers love peaceful nature moments - harmony with the forest!"),
     ],
     feedback: {
-      title: '🍎 RANGER PICNIC!',
+      title: 'RANGER PICNIC',
       message: "Rangers love peaceful nature picnics! Perfect harmony with the forest.",
       skillTaught: 'Specificity',
       tip: 'Rangers enjoy simple natural moments!',
@@ -254,34 +316,41 @@ const DRUID_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Magic forest scene
+      ...NARRATOR("A glowing mushroom pulses with nature's magic!"),
       { parallel: [
         { action: 'spawn', asset: 'grass_patch', position: 'cs-center' },
-        { action: 'spawn', asset: 'tree_magic', position: 'ds-right' },
-        { action: 'sfx', sound: 'spawn' },
-      ], delayAfter: 0.5 },
+        { action: 'spawn', asset: 'sakura_tree', position: 'ds-right' },
+        { action: 'spawn', asset: 'flower', position: 'cs-left' },
+        { action: 'spawn', asset: 'clover', position: 'cs-right' },
+        { action: 'spawn', asset: 'bee', position: 'ds-far-right' },
+        { action: 'sfx', sound: 'whoosh' },
+      ], delayAfter: 0.3 },
+      ...OBJECT_GROW_REVEAL('mushroom_glowing', 'cs-center'),
+      ...ENTER_FROM_LEFT('druid', 'ds-left'),
+
+      // INTENT: Druid senses nature's message
+      ...CHARACTER_SPEAK('druid', '🌿', "Nature whispers its secrets..."),
+
+      // ACTION: Nature investigation
+      ...WALK_TO('druid', 'cs-center'),
       { parallel: [
-        { action: 'spawn_character', character: 'druid', position: 'off-left', anim: 'spawn_ground' },
-      ], delayAfter: 0.4 },
-      { parallel: [
-        { action: 'spawn', asset: 'mushroom_glowing', position: 'cs-center' },
+        { action: 'animate', character: 'druid', anim: 'Idle_A' },
+        { action: 'emote', character: 'druid', emoji: 'curious' },
         { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
-        { action: 'sfx', sound: 'spawn' },
-      ], delayAfter: 0.5 },
-      { parallel: [
-        { action: 'move', character: 'druid', to: 'ds-left', style: 'linear' },
-      ], delayAfter: 0.4 },
-      { parallel: [
-        { action: 'animate', character: 'druid', anim: 'idle' },
-        { action: 'emote', character: 'druid', emoji: '🌿' },
-      ], delayAfter: 0.6 },
-      { parallel: [
-        { action: 'react', effect: 'hearts-float', position: 'cs-center' },
-        { action: 'text_popup', text: '🌿 Nature\'s Secret! 🌿', position: 'center', size: 'large' },
-        { action: 'sfx', sound: 'success' },
-      ], delayAfter: 1.5 },
+        { action: 'sfx', sound: 'footstep' },
+      ], delayAfter: 0.8 },
+
+      // CONSEQUENCE: Discovery revealed
+      ...EMOTIONAL_REACT('druid', 'sparkle-magic', 'cs-center'),
+      ...CHARACTER_EXCLAIM('druid', '✨', "Nature's secret revealed!"),
+
+      // RESOLUTION: Nature wisdom celebration
+      ...CELEBRATION(['druid']),
+      ...NARRATOR("Druids read nature like a book - perfect investigation match!"),
     ],
     feedback: {
-      title: '🌿 NATURE WISDOM!',
+      title: 'NATURE WISDOM',
       message: "Druids read nature like a book! Perfect investigation match!",
       skillTaught: 'Specificity',
       tip: 'Druids understand the language of nature!',
@@ -294,33 +363,45 @@ const DRUID_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Meadow scene
+      ...NARRATOR("The druid prepares a nature celebration!"),
       { parallel: [
         { action: 'spawn', asset: 'grass_patch', position: 'cs-center' },
-        { action: 'spawn_character', character: 'druid', position: 'off-left', anim: 'spawn_ground' },
-        { action: 'sfx', sound: 'spawn' },
-      ], delayAfter: 0.5 },
-      { parallel: [
-        { action: 'move', character: 'druid', to: 'cs-center', style: 'linear' },
-      ], delayAfter: 0.4 },
+        { action: 'spawn', asset: 'bamboo', position: 'ds-left' },
+        { action: 'spawn', asset: 'hedgehog', position: 'ds-far-left' },
+        { action: 'spawn', asset: 'duck', position: 'ds-far-right' },
+        { action: 'sfx', sound: 'whoosh' },
+      ], delayAfter: 0.3 },
+      ...ENTER_FROM_LEFT('druid', 'ds-left'),
+
+      // INTENT: Druid channels nature magic
+      ...CHARACTER_SPEAK('druid', '🌸', "Let nature bloom with joy!"),
+
+      // ACTION: Casting growth spell
+      ...WALK_TO('druid', 'cs-center'),
       { parallel: [
         { action: 'animate', character: 'druid', anim: 'cast_long' },
         { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
         { action: 'camera_shake', intensity: 0.3, duration: 1.0 },
+        { action: 'sfx', sound: 'whoosh' },
       ], delayAfter: 0.8 },
+
+      // CONSEQUENCE: Nature blooms everywhere
+      ...OBJECT_GROW_REVEAL('sakura_tree', 'ds-left'),
+      ...OBJECT_GROW_REVEAL('fruit_tree', 'ds-right'),
+      ...OBJECT_GROW_REVEAL('mushroom_glowing', 'cs-left'),
       { parallel: [
-        { action: 'spawn', asset: 'tree_magic', position: 'ds-left' },
-        { action: 'spawn', asset: 'mushroom_glowing', position: 'ds-right' },
         { action: 'react', effect: 'confetti-burst', position: 'center' },
-        { action: 'react', effect: 'hearts-float', position: 'center' },
-        { action: 'sfx', sound: 'success' },
-      ], delayAfter: 0.6 },
-      { parallel: [
-        { action: 'animate', character: 'druid', anim: 'taunt' },
-        { action: 'text_popup', text: '🌸 FLOWER PARTY! 🌸', position: 'center', size: 'huge' },
-      ], delayAfter: 1.5 },
+        { action: 'sfx', sound: 'coin' },
+      ], delayAfter: 0.5 },
+      ...EMOTIONAL_REACT('druid', 'hearts-float', 'cs-center'),
+
+      // RESOLUTION: Flower party celebration
+      ...CELEBRATION(['druid']),
+      ...NARRATOR("Druids celebrate by making nature bloom - magic flowers everywhere!"),
     ],
     feedback: {
-      title: '🌸 DRUID CELEBRATION!',
+      title: 'DRUID CELEBRATION',
       message: "Druids celebrate by making nature bloom! Magic flowers everywhere!",
       skillTaught: 'Specificity',
       tip: 'Druids bring nature\'s joy to every moment!',
@@ -333,29 +414,40 @@ const DRUID_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'funny_fail',
     steps: [
+      // SETUP: Forest scene with bunny (cause of panic)
+      ...NARRATOR("A harmless bunny appears!"),
       { parallel: [
         { action: 'spawn', asset: 'tree_oak', position: 'ds-left' },
-        { action: 'spawn_character', character: 'druid', position: 'cs-center', anim: 'spawn_ground' },
-        { action: 'sfx', sound: 'spawn' },
-      ], delayAfter: 0.5 },
-      { parallel: [
-        { action: 'spawn', asset: 'bunny', position: 'ds-right' },
-        { action: 'sfx', sound: 'spawn' },
+        { action: 'sfx', sound: 'whoosh' },
       ], delayAfter: 0.3 },
+      ...DROP_IN('druid', 'cs-center'),
+      ...OBJECT_DROP('bunny', 'ds-right'),
+
+      // INTENT: Druid panics at the tiny bunny
+      ...CHARACTER_THINK('druid', '😱'),
       { parallel: [
         { action: 'animate', character: 'druid', anim: 'get_hit' },
-        { action: 'emote', character: 'druid', emoji: '😱' },
         { action: 'react', effect: 'stars-spin', position: 'cs-center' },
+        { action: 'sfx', sound: 'fail' },
       ], delayAfter: 0.5 },
+
+      // ACTION: Attempts panicked shapeshift spell
+      ...CHARACTER_EXCLAIM('druid', '🌳', "I'll turn into a tree!"),
       { parallel: [
         { action: 'animate', character: 'druid', anim: 'cast_spell' },
         { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
       ], delayAfter: 0.6 },
+
+      // CONSEQUENCE: Failed transformation
       { parallel: [
         { action: 'react', effect: 'question-marks', position: 'cs-center' },
         { action: 'text_popup', text: '🌳 Failed Shapeshifting! 🌳', position: 'center', size: 'large' },
         { action: 'sfx', sound: 'fail' },
-      ], delayAfter: 1.5 },
+      ], delayAfter: 0.8 },
+
+      // RESOLUTION: Druid realizes panic doesn't help
+      ...DISAPPOINTMENT(['druid']),
+      ...NARRATOR("Druids need calm minds for nature magic - panic breaks the connection!"),
     ],
     feedback: {
       title: '🌳 PANIC SHAPESHIFT FAIL!',
@@ -371,35 +463,44 @@ const DRUID_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Meadow with small glowing mushroom
+      ...NARRATOR("The druid channels nature's power!"),
       { parallel: [
         { action: 'spawn', asset: 'grass_patch', position: 'cs-center' },
-        { action: 'spawn_character', character: 'druid', position: 'off-left', anim: 'spawn_ground' },
-        { action: 'sfx', sound: 'spawn' },
-      ], delayAfter: 0.5 },
-      { parallel: [
-        { action: 'spawn', asset: 'mushroom_glowing', position: 'cs-center' },
-        { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
-        { action: 'sfx', sound: 'spawn' },
-      ], delayAfter: 0.4 },
-      { parallel: [
-        { action: 'move', character: 'druid', to: 'ds-left', style: 'linear' },
-      ], delayAfter: 0.4 },
+        { action: 'sfx', sound: 'whoosh' },
+      ], delayAfter: 0.3 },
+      ...OBJECT_GROW_REVEAL('mushroom_glowing', 'cs-center'),
+      ...ENTER_FROM_LEFT('druid', 'ds-left'),
+
+      // INTENT: Druid focuses on growth magic
+      ...CHARACTER_SPEAK('druid', '🌱', "Let nature's magic flow..."),
+
+      // ACTION: Powerful nature spell casting
       { parallel: [
         { action: 'animate', character: 'druid', anim: 'cast_long' },
         { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
         { action: 'camera_shake', intensity: 0.4, duration: 1.2 },
+        { action: 'sfx', sound: 'magic' },
       ], delayAfter: 1.0 },
+
+      // CONSEQUENCE: Massive tree grows from mushroom
       { parallel: [
-        { action: 'spawn', asset: 'tree_magic', position: 'cs-center' },
-        { action: 'react', effect: 'explosion-cartoon', position: 'cs-center' },
         { action: 'screen_flash', color: 'green', duration: 0.3 },
+      ], delayAfter: 0.3 },
+      ...OBJECT_TRANSFORM('mushroom_glowing', 'sakura_tree', 'cs-center'),
+      { parallel: [
+        { action: 'react', effect: 'explosion-cartoon', position: 'cs-center' },
         { action: 'text_popup', text: '🌳 NATURE MAGIC! 🌳', position: 'center', size: 'huge' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 0.6 },
+
+      // RESOLUTION: Druid celebrates the perfect spell
       { parallel: [
         { action: 'animate', character: 'druid', anim: 'jump_big' },
-        { action: 'react', effect: 'hearts-float', position: 'center' },
-      ], delayAfter: 1.5 },
+      ], delayAfter: 0.5 },
+      ...EMOTIONAL_REACT('druid', 'hearts-float', 'cs-center'),
+      ...CELEBRATION(['druid']),
+      ...NARRATOR("Druids and nature magic - perfect harmony creates miracles!"),
     ],
     feedback: {
       title: '🌳 DRUID MAGIC!',
@@ -415,31 +516,39 @@ const DRUID_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Forest clearing perfect for traps
+      ...NARRATOR("The druid weaves nature into a living trap!"),
       { parallel: [
         { action: 'spawn', asset: 'tree_oak', position: 'ds-left' },
+        { action: 'spawn', asset: 'birch_tree', position: 'ds-right' },
         { action: 'spawn', asset: 'grass_patch', position: 'cs-center' },
-        { action: 'sfx', sound: 'spawn' },
-      ], delayAfter: 0.5 },
-      { parallel: [
-        { action: 'spawn_character', character: 'druid', position: 'off-left', anim: 'spawn_ground' },
-      ], delayAfter: 0.4 },
-      { parallel: [
-        { action: 'move', character: 'druid', to: 'ds-left', style: 'linear' },
-      ], delayAfter: 0.4 },
+        { action: 'spawn', asset: 'raccoon', position: 'ds-far-right' },
+        { action: 'sfx', sound: 'whoosh' },
+      ], delayAfter: 0.3 },
+      ...ENTER_FROM_LEFT('druid', 'ds-left'),
+
+      // INTENT: Druid plans to grow a vine trap
+      ...CHARACTER_SPEAK('druid', '🌿', "The forest will protect us..."),
+
+      // ACTION: Casting growth magic for trap
       { parallel: [
         { action: 'animate', character: 'druid', anim: 'cast_spell' },
         { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
+        { action: 'sfx', sound: 'magic' },
       ], delayAfter: 0.6 },
+
+      // CONSEQUENCE: Living vine trap grows into place
+      ...OBJECT_GROW_REVEAL('barrel', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('mushroom_glowing', 'cs-left'),
       { parallel: [
-        { action: 'spawn', asset: 'barrel', position: 'cs-center' },
-        { action: 'spawn', asset: 'mushroom_glowing', position: 'cs-left' },
         { action: 'text_popup', text: '🌿 VINE TRAP! 🌿', position: 'center', size: 'large' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 0.5 },
-      { parallel: [
-        { action: 'animate', character: 'druid', anim: 'Cheering' },
-        { action: 'react', effect: 'hearts-float', position: 'center' },
-      ], delayAfter: 1.5 },
+
+      // RESOLUTION: Druid admires the natural trap
+      ...EMOTIONAL_REACT('druid', 'hearts-float', 'cs-center'),
+      ...CELEBRATION(['druid']),
+      ...NARRATOR("Druids make traps from the forest itself - nature is their ally!"),
     ],
     feedback: {
       title: '🌿 NATURE TRAP!',
@@ -455,30 +564,43 @@ const DRUID_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Perfect forest picnic spot
+      ...NARRATOR("Time for a feast with forest friends!"),
       { parallel: [
         { action: 'spawn', asset: 'grass_patch', position: 'cs-center' },
         { action: 'spawn', asset: 'tree_oak', position: 'ds-left' },
-        { action: 'spawn', asset: 'tree_oak', position: 'ds-right' },
-        { action: 'sfx', sound: 'spawn' },
-      ], delayAfter: 0.5 },
-      { parallel: [
-        { action: 'spawn_character', character: 'druid', position: 'off-left', anim: 'spawn_ground' },
-      ], delayAfter: 0.4 },
-      { parallel: [
-        { action: 'move', character: 'druid', to: 'cs-center', style: 'linear' },
-      ], delayAfter: 0.4 },
-      { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center' },
-        { action: 'spawn', asset: 'apple', position: 'cs-center' },
-        { action: 'spawn', asset: 'bunny', position: 'ds-left' },
-        { action: 'sfx', sound: 'spawn' },
-      ], delayAfter: 0.5 },
+        { action: 'spawn', asset: 'pine_tree', position: 'ds-right' },
+        { action: 'spawn', asset: 'sheep', position: 'ds-far-left' },
+        { action: 'spawn', asset: 'cow', position: 'ds-far-right' },
+        { action: 'sfx', sound: 'whoosh' },
+      ], delayAfter: 0.3 },
+      ...ENTER_FROM_LEFT('druid', 'cs-center'),
+
+      // INTENT: Druid prepares picnic spread
+      ...CHARACTER_SPEAK('druid', '🍎', "Nature's bounty for everyone!"),
+      ...OBJECT_SERVE('table_long', 'off-left', 'cs-center'),
+      ...SPELL_CAST('druid'),
+      ...OBJECT_GROW_REVEAL('banana_fmp', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('honey_jar', 'cs-right'),
+      ...OBJECT_GROW_REVEAL('salad', 'cs-left'),
+      ...OBJECT_GROW_REVEAL('mushroom_glowing', 'ds-left'),
+
+      // ACTION: Forest creatures join the picnic
+      ...OBJECT_DROP('bunny', 'ds-left'),
+      ...OBJECT_DROP('bear', 'ds-right'),
       { parallel: [
         { action: 'animate', character: 'druid', anim: 'sit_floor' },
-        { action: 'react', effect: 'hearts-float', position: 'cs-center' },
+      ], delayAfter: 0.5 },
+
+      // CONSEQUENCE: Peaceful harmony with nature
+      ...EMOTIONAL_REACT('druid', 'hearts-float', 'cs-center'),
+      { parallel: [
         { action: 'text_popup', text: '🐰 NATURE FEAST! 🐰', position: 'center', size: 'large' },
         { action: 'sfx', sound: 'success' },
-      ], delayAfter: 1.5 },
+      ], delayAfter: 0.5 },
+
+      // RESOLUTION: Perfect harmony celebration
+      ...NARRATOR("Druids share meals with forest friends - perfect harmony!"),
     ],
     feedback: {
       title: '🐰 DRUID PICNIC!',
@@ -502,6 +624,8 @@ const BARBARIAN_VIGNETTES: Vignette[] = [
         { action: 'spawn', asset: 'rock_boulder', position: 'ds-left' },
         { action: 'spawn', asset: 'rock_boulder', position: 'ds-right' },
         { action: 'spawn', asset: 'barrel', position: 'cs-center' },
+        { action: 'spawn', asset: 'dead_tree', position: 'ds-far-left' },
+        { action: 'spawn', asset: 'common_tree', position: 'ds-far-right' },
         { action: 'sfx', sound: 'spawn' },
       ], delayAfter: 0.5 },
       { parallel: [
@@ -510,6 +634,7 @@ const BARBARIAN_VIGNETTES: Vignette[] = [
       { parallel: [
         { action: 'move', character: 'barbarian', to: 'ds-left', style: 'linear' },
       ], delayAfter: 0.4 },
+      ...CHARACTER_SPEAK('barbarian', '💪', "ME SMASH TO FIND ANSWERS!"),
       { parallel: [
         { action: 'animate', character: 'barbarian', anim: 'sword_slash' },
         { action: 'react', effect: 'explosion-cartoon', position: 'cs-center' },
@@ -531,7 +656,7 @@ const BARBARIAN_VIGNETTES: Vignette[] = [
   },
   {
     id: 'ap_barbarian_celebrate',
-    description: 'Barbarian celebrates with a victory roar and weapon spinning.',
+    description: 'Barbarian celebrates with a victory roar and wild spinning.',
     trigger: { adventurer: 'barbarian', discovery: '*', reaction: 'celebrate' },
     tier: 'spectacular',
     promptScore: 'perfect',
@@ -547,12 +672,15 @@ const BARBARIAN_VIGNETTES: Vignette[] = [
       { parallel: [
         { action: 'move', character: 'barbarian', to: 'cs-center', style: 'linear' },
       ], delayAfter: 0.4 },
+      ...CHARACTER_EXCLAIM('barbarian', '🎉', "BARBARIAN STRONGEST!"),
       { parallel: [
         { action: 'animate', character: 'barbarian', anim: 'spin_attack' },
         { action: 'camera_shake', intensity: 0.6, duration: 1.0 },
         { action: 'react', effect: 'explosion-cartoon', position: 'cs-center' },
         { action: 'sfx', sound: 'react' },
       ], delayAfter: 0.8 },
+      ...DANCE('barbarian'),
+      ...CROWD_CHEER(['barbarian']),
       { parallel: [
         { action: 'animate', character: 'barbarian', anim: 'taunt' },
         { action: 'react', effect: 'hearts-float', position: 'center' },
@@ -577,6 +705,8 @@ const BARBARIAN_VIGNETTES: Vignette[] = [
       { parallel: [
         { action: 'spawn', asset: 'tree_pine', position: 'ds-left' },
         { action: 'spawn', asset: 'bunny', position: 'cs-center' },
+        { action: 'spawn', asset: 'frog', position: 'cs-left' },
+        { action: 'spawn', asset: 'squirrel', position: 'ds-far-right' },
         { action: 'sfx', sound: 'spawn' },
       ], delayAfter: 0.5 },
       { parallel: [
@@ -584,7 +714,7 @@ const BARBARIAN_VIGNETTES: Vignette[] = [
       ], delayAfter: 0.4 },
       { parallel: [
         { action: 'animate', character: 'barbarian', anim: 'get_hit' },
-        { action: 'emote', character: 'barbarian', emoji: '😱' },
+        { action: 'emote', character: 'barbarian', emoji: 'scared' },
         { action: 'react', effect: 'stars-spin', position: 'off-left' },
         { action: 'sfx', sound: 'fail' },
       ], delayAfter: 0.5 },
@@ -619,7 +749,7 @@ const BARBARIAN_VIGNETTES: Vignette[] = [
       ], delayAfter: 0.5 },
       { parallel: [
         { action: 'animate', character: 'barbarian', anim: 'cast_spell' },
-        { action: 'emote', character: 'barbarian', emoji: '😤' },
+        { action: 'emote', character: 'barbarian', emoji: 'angry' },
         { action: 'camera_shake', intensity: 0.3, duration: 0.5 },
       ], delayAfter: 0.6 },
       { parallel: [
@@ -628,7 +758,7 @@ const BARBARIAN_VIGNETTES: Vignette[] = [
         { action: 'sfx', sound: 'fail' },
       ], delayAfter: 0.5 },
       { parallel: [
-        { action: 'emote', character: 'barbarian', emoji: '🤷' },
+        { action: 'emote', character: 'barbarian', emoji: 'confused' },
         { action: 'react', effect: 'question-marks', position: 'cs-center' },
       ], delayAfter: 1.5 },
     ],
@@ -658,10 +788,11 @@ const BARBARIAN_VIGNETTES: Vignette[] = [
       ], delayAfter: 0.4 },
       { parallel: [
         { action: 'animate', character: 'barbarian', anim: 'throw' },
-        { action: 'spawn', asset: 'rock_boulder', position: 'cs-center' },
         { action: 'camera_shake', intensity: 0.5, duration: 0.6 },
         { action: 'sfx', sound: 'react' },
-      ], delayAfter: 0.6 },
+      ], delayAfter: 0.3 },
+      ...OBJECT_GROW_REVEAL('rock_boulder', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('barrel', 'cs-left'),
       { parallel: [
         { action: 'animate', character: 'barbarian', anim: 'jump_big' },
         { action: 'react', effect: 'stars-spin', position: 'cs-center' },
@@ -685,10 +816,15 @@ const BARBARIAN_VIGNETTES: Vignette[] = [
     steps: [
       { parallel: [
         { action: 'spawn', asset: 'table_long', position: 'cs-center' },
-        { action: 'spawn', asset: 'burger', position: 'cs-center' },
-        { action: 'spawn', asset: 'cake_birthday', position: 'cs-left' },
+        { action: 'spawn', asset: 'grapes', position: 'ds-left' },
+        { action: 'spawn', asset: 'orange', position: 'ds-right' },
         { action: 'sfx', sound: 'spawn' },
       ], delayAfter: 0.5 },
+      ...OBJECT_GROW_REVEAL('burger', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('cake_birthday', 'cs-left'),
+      ...OBJECT_GROW_REVEAL('pizza_full', 'cs-right'),
+      ...OBJECT_GROW_REVEAL('cherries', 'ds-left'),
+      ...OBJECT_GROW_REVEAL('strawberry', 'ds-right'),
       { parallel: [
         { action: 'spawn_character', character: 'barbarian', position: 'off-left', anim: 'spawn_ground' },
       ], delayAfter: 0.4 },
@@ -697,13 +833,16 @@ const BARBARIAN_VIGNETTES: Vignette[] = [
       ], delayAfter: 0.4 },
       { parallel: [
         { action: 'animate', character: 'barbarian', anim: 'sit_floor' },
-        { action: 'emote', character: 'barbarian', emoji: '😋' },
+        { action: 'emote', character: 'barbarian', emoji: 'yummy' },
       ], delayAfter: 0.5 },
+      ...OBJECT_SHRINK_POP('burger'),
+      ...OBJECT_SHRINK_POP('pizza_full'),
       { parallel: [
         { action: 'react', effect: 'hearts-float', position: 'cs-center' },
         { action: 'text_popup', text: '🍔 FEAST TIME! 🍔', position: 'center', size: 'huge' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 1.5 },
+      ...DANCE('barbarian'),
     ],
     feedback: {
       title: '🍔 BARBARIAN FEAST!',
@@ -726,6 +865,8 @@ const NINJA_VIGNETTES: Vignette[] = [
       { parallel: [
         { action: 'spawn', asset: 'rock_boulder', position: 'ds-left' },
         { action: 'spawn', asset: 'tree_oak', position: 'ds-right' },
+        { action: 'spawn', asset: 'magnifying_glass', position: 'off-left' },
+        { action: 'spawn', asset: 'journal', position: 'off-right' },
         { action: 'sfx', sound: 'spawn' },
       ], delayAfter: 0.5 },
       { parallel: [
@@ -739,9 +880,10 @@ const NINJA_VIGNETTES: Vignette[] = [
       { parallel: [
         { action: 'move', character: 'ninja', to: 'ds-right', style: 'linear' },
       ], delayAfter: 0.5 },
+      ...CHARACTER_SPEAK('ninja', '🤫', "Shhh... observing from shadows..."),
       { parallel: [
         { action: 'animate', character: 'ninja', anim: 'idle' },
-        { action: 'emote', character: 'ninja', emoji: '👀' },
+        { action: 'emote', character: 'ninja', emoji: 'suspicious' },
       ], delayAfter: 0.6 },
       { parallel: [
         { action: 'react', effect: 'smoke', position: 'cs-center' },
@@ -768,6 +910,7 @@ const NINJA_VIGNETTES: Vignette[] = [
         { action: 'spawn_character', character: 'ninja', position: 'cs-center', anim: 'spawn_air' },
         { action: 'sfx', sound: 'spawn' },
       ], delayAfter: 0.5 },
+      ...CHARACTER_EXCLAIM('ninja', '🥷', "Ninja victory is silent victory!"),
       { parallel: [
         { action: 'animate', character: 'ninja', anim: 'jump_small' },
         { action: 'react', effect: 'smoke', position: 'cs-center' },
@@ -778,6 +921,7 @@ const NINJA_VIGNETTES: Vignette[] = [
         { action: 'react', effect: 'stars-spin', position: 'center' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 0.6 },
+      ...DANCE('ninja'),
       { parallel: [
         { action: 'react', effect: 'smoke', position: 'cs-center' },
         { action: 'text_popup', text: '🥷 NINJA STYLE! 🥷', position: 'center', size: 'huge' },
@@ -799,12 +943,13 @@ const NINJA_VIGNETTES: Vignette[] = [
     steps: [
       { parallel: [
         { action: 'spawn', asset: 'bunny', position: 'cs-center' },
+        { action: 'spawn', asset: 'squirrel', position: 'ds-far-left' },
         { action: 'spawn_character', character: 'ninja', position: 'off-right', anim: 'spawn_air' },
         { action: 'sfx', sound: 'spawn' },
       ], delayAfter: 0.5 },
       { parallel: [
         { action: 'animate', character: 'ninja', anim: 'get_hit' },
-        { action: 'emote', character: 'ninja', emoji: '😱' },
+        { action: 'emote', character: 'ninja', emoji: 'scared' },
         { action: 'react', effect: 'stars-spin', position: 'off-right' },
       ], delayAfter: 0.5 },
       { parallel: [
@@ -841,7 +986,7 @@ const NINJA_VIGNETTES: Vignette[] = [
       ], delayAfter: 0.5 },
       { parallel: [
         { action: 'animate', character: 'ninja', anim: 'cast_spell' },
-        { action: 'emote', character: 'ninja', emoji: '🤔' },
+        { action: 'emote', character: 'ninja', emoji: 'thinking' },
       ], delayAfter: 0.6 },
       { parallel: [
         { action: 'react', effect: 'smoke', position: 'cs-center' },
@@ -849,7 +994,7 @@ const NINJA_VIGNETTES: Vignette[] = [
         { action: 'sfx', sound: 'fail' },
       ], delayAfter: 0.5 },
       { parallel: [
-        { action: 'emote', character: 'ninja', emoji: '🤷' },
+        { action: 'emote', character: 'ninja', emoji: 'confused' },
       ], delayAfter: 1.5 },
     ],
     feedback: {
@@ -869,6 +1014,8 @@ const NINJA_VIGNETTES: Vignette[] = [
       { parallel: [
         { action: 'spawn', asset: 'tree_oak', position: 'ds-left' },
         { action: 'spawn', asset: 'rock_boulder', position: 'ds-right' },
+        { action: 'spawn', asset: 'pear', position: 'ds-far-left' },
+        { action: 'spawn', asset: 'lemon', position: 'ds-far-right' },
         { action: 'sfx', sound: 'spawn' },
       ], delayAfter: 0.5 },
       { parallel: [
@@ -879,11 +1026,11 @@ const NINJA_VIGNETTES: Vignette[] = [
       ], delayAfter: 0.4 },
       { parallel: [
         { action: 'animate', character: 'ninja', anim: 'throw' },
-        { action: 'spawn', asset: 'barrel', position: 'cs-center' },
-        { action: 'spawn', asset: 'torch', position: 'cs-left' },
         { action: 'react', effect: 'smoke', position: 'cs-center' },
         { action: 'sfx', sound: 'spawn' },
-      ], delayAfter: 0.6 },
+      ], delayAfter: 0.3 },
+      ...OBJECT_GROW_REVEAL('barrel', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('torch', 'cs-left'),
       { parallel: [
         { action: 'animate', character: 'ninja', anim: 'wave' },
         { action: 'react', effect: 'stars-spin', position: 'cs-center' },
@@ -893,7 +1040,7 @@ const NINJA_VIGNETTES: Vignette[] = [
     ],
     feedback: {
       title: '🥷 NINJA TRAP MASTER!',
-      message: "Ninjas set silent, deadly traps! Perfect precision!",
+      message: "Ninjas set silent, sneaky traps! Perfect precision!",
       skillTaught: 'Specificity',
       tip: 'Ninjas excel at sneaky trap placement!',
     },
@@ -912,9 +1059,10 @@ const NINJA_VIGNETTES: Vignette[] = [
       ], delayAfter: 0.5 },
       { parallel: [
         { action: 'spawn', asset: 'table_long', position: 'cs-center' },
-        { action: 'spawn', asset: 'sandwich', position: 'cs-center' },
         { action: 'sfx', sound: 'spawn' },
       ], delayAfter: 0.4 },
+      ...OBJECT_GROW_REVEAL('sandwich', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('sushi', 'cs-left'),
       { parallel: [
         { action: 'spawn_character', character: 'ninja', position: 'off-right', anim: 'spawn_air' },
         { action: 'react', effect: 'smoke', position: 'off-right' },
@@ -927,7 +1075,9 @@ const NINJA_VIGNETTES: Vignette[] = [
         { action: 'react', effect: 'smoke', position: 'cs-center' },
         { action: 'text_popup', text: '🥷 STEALTH SNACK! 🥷', position: 'center', size: 'large' },
         { action: 'sfx', sound: 'success' },
-      ], delayAfter: 1.5 },
+      ], delayAfter: 0.5 },
+      ...OBJECT_SHRINK_POP('sandwich'),
+      ...DANCE('ninja'),
     ],
     feedback: {
       title: '🥷 NINJA PICNIC!',
@@ -949,6 +1099,8 @@ const ROGUE_VIGNETTES: Vignette[] = [
     steps: [
       { parallel: [
         { action: 'spawn', asset: 'chest', position: 'cs-center' },
+        { action: 'spawn', asset: 'magnifying_glass', position: 'ds-left' },
+        { action: 'spawn', asset: 'journal', position: 'ds-right' },
         { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
         { action: 'sfx', sound: 'spawn' },
       ], delayAfter: 0.5 },
@@ -958,6 +1110,7 @@ const ROGUE_VIGNETTES: Vignette[] = [
       { parallel: [
         { action: 'move', character: 'rogue', to: 'ds-left', style: 'linear' },
       ], delayAfter: 0.4 },
+      ...CHARACTER_SPEAK('rogue', '😏', "Ooh, what treasures are hiding here?"),
       { parallel: [
         { action: 'animate', character: 'rogue', anim: 'idle' },
         { action: 'emote', character: 'rogue', emoji: '🔓' },
@@ -991,11 +1144,14 @@ const ROGUE_VIGNETTES: Vignette[] = [
       { parallel: [
         { action: 'move', character: 'rogue', to: 'cs-center', style: 'linear' },
       ], delayAfter: 0.4 },
+      ...CHARACTER_EXCLAIM('rogue', '💰', "Look at all this shiny loot!"),
       { parallel: [
         { action: 'animate', character: 'rogue', anim: 'throw' },
         { action: 'spawn_rain', asset: 'coin', quantity: 10, position: 'wide' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 0.6 },
+      ...DANCE('rogue'),
+      ...CROWD_CHEER(['rogue']),
       { parallel: [
         { action: 'animate', character: 'rogue', anim: 'jump_big' },
         { action: 'react', effect: 'hearts-float', position: 'cs-center' },
@@ -1024,7 +1180,7 @@ const ROGUE_VIGNETTES: Vignette[] = [
       ], delayAfter: 0.5 },
       { parallel: [
         { action: 'animate', character: 'rogue', anim: 'get_hit' },
-        { action: 'emote', character: 'rogue', emoji: '😱' },
+        { action: 'emote', character: 'rogue', emoji: 'scared' },
         { action: 'react', effect: 'stars-spin', position: 'ds-left' },
       ], delayAfter: 0.5 },
       { parallel: [
@@ -1058,7 +1214,7 @@ const ROGUE_VIGNETTES: Vignette[] = [
       ], delayAfter: 0.5 },
       { parallel: [
         { action: 'animate', character: 'rogue', anim: 'cast_spell' },
-        { action: 'emote', character: 'rogue', emoji: '🤔' },
+        { action: 'emote', character: 'rogue', emoji: 'thinking' },
       ], delayAfter: 0.6 },
       { parallel: [
         { action: 'react', effect: 'question-marks', position: 'cs-center' },
@@ -1066,7 +1222,7 @@ const ROGUE_VIGNETTES: Vignette[] = [
         { action: 'sfx', sound: 'fail' },
       ], delayAfter: 0.5 },
       { parallel: [
-        { action: 'emote', character: 'rogue', emoji: '🤷' },
+        { action: 'emote', character: 'rogue', emoji: 'confused' },
       ], delayAfter: 1.5 },
     ],
     feedback: {
@@ -1095,10 +1251,10 @@ const ROGUE_VIGNETTES: Vignette[] = [
       ], delayAfter: 0.4 },
       { parallel: [
         { action: 'animate', character: 'rogue', anim: 'throw' },
-        { action: 'spawn', asset: 'barrel', position: 'cs-left' },
-        { action: 'spawn', asset: 'barrel', position: 'cs-right' },
         { action: 'sfx', sound: 'spawn' },
-      ], delayAfter: 0.6 },
+      ], delayAfter: 0.3 },
+      ...OBJECT_GROW_REVEAL('barrel', 'cs-left'),
+      ...OBJECT_GROW_REVEAL('barrel', 'cs-right'),
       { parallel: [
         { action: 'animate', character: 'rogue', anim: 'Cheering' },
         { action: 'react', effect: 'stars-spin', position: 'cs-center' },
@@ -1122,10 +1278,13 @@ const ROGUE_VIGNETTES: Vignette[] = [
     steps: [
       { parallel: [
         { action: 'spawn', asset: 'table_long', position: 'cs-center' },
-        { action: 'spawn', asset: 'sandwich', position: 'cs-center' },
         { action: 'spawn', asset: 'chest_gold', position: 'ds-right' },
+        { action: 'spawn', asset: 'apple_fmp', position: 'ds-left' },
         { action: 'sfx', sound: 'spawn' },
       ], delayAfter: 0.5 },
+      ...OBJECT_GROW_REVEAL('sandwich_food', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('cake', 'cs-left'),
+      ...OBJECT_GROW_REVEAL('honey', 'cs-right'),
       { parallel: [
         { action: 'spawn_character', character: 'rogue', position: 'off-left', anim: 'spawn_ground' },
       ], delayAfter: 0.4 },
@@ -1136,12 +1295,14 @@ const ROGUE_VIGNETTES: Vignette[] = [
         { action: 'animate', character: 'rogue', anim: 'sit_floor' },
         { action: 'emote', character: 'rogue', emoji: '💰' },
       ], delayAfter: 0.5 },
+      ...OBJECT_SHRINK_POP('cake'),
       { parallel: [
         { action: 'spawn_rain', asset: 'coin', quantity: 5, position: 'cs-center' },
         { action: 'react', effect: 'hearts-float', position: 'cs-center' },
         { action: 'text_popup', text: '💰 TREASURE PICNIC! 💰', position: 'center', size: 'large' },
         { action: 'sfx', sound: 'success' },
-      ], delayAfter: 1.5 },
+      ], delayAfter: 0.5 },
+      ...CROWD_CHEER(['rogue']),
     ],
     feedback: {
       title: '💰 ROGUE PICNIC!',
@@ -1178,7 +1339,7 @@ const WHOLE_PARTY_VIGNETTES: Vignette[] = [
       { parallel: [
         { action: 'crowd_react', characters: 'all', anim: 'idle' },
         { action: 'emote', character: 'ranger', emoji: '🔍' },
-        { action: 'emote', character: 'rogue', emoji: '👀' },
+        { action: 'emote', character: 'rogue', emoji: 'suspicious' },
         { action: 'emote', character: 'druid', emoji: '🌿' },
       ], delayAfter: 0.6 },
       { parallel: [
@@ -1218,12 +1379,15 @@ const WHOLE_PARTY_VIGNETTES: Vignette[] = [
         { action: 'spawn_rain', asset: 'coin', quantity: 15, position: 'wide' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 0.6 },
+      ...CROWD_CHEER([]),
       { parallel: [
         { action: 'crowd_react', characters: 'all', anim: 'wave' },
         { action: 'react', effect: 'sparkle-magic', position: 'center' },
         { action: 'react', effect: 'hearts-float', position: 'center' },
         { action: 'camera_shake', intensity: 0.4, duration: 0.8 },
       ], delayAfter: 0.8 },
+      ...DANCE('ranger'),
+      ...DANCE('barbarian'),
       { parallel: [
         { action: 'text_popup', text: '🎉 PARTY VICTORY! 🎉', position: 'center', size: 'huge' },
         { action: 'sfx', sound: 'success' },
@@ -1254,8 +1418,8 @@ const WHOLE_PARTY_VIGNETTES: Vignette[] = [
       ], delayAfter: 0.5 },
       { parallel: [
         { action: 'crowd_react', characters: 'all', anim: 'get_hit' },
-        { action: 'emote', character: 'ranger', emoji: '😱' },
-        { action: 'emote', character: 'barbarian', emoji: '😱' },
+        { action: 'emote', character: 'ranger', emoji: 'scared' },
+        { action: 'emote', character: 'barbarian', emoji: 'scared' },
         { action: 'react', effect: 'stars-spin', position: 'center' },
         { action: 'sfx', sound: 'fail' },
       ], delayAfter: 0.6 },
@@ -1303,7 +1467,7 @@ const WHOLE_PARTY_VIGNETTES: Vignette[] = [
         { action: 'sfx', sound: 'react' },
       ], delayAfter: 0.5 },
       { parallel: [
-        { action: 'emote', character: 'barbarian', emoji: '🤷' },
+        { action: 'emote', character: 'barbarian', emoji: 'confused' },
         { action: 'text_popup', text: '...some aren\'t magic users!', position: 'center', size: 'large' },
         { action: 'react', effect: 'question-marks', position: 'center' },
       ], delayAfter: 1.5 },
@@ -1366,11 +1530,13 @@ const WHOLE_PARTY_VIGNETTES: Vignette[] = [
     steps: [
       { parallel: [
         { action: 'spawn', asset: 'table_long', position: 'cs-center' },
-        { action: 'spawn', asset: 'burger', position: 'cs-left' },
-        { action: 'spawn', asset: 'cake_birthday', position: 'cs-center' },
-        { action: 'spawn', asset: 'apple', position: 'cs-right' },
         { action: 'sfx', sound: 'spawn' },
       ], delayAfter: 0.5 },
+      ...SPELL_CAST('druid'),
+      ...OBJECT_GROW_REVEAL('burger', 'cs-left'),
+      ...OBJECT_GROW_REVEAL('cake_birthday', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('apple', 'cs-right'),
+      ...OBJECT_GROW_REVEAL('pizza_full', 'ds-left'),
       { parallel: [
         { action: 'spawn_character', character: 'ranger', position: 'off-left', anim: 'spawn_ground' },
         { action: 'spawn_character', character: 'barbarian', position: 'off-right', anim: 'spawn_ground' },
@@ -1384,11 +1550,16 @@ const WHOLE_PARTY_VIGNETTES: Vignette[] = [
       { parallel: [
         { action: 'crowd_react', characters: 'all', anim: 'sit_floor' },
       ], delayAfter: 0.5 },
+      ...OBJECT_SHRINK_POP('burger'),
+      ...OBJECT_SHRINK_POP('pizza_full'),
+      ...CROWD_CHEER([]),
       { parallel: [
         { action: 'react', effect: 'hearts-float', position: 'center' },
         { action: 'text_popup', text: '🧺 PARTY FEAST! 🧺', position: 'center', size: 'huge' },
         { action: 'sfx', sound: 'success' },
-      ], delayAfter: 1.5 },
+      ], delayAfter: 0.5 },
+      ...DANCE('ranger'),
+      ...DANCE('druid'),
     ],
     feedback: {
       title: '🧺 PARTY PICNIC!',
@@ -1501,7 +1672,7 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'move', character: 'ranger', to: 'cs-center', style: 'linear' },
-          { action: 'emote', character: 'ranger', emoji: '🤑' },
+          { action: 'emote', character: 'ranger', emoji: 'excited' },
         ],
         delayAfter: 0.4,
       },
@@ -1569,7 +1740,7 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'react', effect: 'stars-spin', position: 'cs-center' },
-          { action: 'emote', character: 'ninja', emoji: '😱' },
+          { action: 'emote', character: 'ninja', emoji: 'scared' },
         ],
         delayAfter: 0.3,
       },
@@ -1617,7 +1788,7 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
         parallel: [
           { action: 'spawn_character', character: 'skeleton', position: 'cs-left', anim: 'spawn_ground' },
           { action: 'spawn_character', character: 'skeleton', position: 'cs-right', anim: 'spawn_ground' },
-          { action: 'emote', character: 'skeleton', emoji: '💤' },
+          { action: 'emote', character: 'skeleton', emoji: 'sleeping' },
         ],
         delayAfter: 0.5,
       },
@@ -1746,7 +1917,7 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'ranger', anim: 'idle' },
-          { action: 'emote', character: 'ranger', emoji: '🤔' },
+          { action: 'emote', character: 'ranger', emoji: 'thinking' },
         ],
         delayAfter: 0.5,
       },
@@ -1820,7 +1991,7 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
       },
       {
         parallel: [
-          { action: 'spawn', asset: 'tree_magic', position: 'cs-center' },
+          { action: 'spawn', asset: 'sakura_tree', position: 'cs-center' },
           { action: 'react', effect: 'explosion-cartoon', position: 'cs-center' },
           { action: 'react', effect: 'hearts-float', position: 'center' },
           { action: 'screen_flash', color: 'gold', duration: 0.3 },
@@ -1884,7 +2055,7 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'move', character: 'mage', to: 'ds-left', style: 'linear' },
-          { action: 'emote', character: 'mage', emoji: '😲' },
+          { action: 'emote', character: 'mage', emoji: 'shocked' },
         ],
         delayAfter: 2.0,
       },
@@ -1933,7 +2104,7 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'ranger', anim: 'idle' },
-          { action: 'emote', character: 'ranger', emoji: '😲' },
+          { action: 'emote', character: 'ranger', emoji: 'shocked' },
           { action: 'react', effect: 'stars-spin', position: 'cs-center' },
         ],
         delayAfter: 0.5,
@@ -2052,7 +2223,7 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'ninja', anim: 'idle' },
-          { action: 'emote', character: 'ninja', emoji: '🤔' },
+          { action: 'emote', character: 'ninja', emoji: 'thinking' },
           { action: 'react', effect: 'question-marks', position: 'cs-center' },
         ],
         delayAfter: 0.8,
@@ -2114,8 +2285,8 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'crowd_react', characters: 'all', anim: 'idle' },
-          { action: 'emote', character: 'ranger', emoji: '🤫' },
-          { action: 'emote', character: 'druid', emoji: '👀' },
+          { action: 'emote', character: 'ranger', emoji: 'sneaky' },
+          { action: 'emote', character: 'druid', emoji: 'suspicious' },
         ],
         delayAfter: 0.8,
       },
@@ -2165,7 +2336,7 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'move', character: 'ranger', to: 'cs-center', style: 'linear' },
-          { action: 'emote', character: 'ranger', emoji: '🎉' },
+          { action: 'emote', character: 'ranger', emoji: 'party' },
         ],
         delayAfter: 0.4,
       },
@@ -2224,7 +2395,7 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'react', effect: 'stars-spin', position: 'cs-center' },
-          { action: 'emote', character: 'ninja', emoji: '😰' },
+          { action: 'emote', character: 'ninja', emoji: 'worried' },
           { action: 'react', effect: 'question-marks', position: 'cs-center' },
         ],
         delayAfter: 0.5,
@@ -2343,7 +2514,7 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'barbarian', anim: 'idle' },
-          { action: 'emote', character: 'barbarian', emoji: '🤔' },
+          { action: 'emote', character: 'barbarian', emoji: 'thinking' },
         ],
         delayAfter: 0.6,
       },
@@ -2474,7 +2645,7 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'crowd_react', characters: 'all', anim: 'idle' },
-          { action: 'emote', character: 'ranger', emoji: '😊' },
+          { action: 'emote', character: 'ranger', emoji: 'happy' },
           { action: 'emote', character: 'druid', emoji: '🍰' },
         ],
         delayAfter: 0.8,
@@ -2533,7 +2704,7 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'ranger', anim: 'idle' },
-          { action: 'emote', character: 'ranger', emoji: '👀' },
+          { action: 'emote', character: 'ranger', emoji: 'suspicious' },
         ],
         delayAfter: 0.6,
       },
@@ -2572,7 +2743,7 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
           { action: 'spawn', asset: 'bunny', position: 'cs-center' },
           { action: 'spawn', asset: 'chest_gold', position: 'cs-left' },
           { action: 'screen_flash', color: 'darkblue', duration: 0.5 }, // midnight
-          { action: 'emote', character: 'bunny', emoji: '💤' },
+          { action: 'emote', character: 'bunny', emoji: 'sleeping' },
           { action: 'sfx', sound: 'spawn' },
         ],
         delayAfter: 0.5,
@@ -2586,7 +2757,7 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'move', character: 'rogue', to: 'cs-left', style: 'linear' },
-          { action: 'emote', character: 'rogue', emoji: '😈' },
+          { action: 'emote', character: 'rogue', emoji: 'mischievous' },
         ],
         delayAfter: 0.4,
       },
@@ -2717,7 +2888,7 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'barbarian', anim: 'idle' },
-          { action: 'emote', character: 'barbarian', emoji: '🤫' },
+          { action: 'emote', character: 'barbarian', emoji: 'sneaky' },
         ],
         delayAfter: 0.6,
       },
@@ -2779,7 +2950,7 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'move', character: 'druid', to: 'cs-center', style: 'linear' },
-          { action: 'emote', character: 'druid', emoji: '🤩' },
+          { action: 'emote', character: 'druid', emoji: 'star_eyes' },
         ],
         delayAfter: 0.4,
       },
@@ -2841,7 +3012,7 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'move', character: 'rogue', to: 'cs-center', style: 'linear' },
-          { action: 'emote', character: 'rogue', emoji: '😋' },
+          { action: 'emote', character: 'rogue', emoji: 'yummy' },
         ],
         delayAfter: 0.4,
       },
@@ -2907,7 +3078,7 @@ export const ADVENTURERS_PICNIC_DEFAULT_2: Vignette = {
     {
       parallel: [
         { action: 'animate', character: 'ranger', anim: 'idle' },
-        { action: 'emote', character: 'ranger', emoji: '🤷' },
+        { action: 'emote', character: 'ranger', emoji: 'confused' },
         { action: 'react', effect: 'question-marks', position: 'center' },
         { action: 'text_popup', text: '...what now?', position: 'center', size: 'large' },
       ],
@@ -3086,7 +3257,7 @@ export const ADVENTURERS_PICNIC_STAGE_3: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'barbarian', anim: 'get_hit' },
-          { action: 'emote', character: 'barbarian', emoji: '😱' },
+          { action: 'emote', character: 'barbarian', emoji: 'scared' },
           { action: 'react', effect: 'stars-spin', position: 'ds-center' },
         ],
         delayAfter: 0.5,
@@ -3271,7 +3442,7 @@ export const ADVENTURERS_PICNIC_STAGE_3: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'clown', anim: 'get_hit' },
-          { action: 'emote', character: 'clown', emoji: '😱' },
+          { action: 'emote', character: 'clown', emoji: 'scared' },
           { action: 'react', effect: 'stars-spin', position: 'ds-right' },
         ],
         delayAfter: 0.5,
@@ -3324,7 +3495,7 @@ export const ADVENTURERS_PICNIC_DEFAULT_3: Vignette = {
     {
       parallel: [
         { action: 'crowd_react', characters: 'all', anim: 'idle' },
-        { action: 'emote', character: 'ranger', emoji: '🤷' },
+        { action: 'emote', character: 'ranger', emoji: 'confused' },
         { action: 'react', effect: 'question-marks', position: 'center' },
       ],
       delayAfter: 0.8,

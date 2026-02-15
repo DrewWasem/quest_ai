@@ -5,7 +5,7 @@
  * Claude generates fresh options on stage entry; defaultOptions are the static fallback.
  */
 
-import type { QuestStage } from '../types/madlibs';
+import type { QuestStage, Level4Stage, Level5Stage } from '../types/madlibs';
 import { SKELETON_BIRTHDAY_STAGE_1, SKELETON_BIRTHDAY_DEFAULT, SKELETON_BIRTHDAY_STAGE_2, SKELETON_BIRTHDAY_DEFAULT_2, SKELETON_BIRTHDAY_STAGE_3, SKELETON_BIRTHDAY_DEFAULT_3 } from './vignettes/skeleton-birthday';
 import { KNIGHT_SPACE_STAGE_1, KNIGHT_SPACE_DEFAULT, KNIGHT_SPACE_STAGE_2, KNIGHT_SPACE_DEFAULT_2, KNIGHT_SPACE_STAGE_3, KNIGHT_SPACE_DEFAULT_3 } from './vignettes/knight-space';
 import { BARBARIAN_SCHOOL_STAGE_1, BARBARIAN_SCHOOL_DEFAULT, BARBARIAN_SCHOOL_STAGE_2, BARBARIAN_SCHOOL_DEFAULT_2, BARBARIAN_SCHOOL_STAGE_3, BARBARIAN_SCHOOL_DEFAULT_3 } from './vignettes/barbarian-school';
@@ -1821,6 +1821,309 @@ export const MAGE_KITCHEN_STAGES: QuestStage[] = [
     ],
   },
 ];
+
+// ─── LEVEL 4 STAGES (Hybrid Free Text) ──────────────────────────────────────
+
+export const LEVEL_4_STAGES: Record<string, Level4Stage> = {
+  'skeleton-birthday': {
+    id: 'skeleton-birthday-4',
+    questId: 'skeleton-birthday',
+    stageNumber: 4,
+    title: 'Party Mastermind',
+    intro: "You're getting really good at this! Now try describing the party in your own words.",
+    characterSlot: {
+      id: 'CHARACTER',
+      label: 'Party Guest',
+      icon: '\u{1F3AD}',
+      allowedTags: ['skeleton_warrior', 'skeleton_mage', 'knight', 'mage', 'rogue'],
+      defaultOptions: [
+        { label: 'Skeleton', tag: 'skeleton_warrior', icon: '\u{1F480}' },
+        { label: 'Skeleton Mage', tag: 'skeleton_mage', icon: '\u{1F9D9}' },
+        { label: 'Knight', tag: 'knight', icon: '\u{1F6E1}\u{FE0F}' },
+        { label: 'Mage', tag: 'mage', icon: '\u{1FA84}' },
+        { label: 'Rogue', tag: 'rogue', icon: '\u{1F5E1}\u{FE0F}' },
+      ],
+    },
+    freeTextFields: [{
+      id: 'ACTION',
+      label: 'What should they do at the party?',
+      placeholder: 'Type what happens...',
+      maxLength: 50,
+      ghostExamples: ['eat a giant cake', 'dance with a pizza', 'throw confetti everywhere', 'do magic tricks'],
+    }],
+    vignettes: SKELETON_BIRTHDAY_STAGE_1,
+    defaultVignette: SKELETON_BIRTHDAY_DEFAULT,
+    requiredSuccesses: 3,
+  },
+
+  'knight-space': {
+    id: 'knight-space-4',
+    questId: 'knight-space',
+    stageNumber: 4,
+    title: 'Mission Commander',
+    intro: "You know the crew! Now write your OWN mission orders!",
+    characterSlot: {
+      id: 'CHARACTER',
+      label: 'Crew Member',
+      icon: '\u{1F9D1}\u{200D}\u{1F680}',
+      allowedTags: ['ranger', 'robot', 'engineer', 'knight', 'everyone'],
+      defaultOptions: [
+        { label: 'Space Ranger', tag: 'ranger', icon: '\u{1F680}' },
+        { label: 'Robot Helper', tag: 'robot', icon: '\u{1F916}' },
+        { label: 'Engineer', tag: 'engineer', icon: '\u{1F527}' },
+        { label: 'Knight', tag: 'knight', icon: '\u{1F6E1}\u{FE0F}' },
+        { label: 'Everyone!', tag: 'everyone', icon: '\u{1F465}' },
+      ],
+    },
+    freeTextFields: [{
+      id: 'ACTION',
+      label: 'What mission should they do?',
+      placeholder: 'Type the mission...',
+      maxLength: 50,
+      ghostExamples: ['repair the engine fast', 'launch a rocket to the moon', 'defend from space pirates', 'explore a new planet'],
+    }],
+    vignettes: KNIGHT_SPACE_STAGE_1,
+    defaultVignette: KNIGHT_SPACE_DEFAULT,
+    requiredSuccesses: 3,
+  },
+
+  'barbarian-school': {
+    id: 'barbarian-school-4',
+    questId: 'barbarian-school',
+    stageNumber: 4,
+    title: 'Recess Boss',
+    intro: "Write your OWN recess chaos! Pick a monster and describe what they do!",
+    characterSlot: {
+      id: 'CHARACTER',
+      label: 'Monster',
+      icon: '\u{1F479}',
+      allowedTags: ['barbarian', 'clown', 'ninja', 'robot', 'caveman', 'everyone'],
+      defaultOptions: [
+        { label: 'Barbarian', tag: 'barbarian', icon: '\u{1FA93}' },
+        { label: 'Clown', tag: 'clown', icon: '\u{1F921}' },
+        { label: 'Ninja', tag: 'ninja', icon: '\u{1F977}' },
+        { label: 'Robot', tag: 'robot', icon: '\u{1F916}' },
+        { label: 'Caveman', tag: 'caveman', icon: '\u{1F9B4}' },
+      ],
+    },
+    freeTextFields: [{
+      id: 'ACTION',
+      label: 'What should they do at recess?',
+      placeholder: 'Type the action...',
+      maxLength: 50,
+      ghostExamples: ['wrestle on the swings', 'climb the tallest tree', 'race around the playground', 'hide behind the bushes'],
+    }],
+    vignettes: BARBARIAN_SCHOOL_STAGE_1,
+    defaultVignette: BARBARIAN_SCHOOL_DEFAULT,
+    requiredSuccesses: 3,
+  },
+
+  'skeleton-pizza': {
+    id: 'skeleton-pizza-4',
+    questId: 'skeleton-pizza',
+    stageNumber: 4,
+    title: 'Head Chef',
+    intro: "Forget the menu! Write your OWN recipe orders!",
+    characterSlot: {
+      id: 'CHARACTER',
+      label: 'Chef',
+      icon: '\u{1F468}\u{200D}\u{1F373}',
+      allowedTags: ['skeleton', 'clown', 'superhero', 'survivalist', 'everyone'],
+      defaultOptions: [
+        { label: 'Skeleton Chef', tag: 'skeleton', icon: '\u{1F480}' },
+        { label: 'Clown Cook', tag: 'clown', icon: '\u{1F921}' },
+        { label: 'Super Chef', tag: 'superhero', icon: '\u{1F9B8}' },
+        { label: 'Survivalist', tag: 'survivalist', icon: '\u{1F3D5}\u{FE0F}' },
+      ],
+    },
+    freeTextFields: [{
+      id: 'ACTION',
+      label: 'What should they cook?',
+      placeholder: 'Type what to cook...',
+      maxLength: 50,
+      ghostExamples: ['cook a giant pepperoni pizza', 'bake a mystery cake', 'toss pasta in the air', 'make bone soup with fire'],
+    }],
+    vignettes: SKELETON_PIZZA_STAGE_1,
+    defaultVignette: SKELETON_PIZZA_DEFAULT,
+    requiredSuccesses: 3,
+  },
+
+  'adventurers-picnic': {
+    id: 'adventurers-picnic-4',
+    questId: 'adventurers-picnic',
+    stageNumber: 4,
+    title: 'Expedition Leader',
+    intro: "Lead the expedition YOUR way! Pick an adventurer and write what they discover!",
+    characterSlot: {
+      id: 'CHARACTER',
+      label: 'Adventurer',
+      icon: '\u{1F9DD}',
+      allowedTags: ['ranger', 'druid', 'barbarian', 'ninja', 'rogue', 'whole_party'],
+      defaultOptions: [
+        { label: 'Ranger', tag: 'ranger', icon: '\u{1F3F9}' },
+        { label: 'Druid', tag: 'druid', icon: '\u{1F33F}' },
+        { label: 'Barbarian', tag: 'barbarian', icon: '\u{1FA93}' },
+        { label: 'Ninja', tag: 'ninja', icon: '\u{1F977}' },
+        { label: 'Rogue', tag: 'rogue', icon: '\u{1F5E1}\u{FE0F}' },
+      ],
+    },
+    freeTextFields: [{
+      id: 'ACTION',
+      label: 'What do they discover?',
+      placeholder: 'Type what happens...',
+      maxLength: 50,
+      ghostExamples: ['find a magic portal', 'discover hidden treasure', 'tame a forest creature', 'explore an ancient ruin'],
+    }],
+    vignettes: ADVENTURERS_PICNIC_STAGE_1,
+    defaultVignette: ADVENTURERS_PICNIC_DEFAULT,
+    requiredSuccesses: 3,
+  },
+
+  'dungeon-concert': {
+    id: 'dungeon-concert-4',
+    questId: 'dungeon-concert',
+    stageNumber: 4,
+    title: 'Dungeon Master',
+    intro: "Write your own escape plan! Pick a hero and describe their move!",
+    characterSlot: {
+      id: 'CHARACTER',
+      label: 'Hero',
+      icon: '\u{2694}\u{FE0F}',
+      allowedTags: ['knight', 'mage', 'rogue', 'skeleton', 'necromancer', 'team'],
+      defaultOptions: [
+        { label: 'Knight', tag: 'knight', icon: '\u{1F6E1}\u{FE0F}' },
+        { label: 'Mage', tag: 'mage', icon: '\u{1F9D9}' },
+        { label: 'Rogue', tag: 'rogue', icon: '\u{1F5E1}\u{FE0F}' },
+        { label: 'Skeleton', tag: 'skeleton', icon: '\u{1F480}' },
+        { label: 'Necromancer', tag: 'necromancer', icon: '\u{2620}\u{FE0F}' },
+      ],
+    },
+    freeTextFields: [{
+      id: 'ACTION',
+      label: 'How do they escape?',
+      placeholder: 'Type their plan...',
+      maxLength: 50,
+      ghostExamples: ['sneak past the guard quietly', 'blast the door with magic', 'pick the lock silently', 'fight through the dungeon'],
+    }],
+    vignettes: DUNGEON_CONCERT_STAGE_1,
+    defaultVignette: DUNGEON_CONCERT_DEFAULT,
+    requiredSuccesses: 3,
+  },
+
+  'mage-kitchen': {
+    id: 'mage-kitchen-4',
+    questId: 'mage-kitchen',
+    stageNumber: 4,
+    title: 'Archmage Chef',
+    intro: "Cast your OWN spell! Pick a target and describe the magic!",
+    characterSlot: {
+      id: 'CHARACTER',
+      label: 'Target',
+      icon: '\u{1F3AF}',
+      allowedTags: ['stove', 'fridge', 'pot', 'pan', 'sink', 'oven'],
+      defaultOptions: [
+        { label: 'Wild Stove', tag: 'stove', icon: '\u{1F525}' },
+        { label: 'Angry Fridge', tag: 'fridge', icon: '\u{1F9CA}' },
+        { label: 'Bubbling Pot', tag: 'pot', icon: '\u{1F372}' },
+        { label: 'Flying Pan', tag: 'pan', icon: '\u{1F373}' },
+        { label: 'Leaky Sink', tag: 'sink', icon: '\u{1F6B0}' },
+      ],
+    },
+    freeTextFields: [{
+      id: 'ACTION',
+      label: 'What spell do you cast?',
+      placeholder: 'Type the spell...',
+      maxLength: 50,
+      ghostExamples: ['freeze it with ice magic', 'make it grow giant', 'set it on fire', 'transform it into a cake'],
+    }],
+    vignettes: MAGE_KITCHEN_STAGE_1,
+    defaultVignette: MAGE_KITCHEN_DEFAULT,
+    requiredSuccesses: 3,
+  },
+};
+
+// ─── LEVEL 5 STAGES (Full Prompt) ───────────────────────────────────────────
+
+export const LEVEL_5_STAGES: Record<string, Level5Stage> = {
+  'skeleton-birthday': {
+    id: 'skeleton-birthday-5',
+    questId: 'skeleton-birthday',
+    stageNumber: 5,
+    title: 'Party Genius',
+    intro: "You've mastered the basics! Now you can write ANYTHING you want!",
+    promptPlaceholder: 'Make the skeleton throw an epic party with cake and fireworks',
+    sentenceStarters: ['Make the', 'Tell the', 'Have the', 'Create a scene where'],
+    systemPromptKey: 'skeleton-birthday',
+  },
+  'knight-space': {
+    id: 'knight-space-5',
+    questId: 'knight-space',
+    stageNumber: 5,
+    title: 'Space Admiral',
+    intro: "Full creative mode! Write any space mission you can imagine!",
+    promptPlaceholder: 'Have the ranger and robot repair the station while dodging asteroids',
+    sentenceStarters: ['Make the', 'Send the', 'Have the', 'Create a mission where'],
+    systemPromptKey: 'knight-space',
+  },
+  'barbarian-school': {
+    id: 'barbarian-school-5',
+    questId: 'barbarian-school',
+    stageNumber: 5,
+    title: 'Playground Legend',
+    intro: "Write ANYTHING for recess! The crazier, the better!",
+    promptPlaceholder: 'Make the barbarian and ninja have an epic wrestling match on the swings',
+    sentenceStarters: ['Make the', 'Have the', 'Tell the', 'At recess,'],
+    systemPromptKey: 'barbarian-school',
+  },
+  'skeleton-pizza': {
+    id: 'skeleton-pizza-5',
+    questId: 'skeleton-pizza',
+    stageNumber: 5,
+    title: 'Restaurant Owner',
+    intro: "Full control of the kitchen! Write any recipe disaster you want!",
+    promptPlaceholder: 'Have the skeleton chef and clown cook make a giant pizza that explodes',
+    sentenceStarters: ['Make the', 'Have the', 'Tell the', 'In the kitchen,'],
+    systemPromptKey: 'skeleton-pizza',
+  },
+  'adventurers-picnic': {
+    id: 'adventurers-picnic-5',
+    questId: 'adventurers-picnic',
+    stageNumber: 5,
+    title: 'Grand Explorer',
+    intro: "Write your own adventure! The whole forest is yours!",
+    promptPlaceholder: 'Have the ranger discover a magic portal while the druid tames a forest creature',
+    sentenceStarters: ['Make the', 'Have the', 'Tell the', 'In the forest,'],
+    systemPromptKey: 'adventurers-picnic',
+  },
+  'dungeon-concert': {
+    id: 'dungeon-concert-5',
+    questId: 'dungeon-concert',
+    stageNumber: 5,
+    title: 'Legend of the Dungeon',
+    intro: "Write your own epic dungeon escape! Anything goes!",
+    promptPlaceholder: 'Have the knight and mage team up to fight the guard and escape through the secret door',
+    sentenceStarters: ['Make the', 'Have the', 'Tell the', 'In the dungeon,'],
+    systemPromptKey: 'dungeon-concert',
+  },
+  'mage-kitchen': {
+    id: 'mage-kitchen-5',
+    questId: 'mage-kitchen',
+    stageNumber: 5,
+    title: 'Supreme Sorcerer',
+    intro: "Cast any spell on any target! Maximum magical mayhem!",
+    promptPlaceholder: 'Make the mage cast a giant grow spell on the stove while the pot bubbles over',
+    sentenceStarters: ['Make the', 'Cast a', 'Have the', 'In the kitchen,'],
+    systemPromptKey: 'mage-kitchen',
+  },
+};
+
+export function getLevel4Stage(zoneId: string): Level4Stage | null {
+  return LEVEL_4_STAGES[zoneId] ?? null;
+}
+
+export function getLevel5Stage(zoneId: string): Level5Stage | null {
+  return LEVEL_5_STAGES[zoneId] ?? null;
+}
 
 // ─── MASTER REGISTRY ────────────────────────────────────────────────────────
 

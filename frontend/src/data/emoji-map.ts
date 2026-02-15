@@ -54,6 +54,28 @@ export const EMOJI_MAP: Record<string, number> = {
   // Food reactions (for kitchen/restaurant/picnic tasks)
   yummy: 40,          // drooling (reuse)
   disgusted: 26,      // sick (reuse)
+
+  // Extended emotions (for vignette story overhaul)
+  nervous: 13,        // wide eyes, teeth showing, sweat
+  pleading: 14,       // big puppy eyes, begging
+  suspicious: 22,     // narrowed side-eye
+  triumphant: 30,     // victorious grin, pumped
+  exhausted: 31,      // drooping, worn out
+  hungry: 32,         // open mouth, wanting food
+  musical: 33,        // happy face with notes vibe
+  sneaky: 34,         // shifty narrow eyes
+  embarrassed: 37,    // flushed, looking away
+  annoyed: 38,        // irritated, teeth clenched
+  hopeful: 42,        // slight smile, looking up
+  jealous: 44,        // green-tinted envy
+  grateful: 47,       // warm thankful smile
+  stubborn: 50,       // pouty, arms-crossed energy
+  playful: 52,        // big cheeky grin
+  furious: 39,        // dark angry, rage
+  curious: 29,        // head-tilt, questioning
+  heroic: 70,         // brave, strong face
+  cheeky: 85,         // mischievous grin variant
+  startled: 100,      // jump-scare surprise
 }
 
 /** Get path to a 16×16 outline emoji PNG (for particle effects) */

@@ -52,7 +52,7 @@ export default function TitleScreen({ onSelectCharacter }: TitleScreenProps) {
           <div className="text-2xl mb-1">{'\u{1F3F0}'}</div>
           <h3 className="font-heading font-bold text-sm text-quest-text-dark">Explore</h3>
           <p className="text-xs text-quest-text-light mt-1">
-            Roam a 3D village with 7 quest zones
+            Roam a 3D village with 8 quest zones
           </p>
         </div>
         <div className="bg-white/70 backdrop-blur-sm rounded-2xl px-5 py-4 border border-quest-orange/15 text-center">

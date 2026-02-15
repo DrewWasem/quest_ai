@@ -1,5 +1,5 @@
 /**
- * World Definitions — sandbox world configs for all 7 quest zones.
+ * World Definitions — sandbox world configs for all 8 quest zones.
  *
  * Each world defines its characters, props, animations, effects, sounds,
  * and the system prompt template used to call Claude for sandbox play.

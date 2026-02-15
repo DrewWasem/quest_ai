@@ -24,7 +24,7 @@ import type { SceneScript, Action, Position, SpawnGroupAction } from '../types/s
 import type { VignetteStep } from '../types/madlibs'
 import { CHARACTERS, ANIMAL_MODELS, type CharacterKey } from '../data/asset-manifest'
 import { useGameStore, ZONE_CENTERS } from '../stores/gameStore'
-import { EMOJI_MAP, getEmojiBubblePath, getEmojiOutlinePath } from '../data/emoji-map'
+import { getEmojiBubblePath, getEmojiOutlinePath } from '../data/emoji-map'
 
 // Compute character facing for a zone — face toward village center (0,0,0)
 let _zoneCharRotationCache: Record<string, [number, number, number]> | null = null
@@ -38,11 +38,10 @@ function getZoneCharRotation(zoneId: string): [number, number, number] | undefin
   return _zoneCharRotationCache[zoneId]
 }
 
-// Resolve an emoji string (semantic name, number, or Unicode) to a pixel-art image path
+// Resolve an emoji string (semantic name or Unicode) to a pixel-art image path
 function resolveEmojiImage(emoji: string): string | null {
-  if (EMOJI_MAP[emoji]) return getEmojiBubblePath(emoji)
-  const num = parseInt(emoji, 10)
-  if (!isNaN(num) && num >= 1 && num <= 127) return getEmojiBubblePath(num)
+  const path = getEmojiBubblePath(emoji)
+  if (path) return path
   return null // Unicode fallback — no image available
 }
 
@@ -838,17 +837,10 @@ const PROP_PATHS: Record<string, string> = {
   jam_hex: 'food-mega-pack/Jars/Jam_Hex/Jam_Hex_01.glb',
   jam_round: 'food-mega-pack/Jars/Jam_Round/Jam_Round_01.glb',
 
-  // === Cartoon City ===
-  car: 'cartoon-city/Car_06.glb',
-  van: 'cartoon-city/Van.glb',
-  bus_stop: 'cartoon-city/Bus_Stop_02.glb',
-  futuristic_car: 'cartoon-city/Futuristic_Car_1.glb',
-  fountain_city: 'cartoon-city/Fountain_03.glb',
-  billboard: 'cartoon-city/Billboard_2x1_03.glb',
-  traffic_light: 'cartoon-city/traffic_light_001.glb',
-  trash_can: 'cartoon-city/Trash_Can_04.glb',
-  palm_tree: 'cartoon-city/Palm_03.glb',
-  spotlight_city: 'cartoon-city/Spotlight_01.glb',
+  // === Remapped from Cartoon City → Kenney CC0 ===
+  fountain_city: 'kenney/fantasy-town/fountain-round.glb',
+  trash_can: 'kenney/furniture-kit/trashcan.glb',
+  palm_tree: 'kenney/nature-kit/tree_palm.glb',
 
   // === Kenney: Castle Kit (76 models) ===
   'bridge-draw': 'kenney/castle-kit/bridge-draw.glb',

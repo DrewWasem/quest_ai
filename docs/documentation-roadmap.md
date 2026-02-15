@@ -31,9 +31,9 @@ Judges evaluate **three things** in this order:
 | # | Document | Status | Owner | Est. Time | Deadline |
 |---|----------|--------|-------|-----------|----------|
 | 1 | **Demo Video** (2-4 min) | TODO | Drew | 2-3 hrs | Sun AM |
-| 2 | **README.md** (root-level, for judges) | TODO | Claude + Drew | 30 min | Sat PM |
-| 3 | **Project Description** (submission form text) | TODO | Claude + Drew | 15 min | Sun midday |
-| 4 | **LICENSE** (MIT) | TODO | Claude | 2 min | Sat PM |
+| 2 | **README.md** (root-level, for judges) | DONE | Claude | 30 min | Sat PM |
+| 3 | **Project Description** (submission form text) | DONE | Claude | 15 min | Sun midday |
+| 4 | **LICENSE** (MIT) | DONE | Claude | 2 min | Sat PM |
 
 #### 1. Demo Video
 **Format:** Screen recording with voiceover, 2-4 minutes
@@ -167,8 +167,8 @@ Standard MIT license file at project root.
 |---|----------|--------|-------|-----------|
 | 5 | **Screenshots** (4-6 PNGs for README) | TODO | Drew | 20 min |
 | 6 | **CLAUDE.md** (updated) | DONE | Claude | already done |
-| 7 | **.env.example** | NEEDS CHECK | Claude | 5 min |
-| 8 | **Asset license verification** | TODO | Claude | 15 min |
+| 7 | **.env.example** | DONE | Claude | already existed |
+| 8 | **Asset license verification** | DONE | Claude | see README credits |
 
 #### 5. Screenshots
 Capture with Puppeteer or browser dev tools at 1920x1080:

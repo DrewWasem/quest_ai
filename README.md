@@ -1,231 +1,185 @@
-# Prompt Quest
+<p align="center">
+  <img src="docs/screenshots/hero.png" alt="Prompt Quest — A kid types a description and a 3D scene comes alive" width="720" />
+</p>
 
-A 3D game that teaches kids (ages 7-11) prompt engineering through play. Built solo with Claude Opus 4.6 for the Claude Code Hackathon (Feb 10-16, 2026).
+<h1 align="center">Prompt Quest</h1>
 
-**Builder:** Drew
+<p align="center">
+  <strong>AI-powered 3D game that teaches kids descriptive thinking through play.</strong><br/>
+  Built solo in 7 days for the <a href="https://cerebralvalley.ai/e/claude-code-hackathon">Built with Opus 4.6 — Claude Code Hackathon</a> (Feb 10-16, 2026).
+</p>
 
-## How It Works
+<p align="center">
+  <img src="https://img.shields.io/badge/React-18-61DAFB?logo=react" alt="React 18" />
+  <img src="https://img.shields.io/badge/TypeScript-5.3-3178C6?logo=typescript" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Three.js-r170-000000?logo=threedotjs" alt="Three.js" />
+  <img src="https://img.shields.io/badge/Claude-Opus_4.6-7C3AED?logo=anthropic" alt="Claude Opus 4.6" />
+  <img src="https://img.shields.io/badge/Vite-5-646CFF?logo=vite" alt="Vite" />
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="MIT License" />
+</p>
 
-Kids explore a 3D village and enter quest zones where they solve comedy puzzles by describing what should happen. Claude interprets their description and brings it to life with 3D characters, props, and animations. Better prompts = better results.
+---
+
+## What is this?
+
+Kids ages 7-11 type a description like *"the skeleton juggles birthday cakes while riding a unicycle"* and Claude Opus 4.6 builds a 3D animated scene in real time — characters spawn, props appear, animations play, and a funny narration reads aloud. Vague descriptions produce hilarious failures (the skeleton drops everything and slips on frosting), making kids *want* to try again with better descriptions. No grades, no "wrong answers" — just comedy and concrete hints.
+
+<!-- ## See it in action -->
+
+<!-- Replace with your actual video link after recording -->
+<!-- [![Demo Video](docs/screenshots/video-thumbnail.png)](https://your-video-link-here) -->
+
+<!--
+<p align="center">
+  <img src="docs/screenshots/village.png" alt="Medieval village world" width="380" />
+  <img src="docs/screenshots/quest.png" alt="Quest zone gameplay" width="380" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/funny-fail.png" alt="Funny fail — comedy moment" width="380" />
+  <img src="docs/screenshots/success.png" alt="Full success — celebration" width="380" />
+</p>
+-->
+
+## How it works
 
 ```
-Kid types: "Throw a giant birthday cake with balloons, presents, and a dance party"
-  -> Claude Opus 4.6 evaluates the prompt against a vocabulary contract
-  -> 3D scene assembles: cake spawns, balloons float in, skeleton dances, confetti bursts
-  -> Feedback: "Amazing! You described the cake, decorations, AND a celebration!"
+Kid types a description
+        |
+        v
++-------------------+     +------------------+     +------------------+
+|  1. Cache Lookup   |---->|  2. Claude API   |---->|  3. Fallback     |
+|  166 pre-computed  |     |  Opus 4.6 live   |     |  Never shows an  |
+|  instant responses |     |  6s timeout      |     |  error screen    |
++-------------------+     +------------------+     +------------------+
+        |                         |                         |
+        +-------------+-----------+-------------------------+
+                      |
+                      v
+            JSON Scene Script
+        { spawn, move, animate, emote, react }
+                      |
+                      v
+         React Three Fiber renders
+         3D scene with audio + effects
 ```
 
-The AI is invisible. Kids think they're playing a game. They're actually learning specificity, completeness, and creativity.
+1. A kid types a description ("a giant cake falls from the sky")
+2. The three-tier system finds the best response — cache, live API, or fallback
+3. Claude Opus 4.6 generates a JSON scene script with characters, props, animations, and narration
+4. React Three Fiber renders it as a 3D animated scene with real audio and particle effects
+5. The kid gets funny, concrete feedback and tries again
 
-## The 7 Quests
-
-| # | Quest | Skill Taught | Stages |
-|---|-------|-------------|--------|
-| 1 | Skeleton's Surprise Birthday | Specificity — details matter | 3 |
-| 2 | Knight's Space Mission | Sequencing — order of events | 3 |
-| 3 | Mage vs. The Kitchen | Cause & effect — actions have consequences | 3 |
-| 4 | Barbarian's School Day | Audience — who is involved matters | 3 |
-| 5 | Dungeon Rock Concert | Completeness — cover all the pieces | 4 |
-| 6 | Skeleton Pizza Delivery | Constraints — working within limits | 3 |
-| 7 | Adventurers' Picnic | Creativity — surprise and delight | 3 |
-
-Each quest has multiple stages with progressive difficulty, 3 progressive hints per stage, and pre-rendered responses for instant feedback during demo.
-
-## Features
-
-- **3D village world** — walk between quest zones with WASD/arrow keys, hold Shift to run
-- **28 animated characters** with 139 shared skeletal animations (idle, walk, dance, wave, attack, etc.)
-- **4,270+ 3D props** from KayKit + Tiny Treats asset libraries
-- **Story curriculum** — 7 stories, 22 stages, 220 pre-rendered responses teaching prompt engineering skills
-- **4-tier response system** — Story match (instant) -> Cache -> Live API -> Fallback (demo never errors)
-- **Voice input** via Web Speech API (Chrome)
-- **TTS narration** reads results aloud with kid-friendly pacing
-- **Synthesized SFX** via Web Audio API (no audio files needed)
-- **Per-quest atmospheres** — fog, sky color, sparkle particles, bloom, contact shadows
-- **Fog walk-through intro** on quest entry with hero character reveal
-- **Kid-friendly feedback** — concrete game advice, never raw errors or technical jargon
-
-## Tech Stack
+## Tech stack
 
 | Layer | Technology |
 |-------|-----------|
 | UI | React 18 + TypeScript + Tailwind CSS |
-| 3D Engine | React Three Fiber + Drei |
+| 3D Engine | React Three Fiber + Drei + Three.js r170 |
 | State | Zustand |
 | AI | Claude Opus 4.6 (scene script generation) |
-| Assets | KayKit + Tiny Treats (4,270+ GLTF models) |
-| Audio | Web Audio API (synthesized SFX) + SpeechSynthesis (TTS) |
-| Voice Input | Web Speech API (Chrome) |
+| Audio | Web Audio API + 665 OGG files (Kenney) |
 | Build | Vite 5 |
-| Deploy | Vercel |
+| Deployment | Vercel |
+
+## Claude integration
+
+Every player description flows through a **vocabulary-contract system** that constrains Claude's output to valid assets:
+
+- **Scene scripts** — Claude generates JSON with `spawn`, `move`, `animate`, `emote`, and `react` actions, each referencing only assets from the 2,186-entry prop registry and 28 character models
+- **Comedy calibration** — The system prompt instructs Claude to make failures funnier than successes. A vague description about a birthday party produces a skeleton slipping on frosting, not a generic error
+- **Three-tier response** — (1) Instant cache lookup against 166 pre-computed golden responses, (2) live Opus 4.6 API call with vocabulary enforcement, (3) pre-written fallback scripts so the demo never shows an error
+- **Five difficulty levels** — Mad Libs fill-in-the-blank (levels 1-3) progresses to free-text description (levels 4-5), scaffolding kids from structured to open-ended thinking
+
+## Run locally
+
+```bash
+git clone https://github.com/DrewWasem/kids_ai_game.git
+cd kids_ai_game/frontend
+npm install
+npm run dev
+```
+
+Open [http://localhost:5175](http://localhost:5175). The game works immediately using the built-in cache of 166 pre-computed responses — no API key needed for the demo.
+
+To enable live AI generation for any description:
+
+```bash
+cp ../.env.example .env
+# Add your VITE_ANTHROPIC_API_KEY to .env
+```
+
+## By the numbers
+
+| Metric | Count |
+|--------|-------|
+| Quest tasks | 7 across 2 explorable village zones |
+| Golden cache entries | 166 instant demo responses |
+| 3D models | 4,270+ GLTF assets |
+| Animated characters | 28 with shared skeleton rig |
+| Animation clips | 139 (idle, walk, run, attack, dance, cheer...) |
+| Registered props | 2,186 with fuzzy name resolution |
+| Audio files | 665 OGGs + synthesized fallbacks |
+| TypeScript errors | 0 |
+| Production build | 678 modules, ~493 kB gzipped |
 
 ## Architecture
 
 ```
-                          +-----------------------+
-                          |    3D Village World   |
-                          |  (R3F + Drei + Three) |
-                          +-----------+-----------+
-                                      |
-                            Player walks to zone
-                                      |
-                          +-----------v-----------+
-                          |     Quest Zone UI     |
-                          | Stage question + input|
-                          +-----------+-----------+
-                                      |
-                              Kid types prompt
-                                      |
-              +-------------------------------------------+
-              |         4-Tier Response Resolver           |
-              |                                           |
-              |  Tier 0: Story Matcher (pre-rendered)     |
-              |  Tier 1: Cache (fuzzy keyword matching)   |
-              |  Tier 2: Live API (Opus 4.6, 6s timeout)  |
-              |  Tier 3: Fallback (safe default, instant)  |
-              +-------------------------------------------+
-                                      |
-                          +-----------v-----------+
-                          |   ScenePlayer3D       |
-                          | spawn, move, animate, |
-                          | react, emote, sfx     |
-                          +-----------+-----------+
-                                      |
-                          +-----------v-----------+
-                          |   Narration + Feedback |
-                          |   TTS + hint system    |
-                          +-----------------------+
++-------------------------------------------------------------+
+|                    React App (Zustand)                        |
++------------------+------------------+-----------------------+
+|   Village World  |  Scene Player 3D |   Prompt Input        |
+|   Hex terrain    |  Action executor |   Mad Libs + Free     |
+|   Zone markers   |  1000+ lines     |   Voice input         |
+|   Camera fly     |  Zone-relative   |   TTS narration       |
++------------------+------------------+-----------------------+
+|              React Three Fiber Canvas                        |
+|  Characters (28) | Props (2,186) | Atmosphere | Audio       |
++-------------------------------------------------------------+
+|           Three-Tier Response System                         |
+|  Cache (166) --> Claude Opus 4.6 --> Fallback (13)          |
++-------------------------------------------------------------+
 ```
 
-**Key design decisions:**
-- **Vocabulary contract** — Claude can ONLY reference pre-built assets (28 characters, 87 props, 139 animations). This prevents hallucinating assets that don't exist.
-- **Scene scripts** — Claude returns structured JSON that the 3D engine executes as animated sequences. Never free text.
-- **Story curriculum** — 220 pre-rendered responses mean the demo runs at zero latency with no API dependency. Fuzzy keyword matching ensures variations of expected inputs still match.
-- **Error tolerance** — Unknown actors/props are silently skipped, missing characters auto-spawn on reference, SafeModel boundary catches GLTF failures. The demo never crashes.
+**Village World** — A persistent medieval hex-tile village with buildings, roads, mountains, and glowing quest markers. The camera smoothly flies between village overview and quest zones.
 
-## Quick Start
+**Scene Player 3D** — Executes scene scripts action-by-action: spawning characters with skeletal animations, placing props with bounce entrances, triggering movement along arc/linear paths, playing emotes as pixel-art emoji bubbles, and firing particle effects with sound.
 
-```bash
-cd frontend
-npm install
-npm run dev
-# Open http://localhost:5174
-```
+**Seven Quests** — Each quest has its own atmosphere (fog, lighting, particles, music), environment props, and cast of characters:
 
-For live Claude API calls:
-```bash
-cp .env.example .env
-# Add your VITE_ANTHROPIC_API_KEY
-```
+| # | Quest | What the kid does |
+|---|-------|----|
+| 1 | Skeleton's Surprise Birthday | Plan a party in the dungeon |
+| 2 | Knight's Space Mission | Launch a knight into orbit |
+| 3 | Mage vs. Kitchen | Cook a meal with magic |
+| 4 | Barbarian's School | Teach a barbarian to sit still |
+| 5 | Dungeon Rock Concert | Stage a concert underground |
+| 6 | Skeleton Pizza Delivery | Deliver pizza across the village |
+| 7 | Adventurers' Picnic | Set up an outdoor feast |
 
-Without an API key, story responses, cached responses, and fallbacks all work — the game is fully playable.
+## 3D asset credits
 
-## Controls
+All 3D assets are open-source and free for commercial use:
 
-| Input | Action |
-|-------|--------|
-| WASD / Arrow keys | Move through village |
-| Shift (hold) | Sprint |
-| Q / E | Rotate camera |
-| Walk to glowing circle | Enter quest zone |
-| Type in text box | Describe what should happen |
-| Click microphone | Voice input (Chrome) |
+| Pack | Models | License | Author |
+|------|--------|---------|--------|
+| [Kenney](https://kenney.nl) | 1,636 GLBs + 665 OGGs | CC0 | Kenney |
+| [KayKit](https://kaylousberg.itch.io/) | Characters, animations, buildings | CC0 | Kay Lousberg |
+| [Tiny Treats](https://tinytreats.itch.io/) | 96 props (kitchen, park, furniture) | CC0 | Tiny Treats |
+| [Quaternius](https://quaternius.com/) | 150 props | CC0 | Quaternius |
+| [FoodMegaPack](https://binbun3d.itch.io/food-mega-pack) | 91 food models | CC0 | Binbun |
+| [Poly Pizza](https://poly.pizza/) | 95 assorted props | CC-BY | Various artists |
 
-## Commands
+## Built with Claude Code
 
-```bash
-cd frontend
-npm run dev          # Start dev server (port 5174)
-npm run build        # Production build (0 TS errors)
-npm run preview      # Preview production build
-```
-
-## Project Structure
-
-```
-frontend/src/
-├── game/                         # 3D game engine (React Three Fiber)
-│   ├── R3FGame.tsx               # Root R3F canvas + village
-│   ├── VillageWorld.tsx          # Village layout with 7 quest zones
-│   ├── VillageCamera.tsx         # Third-person camera + player following
-│   ├── PlayerCharacter.tsx       # WASD-controlled player avatar
-│   ├── QuestZoneCircle.tsx       # Glowing zone entry rings
-│   ├── ScenePlayer3D.tsx         # Core scene script executor (~950 lines)
-│   ├── Character3D.tsx           # Animated character with skeleton clone
-│   ├── Prop3D.tsx                # GLTF prop loading with bounce entrance
-│   ├── AnimationController.ts    # 139 shared animation clips + crossfade
-│   ├── TaskAtmosphere.tsx        # Per-quest fog, sky, particles, bloom
-│   ├── TaskIntro.tsx             # Fog walk-through intro animation
-│   ├── SceneEnvironment3D.tsx    # Dungeon, space, kitchen backdrops
-│   └── SoundManager3D.ts        # Synthesized SFX (9 sound types)
-├── services/                     # AI + response resolution
-│   ├── claude.ts                 # Claude API client (Opus 4.6)
-│   ├── cache.ts                  # Fuzzy keyword match cache
-│   ├── resolver.ts               # 4-tier response resolver
-│   ├── story-matcher.ts          # Fuzzy match to pre-rendered responses
-│   ├── story-resolver.ts         # StoryResponse -> SceneScript converter
-│   └── block-resolver.ts         # Block format -> SceneScript converter
-├── data/                         # Pre-generated content
-│   ├── stories/                  # 7 story curricula (220 responses)
-│   │   ├── types.ts              # Story, StoryStage, StoryResponse types
-│   │   ├── skeleton-birthday.ts  # Specificity curriculum
-│   │   ├── knight-space.ts       # Sequencing curriculum
-│   │   ├── mage-kitchen.ts       # Cause & effect curriculum
-│   │   ├── barbarian-school.ts   # Audience curriculum
-│   │   ├── dungeon-concert.ts    # Completeness curriculum
-│   │   ├── skeleton-pizza.ts     # Constraints curriculum
-│   │   ├── adventurers-picnic.ts # Creativity curriculum
-│   │   └── index.ts              # Barrel export + getStoryById
-│   ├── block-library.ts          # 87 prop paths + character registry
-│   ├── fallback-scripts.ts       # 22 stage fallbacks + 7 zone fallbacks
-│   └── asset-manifest.ts         # Full asset registry
-├── prompts/                      # Claude system prompts
-│   ├── block/                    # Block-format prompts (7 quests)
-│   └── *.ts                      # Legacy scene-script prompts
-├── stores/
-│   └── gameStore.ts              # Zustand: zone nav, stage progression, input
-├── components/
-│   ├── PromptInput.tsx           # Input + feedback + hint + stage progress
-│   ├── VoiceButton.tsx           # Web Speech API mic button
-│   ├── LoadingScreen.tsx         # Branded preloader
-│   └── ErrorBoundary.tsx         # React error boundary
-├── hooks/
-│   └── useTTS.ts                 # Text-to-speech narration
-└── types/
-    ├── scene-script.ts           # SceneScript + action types
-    └── block-types.ts            # Block format types
-```
-
-## How the Story System Works
-
-Each quest teaches a specific prompt engineering skill through progressive stages:
-
-1. **Enter a zone** - Player walks to a glowing circle, camera flies in, narration introduces the challenge
-2. **Read the question** - Each stage poses a specific question (e.g., "Who's invited to the party?")
-3. **Type a description** - Kid describes what should happen in natural language
-4. **Watch it play out** - Story matcher finds the best pre-rendered response, 3D scene animates
-5. **Get feedback** - Success level (Amazing/Almost/Oops), concrete tips, missing elements highlighted
-6. **Use hints if stuck** - 3 progressive hints per stage, from gentle nudge to specific suggestion
-7. **Advance to next stage** - On success, move to the next stage with increased complexity
-
-The curriculum progresses from simple specificity ("What kind of cake?") to creative expression ("Invent something nobody expects!").
-
-## Build Stats
-
-- 672 modules, 1,465 kB JS (382 kB gzip)
-- 0 TypeScript errors
-- 17/17 Puppeteer stress tests passed (empty input, XSS, SQL injection, emoji, gibberish, etc.)
-- 220 pre-rendered story responses across 22 stages
-- 28 character models, 139 animations, 87 props
+This entire project — every line of code, every system prompt, every cache entry — was built using [Claude Code](https://claude.ai/code) and Claude Opus 4.6 over 7 days. The `.claude/` directory contains the orchestration setup: 7 domain-expert SMEs, 32 workflow skills, persistent memory tree, and custom hooks for typechecking and context management.
 
 ## License
 
-MIT
+[MIT](LICENSE)
 
-## Credits
+---
 
-- **AI:** [Claude Opus 4.6](https://anthropic.com) by Anthropic
-- **Build Tool:** [Claude Code](https://claude.ai/code) by Anthropic
-- **3D Engine:** [React Three Fiber](https://github.com/pmndrs/react-three-fiber) + [Drei](https://github.com/pmndrs/drei)
-- **3D Assets:** [KayKit](https://kaylousberg.com/game-assets) + [Tiny Treats](https://kaylousberg.com/game-assets)
-- **Fonts:** [Fredoka](https://fonts.google.com/specimen/Fredoka) + [Nunito](https://fonts.google.com/specimen/Nunito)
+<p align="center">
+  Built solo by Drew for the <strong>Built with Opus 4.6 — Claude Code Hackathon</strong> (Feb 10-16, 2026)
+</p>

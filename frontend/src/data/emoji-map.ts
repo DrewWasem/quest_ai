@@ -1,98 +1,105 @@
 /**
- * Emoji Map — Maps semantic emotion names to JoyQuest 2.0 pixel-art emoji numbers.
+ * Emoji Map — Maps semantic emotion names to Kenney Emotes Pack (CC0) filenames.
  *
- * Two sets:
- * - outline/ (16×16 px) — for particle burst effects
- * - bubble/ (32×32 px) — for character emote bubbles
+ * 30 pixel-art emotes from Kenney.nl (public domain / CC0).
+ * Located at: /assets/2d/emojis/kenney/
  *
- * Numbers verified by visual inspection of extracted PNGs.
+ * For emotions not in the Kenney set, resolveEmojiImage() in ScenePlayer3D
+ * falls back to Unicode text rendering.
  */
 
-export const EMOJI_MAP: Record<string, number> = {
-  // Positive emotions
-  happy: 10,          // big grin, teeth showing
-  laughing: 7,        // open-mouth laugh with tongue
-  love_eyes: 2,       // heart eyes
-  cool: 90,           // sunglasses
-  star_eyes: 15,      // star/sparkle eyes, amazed
-  wink: 12,           // one eye closed, smile
-  party: 19,          // party hat, confetti
-  proud: 65,          // smug grin
-  excited: 75,        // big happy grin
+export const EMOJI_MAP: Record<string, string> = {
+  // Faces
+  happy: 'emote_faceHappy',
+  angry: 'emote_faceAngry',
+  sad: 'emote_faceSad',
+  laughing: 'emote_laugh',
 
-  // Negative emotions
-  angry: 1,           // furrowed brows, frown
-  mad: 6,             // furrowed brows, open mouth
-  sad: 4,             // single tear, blue
-  crying: 3,          // tears streaming
-  scared: 16,         // wide mouth, pale
-  confused: 17,       // questioning look
-  worried: 5,         // teeth showing, sweat drop
-  grumpy: 80,         // pouty face
-  sick: 26,           // green/nauseous
+  // Hearts
+  love: 'emote_heart',
+  love_eyes: 'emote_hearts',
+  heartbreak: 'emote_heartBroken',
 
-  // Surprise / shock
-  surprised: 55,      // sparkle/star surprise eyes
-  shocked: 60,        // wide eyes, crying variant
-  mind_blown: 28,     // head explosion
+  // Stars / sleep
+  star_eyes: 'emote_stars',
+  star: 'emote_star',
+  sleeping: 'emote_sleep',
 
-  // Silly / comedy
-  silly: 21,          // tongue out
-  tongue_out: 35,     // goofy derpy face
-  drooling: 40,       // hungry/drooling
-  dizzy: 45,          // woozy/spinning
-  sleeping: 20,       // closed eyes, ZZZ
-  mischievous: 11,    // devil/horns grin
-  smirk: 27,          // half-smile
-  thinking: 23,       // pondering face
-  blushing: 95,       // embarrassed/rosy
-  ghost: 24,          // pale/frightened
-  unamused: 9,        // flat mouth, half-lidded
-  determined: 18,     // serious, flat face
-  frozen: 8,          // cold/blue tint
+  // Symbols
+  music: 'emote_music',
+  musical: 'emote_music',
+  idea: 'emote_idea',
+  surprised: 'emote_exclamation',
+  shocked: 'emote_exclamations',
+  confused: 'emote_question',
+  curious: 'emote_question',
+  alert: 'emote_alert',
+  mad: 'emote_anger',
+  furious: 'emote_anger',
+  crying: 'emote_drop',
+  sick: 'emote_drops',
+  nervous: 'emote_drops',
+  cash: 'emote_cash',
+  cross: 'emote_cross',
+  thinking: 'emote_cloud',
+  dizzy: 'emote_swirl',
+  mind_blown: 'emote_swirl',
 
-  // Food reactions (for kitchen/restaurant/picnic tasks)
-  yummy: 40,          // drooling (reuse)
-  disgusted: 26,      // sick (reuse)
-
-  // Extended emotions (for vignette story overhaul)
-  nervous: 13,        // wide eyes, teeth showing, sweat
-  pleading: 14,       // big puppy eyes, begging
-  suspicious: 22,     // narrowed side-eye
-  triumphant: 30,     // victorious grin, pumped
-  exhausted: 31,      // drooping, worn out
-  hungry: 32,         // open mouth, wanting food
-  musical: 33,        // happy face with notes vibe
-  sneaky: 34,         // shifty narrow eyes
-  embarrassed: 37,    // flushed, looking away
-  annoyed: 38,        // irritated, teeth clenched
-  hopeful: 42,        // slight smile, looking up
-  jealous: 44,        // green-tinted envy
-  grateful: 47,       // warm thankful smile
-  stubborn: 50,       // pouty, arms-crossed energy
-  playful: 52,        // big cheeky grin
-  furious: 39,        // dark angry, rage
-  curious: 29,        // head-tilt, questioning
-  heroic: 70,         // brave, strong face
-  cheeky: 85,         // mischievous grin variant
-  startled: 100,      // jump-scare surprise
+  // Aliases for common vignette emotions → best Kenney match
+  excited: 'emote_exclamation',
+  worried: 'emote_drops',
+  scared: 'emote_exclamations',
+  determined: 'emote_bars',
+  heroic: 'emote_star',
+  triumphant: 'emote_stars',
+  proud: 'emote_star',
+  grateful: 'emote_heart',
+  hopeful: 'emote_star',
+  playful: 'emote_faceHappy',
+  cheeky: 'emote_faceHappy',
+  silly: 'emote_faceHappy',
+  mischievous: 'emote_faceHappy',
+  grumpy: 'emote_faceAngry',
+  annoyed: 'emote_faceAngry',
+  stubborn: 'emote_faceAngry',
+  embarrassed: 'emote_drop',
+  blushing: 'emote_drop',
+  hungry: 'emote_exclamation',
+  yummy: 'emote_heart',
+  disgusted: 'emote_faceSad',
+  jealous: 'emote_faceAngry',
+  sneaky: 'emote_dots3',
+  suspicious: 'emote_dots3',
+  unamused: 'emote_faceSad',
+  exhausted: 'emote_sleep',
+  frozen: 'emote_faceSad',
+  ghost: 'emote_faceSad',
+  party: 'emote_stars',
+  cool: 'emote_star',
+  wink: 'emote_faceHappy',
+  smirk: 'emote_faceHappy',
+  tongue_out: 'emote_laugh',
+  drooling: 'emote_drop',
+  pleading: 'emote_heart',
+  startled: 'emote_exclamations',
 }
 
-/** Get path to a 16×16 outline emoji PNG (for particle effects) */
-export function getEmojiOutlinePath(nameOrNum: string | number): string {
-  const num = typeof nameOrNum === 'number'
-    ? nameOrNum
-    : EMOJI_MAP[nameOrNum] ?? parseInt(nameOrNum, 10)
-  if (isNaN(num) || num < 1 || num > 127) return ''
-  return `/assets/2d/emojis/outline/em_outline_${num}.png`
+/** Get path to a Kenney emote PNG */
+export function getEmojiPath(nameOrKey: string): string {
+  const key = EMOJI_MAP[nameOrKey] ?? nameOrKey
+  // If key looks like a Kenney filename, use it directly
+  if (key.startsWith('emote_')) {
+    return `/assets/2d/emojis/kenney/${key}.png`
+  }
+  return ''
 }
 
-/** Get path to a 32×32 bubble emoji PNG (for character emote bubbles) */
-export function getEmojiBubblePath(nameOrNum: string | number): string {
-  const num = typeof nameOrNum === 'number'
-    ? nameOrNum
-    : EMOJI_MAP[nameOrNum] ?? parseInt(nameOrNum, 10)
-  // Bubble files are 0-indexed (bubble_0.png = emoji 1, bubble_126.png = emoji 127)
-  if (isNaN(num) || num < 1 || num > 127) return ''
-  return `/assets/2d/emojis/bubble/bubble_${num - 1}.png`
+/** Get path to emote for particle effects (same Kenney pixel art) */
+export function getEmojiOutlinePath(nameOrKey: string): string {
+  return getEmojiPath(nameOrKey)
+}
+
+/** Get path to emote for character bubbles (same Kenney pixel art) */
+export function getEmojiBubblePath(nameOrKey: string): string {
+  return getEmojiPath(nameOrKey)
 }

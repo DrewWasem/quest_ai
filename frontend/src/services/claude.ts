@@ -1,7 +1,11 @@
 import type { SceneScript } from '../types/scene-script';
 
-const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
+const DIRECT_API_URL = 'https://api.anthropic.com/v1/messages';
+const PROXY_API_URL = '/api/claude';
 const TIMEOUT_MS = 15000;
+
+// Use serverless proxy in production, direct API in dev (with VITE_ key)
+const useProxy = !import.meta.env.VITE_ANTHROPIC_API_KEY;
 
 interface ClaudeMessage {
   role: 'user' | 'assistant';
@@ -17,32 +21,42 @@ export async function callClaude(
   userMessage: string,
   options?: { model?: string; maxTokens?: number; timeoutMs?: number },
 ): Promise<string> {
-  const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    throw new Error('VITE_ANTHROPIC_API_KEY not set in .env');
-  }
-
   const controller = new AbortController();
   const effectiveTimeout = options?.timeoutMs ?? TIMEOUT_MS;
   const timeout = setTimeout(() => controller.abort(), effectiveTimeout);
 
+  const body = JSON.stringify({
+    model: options?.model ?? 'claude-opus-4-6',
+    max_tokens: options?.maxTokens ?? 1500,
+    system: systemPrompt,
+    messages: [{ role: 'user', content: userMessage }] as ClaudeMessage[],
+  });
+
   try {
-    const response = await fetch(CLAUDE_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
-      body: JSON.stringify({
-        model: options?.model ?? 'claude-opus-4-6',
-        max_tokens: options?.maxTokens ?? 1500,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: userMessage }] as ClaudeMessage[],
-      }),
-      signal: controller.signal,
-    });
+    let response: Response;
+
+    if (useProxy) {
+      // Production: use Vercel serverless proxy (API key stays server-side)
+      response = await fetch(PROXY_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body,
+        signal: controller.signal,
+      });
+    } else {
+      // Dev: call Anthropic directly with client-side key
+      response = await fetch(DIRECT_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': import.meta.env.VITE_ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body,
+        signal: controller.signal,
+      });
+    }
 
     if (!response.ok) {
       const error = await response.text();

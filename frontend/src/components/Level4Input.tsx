@@ -10,6 +10,7 @@ import { useTTS } from '../hooks/useTTS';
 import type { Level4Stage, Vignette } from '../types/madlibs';
 import { buildVignetteScript, resolveLevel4Vignette } from '../services/vignette-resolver';
 import { parseLevel4Text } from '../services/text-parser';
+import { getLoadingVignette } from '../data/loading-vignettes';
 import FeedbackCard from './FeedbackCard';
 
 interface Level4InputProps {
@@ -46,6 +47,11 @@ export default function Level4Input({ stage }: Level4InputProps) {
     setIsPlaying(true);
     setIsParsing(true);
     setFeedback(null);
+
+    // Play loading vignette while Haiku parses
+    const loading = getLoadingVignette(stage.questId);
+    setLastScript(loading.script);
+    setVignetteSteps(loading.steps);
 
     try {
       // Parse free text into tags via Haiku

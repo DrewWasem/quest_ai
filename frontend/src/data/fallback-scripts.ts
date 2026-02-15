@@ -126,6 +126,28 @@ export const FALLBACK_SCRIPTS: Record<string, SceneScript> = {
     prompt_analysis: { has_character: false, has_action: false, has_sequence: false, has_detail: false, has_multi_char: false, has_environment: false },
   },
 
+  'free-play': {
+    success_level: 'FULL_SUCCESS',
+    narration: "The Creative Playground erupts into the wildest party ever!",
+    actions: [
+      { type: 'spawn', target: 'knight', position: 'off-left' },
+      { type: 'move', target: 'knight', to: 'left', style: 'bounce', delay_ms: 200 },
+      { type: 'emote', target: 'knight', emoji: '🎉', text: "Party time!", delay_ms: 400 },
+      { type: 'spawn', target: 'skeleton_warrior', position: 'off-right', delay_ms: 600 },
+      { type: 'move', target: 'skeleton_warrior', to: 'right', style: 'bounce', delay_ms: 200 },
+      { type: 'emote', target: 'skeleton_warrior', emoji: '💀', text: "Let's dance!", delay_ms: 400 },
+      { type: 'spawn', target: 'mage', position: 'off-left', delay_ms: 500 },
+      { type: 'move', target: 'mage', to: 'center', style: 'arc', delay_ms: 200 },
+      { type: 'animate', target: 'mage', anim: 'Ranged_Magic_Spellcasting', delay_ms: 300 },
+      { type: 'emote', target: 'mage', emoji: '✨', text: "Fireworks spell!", delay_ms: 400 },
+      { type: 'react', effect: 'confetti-burst', position: 'center', delay_ms: 300 },
+      { type: 'crowd_react' as any, characters: 'all', anim: 'Cheering', delay_ms: 300 },
+    ],
+    prompt_feedback: "This is YOUR playground — describe any scene you can imagine! Mix any characters, any props, anything goes!",
+    guide_hint: 'Try combining characters from different zones — like the skeleton and the space ranger!',
+    prompt_analysis: { has_character: false, has_action: false, has_sequence: false, has_detail: false, has_multi_char: false, has_environment: false },
+  },
+
   'mage-kitchen': {
     success_level: 'PARTIAL_SUCCESS',
     narration: "The mage zaps the stove but the kitchen starts fighting back!",

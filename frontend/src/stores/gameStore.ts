@@ -126,6 +126,7 @@ export const ZONE_CENTERS: Record<string, [number, number, number]> = {
   'adventurers-picnic':[0, 0, 48],
   'dungeon-concert':   [-35, 0, 35],
   'mage-kitchen':      [-48, 0, 5],
+  'free-play':         [-38, 0, -38],
 };
 
 // Zone metadata derived from WORLDS config
@@ -135,6 +136,19 @@ export const ZONE_META: Record<string, { label: string; emoji: string; color: st
 
 // Village center camera position
 export const VILLAGE_CENTER: [number, number, number] = [0, 0, 0];
+
+/** Count how many quest zones have completed all 3 mad-lib stages (stageNumber >= 4). */
+export function getCompletedZoneCount(stageNumbers: Record<string, number>): number {
+  return Object.entries(stageNumbers)
+    .filter(([zoneId, stage]) => zoneId !== 'free-play' && stage >= 4)
+    .length;
+}
+
+/** Check if a zone is locked (only free-play has a lock gate). */
+export function isZoneLocked(zoneId: string, stageNumbers: Record<string, number>): boolean {
+  if (zoneId !== 'free-play') return false;
+  return getCompletedZoneCount(stageNumbers) < 3;
+}
 
 // Intro scripts shown (and read aloud) when first entering a zone — derived from WORLDS hook
 function getZoneIntro(zoneId: string): SceneScript | null {
@@ -258,7 +272,8 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     const intro = getZoneIntro(zoneId);
 
-    set({
+    // Free-play zone always jumps to Level 5 (sandbox)
+    const stateUpdate: Partial<GameState> = {
       currentZone: zoneId,
       currentTask: zoneId,
       cameraTarget: center,
@@ -268,7 +283,17 @@ export const useGameStore = create<GameState>((set, get) => ({
       error: null,
       userInput: '',
       badgeUnlocks: [],
-    });
+    };
+    if (zoneId === 'free-play') {
+      const { stageNumbers, stageCompleted, discoveredVignettes, level4Successes, level5Unlocked } = get();
+      const updatedStages = { ...stageNumbers, 'free-play': 5 };
+      const updatedL5 = { ...level5Unlocked, 'free-play': true };
+      saveLevels({ stageNumbers: updatedStages, stageCompleted, discoveredVignettes, level4Successes, level5Unlocked: updatedL5 });
+      (stateUpdate as any).stageNumbers = updatedStages;
+      (stateUpdate as any).level5Unlocked = updatedL5;
+    }
+
+    set(stateUpdate as any);
   },
 
   exitZone: () => {
@@ -286,7 +311,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   updatePlayerPosition: (pos: [number, number, number]) => {
-    const { currentZone, isTransitioning } = get();
+    const { currentZone, isTransitioning, stageNumbers } = get();
     if (currentZone || isTransitioning) return;
     if (Date.now() - lastExitTime < ZONE_REENTRY_COOLDOWN) return;
 
@@ -297,6 +322,8 @@ export const useGameStore = create<GameState>((set, get) => ({
       const dz = pos[2] - center[2];
       const dist = Math.sqrt(dx * dx + dz * dz);
       if (dist < ZONE_TRIGGER_DISTANCE) {
+        // Don't enter locked zones
+        if (isZoneLocked(zoneId, stageNumbers)) return;
         get().enterZone(zoneId);
         return;
       }

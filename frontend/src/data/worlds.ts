@@ -183,6 +183,40 @@ export const WORLDS: Record<string, WorldConfig> = {
     effects: ['confetti-burst', 'explosion-cartoon', 'sparkle-magic', 'fire-sneeze', 'stars-spin', 'question-marks', 'laugh-tears', 'splash'],
     sounds: ['spawn', 'move', 'react', 'success', 'partial', 'fail'],
   },
+
+  'free-play': {
+    id: 'free-play',
+    label: 'Creative Playground',
+    emoji: '\u{1F3A8}',
+    color: '#F59E0B',
+    hook: "Welcome to the Creative Playground! Every character, every prop, every effect — it's ALL yours!",
+    placeholder: 'Describe any scene you can imagine — anything goes!',
+    flavor: "Pure chaos encouraged. Mix characters from all zones. The weirder, the better!",
+    characters: [
+      'knight', 'barbarian', 'mage', 'ranger', 'rogue', 'rogue_hooded', 'druid', 'engineer',
+      'skeleton_warrior', 'skeleton_mage', 'skeleton_rogue', 'skeleton_minion', 'skeleton_golem', 'necromancer',
+      'space_ranger', 'ninja', 'clown', 'robot', 'robot_two', 'survivalist',
+      'witch', 'vampire', 'black_knight', 'superhero', 'caveman', 'frost_golem',
+    ],
+    props: [
+      'cake', 'present_A_red', 'present_B_blue', 'table_long', 'chair', 'torch', 'barrel',
+      'pizza_pepperoni', 'stove', 'pot', 'pan', 'chest', 'banner_blue', 'banner_red',
+      'tree', 'rock', 'bench', 'slide', 'guitar', 'drums', 'microphone',
+    ],
+    animations: [
+      'Idle_A', 'Idle_B', 'Walking_A', 'Running_A', 'Running_B', 'Cheering', 'Waving',
+      'Interact', 'PickUp', 'Throw', 'Hit_A', 'Hit_B', 'Death_A',
+      'Jump_Full_Short', 'Jump_Full_Long', 'Dodge_Backward', 'Dodge_Forward',
+      'Sit_Chair_Down', 'Sit_Chair_Idle', 'Sit_Floor_Down', 'Sit_Floor_Idle',
+      'Lie_Down', 'Lie_Idle', 'Push_Ups', 'Headbutt', 'Sneaking', 'Crawling',
+      'Ranged_Magic_Spellcasting', 'Ranged_Magic_Shoot', 'Ranged_Magic_Summon',
+      'Melee_1H_Attack_Chop', 'Melee_2H_Attack_Spin', 'Melee_Block',
+      'Skeletons_Taunt', 'Skeletons_Idle', 'Skeletons_Awaken_Floor', 'Skeletons_Death_Resurrect',
+      'Work_A', 'Hammer', 'Lockpicking', 'Fishing_Cast',
+    ],
+    effects: ['confetti-burst', 'explosion-cartoon', 'hearts-float', 'stars-spin', 'question-marks', 'laugh-tears', 'sparkle-magic', 'sad-cloud', 'fire-sneeze', 'splash'],
+    sounds: ['spawn', 'move', 'react', 'success', 'partial', 'fail'],
+  },
 };
 
 /**

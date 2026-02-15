@@ -9,7 +9,7 @@
  * 5. DEFAULT fallback
  */
 
-import type { Vignette, VignetteStep, VignetteAction, QuestStage } from '../types/madlibs';
+import type { Vignette, VignetteStep, VignetteAction, QuestStage, Level4Stage, Level4ParsedTags } from '../types/madlibs';
 import type { Action, SceneScript } from '../types/scene-script';
 import { resolveAnimationVerb } from '../data/animation-verbs';
 
@@ -68,6 +68,51 @@ export function resolveVignette(
 
 function isAllWildcard(v: Vignette, slotIds: string[]): boolean {
   return slotIds.every(id => v.trigger[id.toLowerCase()] === '*');
+}
+
+/**
+ * Match Level 4 parsed tags to existing vignettes.
+ * Builds a pseudo-selectedTags from parsed free text and runs
+ * through the standard vignette matching pipeline.
+ */
+export function resolveLevel4Vignette(
+  parsed: Level4ParsedTags,
+  stage: Level4Stage,
+): Vignette {
+  // Build selectedTags mapping parsed fields to slot-like keys
+  const selectedTags: Record<string, string> = {};
+  if (parsed.character) selectedTags.CHARACTER = parsed.character;
+  if (parsed.action) selectedTags.ENTERTAINMENT = parsed.action;
+  if (parsed.modifier) selectedTags.FOOD = parsed.modifier;
+  if (parsed.vibe) selectedTags.VIBE = parsed.vibe;
+
+  // Use ranking to find best match across all vignettes
+  const allVignettes = [...stage.vignettes, stage.defaultVignette];
+
+  // Score each vignette by tag overlap
+  let best: Vignette = stage.defaultVignette;
+  let bestScore = -1;
+
+  for (const v of allVignettes) {
+    let score = 0;
+    const triggerValues = Object.values(v.trigger).map(t => t.toLowerCase());
+
+    if (parsed.action && triggerValues.includes(parsed.action)) score += 3;
+    if (parsed.modifier && triggerValues.includes(parsed.modifier)) score += 2;
+    if (parsed.vibe && triggerValues.includes(parsed.vibe)) score += 2;
+    if (parsed.character && triggerValues.includes(parsed.character)) score += 1;
+
+    // Bonus for non-default, non-wildcard matches
+    if (v.promptScore === 'perfect') score += 1;
+    if (v.id === stage.defaultVignette.id) score -= 3;
+
+    if (score > bestScore) {
+      bestScore = score;
+      best = v;
+    }
+  }
+
+  return best;
 }
 
 /**

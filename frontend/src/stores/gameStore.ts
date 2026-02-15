@@ -16,14 +16,25 @@ interface LevelData {
   stageNumbers: Record<string, number>;
   stageCompleted: Record<string, number[]>;
   discoveredVignettes: Record<string, string[]>;
+  level4Successes: Record<string, number>;
+  level5Unlocked: Record<string, boolean>;
 }
 
 function loadLevels(): LevelData {
   try {
     const raw = localStorage.getItem(LEVELS_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return {
+        stageNumbers: parsed.stageNumbers ?? {},
+        stageCompleted: parsed.stageCompleted ?? {},
+        discoveredVignettes: parsed.discoveredVignettes ?? {},
+        level4Successes: parsed.level4Successes ?? {},
+        level5Unlocked: parsed.level5Unlocked ?? {},
+      };
+    }
   } catch { /* corrupt data, start fresh */ }
-  return { stageNumbers: {}, stageCompleted: {}, discoveredVignettes: {} };
+  return { stageNumbers: {}, stageCompleted: {}, discoveredVignettes: {}, level4Successes: {}, level5Unlocked: {} };
 }
 
 function saveLevels(data: LevelData): void {
@@ -62,6 +73,10 @@ interface GameState {
   stageCompleted: Record<string, number[]>; // { 'mage-kitchen': [1], ... } — which stages are done
   discoveredVignettes: Record<string, string[]>; // { 'mage-kitchen-2': ['id1','id2'], ... }
 
+  // Level 4/5 progression
+  level4Successes: Record<string, number>;   // { 'skeleton-birthday': 2, ... }
+  level5Unlocked: Record<string, boolean>;   // { 'skeleton-birthday': true, ... }
+
   // Village navigation
   currentZone: string | null;
   cameraTarget: [number, number, number];
@@ -98,6 +113,8 @@ interface GameState {
   advanceStage: (zoneId: string) => void;
   completeStage: (zoneId: string, stageNumber: number) => void;
   recordDiscovery: (stageKey: string, vignetteId: string) => void;
+  recordLevel4Success: (zoneId: string) => void;
+  unlockLevel5: (zoneId: string) => void;
 }
 
 // Zone center positions in world space — ring at R~48-53, dungeon at Z=-70
@@ -154,6 +171,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   stageNumbers: _savedLevels.stageNumbers,
   stageCompleted: _savedLevels.stageCompleted,
   discoveredVignettes: _savedLevels.discoveredVignettes,
+  level4Successes: _savedLevels.level4Successes,
+  level5Unlocked: _savedLevels.level5Unlocked,
   currentZone: null,
   cameraTarget: VILLAGE_CENTER,
   isTransitioning: false,
@@ -295,29 +314,47 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   advanceStage: (zoneId: string) => {
-    const { stageNumbers, stageCompleted, discoveredVignettes } = get();
-    const maxStages = getQuestStages(zoneId).length;
+    const { stageNumbers, stageCompleted, discoveredVignettes, level4Successes, level5Unlocked } = get();
+    const maxMadLibStages = getQuestStages(zoneId).length;
     const current = stageNumbers[zoneId] ?? 1;
-    if (current >= maxStages) return; // already at max
+
+    // Allow advancing through stages 1→2→3→4→5
+    // Stages 1-3 are Mad Libs, 4 is Hybrid Free Text, 5 is Full Prompt
+    const maxAllowed = level5Unlocked[zoneId] ? 5 : ((stageCompleted[zoneId] ?? []).includes(maxMadLibStages) ? 4 : maxMadLibStages);
+    if (current >= maxAllowed) return;
 
     const next = current + 1;
     const updated = {
       stageNumbers: { ...stageNumbers, [zoneId]: next },
       stageCompleted,
       discoveredVignettes,
+      level4Successes,
+      level5Unlocked,
     };
     saveLevels(updated);
 
+    // Level-up titles for stages 4 and 5
+    const levelTitles: Record<number, { title: string; intro: string }> = {
+      4: { title: 'Free Text Mode', intro: 'Type your own ideas! Pick a character, then describe what happens.' },
+      5: { title: 'Full Prompt Mode', intro: "You've graduated! Write anything you want and watch it come to life!" },
+    };
+
     // Show a "Level Up!" intro script via the scene engine
-    const nextStage = getQuestStages(zoneId).find(s => s.stageNumber === next);
+    const nextStage = next <= maxMadLibStages
+      ? getQuestStages(zoneId).find(s => s.stageNumber === next)
+      : null;
+    const lt = levelTitles[next];
+    const title = nextStage?.title ?? lt?.title ?? 'Next Level';
+    const intro = nextStage?.intro ?? lt?.intro ?? 'New challenge unlocked!';
+
     const levelUpScript: SceneScript = {
       success_level: 'FULL_SUCCESS',
-      narration: `Level ${next}: ${nextStage?.title ?? 'Next Level'}!`,
+      narration: `Level ${next}: ${title}!`,
       actions: [
         { type: 'text_popup' as any, text: `Level ${next}!`, position: 'center', size: 'huge', delay_ms: 0, duration_ms: 2000 },
       ],
-      prompt_feedback: nextStage?.intro ?? 'New challenge unlocked!',
-      guide_hint: 'Try the new options!',
+      prompt_feedback: intro,
+      guide_hint: next >= 4 ? 'Be creative and specific!' : 'Try the new options!',
     };
 
     set({
@@ -328,25 +365,47 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   completeStage: (zoneId: string, stageNumber: number) => {
-    const { stageCompleted, stageNumbers, discoveredVignettes } = get();
+    const { stageCompleted, stageNumbers, discoveredVignettes, level4Successes, level5Unlocked } = get();
     const existing = stageCompleted[zoneId] ?? [];
     if (existing.includes(stageNumber)) return; // already completed
 
     const updatedCompleted = { ...stageCompleted, [zoneId]: [...existing, stageNumber] };
-    const data = { stageNumbers, stageCompleted: updatedCompleted, discoveredVignettes };
+    const data = { stageNumbers, stageCompleted: updatedCompleted, discoveredVignettes, level4Successes, level5Unlocked };
     saveLevels(data);
     set({ stageCompleted: updatedCompleted });
   },
 
   recordDiscovery: (stageKey: string, vignetteId: string) => {
-    const { discoveredVignettes, stageNumbers, stageCompleted } = get();
+    const { discoveredVignettes, stageNumbers, stageCompleted, level4Successes, level5Unlocked } = get();
     const existing = discoveredVignettes[stageKey] ?? [];
     if (existing.includes(vignetteId)) return;
 
     const updated = { ...discoveredVignettes, [stageKey]: [...existing, vignetteId] };
-    const data = { stageNumbers, stageCompleted, discoveredVignettes: updated };
+    const data = { stageNumbers, stageCompleted, discoveredVignettes: updated, level4Successes, level5Unlocked };
     saveLevels(data);
     set({ discoveredVignettes: updated });
+  },
+
+  recordLevel4Success: (zoneId: string) => {
+    const { level4Successes, level5Unlocked, stageNumbers, stageCompleted, discoveredVignettes } = get();
+    const count = (level4Successes[zoneId] ?? 0) + 1;
+    const updatedSuccesses = { ...level4Successes, [zoneId]: count };
+    const data = { stageNumbers, stageCompleted, discoveredVignettes, level4Successes: updatedSuccesses, level5Unlocked };
+    saveLevels(data);
+    set({ level4Successes: updatedSuccesses });
+
+    // Auto-unlock Level 5 after 3 successes
+    if (count >= 3 && !level5Unlocked[zoneId]) {
+      get().unlockLevel5(zoneId);
+    }
+  },
+
+  unlockLevel5: (zoneId: string) => {
+    const { level5Unlocked, stageNumbers, stageCompleted, discoveredVignettes, level4Successes } = get();
+    const updated = { ...level5Unlocked, [zoneId]: true };
+    const data = { stageNumbers, stageCompleted, discoveredVignettes, level4Successes, level5Unlocked: updated };
+    saveLevels(data);
+    set({ level5Unlocked: updated });
   },
 }));
 

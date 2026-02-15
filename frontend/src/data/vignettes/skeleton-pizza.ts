@@ -6,7 +6,16 @@
  */
 
 import type { Vignette } from '../../types/madlibs';
-import { crossStage, setupProps, composeBlocking, MARK } from '../blocking-templates';
+import {
+  ENTER_FROM_LEFT, CHARGE_IN_LEFT,
+  DROP_IN, TELEPORT_IN,
+  OBJECT_DROP, OBJECT_GROW_REVEAL,
+  OBJECT_RAIN,
+  CHARACTER_SPEAK, CHARACTER_THINK, EMOTIONAL_REACT, CHARACTER_EXCLAIM,
+  NARRATOR, IMPACT, CELEBRATION, DISAPPOINTMENT, DRAMATIC_PAUSE,
+  WALK_TO, RUN_TO, JUMP_TO, CROWD_CHEER, CROWD_GASP,
+  BOUNCE_ENTRANCE, DANCE,
+} from '../movement-templates';
 
 // ─── STAGE 1 VIGNETTES ──────────────────────────────────────────────────────
 
@@ -20,13 +29,51 @@ const SKELETON_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'stove', position: 'cs-center' }, { action: 'spawn', asset: 'table_kitchen', position: 'cs-left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'skeleton_warrior', position: 'off-left', anim: 'spawn_ground' }, { action: 'emote', character: 'skeleton_warrior', emoji: '👨‍🍳' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'throw' }, { action: 'text_popup', text: '🍕 TOSSING DOUGH! 🍕', position: 'top', size: 'large' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'react', effect: 'explosion-cartoon', position: 'cs-center' }, { action: 'emote', character: 'skeleton_warrior', emoji: '🦴' }, { action: 'sfx', sound: 'fail' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn', asset: 'pizza_whole', position: 'cs-center' }, { action: 'react', effect: 'sparkle-magic', position: 'cs-center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
+      // SETUP: Kitchen scene + narrator intro
+      ...NARRATOR("Chef Skeleton enters the pizzeria, ready to toss some dough!"),
+      {
+        parallel: [
+          { action: 'spawn', asset: 'stove', position: 'cs-center' },
+          { action: 'spawn', asset: 'table_kitchen', position: 'cs-left' },
+          { action: 'spawn', asset: 'rolling_pin', position: 'cs-right' },
+          { action: 'spawn', asset: 'flour_sack', position: 'cs-left' },
+          { action: 'sfx', sound: 'spawn' },
+        ],
+        delayAfter: 0.5,
+      },
+      { parallel: [{ action: 'sfx', sound: 'cooking' }], delayAfter: 0.3 },
+      ...ENTER_FROM_LEFT('skeleton_warrior'),
+      ...WALK_TO('skeleton_warrior', 'cs-left'),
+
+      // INTENT: Skeleton announces the plan
+      ...CHARACTER_SPEAK('skeleton_warrior', 'excited', "Watch THIS! The legendary dough toss!"),
+      { parallel: [{ action: 'sfx', sound: 'whoosh' }], delayAfter: 0.3 },
+
+      // ACTION: Tossing dough... but disaster strikes
+      { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'throw' }], delayAfter: 0.5 },
+      ...IMPACT(),
+      { parallel: [
+        { action: 'react', effect: 'explosion-cartoon', position: 'cs-center' },
+        { action: 'sfx', sound: 'impact' },
+      ], delayAfter: 0.4 },
+
+      // CONSEQUENCE: Arm flies off!
+      ...EMOTIONAL_REACT('skeleton_warrior', 'shocked', 'cs-left'),
+      ...CHARACTER_EXCLAIM('skeleton_warrior', 'shocked', "My ARM! It flew off!"),
+      { parallel: [{ action: 'camera_shake', intensity: 0.3, duration: 0.4 }], delayAfter: 0.3 },
+      ...WALK_TO('skeleton_warrior', 'cs-center'),
+
+      // RESOLUTION: But pizza is perfect!
+      ...OBJECT_GROW_REVEAL('pizza_whole', 'cs-center', 1.2),
+      { parallel: [
+        { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
+        { action: 'sfx', sound: 'bell' },
+      ], delayAfter: 0.4 },
+      ...CROWD_CHEER([]),
+      ...DANCE('skeleton_warrior'),
+      ...NARRATOR("The arm flew off, but the pizza landed perfectly! That's skeleton physics for you!"),
     ],
-    feedback: { title: '🦴 Bone-Toss Pizza!', message: "The skeleton's arm flew off while tossing dough! But hey, the pizza still landed perfectly!", skillTaught: 'Specificity', tip: 'Skeleton chefs have a unique... falling-apart style!' },
+    feedback: { title: 'Bone-Toss Pizza!', message: "The skeleton's arm flew off while tossing dough! But hey, the pizza still landed perfectly!", skillTaught: 'Specificity', tip: 'Skeleton chefs have a unique... falling-apart style!' },
   },
   {
     id: 'sp_skeleton_pepperoni',
@@ -35,13 +82,52 @@ const SKELETON_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'chaotic',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'oven', position: 'cs-center' }, { action: 'spawn', asset: 'table_kitchen', position: 'cs-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'skeleton_warrior', position: 'off-left', anim: 'spawn_ground' }, { action: 'emote', character: 'skeleton_warrior', emoji: '💀' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'interact' }, { action: 'text_popup', text: '🍕 ADDING TOPPINGS... 🍕', position: 'top', size: 'large' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'react', effect: 'question-marks', position: 'cs-center' }, { action: 'emote', character: 'skeleton_warrior', emoji: '🦴' }, { action: 'text_popup', text: '🦴 WAIT... THOSE ARE RIBS! 🦴', position: 'center', size: 'huge' }], delayAfter: 0.8 },
-      { parallel: [{ action: 'spawn', asset: 'pizza_whole', position: 'cs-center' }, { action: 'react', effect: 'laugh-tears', position: 'cs-center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
+      // SETUP: Kitchen with oven + narrator
+      ...NARRATOR("Time to make a delicious pepperoni pizza!"),
+      {
+        parallel: [
+          { action: 'spawn', asset: 'oven', position: 'cs-center' },
+          { action: 'spawn', asset: 'table_kitchen', position: 'cs-right' },
+          { action: 'spawn', asset: 'cutting_board', position: 'cs-right' },
+          { action: 'spawn', asset: 'tomato_fmp', position: 'cs-left' },
+          { action: 'spawn', asset: 'mushroom', position: 'cs-left' },
+          { action: 'sfx', sound: 'spawn' },
+        ],
+        delayAfter: 0.5,
+      },
+      { parallel: [{ action: 'sfx', sound: 'cooking' }], delayAfter: 0.3 },
+      ...ENTER_FROM_LEFT('skeleton_warrior'),
+      ...RUN_TO('skeleton_warrior', 'cs-right'),
+
+      // INTENT: Skeleton plans to add toppings
+      ...CHARACTER_SPEAK('skeleton_warrior', 'proud', "Now for the BEST pepperoni in town!"),
+      ...OBJECT_DROP('dough_ball', 'cs-right'),
+      { parallel: [{ action: 'sfx', sound: 'chop' }], delayAfter: 0.3 },
+
+      // ACTION: Adding "toppings"
+      { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'interact' }], delayAfter: 0.5 },
+      { parallel: [
+        { action: 'react', effect: 'question-marks', position: 'cs-center' },
+        { action: 'sfx', sound: 'chop' },
+      ], delayAfter: 0.4 },
+
+      // CONSEQUENCE: Wait... those are RIBS!
+      ...JUMP_TO('skeleton_warrior', 'cs-left'),
+      ...EMOTIONAL_REACT('skeleton_warrior', 'shocked', 'cs-left'),
+      ...CHARACTER_EXCLAIM('skeleton_warrior', 'shocked', "Oh no! I used my OWN RIBS as toppings!"),
+      ...DRAMATIC_PAUSE(),
+
+      // RESOLUTION: Rib pizza complete!
+      ...OBJECT_GROW_REVEAL('pizza_whole', 'cs-center'),
+      { parallel: [
+        { action: 'react', effect: 'laugh-tears', position: 'cs-center' },
+        { action: 'sfx', sound: 'bell' },
+      ], delayAfter: 0.4 },
+      ...CROWD_GASP([]),
+      ...DISAPPOINTMENT(['skeleton_warrior']),
+      ...NARRATOR("You got a rib pizza! Skeletons make creative ingredient choices when supplies run low."),
     ],
-    feedback: { title: '🦴 Rib Pizza!', message: "The skeleton got confused and used its OWN RIBS as pepperoni! That's... creative cooking?", skillTaught: 'Specificity', tip: 'Skeleton chefs have limited ingredients (mostly bones).' },
+    feedback: { title: 'Rib Pizza!', message: "The skeleton got confused and used its OWN RIBS as pepperoni! That's... creative cooking?", skillTaught: 'Specificity', tip: 'Skeleton chefs have limited ingredients (mostly bones).' },
   },
   {
     id: 'sp_skeleton_pasta',
@@ -50,13 +136,53 @@ const SKELETON_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'funny_fail',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'cauldron', position: 'cs-center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'skeleton_warrior', position: 'off-left', anim: 'spawn_ground' }, { action: 'emote', character: 'skeleton_warrior', emoji: '👨‍🍳' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'cast_spell' }, { action: 'react', effect: 'steam', position: 'cs-center' }, { action: 'text_popup', text: '🍝 STIRRING! 🍝', position: 'top', size: 'large' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'get_bonked' }, { action: 'react', effect: 'stars-spin', position: 'cs-center' }, { action: 'text_popup', text: '😵 TANGLED IN NOODLES! 😵', position: 'center', size: 'huge' }], delayAfter: 0.8 },
-      { parallel: [{ action: 'emote', character: 'skeleton_warrior', emoji: '🍝' }, { action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
+      // SETUP: Cauldron bubbling + narrator
+      ...NARRATOR("Chef Skeleton prepares to make perfect pasta!"),
+      {
+        parallel: [
+          { action: 'spawn', asset: 'cauldron', position: 'cs-center' },
+          { action: 'spawn', asset: 'ladle', position: 'cs-right' },
+          { action: 'spawn', asset: 'big_spoon', position: 'cs-left' },
+          { action: 'sfx', sound: 'spawn' },
+        ],
+        delayAfter: 0.5,
+      },
+      { parallel: [
+        { action: 'react', effect: 'steam', position: 'cs-center' },
+        { action: 'sfx', sound: 'cooking' },
+      ], delayAfter: 0.3 },
+      ...ENTER_FROM_LEFT('skeleton_warrior'),
+      ...WALK_TO('skeleton_warrior', 'cs-center'),
+
+      // INTENT: Ready to stir
+      ...CHARACTER_SPEAK('skeleton_warrior', 'excited', "Time to stir this pasta to perfection!"),
+      { parallel: [{ action: 'sfx', sound: 'chop' }], delayAfter: 0.3 },
+
+      // ACTION: Stirring the pot
+      { parallel: [
+        { action: 'animate', character: 'skeleton_warrior', anim: 'cast_spell' },
+        { action: 'react', effect: 'steam', position: 'cs-center' },
+      ], delayAfter: 0.6 },
+      { parallel: [{ action: 'sfx', sound: 'cooking' }], delayAfter: 0.3 },
+
+      // CONSEQUENCE: Tangled in noodles!
+      ...IMPACT(),
+      { parallel: [
+        { action: 'animate', character: 'skeleton_warrior', anim: 'get_bonked' },
+        { action: 'react', effect: 'stars-spin', position: 'cs-center' },
+      ], delayAfter: 0.4 },
+      ...JUMP_TO('skeleton_warrior', 'cs-left'),
+      ...EMOTIONAL_REACT('skeleton_warrior', 'exhausted', 'cs-left'),
+      ...CHARACTER_EXCLAIM('skeleton_warrior', 'shocked', "I'm tangled! These noodles are everywhere!"),
+      { parallel: [{ action: 'camera_shake', intensity: 0.3, duration: 0.4 }], delayAfter: 0.3 },
+
+      // RESOLUTION: Pasta fail
+      ...CROWD_GASP([]),
+      ...DISAPPOINTMENT(['skeleton_warrior']),
+      { parallel: [{ action: 'sfx', sound: 'impact' }], delayAfter: 0.3 },
+      ...NARRATOR("The skeleton got wrapped in pasta! Without muscles, noodles are impossible to control!"),
     ],
-    feedback: { title: '🍝 Noodle Tangle!', message: "The skeleton got WRAPPED in pasta! It can't untangle itself from all those noodles!", skillTaught: 'Specificity', tip: 'Pasta is tricky for chefs without muscles to hold it!' },
+    feedback: { title: 'Noodle Tangle!', message: "The skeleton got WRAPPED in pasta! It can't untangle itself from all those noodles!", skillTaught: 'Specificity', tip: 'Pasta is tricky for chefs without muscles to hold it!' },
   },
   {
     id: 'sp_skeleton_soup',
@@ -65,13 +191,58 @@ const SKELETON_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'chaotic',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'cauldron', position: 'cs-center' }, { action: 'spawn', asset: 'pot', position: 'cs-left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'skeleton_warrior', position: 'off-left', anim: 'spawn_ground' }, { action: 'emote', character: 'skeleton_warrior', emoji: '🍲' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'interact' }, { action: 'react', effect: 'steam', position: 'cs-center' }, { action: 'text_popup', text: '🍲 PERFECT SOUP! 🍲', position: 'top', size: 'large' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'react', effect: 'splash', position: 'cs-center' }, { action: 'text_popup', text: '💀 SKULL = BOWL?! 💀', position: 'center', size: 'huge' }, { action: 'camera_shake', intensity: 0.4, duration: 0.5 }], delayAfter: 0.8 },
-      { parallel: [{ action: 'react', effect: 'glow-pulse', position: 'cs-center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
+      // SETUP: Soup kitchen scene + narrator
+      ...NARRATOR("Chef Skeleton is making the perfect soup!"),
+      {
+        parallel: [
+          { action: 'spawn', asset: 'cauldron', position: 'cs-center' },
+          { action: 'spawn', asset: 'pot', position: 'cs-left' },
+          { action: 'spawn', asset: 'bell_pepper', position: 'cs-right' },
+          { action: 'spawn', asset: 'onion_fmp', position: 'cs-right' },
+          { action: 'sfx', sound: 'spawn' },
+        ],
+        delayAfter: 0.5,
+      },
+      { parallel: [
+        { action: 'react', effect: 'steam', position: 'cs-center' },
+        { action: 'sfx', sound: 'cooking' },
+      ], delayAfter: 0.3 },
+      ...ENTER_FROM_LEFT('skeleton_warrior'),
+      ...RUN_TO('skeleton_warrior', 'cs-center'),
+
+      // INTENT: Soup is ready!
+      ...CHARACTER_SPEAK('skeleton_warrior', 'proud', "My PERFECT soup is ready! Just need a bowl!"),
+      { parallel: [{ action: 'sfx', sound: 'cooking' }], delayAfter: 0.3 },
+
+      // ACTION: Looking for a bowl
+      ...WALK_TO('skeleton_warrior', 'cs-left'),
+      { parallel: [
+        { action: 'animate', character: 'skeleton_warrior', anim: 'interact' },
+        { action: 'react', effect: 'steam', position: 'cs-center' },
+      ], delayAfter: 0.5 },
+
+      // CONSEQUENCE: Skull falls into soup!
+      ...IMPACT(),
+      { parallel: [
+        { action: 'react', effect: 'splash', position: 'cs-center' },
+        { action: 'camera_shake', intensity: 0.4, duration: 0.5 },
+        { action: 'sfx', sound: 'glass' },
+      ], delayAfter: 0.4 },
+      ...EMOTIONAL_REACT('skeleton_warrior', 'shocked', 'cs-left'),
+      ...CHARACTER_EXCLAIM('skeleton_warrior', 'shocked', "My HEAD! It fell in as the BOWL!"),
+      ...DRAMATIC_PAUSE(),
+
+      // RESOLUTION: Skull-bowl soup success?
+      { parallel: [
+        { action: 'react', effect: 'glow-pulse', position: 'cs-center' },
+        { action: 'sfx', sound: 'bell' },
+      ], delayAfter: 0.4 },
+      ...CROWD_CHEER([]),
+      ...DANCE('skeleton_warrior'),
+      ...CELEBRATION(['skeleton_warrior']),
+      ...NARRATOR("The skull made a perfect bowl! Sometimes accidents create brilliant solutions!"),
     ],
-    feedback: { title: '💀 Skull Bowl Soup!', message: "The skeleton's head FELL OFF into the soup pot! Well... at least it's a good bowl?", skillTaught: 'Specificity', tip: 'Skeleton chefs sometimes lose their heads!' },
+    feedback: { title: 'Skull Bowl Soup!', message: "The skeleton's head FELL OFF into the soup pot! Well... at least it's a good bowl?", skillTaught: 'Specificity', tip: 'Skeleton chefs sometimes lose their heads!' },
   },
   {
     id: 'sp_skeleton_cake',
@@ -80,14 +251,61 @@ const SKELETON_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'funny_fail',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'oven', position: 'cs-center' }, { action: 'spawn', asset: 'table_kitchen', position: 'cs-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'skeleton_warrior', position: 'off-left', anim: 'spawn_ground' }, { action: 'emote', character: 'skeleton_warrior', emoji: '🎂' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'cast_spell' }, { action: 'react', effect: 'fire', position: 'cs-center' }, { action: 'text_popup', text: '🎂 BAKING! 🎂', position: 'top', size: 'large' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'spawn', asset: 'cake_giant', position: 'cs-center' }, { action: 'react', effect: 'sparkle-magic', position: 'cs-center' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'get_hit' }, { action: 'react', effect: 'explosion-cartoon', position: 'cs-center' }, { action: 'text_popup', text: '💥 RATTLE RATTLE! 💥', position: 'center', size: 'huge' }, { action: 'camera_shake', intensity: 0.6, duration: 0.5 }], delayAfter: 0.8 },
-      { parallel: [{ action: 'react', effect: 'dust', position: 'cs-center' }, { action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
+      // SETUP: Bakery scene + narrator
+      ...NARRATOR("Chef Skeleton fires up the oven for a fancy cake!"),
+      {
+        parallel: [
+          { action: 'spawn', asset: 'oven', position: 'cs-center' },
+          { action: 'spawn', asset: 'table_kitchen', position: 'cs-right' },
+          { action: 'spawn', asset: 'stand_mixer', position: 'cs-left' },
+          { action: 'spawn', asset: 'mixing_bowl', position: 'cs-right' },
+          { action: 'spawn', asset: 'whisk', position: 'cs-right' },
+          { action: 'sfx', sound: 'spawn' },
+        ],
+        delayAfter: 0.5,
+      },
+      { parallel: [{ action: 'sfx', sound: 'cooking' }], delayAfter: 0.3 },
+      ...BOUNCE_ENTRANCE('skeleton_warrior', 'cs-left', 'left'),
+
+      // INTENT: Baking a masterpiece
+      ...CHARACTER_SPEAK('skeleton_warrior', 'excited', "I'll bake the TALLEST, most beautiful cake!"),
+      ...WALK_TO('skeleton_warrior', 'cs-right'),
+      { parallel: [
+        { action: 'react', effect: 'fire', position: 'cs-center' },
+        { action: 'sfx', sound: 'cooking' },
+      ], delayAfter: 0.3 },
+
+      // ACTION: Baking the cake
+      { parallel: [
+        { action: 'animate', character: 'skeleton_warrior', anim: 'cast_spell' },
+        { action: 'react', effect: 'fire', position: 'cs-center' },
+      ], delayAfter: 0.6 },
+      ...OBJECT_GROW_REVEAL('cake_giant', 'cs-center'),
+      { parallel: [
+        { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
+        { action: 'sfx', sound: 'bell' },
+      ], delayAfter: 0.4 },
+
+      // CONSEQUENCE: Bones rattle, cake collapses!
+      ...EMOTIONAL_REACT('skeleton_warrior', 'excited', 'cs-left'),
+      { parallel: [
+        { action: 'animate', character: 'skeleton_warrior', anim: 'get_hit' },
+        { action: 'react', effect: 'explosion-cartoon', position: 'cs-center' },
+        { action: 'camera_shake', intensity: 0.6, duration: 0.5 },
+        { action: 'sfx', sound: 'explosion' },
+      ], delayAfter: 0.5 },
+      ...CHARACTER_EXCLAIM('skeleton_warrior', 'shocked', "My bones are rattling! The cake!"),
+
+      // RESOLUTION: Cake disaster
+      { parallel: [
+        { action: 'react', effect: 'dust', position: 'cs-center' },
+        { action: 'sfx', sound: 'impact' },
+      ], delayAfter: 0.4 },
+      ...CROWD_GASP([]),
+      ...DISAPPOINTMENT(['skeleton_warrior']),
+      ...NARRATOR("The skeleton's bones rattled with excitement and shook the cake apart! Delicate baking needs steady hands!"),
     ],
-    feedback: { title: '🎂 Rattle Cake!', message: "The skeleton's bones rattled so hard the cake layers FELL APART! Maybe less shaking next time?", skillTaught: 'Specificity', tip: 'Skeleton chefs vibrate when excited (not great for delicate baking).' },
+    feedback: { title: 'Rattle Cake!', message: "The skeleton's bones rattled so hard the cake layers FELL APART! Maybe less shaking next time?", skillTaught: 'Specificity', tip: 'Skeleton chefs vibrate when excited (not great for delicate baking).' },
   },
   {
     id: 'sp_skeleton_mystery',
@@ -96,13 +314,50 @@ const SKELETON_VIGNETTES: Vignette[] = [
     tier: 'subtle',
     promptScore: 'partial',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'cauldron', position: 'cs-center' }, { action: 'spawn', asset: 'pot', position: 'cs-left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'skeleton_warrior', position: 'off-left', anim: 'spawn_ground' }, { action: 'emote', character: 'skeleton_warrior', emoji: '🤔' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'interact' }, { action: 'react', effect: 'question-marks', position: 'cs-center' }, { action: 'text_popup', text: '❓ WHAT WAS I MAKING? ❓', position: 'top', size: 'large' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'spawn', asset: 'potion_mystery', position: 'cs-center' }, { action: 'react', effect: 'sparkle-magic', position: 'cs-center' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'emote', character: 'skeleton_warrior', emoji: '🤷' }, { action: 'text_popup', text: '🦴 NO BRAIN, NO MEMORY! 🦴', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'partial' }], delayAfter: 1.5 },
+      // SETUP: Mysterious kitchen + narrator
+      ...NARRATOR("Chef Skeleton is about to cook... something mysterious!"),
+      {
+        parallel: [
+          { action: 'spawn', asset: 'cauldron', position: 'cs-center' },
+          { action: 'spawn', asset: 'pot', position: 'cs-left' },
+          { action: 'spawn', asset: 'spatula', position: 'cs-right' },
+          { action: 'spawn', asset: 'knife_block', position: 'cs-left' },
+          { action: 'sfx', sound: 'spawn' },
+        ],
+        delayAfter: 0.5,
+      },
+      { parallel: [{ action: 'sfx', sound: 'cooking' }], delayAfter: 0.3 },
+      ...ENTER_FROM_LEFT('skeleton_warrior'),
+      ...WALK_TO('skeleton_warrior', 'cs-center'),
+
+      // INTENT: What was the recipe?
+      ...CHARACTER_THINK('skeleton_warrior', 'thinking'),
+      ...CHARACTER_SPEAK('skeleton_warrior', 'annoyed', "Wait... what was I supposed to make again?"),
+      { parallel: [
+        { action: 'react', effect: 'question-marks', position: 'cs-center' },
+        { action: 'sfx', sound: 'chop' },
+      ], delayAfter: 0.3 },
+
+      // ACTION: Trying to remember
+      { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'interact' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'react', effect: 'question-marks', position: 'cs-center' }], delayAfter: 0.4 },
+
+      // CONSEQUENCE: No brain = no memory!
+      ...EMOTIONAL_REACT('skeleton_warrior', 'annoyed', 'cs-left'),
+      ...CHARACTER_EXCLAIM('skeleton_warrior', 'shocked', "I can't remember! I have NO BRAIN!"),
+      ...DRAMATIC_PAUSE(),
+
+      // RESOLUTION: Mystery potion appears
+      ...OBJECT_GROW_REVEAL('potion_mystery', 'cs-center'),
+      { parallel: [
+        { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
+        { action: 'sfx', sound: 'cooking' },
+      ], delayAfter: 0.4 },
+      ...CROWD_GASP([]),
+      ...DISAPPOINTMENT(['skeleton_warrior']),
+      ...NARRATOR("Skeletons have no brains! Without memory, mystery dishes are impossible. Be specific!"),
     ],
-    feedback: { title: '🦴 Bonehead Chef!', message: "The skeleton forgot what it was cooking! Skeletons have no brains, remember? Pick a specific dish!", skillTaught: 'Specificity', tip: 'Mystery dishes need specific chefs with good memory!' },
+    feedback: { title: 'Bonehead Chef!', message: "The skeleton forgot what it was cooking! Skeletons have no brains, remember? Pick a specific dish!", skillTaught: 'Specificity', tip: 'Mystery dishes need specific chefs with good memory!' },
   },
 ];
 
@@ -116,13 +371,51 @@ const CLOWN_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'chaotic',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'stove', position: 'cs-center' }, { action: 'spawn', asset: 'table_kitchen', position: 'cs-left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'clown', position: 'off-left', anim: 'spawn_air' }, { action: 'emote', character: 'clown', emoji: '🤡' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'clown', anim: 'throw' }, { action: 'text_popup', text: '🍕 PIZZA FRISBEE! 🍕', position: 'top', size: 'huge' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'spawn_rain', asset: 'pizza_slice', quantity: 5, position: 'wide' }, { action: 'camera_shake', intensity: 0.5, duration: 0.8 }], delayAfter: 0.5 },
-      { parallel: [{ action: 'animate', character: 'clown', anim: 'Cheering' }, { action: 'react', effect: 'laugh-tears', position: 'cs-center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
+      // SETUP: Kitchen scene + narrator
+      ...NARRATOR("Chef Clown bounces into the pizzeria with circus energy!"),
+      {
+        parallel: [
+          { action: 'spawn', asset: 'stove', position: 'cs-center' },
+          { action: 'spawn', asset: 'table_kitchen', position: 'cs-left' },
+          { action: 'spawn', asset: 'pizza_box', position: 'cs-right' },
+          { action: 'spawn', asset: 'dough_roller', position: 'cs-left' },
+          { action: 'sfx', sound: 'spawn' },
+        ],
+        delayAfter: 0.5,
+      },
+      { parallel: [{ action: 'sfx', sound: 'cooking' }], delayAfter: 0.3 },
+      ...CHARGE_IN_LEFT('clown'),
+      ...JUMP_TO('clown', 'cs-left'),
+
+      // INTENT: Clown announces the plan
+      ...CHARACTER_SPEAK('clown', 'mischievous', "Watch me spin this dough like a FRISBEE!"),
+      { parallel: [{ action: 'sfx', sound: 'whoosh' }], delayAfter: 0.3 },
+
+      // ACTION: Spinning and throwing
+      ...RUN_TO('clown', 'cs-center'),
+      { parallel: [{ action: 'animate', character: 'clown', anim: 'throw' }], delayAfter: 0.5 },
+      ...IMPACT(),
+      { parallel: [
+        { action: 'camera_shake', intensity: 0.5, duration: 0.8 },
+        { action: 'sfx', sound: 'explosion' },
+      ], delayAfter: 0.4 },
+
+      // CONSEQUENCE: Pizza rains everywhere!
+      ...OBJECT_RAIN('pizza_slice', 8, 'wide'),
+      ...EMOTIONAL_REACT('clown', 'triumphant', 'cs-left'),
+      ...CHARACTER_EXCLAIM('clown', 'shocked', "It's RAINING PIZZA!"),
+
+      // RESOLUTION: Clown celebrates chaos
+      ...CROWD_CHEER([]),
+      ...DANCE('clown'),
+      ...CELEBRATION(['clown']),
+      { parallel: [
+        { action: 'react', effect: 'laugh-tears', position: 'cs-center' },
+        { action: 'sfx', sound: 'bell' },
+      ], delayAfter: 0.4 },
+      ...NARRATOR("The clown turned dough-tossing into a PIZZA EXPLOSION! That's circus cooking!"),
     ],
-    feedback: { title: '🍕 Frisbee Pizza!', message: "The clown turned pizza dough into a FLYING DISC! It's raining pizza slices everywhere!", skillTaught: 'Specificity', tip: 'Clowns turn cooking into a circus act!' },
+    feedback: { title: 'Frisbee Pizza!', message: "The clown turned pizza dough into a FLYING DISC! It's raining pizza slices everywhere!", skillTaught: 'Specificity', tip: 'Clowns turn cooking into a circus act!' },
   },
   {
     id: 'sp_clown_pepperoni',
@@ -131,13 +424,52 @@ const CLOWN_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'oven', position: 'cs-center' }, { action: 'spawn', asset: 'table_kitchen', position: 'cs-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'clown', position: 'off-left', anim: 'spawn_air' }, { action: 'emote', character: 'clown', emoji: '🤹' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'clown', anim: 'throw' }, { action: 'text_popup', text: '🤹 JUGGLING PEPPERONI! 🤹', position: 'top', size: 'large' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'react', effect: 'sparkle-magic', position: 'cs-center' }, { action: 'spawn', asset: 'pizza_whole', position: 'cs-center' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'animate', character: 'clown', anim: 'wave' }, { action: 'react', effect: 'hearts-float', position: 'cs-center' }, { action: 'text_popup', text: '🎪 PERFECT LANDING! 🎪', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
+      // SETUP: Kitchen stage + narrator
+      ...NARRATOR("Chef Clown prepares for a juggling performance!"),
+      {
+        parallel: [
+          { action: 'spawn', asset: 'oven', position: 'cs-center' },
+          { action: 'spawn', asset: 'table_kitchen', position: 'cs-right' },
+          { action: 'spawn', asset: 'pizza_pepperoni', position: 'cs-center' },
+          { action: 'spawn', asset: 'bacon_fmp', position: 'cs-left' },
+          { action: 'spawn', asset: 'sausage', position: 'cs-right' },
+          { action: 'sfx', sound: 'spawn' },
+        ],
+        delayAfter: 0.5,
+      },
+      { parallel: [{ action: 'sfx', sound: 'cooking' }], delayAfter: 0.3 },
+      ...DROP_IN('clown'),
+      ...WALK_TO('clown', 'cs-center'),
+
+      // INTENT: The juggling act begins
+      ...CHARACTER_SPEAK('clown', 'excited', "Ladies and gentlemen... PEPPERONI JUGGLING!"),
+      ...OBJECT_DROP('dough_ball', 'cs-right'),
+      { parallel: [{ action: 'sfx', sound: 'whoosh' }], delayAfter: 0.3 },
+
+      // ACTION: Juggling pepperoni
+      ...RUN_TO('clown', 'cs-right'),
+      { parallel: [{ action: 'animate', character: 'clown', anim: 'throw' }], delayAfter: 0.6 },
+      { parallel: [
+        { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
+        { action: 'sfx', sound: 'cooking' },
+      ], delayAfter: 0.4 },
+
+      // CONSEQUENCE: Perfect landing!
+      ...OBJECT_GROW_REVEAL('pizza_whole', 'cs-center'),
+      { parallel: [
+        { action: 'react', effect: 'hearts-float', position: 'cs-center' },
+        { action: 'sfx', sound: 'bell' },
+      ], delayAfter: 0.4 },
+      ...EMOTIONAL_REACT('clown', 'triumphant', 'cs-left'),
+      ...CHARACTER_EXCLAIM('clown', 'shocked', "Perfect pattern! Every pepperoni in place!"),
+
+      // RESOLUTION: The crowd goes wild
+      ...CROWD_CHEER([]),
+      ...DANCE('clown'),
+      ...CELEBRATION(['clown']),
+      ...NARRATOR("The clown juggled every topping perfectly! That's what happens when cooking meets circus!"),
     ],
-    feedback: { title: '🤹 Juggle-roni!', message: "The clown JUGGLED all the pepperoni and they landed in a perfect pattern! That's skill!", skillTaught: 'Specificity', tip: 'Clowns make everything a performance!' },
+    feedback: { title: 'Juggle-roni!', message: "The clown JUGGLED all the pepperoni and they landed in a perfect pattern! That's skill!", skillTaught: 'Specificity', tip: 'Clowns make everything a performance!' },
   },
   {
     id: 'sp_clown_pasta',
@@ -146,13 +478,55 @@ const CLOWN_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'chaotic',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'cauldron', position: 'cs-center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'clown', position: 'off-left', anim: 'spawn_air' }, { action: 'emote', character: 'clown', emoji: '🎈' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'clown', anim: 'cast_long' }, { action: 'react', effect: 'steam', position: 'cs-center' }, { action: 'text_popup', text: '🍝 NOODLE TWISTING! 🍝', position: 'top', size: 'large' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'react', effect: 'sparkle-magic', position: 'cs-center' }, { action: 'text_popup', text: '🎈 BALLOON ANIMALS?! 🎈', position: 'center', size: 'huge' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'animate', character: 'clown', anim: 'taunt' }, { action: 'react', effect: 'stars-spin', position: 'cs-center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
+      // SETUP: Kitchen scene + narrator
+      ...NARRATOR("Chef Clown approaches the pasta station!"),
+      {
+        parallel: [
+          { action: 'spawn', asset: 'cauldron', position: 'cs-center' },
+          { action: 'spawn', asset: 'frying_pan', position: 'cs-right' },
+          { action: 'spawn', asset: 'cheese', position: 'cs-left' },
+          { action: 'sfx', sound: 'spawn' },
+        ],
+        delayAfter: 0.5,
+      },
+      { parallel: [
+        { action: 'react', effect: 'steam', position: 'cs-center' },
+        { action: 'sfx', sound: 'cooking' },
+      ], delayAfter: 0.3 },
+      ...CHARGE_IN_LEFT('clown'),
+      ...RUN_TO('clown', 'cs-center'),
+
+      // INTENT: Balloon animals from noodles?
+      ...CHARACTER_SPEAK('clown', 'mischievous', "These noodles look like balloon-making material!"),
+      { parallel: [{ action: 'sfx', sound: 'chop' }], delayAfter: 0.3 },
+
+      // ACTION: Twisting noodles
+      { parallel: [
+        { action: 'animate', character: 'clown', anim: 'cast_long' },
+        { action: 'react', effect: 'steam', position: 'cs-center' },
+      ], delayAfter: 0.6 },
+
+      // CONSEQUENCE: Balloon animals appear!
+      ...IMPACT(),
+      { parallel: [
+        { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
+        { action: 'sfx', sound: 'cooking' },
+      ], delayAfter: 0.4 },
+      ...JUMP_TO('clown', 'cs-left'),
+      ...EMOTIONAL_REACT('clown', 'proud', 'cs-left'),
+      ...CHARACTER_EXCLAIM('clown', 'shocked', "Behold! Edible balloon noodle animals!"),
+
+      // RESOLUTION: Art or food?
+      ...CROWD_CHEER([]),
+      ...DANCE('clown'),
+      ...CELEBRATION(['clown']),
+      { parallel: [
+        { action: 'react', effect: 'stars-spin', position: 'cs-center' },
+        { action: 'sfx', sound: 'bell' },
+      ], delayAfter: 0.4 },
+      ...NARRATOR("The clown turned pasta into balloon animals! Edible? Yes. Normal? Not even close!"),
     ],
-    feedback: { title: '🎈 Balloon Noodles!', message: "The clown twisted pasta into BALLOON ANIMALS! Edible art? Sure, why not!", skillTaught: 'Specificity', tip: 'Clowns cannot resist making shapes out of everything!' },
+    feedback: { title: 'Balloon Noodles!', message: "The clown twisted pasta into BALLOON ANIMALS! Edible art? Sure, why not!", skillTaught: 'Specificity', tip: 'Clowns cannot resist making shapes out of everything!' },
   },
   {
     id: 'sp_clown_soup',
@@ -161,13 +535,56 @@ const CLOWN_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'chaotic',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'cauldron', position: 'cs-center' }, { action: 'spawn', asset: 'pot', position: 'cs-left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'clown', position: 'off-left', anim: 'spawn_air' }, { action: 'emote', character: 'clown', emoji: '🤡' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'clown', anim: 'interact' }, { action: 'react', effect: 'steam', position: 'cs-center' }, { action: 'text_popup', text: '🍲 COOKING SOUP... 🍲', position: 'top', size: 'large' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'animate', character: 'clown', anim: 'throw' }, { action: 'text_popup', text: '📯 HONK HONK! 📯', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'react', effect: 'laugh-tears', position: 'cs-center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
+      // SETUP: Soup kitchen + narrator
+      ...NARRATOR("Chef Clown prepares a special soup recipe!"),
+      {
+        parallel: [
+          { action: 'spawn', asset: 'cauldron', position: 'cs-center' },
+          { action: 'spawn', asset: 'pot', position: 'cs-left' },
+          { action: 'spawn', asset: 'corn', position: 'cs-right' },
+          { action: 'spawn', asset: 'pepper', position: 'cs-right' },
+          { action: 'sfx', sound: 'spawn' },
+        ],
+        delayAfter: 0.5,
+      },
+      { parallel: [
+        { action: 'react', effect: 'steam', position: 'cs-center' },
+        { action: 'sfx', sound: 'cooking' },
+      ], delayAfter: 0.3 },
+      ...DROP_IN('clown'),
+      ...BOUNCE_ENTRANCE('clown', 'cs-center', 'left'),
+
+      // INTENT: Soup needs special seasoning
+      ...CHARACTER_SPEAK('clown', 'mischievous', "This soup needs my SECRET ingredient!"),
+      { parallel: [{ action: 'sfx', sound: 'cooking' }], delayAfter: 0.3 },
+
+      // ACTION: Adding honks!
+      ...WALK_TO('clown', 'cs-left'),
+      { parallel: [
+        { action: 'animate', character: 'clown', anim: 'interact' },
+        { action: 'react', effect: 'steam', position: 'cs-center' },
+      ], delayAfter: 0.5 },
+      ...RUN_TO('clown', 'cs-center'),
+      { parallel: [
+        { action: 'animate', character: 'clown', anim: 'throw' },
+        { action: 'sfx', sound: 'chop' },
+      ], delayAfter: 0.4 },
+
+      // CONSEQUENCE: HONK HONK!
+      ...IMPACT(),
+      ...EMOTIONAL_REACT('clown', 'mischievous', 'cs-left'),
+      ...CHARACTER_EXCLAIM('clown', 'shocked', "HONK HONK! The perfect seasoning!"),
+
+      // RESOLUTION: Honk soup complete
+      { parallel: [
+        { action: 'react', effect: 'laugh-tears', position: 'cs-center' },
+        { action: 'sfx', sound: 'bell' },
+      ], delayAfter: 0.4 },
+      ...CROWD_GASP([]),
+      ...CELEBRATION(['clown']),
+      ...NARRATOR("The clown honked INTO the soup! Clown cuisine uses very... unusual spices!"),
     ],
-    feedback: { title: '📯 Honk Soup!', message: "The clown HONKED into the soup pot! Does it taste like honks? We'll never know!", skillTaught: 'Specificity', tip: 'Clowns add... unusual seasonings to their dishes.' },
+    feedback: { title: 'Honk Soup!', message: "The clown HONKED into the soup pot! Does it taste like honks? We'll never know!", skillTaught: 'Specificity', tip: 'Clowns add... unusual seasonings to their dishes.' },
   },
   {
     id: 'sp_clown_cake',
@@ -176,14 +593,58 @@ const CLOWN_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'chaotic',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'oven', position: 'cs-center' }, { action: 'spawn', asset: 'table_kitchen', position: 'cs-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'clown', position: 'off-left', anim: 'spawn_air' }, { action: 'emote', character: 'clown', emoji: '🎂' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'clown', anim: 'cast_spell' }, { action: 'react', effect: 'fire', position: 'cs-center' }, { action: 'text_popup', text: '🎂 BAKING! 🎂', position: 'top', size: 'large' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'spawn', asset: 'cake_giant', position: 'cs-center' }, { action: 'react', effect: 'sparkle-magic', position: 'cs-center' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'react', effect: 'explosion-cartoon', position: 'cs-center' }, { action: 'text_popup', text: '🥧 SURPRISE PIE INSIDE! 🥧', position: 'center', size: 'huge' }, { action: 'camera_shake', intensity: 0.5, duration: 0.5 }], delayAfter: 0.5 },
-      { parallel: [{ action: 'animate', character: 'clown', anim: 'jump_big' }, { action: 'react', effect: 'sparkle-magic', position: 'cs-center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
+      // SETUP: Bakery scene + narrator
+      ...NARRATOR("Chef Clown prepares a cake with a BIG surprise!"),
+      {
+        parallel: [
+          { action: 'spawn', asset: 'oven', position: 'cs-center' },
+          { action: 'spawn', asset: 'table_kitchen', position: 'cs-right' },
+          { action: 'spawn', asset: 'bread_oven', position: 'cs-left' },
+          { action: 'spawn', asset: 'toaster', position: 'cs-right' },
+          { action: 'sfx', sound: 'spawn' },
+        ],
+        delayAfter: 0.5,
+      },
+      { parallel: [{ action: 'sfx', sound: 'cooking' }], delayAfter: 0.3 },
+      ...DROP_IN('clown'),
+      ...JUMP_TO('clown', 'cs-right'),
+
+      // INTENT: Secret surprise inside
+      ...CHARACTER_SPEAK('clown', 'mischievous', "This cake will have a SURPRISE inside!"),
+      { parallel: [
+        { action: 'react', effect: 'fire', position: 'cs-center' },
+        { action: 'sfx', sound: 'cooking' },
+      ], delayAfter: 0.3 },
+
+      // ACTION: Baking with hidden pie
+      ...RUN_TO('clown', 'cs-center'),
+      { parallel: [
+        { action: 'animate', character: 'clown', anim: 'cast_spell' },
+        { action: 'react', effect: 'fire', position: 'cs-center' },
+      ], delayAfter: 0.6 },
+      ...OBJECT_GROW_REVEAL('cake_giant', 'cs-center'),
+      { parallel: [
+        { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
+        { action: 'sfx', sound: 'bell' },
+      ], delayAfter: 0.4 },
+
+      // CONSEQUENCE: PIE REVEAL!
+      ...IMPACT(),
+      { parallel: [
+        { action: 'react', effect: 'explosion-cartoon', position: 'cs-center' },
+        { action: 'camera_shake', intensity: 0.5, duration: 0.5 },
+        { action: 'sfx', sound: 'explosion' },
+      ], delayAfter: 0.4 },
+      ...EMOTIONAL_REACT('clown', 'triumphant', 'cs-left'),
+      ...CHARACTER_EXCLAIM('clown', 'shocked', "SURPRISE! A PIE baked INSIDE the cake!"),
+
+      // RESOLUTION: Dessert inception!
+      ...CROWD_CHEER([]),
+      ...DANCE('clown'),
+      ...CELEBRATION(['clown']),
+      ...NARRATOR("The clown hid a pie inside a cake! Double dessert means double fun!"),
     ],
-    feedback: { title: '🥧 Pie-Cake!', message: "The clown baked a PIE INSIDE THE CAKE! It's a dessert inside a dessert! Genius or chaos?", skillTaught: 'Specificity', tip: 'Clown cooking is full of surprises (and pranks)!' },
+    feedback: { title: 'Pie-Cake!', message: "The clown baked a PIE INSIDE THE CAKE! It's a dessert inside a dessert! Genius or chaos?", skillTaught: 'Specificity', tip: 'Clown cooking is full of surprises (and pranks)!' },
   },
   {
     id: 'sp_clown_mystery',
@@ -192,14 +653,58 @@ const CLOWN_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'chaotic',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'oven', position: 'cs-center' }, { action: 'spawn', asset: 'table_kitchen', position: 'cs-left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'clown', position: 'off-left', anim: 'spawn_air' }, { action: 'emote', character: 'clown', emoji: '🤡' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'clown', anim: 'interact' }, { action: 'react', effect: 'question-marks', position: 'cs-center' }, { action: 'text_popup', text: '❓ MYSTERY COOKING! ❓', position: 'top', size: 'large' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'spawn', asset: 'pie', position: 'cs-center' }, { action: 'react', effect: 'sparkle-magic', position: 'cs-center' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'react', effect: 'explosion-cartoon', position: 'cs-center' }, { action: 'react', effect: 'confetti-burst', position: 'cs-center' }, { action: 'text_popup', text: '🎉 CONFETTI EXPLOSION! 🎉', position: 'center', size: 'huge' }, { action: 'camera_shake', intensity: 0.6, duration: 0.6 }], delayAfter: 0.5 },
-      { parallel: [{ action: 'animate', character: 'clown', anim: 'Cheering' }, { action: 'react', effect: 'laugh-tears', position: 'cs-center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
+      // SETUP: Kitchen scene + narrator
+      ...NARRATOR("Chef Clown is cooking something mysterious!"),
+      {
+        parallel: [
+          { action: 'spawn', asset: 'oven', position: 'cs-center' },
+          { action: 'spawn', asset: 'table_kitchen', position: 'cs-left' },
+          { action: 'sfx', sound: 'spawn' },
+        ],
+        delayAfter: 0.5,
+      },
+      { parallel: [{ action: 'sfx', sound: 'cooking' }], delayAfter: 0.3 },
+      ...CHARGE_IN_LEFT('clown'),
+      ...JUMP_TO('clown', 'cs-center'),
+
+      // INTENT: Mystery prank time
+      ...CHARACTER_SPEAK('clown', 'mischievous', "Let's make the ULTIMATE mystery dish!"),
+      { parallel: [
+        { action: 'react', effect: 'question-marks', position: 'cs-center' },
+        { action: 'sfx', sound: 'chop' },
+      ], delayAfter: 0.3 },
+
+      // ACTION: Creating mystery pie
+      ...WALK_TO('clown', 'cs-left'),
+      { parallel: [{ action: 'animate', character: 'clown', anim: 'interact' }], delayAfter: 0.5 },
+      ...OBJECT_GROW_REVEAL('pie', 'cs-center'),
+      ...JUMP_TO('clown', 'cs-right'),
+      { parallel: [
+        { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
+        { action: 'sfx', sound: 'cooking' },
+      ], delayAfter: 0.4 },
+
+      // CONSEQUENCE: CONFETTI EXPLOSION!
+      ...IMPACT(),
+      { parallel: [
+        { action: 'react', effect: 'explosion-cartoon', position: 'cs-center' },
+        { action: 'react', effect: 'confetti-burst', position: 'cs-center' },
+        { action: 'camera_shake', intensity: 0.6, duration: 0.6 },
+        { action: 'sfx', sound: 'explosion' },
+      ], delayAfter: 0.5 },
+      ...EMOTIONAL_REACT('clown', 'triumphant', 'cs-left'),
+      ...CHARACTER_EXCLAIM('clown', 'shocked', "SURPRISE! It's a CONFETTI PRANK PIE!"),
+
+      // RESOLUTION: The ultimate prank
+      ...CROWD_CHEER([]),
+      ...CELEBRATION(['clown']),
+      { parallel: [
+        { action: 'react', effect: 'laugh-tears', position: 'cs-center' },
+        { action: 'sfx', sound: 'bell' },
+      ], delayAfter: 0.4 },
+      ...NARRATOR("The clown made a prank pie full of confetti! Clowns LOVE mystery dishes for hiding pranks!"),
     ],
-    feedback: { title: '🎉 Prank Pie!', message: "The clown made a PRANK PIE that explodes in confetti! It was a surprise... but not edible!", skillTaught: 'Specificity', tip: 'Clowns love mystery dishes because they can hide pranks!' },
+    feedback: { title: 'Prank Pie!', message: "The clown made a PRANK PIE that explodes in confetti! It was a surprise... but not edible!", skillTaught: 'Specificity', tip: 'Clowns love mystery dishes because they can hide pranks!' },
   },
 ];
 
@@ -213,13 +718,56 @@ const SUPERHERO_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'stove', position: 'cs-center' }, { action: 'spawn', asset: 'table_kitchen', position: 'cs-left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'superhero', position: 'off-left', anim: 'spawn_air' }, { action: 'emote', character: 'superhero', emoji: '🦸' }, { action: 'react', effect: 'explosion-cartoon', position: 'off-left' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'superhero', anim: 'spin_attack' }, { action: 'text_popup', text: '⚡ SUPER SPEED SPIN! ⚡', position: 'top', size: 'huge' }, { action: 'camera_shake', intensity: 0.7, duration: 0.8 }], delayAfter: 0.6 },
-      { parallel: [{ action: 'spawn', asset: 'pizza_whole', position: 'cs-center' }, { action: 'react', effect: 'sparkle-magic', position: 'cs-center' }, { action: 'screen_flash', color: 'gold', duration: 0.2 }], delayAfter: 0.5 },
-      { parallel: [{ action: 'animate', character: 'superhero', anim: 'wave' }, { action: 'react', effect: 'glow-pulse', position: 'cs-center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
+      // SETUP: Kitchen scene + narrator
+      ...NARRATOR("Captain Cuisine arrives with super-speed!"),
+      {
+        parallel: [
+          { action: 'spawn', asset: 'stove', position: 'cs-center' },
+          { action: 'spawn', asset: 'table_kitchen', position: 'cs-left' },
+          { action: 'spawn', asset: 'display_case', position: 'cs-right' },
+          { action: 'spawn', asset: 'pizza_cheese', position: 'cs-right' },
+          { action: 'sfx', sound: 'spawn' },
+        ],
+        delayAfter: 0.5,
+      },
+      { parallel: [{ action: 'sfx', sound: 'cooking' }], delayAfter: 0.3 },
+      ...TELEPORT_IN('superhero'),
+      { parallel: [
+        { action: 'react', effect: 'explosion-cartoon', position: 'cs-left' },
+        { action: 'sfx', sound: 'whoosh' },
+      ], delayAfter: 0.3 },
+      ...RUN_TO('superhero', 'cs-center'),
+
+      // INTENT: Super-speed dough toss
+      ...CHARACTER_SPEAK('superhero', 'proud', "Time to use SUPER-SPEED on this dough!"),
+      ...OBJECT_GROW_REVEAL('dough_ball', 'cs-center'),
+
+      // ACTION: Spinning faster than sound
+      { parallel: [
+        { action: 'animate', character: 'superhero', anim: 'spin_attack' },
+        { action: 'camera_shake', intensity: 0.7, duration: 0.8 },
+        { action: 'sfx', sound: 'whoosh' },
+      ], delayAfter: 0.6 },
+      ...IMPACT(),
+      { parallel: [{ action: 'screen_flash', color: 'gold', duration: 0.2 }], delayAfter: 0.2 },
+
+      // CONSEQUENCE: Instant perfect pizza!
+      ...OBJECT_GROW_REVEAL('pizza_whole', 'cs-center'),
+      { parallel: [
+        { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
+        { action: 'sfx', sound: 'bell' },
+      ], delayAfter: 0.4 },
+      ...EMOTIONAL_REACT('superhero', 'triumphant', 'cs-left'),
+      ...CHARACTER_EXCLAIM('superhero', 'shocked', "Done in 0.5 seconds! Super-speed works!"),
+
+      // RESOLUTION: Superhero efficiency
+      ...CROWD_CHEER([]),
+      ...DANCE('superhero'),
+      ...CELEBRATION(['superhero']),
+      { parallel: [{ action: 'react', effect: 'glow-pulse', position: 'cs-center' }], delayAfter: 0.3 },
+      ...NARRATOR("The dough spun so fast it cooked from friction! That's superhero physics!"),
     ],
-    feedback: { title: '⚡ Super-Speed Pizza!', message: "The superhero spun the dough SO FAST it cooked instantly! That's the power of super-speed!", skillTaught: 'Specificity', tip: 'Superhero chefs use their powers to cook faster than anyone!' },
+    feedback: { title: 'Super-Speed Pizza!', message: "The superhero spun the dough SO FAST it cooked instantly! That's the power of super-speed!", skillTaught: 'Specificity', tip: 'Superhero chefs use their powers to cook faster than anyone!' },
   },
   {
     id: 'sp_superhero_pepperoni',
@@ -228,13 +776,13 @@ const SUPERHERO_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'oven', position: 'cs-center' }, { action: 'spawn', asset: 'table_kitchen', position: 'cs-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'spawn', asset: 'oven', position: 'cs-center' }, { action: 'spawn', asset: 'table_kitchen', position: 'cs-right' }, { action: 'spawn', asset: 'pineapple_fmp', position: 'cs-left' }, { action: 'spawn', asset: 'broccoli_fmp', position: 'cs-left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'superhero', position: 'off-left', anim: 'spawn_air' }, { action: 'emote', character: 'superhero', emoji: '👁️' }], delayAfter: 0.4 },
       { parallel: [{ action: 'animate', character: 'superhero', anim: 'cast_spell' }, { action: 'react', effect: 'fire', position: 'cs-center' }, { action: 'text_popup', text: '👁️ LASER VISION! 👁️', position: 'top', size: 'huge' }], delayAfter: 0.6 },
       { parallel: [{ action: 'spawn', asset: 'pizza_whole', position: 'cs-center' }, { action: 'react', effect: 'sparkle-magic', position: 'cs-center' }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'superhero', anim: 'taunt' }, { action: 'react', effect: 'stars-spin', position: 'cs-center' }, { action: 'text_popup', text: '🍕 PERFECT PATTERN! 🍕', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
     ],
-    feedback: { title: '👁️ Laser Pepperoni!', message: "The superhero used LASER VISION to place each pepperoni with surgical precision! Perfect!", skillTaught: 'Specificity', tip: 'Superhero precision = perfect cooking every time!' },
+    feedback: { title: '👁️ Laser Pepperoni!', message: "The superhero used LASER VISION to place each pepperoni with perfect aim! Perfect!", skillTaught: 'Specificity', tip: 'Superhero precision = perfect cooking every time!' },
   },
   {
     id: 'sp_superhero_pasta',
@@ -244,7 +792,7 @@ const SUPERHERO_VIGNETTES: Vignette[] = [
     promptScore: 'perfect',
     steps: [
       { parallel: [{ action: 'spawn', asset: 'cauldron', position: 'cs-center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'superhero', position: 'off-left', anim: 'spawn_air' }, { action: 'emote', character: 'superhero', emoji: '💪' }], delayAfter: 0.4 },
+      { parallel: [{ action: 'spawn_character', character: 'superhero', position: 'off-left', anim: 'spawn_air' }, { action: 'emote', character: 'superhero', emoji: 'heroic' }], delayAfter: 0.4 },
       { parallel: [{ action: 'animate', character: 'superhero', anim: 'cast_long' }, { action: 'react', effect: 'steam', position: 'cs-center' }, { action: 'text_popup', text: '💪 SUPER STRENGTH STIR! 💪', position: 'top', size: 'huge' }], delayAfter: 0.6 },
       { parallel: [{ action: 'animate', character: 'superhero', anim: 'jump_idle' }, { action: 'camera_shake', intensity: 0.6, duration: 0.8 }, { action: 'text_popup', text: '🍝 LIFTING THE WHOLE POT! 🍝', position: 'center', size: 'huge' }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'superhero', anim: 'jump_big' }, { action: 'react', effect: 'hearts-float', position: 'cs-center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
@@ -273,8 +821,8 @@ const SUPERHERO_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'oven', position: 'cs-center' }, { action: 'spawn', asset: 'table_kitchen', position: 'cs-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'superhero', position: 'off-left', anim: 'spawn_air' }, { action: 'emote', character: 'superhero', emoji: '🦸' }], delayAfter: 0.4 },
+      { parallel: [{ action: 'spawn', asset: 'oven', position: 'cs-center' }, { action: 'spawn', asset: 'table_kitchen', position: 'cs-right' }, { action: 'spawn', asset: 'pickup_truck', position: 'us-right' }, { action: 'spawn', asset: 'cheddar', position: 'cs-left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'spawn_character', character: 'superhero', position: 'off-left', anim: 'spawn_air' }, { action: 'emote', character: 'superhero', emoji: 'heroic' }], delayAfter: 0.4 },
       { parallel: [{ action: 'animate', character: 'superhero', anim: 'jump_idle' }, { action: 'text_popup', text: '🦸 FLYING AROUND! 🦸', position: 'top', size: 'huge' }, { action: 'camera_shake', intensity: 0.5, duration: 0.8 }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'fire', position: 'cs-center' }, { action: 'spawn', asset: 'cake_giant', position: 'cs-center' }], delayAfter: 0.4 },
       { parallel: [{ action: 'animate', character: 'superhero', anim: 'wave' }, { action: 'react', effect: 'stars-spin', position: 'cs-center' }, { action: 'text_popup', text: '🎂 PERFECT BAKE! 🎂', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
@@ -309,7 +857,7 @@ const SURVIVALIST_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'barrel', position: 'cs-center' }, { action: 'spawn', asset: 'crate', position: 'cs-left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'spawn', asset: 'barrel', position: 'cs-center' }, { action: 'spawn', asset: 'crate', position: 'cs-left' }, { action: 'spawn', asset: 'truck', position: 'us-right' }, { action: 'spawn', asset: 'ham', position: 'cs-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'survivalist', position: 'off-left', anim: 'spawn_ground' }, { action: 'emote', character: 'survivalist', emoji: '🏕️' }], delayAfter: 0.4 },
       { parallel: [{ action: 'animate', character: 'survivalist', anim: 'interact' }, { action: 'react', effect: 'fire', position: 'cs-center' }, { action: 'text_popup', text: '🔥 CAMPFIRE COOKING! 🔥', position: 'top', size: 'large' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'smoke', position: 'cs-center' }, { action: 'text_popup', text: '🍕 PRIMITIVE PIZZA! 🍕', position: 'center', size: 'huge' }], delayAfter: 0.5 },
@@ -324,7 +872,7 @@ const SURVIVALIST_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'chaotic',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'barrel', position: 'cs-center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'spawn', asset: 'barrel', position: 'cs-center' }, { action: 'spawn', asset: 'cart', position: 'us-left' }, { action: 'spawn', asset: 'olive', position: 'cs-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'survivalist', position: 'off-left', anim: 'spawn_ground' }, { action: 'emote', character: 'survivalist', emoji: '🎯' }], delayAfter: 0.4 },
       { parallel: [{ action: 'animate', character: 'survivalist', anim: 'throw' }, { action: 'text_popup', text: '🎯 HUNTING PEPPERONI! 🎯', position: 'top', size: 'large' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'question-marks', position: 'cs-center' }, { action: 'text_popup', text: '❓ WILD PEPPERONI?! ❓', position: 'center', size: 'huge' }], delayAfter: 0.5 },
@@ -339,7 +887,7 @@ const SURVIVALIST_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'chaotic',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'cauldron', position: 'cs-center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'spawn', asset: 'cauldron', position: 'cs-center' }, { action: 'spawn', asset: 'garlic', position: 'cs-left' }, { action: 'spawn', asset: 'chili_pepper', position: 'cs-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'survivalist', position: 'off-left', anim: 'spawn_ground' }, { action: 'emote', character: 'survivalist', emoji: '🌾' }], delayAfter: 0.4 },
       { parallel: [{ action: 'animate', character: 'survivalist', anim: 'interact' }, { action: 'text_popup', text: '🌾 WEAVING GRASS! 🌾', position: 'top', size: 'large' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'steam', position: 'cs-center' }, { action: 'text_popup', text: '🍝 GRASS NOODLES?! 🍝', position: 'center', size: 'huge' }], delayAfter: 0.5 },
@@ -389,7 +937,7 @@ const SURVIVALIST_VIGNETTES: Vignette[] = [
       { parallel: [{ action: 'animate', character: 'survivalist', anim: 'interact' }, { action: 'react', effect: 'question-marks', position: 'cs-center' }, { action: 'text_popup', text: '🌿 WILD FORAGING! 🌿', position: 'top', size: 'large' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'fire', position: 'cs-center' }, { action: 'text_popup', text: '❓ MYSTERY STEW! ❓', position: 'center', size: 'huge' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn', asset: 'potion_mystery', position: 'cs-center' }, { action: 'react', effect: 'steam', position: 'cs-center' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'emote', character: 'survivalist', emoji: '🤷' }, { action: 'text_popup', text: '🏕️ WILDERNESS SURPRISE! 🏕️', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'partial' }], delayAfter: 1.5 },
+      { parallel: [{ action: 'emote', character: 'survivalist', emoji: 'confused' }, { action: 'text_popup', text: '🏕️ WILDERNESS SURPRISE! 🏕️', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'partial' }], delayAfter: 1.5 },
     ],
     feedback: { title: '🌿 Wild Mystery!', message: "The survivalist foraged mystery ingredients from the wild! Nobody knows what's in it... but it's edible!", skillTaught: 'Specificity', tip: 'Survivalists make do with whatever nature provides!' },
   },
@@ -405,7 +953,7 @@ const EVERYONE_VIGNETTES: Vignette[] = [
     tier: 'absolute_chaos',
     promptScore: 'chaotic',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'stove', position: 'cs-center' }, { action: 'spawn', asset: 'oven', position: 'cs-left' }, { action: 'spawn', asset: 'table_kitchen', position: 'cs-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'spawn', asset: 'stove', position: 'cs-center' }, { action: 'spawn', asset: 'oven', position: 'cs-left' }, { action: 'spawn', asset: 'table_kitchen', position: 'cs-right' }, { action: 'spawn', asset: 'counter_table', position: 'ds-left' }, { action: 'spawn', asset: 'cash_register', position: 'ds-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'skeleton_warrior', position: 'ds-left', anim: 'spawn_ground' }, { action: 'spawn_character', character: 'clown', position: 'ds-right', anim: 'spawn_air' }, { action: 'spawn_character', character: 'superhero', position: 'us-left', anim: 'spawn_air' }], delayAfter: 0.4 },
       { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'throw' }, { action: 'animate', character: 'clown', anim: 'throw' }, { action: 'animate', character: 'superhero', anim: 'spin_attack' }, { action: 'text_popup', text: '🍕 TOO MANY CHEFS! 🍕', position: 'top', size: 'huge' }, { action: 'camera_shake', intensity: 0.8, duration: 1.0 }], delayAfter: 0.6 },
       { parallel: [{ action: 'spawn_rain', asset: 'pizza_slice', quantity: 8, position: 'wide' }, { action: 'react', effect: 'explosion-cartoon', position: 'center' }], delayAfter: 0.5 },
@@ -420,7 +968,7 @@ const EVERYONE_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'chaotic',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'oven', position: 'cs-center' }, { action: 'spawn', asset: 'table_kitchen', position: 'cs-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'spawn', asset: 'oven', position: 'cs-center' }, { action: 'spawn', asset: 'table_kitchen', position: 'cs-right' }, { action: 'spawn', asset: 'pizza_food', position: 'cs-center' }, { action: 'spawn', asset: 'sink', position: 'cs-left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'skeleton_warrior', position: 'ds-left', anim: 'spawn_ground' }, { action: 'spawn_character', character: 'clown', position: 'ds-right', anim: 'spawn_air' }, { action: 'spawn_character', character: 'superhero', position: 'us-left', anim: 'spawn_air' }], delayAfter: 0.4 },
       { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'interact' }, { action: 'animate', character: 'clown', anim: 'throw' }, { action: 'animate', character: 'superhero', anim: 'cast_spell' }, { action: 'text_popup', text: '🍕 EVERYONE ADDING TOPPINGS! 🍕', position: 'top', size: 'large' }], delayAfter: 0.6 },
       { parallel: [{ action: 'spawn', asset: 'pizza_whole', position: 'cs-center' }, { action: 'react', effect: 'question-marks', position: 'cs-center' }, { action: 'text_popup', text: '❓ WEIRD COMBO! ❓', position: 'center', size: 'huge' }], delayAfter: 0.5 },
@@ -511,28 +1059,32 @@ export const SKELETON_PIZZA_DEFAULT: Vignette = {
   trigger: { chef: '*', dish: '*', style: '*' },
   tier: 'subtle',
   promptScore: 'partial',
-  steps: composeBlocking(
+  steps: [
     // Kitchen props
-    setupProps([
-      { asset: 'stove', mark: MARK.US_CENTER },
-      { asset: 'pot', mark: MARK.US_LEFT },
-    ]),
+    {
+      parallel: [
+        { action: 'spawn', asset: 'stove', position: 'us-center' },
+        { action: 'spawn', asset: 'pot', position: 'us-left' },
+        { action: 'sfx', sound: 'spawn' },
+      ],
+      delayAfter: 0.5,
+    },
     // Skeleton crosses the kitchen left-to-right, stops at stove
-    crossStage('skeleton_warrior', 'left-to-right', {
-      stopAt: MARK.CS_CENTER,
-      midAction: { action: 'emote', character: 'skeleton_warrior', emoji: '👨‍🍳' },
-    }),
+    { parallel: [{ action: 'spawn_character', character: 'skeleton_warrior', position: 'off-left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.2 },
+    { parallel: [{ action: 'move', character: 'skeleton_warrior', to: 'cs-center', style: 'linear' }], delayAfter: 0.3 },
+    { parallel: [{ action: 'emote', character: 'skeleton_warrior', emoji: '👨‍🍳' }], delayAfter: 0.5 },
+    { parallel: [{ action: 'move', character: 'skeleton_warrior', to: 'cs-center', style: 'linear' }], delayAfter: 0.3 },
     // Skeleton cooks
-    [{
+    {
       parallel: [
         { action: 'animate', character: 'skeleton_warrior', anim: 'interact' },
-        { action: 'spawn', asset: 'pizza', position: MARK.CS_CENTER },
+        { action: 'spawn', asset: 'pizza', position: 'cs-center' },
         { action: 'sfx', sound: 'success' },
         { action: 'text_popup', text: '🍕 COOKING! 🍕', position: 'center', size: 'large' },
       ],
       delayAfter: 2.0,
-    }],
-  ),
+    },
+  ],
   feedback: {
     title: '🍳 Kitchen Time!',
     message: "Someone cooked something! But WHO was the chef? WHAT did they cook? HOW did they cook it? Fill in the details!",
@@ -587,7 +1139,7 @@ export const SKELETON_PIZZA_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'skeleton_warrior', anim: 'idle' },
-          { action: 'emote', character: 'skeleton_warrior', emoji: '🤔' },
+          { action: 'emote', character: 'skeleton_warrior', emoji: 'thinking' },
           { action: 'text_popup', text: '🧊 FROZEN SOLID! 🧊', position: 'center', size: 'huge' },
         ],
         delayAfter: 2.0,
@@ -623,7 +1175,7 @@ export const SKELETON_PIZZA_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'clown', position: 'left', anim: 'spawn_air' },
-          { action: 'emote', character: 'clown', emoji: '🤡' },
+          { action: 'emote', character: 'clown', emoji: 'silly' },
         ],
         delayAfter: 0.5,
       },
@@ -705,7 +1257,7 @@ export const SKELETON_PIZZA_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'survivalist', anim: 'get_bonked' },
-          { action: 'emote', character: 'survivalist', emoji: '😰' },
+          { action: 'emote', character: 'survivalist', emoji: 'worried' },
           { action: 'text_popup', text: '🧊 FROZEN CHUNKS! 🧊', position: 'center', size: 'huge' },
           { action: 'react', effect: 'question-marks', position: 'center' },
         ],
@@ -805,7 +1357,7 @@ export const SKELETON_PIZZA_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'superhero', position: 'left', anim: 'spawn_air' },
-          { action: 'emote', character: 'superhero', emoji: '🦸' },
+          { action: 'emote', character: 'superhero', emoji: 'heroic' },
         ],
         delayAfter: 0.5,
       },
@@ -840,7 +1392,7 @@ export const SKELETON_PIZZA_STAGE_2: Vignette[] = [
       title: '🌋 VOLCANIC CHAOS!',
       message: "VOLCANIC + INFINITE = TOO MUCH! The kitchen can't handle it! Maybe try 'blazing' instead of 'volcanic'?",
       skillTaught: 'Specificity',
-      tip: "Some combinations are TOO specific — volcanic + infinite is overkill!",
+      tip: "Some combinations are TOO specific — volcanic + infinite creates too much chaos!",
       vagueComparison: {
         vagueInput: "Make cake at volcanic heat",
         vagueResult: "The kitchen erupts! Maybe be less specific next time?",
@@ -867,7 +1419,7 @@ export const SKELETON_PIZZA_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'clown', position: 'left', anim: 'spawn_air' },
-          { action: 'emote', character: 'clown', emoji: '🤡' },
+          { action: 'emote', character: 'clown', emoji: 'silly' },
         ],
         delayAfter: 0.5,
       },
@@ -983,7 +1535,7 @@ export const SKELETON_PIZZA_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'superhero', position: 'left', anim: 'spawn_air' },
-          { action: 'emote', character: 'superhero', emoji: '🦸' },
+          { action: 'emote', character: 'superhero', emoji: 'heroic' },
         ],
         delayAfter: 0.5,
       },
@@ -1042,7 +1594,7 @@ export const SKELETON_PIZZA_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'clown', position: 'left', anim: 'spawn_air' },
-          { action: 'emote', character: 'clown', emoji: '🤡' },
+          { action: 'emote', character: 'clown', emoji: 'silly' },
         ],
         delayAfter: 0.5,
       },
@@ -1161,7 +1713,7 @@ export const SKELETON_PIZZA_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'skeleton_warrior', position: 'left', anim: 'spawn_air' },
-          { action: 'emote', character: 'skeleton_warrior', emoji: '❓' },
+          { action: 'emote', character: 'skeleton_warrior', emoji: 'confused' },
         ],
         delayAfter: 0.5,
       },
@@ -1292,7 +1844,7 @@ export const SKELETON_PIZZA_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'superhero', position: 'left', anim: 'spawn_air' },
-          { action: 'emote', character: 'superhero', emoji: '🦸' },
+          { action: 'emote', character: 'superhero', emoji: 'heroic' },
         ],
         delayAfter: 0.5,
       },
@@ -1533,7 +2085,7 @@ export const SKELETON_PIZZA_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'clown', position: 'left', anim: 'spawn_air' },
-          { action: 'emote', character: 'clown', emoji: '🤡' },
+          { action: 'emote', character: 'clown', emoji: 'silly' },
         ],
         delayAfter: 0.5,
       },
@@ -1593,7 +2145,7 @@ export const SKELETON_PIZZA_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'skeleton_warrior', position: 'left', anim: 'spawn_air' },
-          { action: 'emote', character: 'skeleton_warrior', emoji: '❓' },
+          { action: 'emote', character: 'skeleton_warrior', emoji: 'confused' },
         ],
         delayAfter: 0.5,
       },
@@ -1681,7 +2233,7 @@ export const SKELETON_PIZZA_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'survivalist', anim: 'get_bonked' },
-          { action: 'emote', character: 'survivalist', emoji: '😰' },
+          { action: 'emote', character: 'survivalist', emoji: 'worried' },
           { action: 'text_popup', text: '🔥 LAVA PIZZA! 🔥', position: 'center', size: 'huge' },
         ],
         delayAfter: 2.0,
@@ -1843,7 +2395,7 @@ export const SKELETON_PIZZA_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'clown', position: 'left', anim: 'spawn_air' },
-          { action: 'emote', character: 'clown', emoji: '🤡' },
+          { action: 'emote', character: 'clown', emoji: 'silly' },
         ],
         delayAfter: 0.5,
       },
@@ -1926,7 +2478,7 @@ export const SKELETON_PIZZA_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'mage', anim: 'idle' },
-          { action: 'emote', character: 'mage', emoji: '😰' },
+          { action: 'emote', character: 'mage', emoji: 'worried' },
           { action: 'text_popup', text: '🧊 FROZEN NOODLES! 🧊', position: 'center', size: 'huge' },
         ],
         delayAfter: 2.0,
@@ -1963,7 +2515,7 @@ export const SKELETON_PIZZA_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'superhero', position: 'left', anim: 'spawn_air' },
-          { action: 'emote', character: 'superhero', emoji: '🦸' },
+          { action: 'emote', character: 'superhero', emoji: 'heroic' },
         ],
         delayAfter: 0.5,
       },
@@ -2216,7 +2768,7 @@ export const SKELETON_PIZZA_STAGE_3: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'clown', position: 'center', anim: 'spawn_air' },
-          { action: 'emote', character: 'clown', emoji: '🤡' },
+          { action: 'emote', character: 'clown', emoji: 'silly' },
         ],
         delayAfter: 0.5,
       },
@@ -2503,7 +3055,7 @@ export const SKELETON_PIZZA_STAGE_3: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'clown', position: 'left', anim: 'spawn_air' },
-          { action: 'emote', character: 'clown', emoji: '🤡' },
+          { action: 'emote', character: 'clown', emoji: 'silly' },
         ],
         delayAfter: 0.5,
       },
@@ -2601,7 +3153,7 @@ export const SKELETON_PIZZA_DEFAULT_3: Vignette = {
     {
       parallel: [
         { action: 'animate', character: 'skeleton_warrior', anim: 'idle' },
-        { action: 'emote', character: 'skeleton_warrior', emoji: '🤔' },
+        { action: 'emote', character: 'skeleton_warrior', emoji: 'thinking' },
         { action: 'text_popup', text: '❓ Try a combo! ❓', position: 'center', size: 'large' },
       ],
       delayAfter: 2.0,

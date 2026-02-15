@@ -7,6 +7,13 @@
  */
 
 import type { Vignette } from '../../types/madlibs';
+import {
+  ENTER_FROM_LEFT, CHARGE_IN_LEFT, SNEAK_IN_LEFT,
+  CHARACTER_SPEAK, CHARACTER_EXCLAIM, EMOTIONAL_REACT,
+  NARRATOR, IMPACT, CELEBRATION, DISAPPOINTMENT,
+  WALK_TO, RUN_TO, CROWD_CHEER,
+  OBJECT_GROW_REVEAL,
+} from '../movement-templates';
 
 // ─── STAGE 1 VIGNETTES ──────────────────────────────────────────────────────
 
@@ -19,11 +26,21 @@ const KNIGHT_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'funny_fail',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'knight', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'knight', emoji: '🤫' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'knight', anim: 'walk' }, { action: 'text_popup', text: '🛡️ CLANK CLANK CLANK 🛡️', position: 'center', size: 'huge' }, { action: 'camera_shake', intensity: 0.6, duration: 1.0 }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'animate', character: 'knight', anim: 'get_hit' }, { action: 'emote', character: 'knight', emoji: '😅' }, { action: 'react', effect: 'stars-spin', position: 'center' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'text_popup', text: '💥 TOO LOUD! 💥', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
+      // SETUP: Scene introduction
+      ...NARRATOR("A knight in heavy armor approaches the dungeon wall..."),
+      { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'door' }], delayAfter: 0.5 },
+      ...SNEAK_IN_LEFT('knight'),
+      ...WALK_TO('knight', 'cs-center'),
+      // INTENT: Knight tries to be sneaky
+      ...CHARACTER_SPEAK('knight', 'nervous', "I'll be super quiet..."),
+      // ACTION: Loud clanking despite best efforts
+      { parallel: [{ action: 'animate', character: 'knight', anim: 'walk' }, { action: 'text_popup', text: 'CLANK CLANK CLANK', position: 'center', size: 'huge' }, { action: 'camera_shake', intensity: 0.6, duration: 1.0 }, { action: 'sfx', sound: 'footstep' }], delayAfter: 0.6 },
+      // CONSEQUENCE: Embarrassed realization
+      ...EMOTIONAL_REACT('knight', 'embarrassed', 'center'),
+      ...IMPACT(),
+      // RESOLUTION: Failure and lesson
+      ...DISAPPOINTMENT(['knight']),
+      ...NARRATOR("Heavy armor makes sneaking impossible. Knights need different tactics!"),
     ],
     feedback: {
       title: '🛡️ ARMOR TOO LOUD!',
@@ -39,11 +56,22 @@ const KNIGHT_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'pillar_stone', position: 'left' }, { action: 'spawn', asset: 'pillar_stone', position: 'right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'knight', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'knight', emoji: '⚔️' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'knight', anim: 'sword_slash' }, { action: 'text_popup', text: '⚔️ FOR HONOR! ⚔️', position: 'top', size: 'huge' }, { action: 'react', effect: 'explosion-cartoon', position: 'center' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'camera_shake', intensity: 0.7, duration: 0.8 }, { action: 'react', effect: 'stars-spin', position: 'center' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'animate', character: 'knight', anim: 'Cheering' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'text_popup', text: '🏆 VICTORY! 🏆', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
+      // SETUP: Battle arena
+      ...NARRATOR("The knight enters the battle arena, sword gleaming..."),
+      { parallel: [{ action: 'spawn', asset: 'pillar_stone', position: 'left' }, { action: 'spawn', asset: 'pillar_stone', position: 'right' }, { action: 'spawn', asset: 'guitar', position: 'center' }, { action: 'spawn', asset: 'bat', position: 'us-left' }, { action: 'spawn', asset: 'slime', position: 'us-right' }, { action: 'sfx', sound: 'door' }], delayAfter: 0.5 },
+      ...CHARGE_IN_LEFT('knight'),
+      ...RUN_TO('knight', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('guitar', 'center', 1.4),
+      // INTENT: Battle cry
+      ...CHARACTER_EXCLAIM('knight', 'heroic', 'FOR HONOR!'),
+      // ACTION: Sword slash attack
+      { parallel: [{ action: 'animate', character: 'knight', anim: 'sword_slash' }, { action: 'react', effect: 'explosion-cartoon', position: 'center' }, { action: 'sfx', sound: 'impact' }], delayAfter: 0.6 },
+      { parallel: [{ action: 'camera_shake', intensity: 0.7, duration: 0.8 }], delayAfter: 0.5 },
+      // CONSEQUENCE: Victorious pose
+      ...EMOTIONAL_REACT('knight', 'triumphant', 'center'),
+      // RESOLUTION: Success celebration
+      ...CELEBRATION(['knight']),
+      ...NARRATOR("Knights are made for battle — using their strength is always the right choice!"),
     ],
     feedback: {
       title: '⚔️ HONORABLE COMBAT!',
@@ -59,11 +87,21 @@ const KNIGHT_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'funny_fail',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'knight', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'knight', emoji: '🪄' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'knight', anim: 'cast_spell' }, { action: 'text_popup', text: '✨ ABRA...CA... ✨', position: 'center', size: 'large' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'react', effect: 'question-marks', position: 'center' }, { action: 'emote', character: 'knight', emoji: '❓' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'animate', character: 'knight', anim: 'idle' }, { action: 'text_popup', text: '🤷 NO MAGIC! 🤷', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
+      // SETUP: Magic attempt setting
+      ...NARRATOR("The knight faces a magical barrier..."),
+      { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'door' }], delayAfter: 0.5 },
+      ...ENTER_FROM_LEFT('knight'),
+      ...WALK_TO('knight', 'ds-center'),
+      // INTENT: Tries to cast magic
+      ...CHARACTER_SPEAK('knight', 'determined', "I'll try magic words..."),
+      // ACTION: Failed spellcasting
+      { parallel: [{ action: 'animate', character: 'knight', anim: 'cast_spell' }, { action: 'text_popup', text: 'ABRA...CA...', position: 'center', size: 'large' }, { action: 'sfx', sound: 'magic' }], delayAfter: 0.6 },
+      { parallel: [{ action: 'react', effect: 'question-marks', position: 'center' }], delayAfter: 0.5 },
+      // CONSEQUENCE: Confused realization
+      ...EMOTIONAL_REACT('knight', 'confused', 'center'),
+      // RESOLUTION: No magic ability
+      ...DISAPPOINTMENT(['knight']),
+      ...NARRATOR("Knights don't have magical training — they need mages for spells!"),
     ],
     feedback: {
       title: '🪄 NOT A SPELLCASTER!',
@@ -79,11 +117,21 @@ const KNIGHT_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'funny_fail',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'door_iron', position: 'center' }, { action: 'spawn', asset: 'lock', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'knight', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'knight', emoji: '🔑' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'knight', anim: 'interact' }, { action: 'text_popup', text: '🔓 PICKING... 🔓', position: 'center', size: 'large' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'react', effect: 'explosion-cartoon', position: 'center' }, { action: 'text_popup', text: '🔨 GAUNTLET TOO BIG! 🔨', position: 'center', size: 'huge' }, { action: 'camera_shake', intensity: 0.5, duration: 0.5 }, { action: 'sfx', sound: 'fail' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'animate', character: 'knight', anim: 'idle' }, { action: 'emote', character: 'knight', emoji: '😬' }], delayAfter: 1.5 },
+      // SETUP: Locked door
+      ...NARRATOR("A locked door blocks the path..."),
+      { parallel: [{ action: 'spawn', asset: 'door_iron', position: 'center' }, { action: 'spawn', asset: 'lock', position: 'center' }, { action: 'spawn', asset: 'metal-gate', position: 'left' }, { action: 'spawn', asset: 'lantern', position: 'right' }, { action: 'spawn', asset: 'candlestick', position: 'ds-left' }, { action: 'sfx', sound: 'door' }], delayAfter: 0.5 },
+      ...ENTER_FROM_LEFT('knight'),
+      ...WALK_TO('knight', 'ds-center'),
+      // INTENT: Attempt lockpicking
+      ...CHARACTER_SPEAK('knight', 'determined', "I'll pick this lock..."),
+      // ACTION: Clumsy attempt with gauntlets
+      { parallel: [{ action: 'animate', character: 'knight', anim: 'interact' }, { action: 'text_popup', text: 'PICKING...', position: 'center', size: 'large' }], delayAfter: 0.6 },
+      { parallel: [{ action: 'react', effect: 'explosion-cartoon', position: 'center' }, { action: 'text_popup', text: 'GAUNTLET TOO BIG!', position: 'center', size: 'huge' }, { action: 'camera_shake', intensity: 0.5, duration: 0.5 }, { action: 'sfx', sound: 'impact' }], delayAfter: 0.5 },
+      // CONSEQUENCE: Awkward realization
+      ...EMOTIONAL_REACT('knight', 'embarrassed', 'center'),
+      // RESOLUTION: Wrong tool for the job
+      ...DISAPPOINTMENT(['knight']),
+      ...NARRATOR("Metal gauntlets are too bulky for delicate lockpicking — send a rogue instead!"),
     ],
     feedback: {
       title: '🔨 GAUNTLETS TOO BIG!',
@@ -99,11 +147,21 @@ const KNIGHT_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'partial',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'knight', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'knight', emoji: '🛡️' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'knight', anim: 'sword_slash' }, { action: 'text_popup', text: '🛡️ CLANG CLANG! 🛡️', position: 'center', size: 'huge' }, { action: 'camera_shake', intensity: 0.7, duration: 1.0 }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'react', effect: 'stars-spin', position: 'center' }, { action: 'text_popup', text: '💥 LOUD DISTRACTION! 💥', position: 'center', size: 'large' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'animate', character: 'knight', anim: 'wave' }, { action: 'react', effect: 'glow-pulse', position: 'center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
+      // SETUP: Distraction setup
+      ...NARRATOR("The knight prepares to create a diversion..."),
+      { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'door' }], delayAfter: 0.5 },
+      ...ENTER_FROM_LEFT('knight'),
+      ...RUN_TO('knight', 'cs-center'),
+      // INTENT: Plan to distract
+      ...CHARACTER_SPEAK('knight', 'mischievous', "I'll make some noise..."),
+      // ACTION: Loud sword-on-shield banging
+      { parallel: [{ action: 'animate', character: 'knight', anim: 'sword_slash' }, { action: 'text_popup', text: 'CLANG CLANG!', position: 'center', size: 'huge' }, { action: 'camera_shake', intensity: 0.7, duration: 1.0 }, { action: 'sfx', sound: 'impact' }], delayAfter: 0.6 },
+      { parallel: [{ action: 'react', effect: 'stars-spin', position: 'center' }, { action: 'text_popup', text: 'LOUD DISTRACTION!', position: 'center', size: 'large' }], delayAfter: 0.5 },
+      // CONSEQUENCE: Success but too loud
+      ...EMOTIONAL_REACT('knight', 'proud', 'center'),
+      // RESOLUTION: Partial success
+      ...CELEBRATION(['knight']),
+      ...NARRATOR("The distraction worked, but knights are too loud — subtlety isn't their strong suit!"),
     ],
     feedback: {
       title: '🛡️ LOUD DISTRACTION!',
@@ -119,11 +177,21 @@ const KNIGHT_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'crate_wood', position: 'center' }, { action: 'spawn', asset: 'barrel', position: 'right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'knight', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'knight', emoji: '💪' }], delayAfter: 0.4 },
-      { parallel: [{ action: 'animate', character: 'knight', anim: 'spin_attack' }, { action: 'text_popup', text: '💥 SMASH! 💥', position: 'top', size: 'huge' }, { action: 'react', effect: 'explosion-cartoon', position: 'center' }, { action: 'camera_shake', intensity: 0.8, duration: 0.8 }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
+      // SETUP: Obstacles in the way
+      ...NARRATOR("Crates and barrels block the passage..."),
+      { parallel: [{ action: 'spawn', asset: 'crate_wood', position: 'center' }, { action: 'spawn', asset: 'barrel', position: 'right' }, { action: 'spawn', asset: 'siege-catapult', position: 'us-left' }, { action: 'spawn', asset: 'cannon', position: 'us-right' }, { action: 'spawn', asset: 'cannonball', position: 'ds-right' }, { action: 'sfx', sound: 'impact' }], delayAfter: 0.5 },
+      ...CHARGE_IN_LEFT('knight'),
+      ...RUN_TO('knight', 'ds-center'),
+      // INTENT: Ready to smash
+      ...CHARACTER_EXCLAIM('knight', 'determined', 'SMASH TIME!'),
+      // ACTION: Destructive spin attack
+      { parallel: [{ action: 'animate', character: 'knight', anim: 'spin_attack' }, { action: 'text_popup', text: 'SMASH!', position: 'top', size: 'huge' }, { action: 'react', effect: 'explosion-cartoon', position: 'center' }, { action: 'camera_shake', intensity: 0.8, duration: 0.8 }, { action: 'sfx', sound: 'impact' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'explosion-cartoon', position: 'right' }, { action: 'screen_flash', color: 'orange', duration: 0.2 }], delayAfter: 0.5 },
-      { parallel: [{ action: 'animate', character: 'knight', anim: 'taunt' }, { action: 'react', effect: 'hearts-float', position: 'center' }, { action: 'text_popup', text: '🏆 SMASHED THROUGH! 🏆', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
+      // CONSEQUENCE: Victorious taunt
+      ...EMOTIONAL_REACT('knight', 'triumphant', 'center'),
+      // RESOLUTION: Perfect use of strength
+      ...CELEBRATION(['knight']),
+      ...NARRATOR("Knights excel at smashing obstacles — brute force is their specialty!"),
     ],
     feedback: {
       title: '💥 KNIGHT SMASH!',
@@ -143,10 +211,13 @@ const MAGE_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'funny_fail',
     steps: [
+      ...NARRATOR("The mage approaches the dungeon stage, staff glowing softly..."),
       { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'mage', position: 'left', anim: 'spawn_air' }, { action: 'emote', character: 'mage', emoji: '🤫' }], delayAfter: 0.4 },
+      { parallel: [{ action: 'spawn_character', character: 'mage', position: 'left', anim: 'spawn_air' }, { action: 'emote', character: 'mage', emoji: 'sneaky' }], delayAfter: 0.4 },
+      ...WALK_TO('mage', 'ds-center'),
+      ...CHARACTER_SPEAK('mage', 'nervous', "I'll dim my staff and sneak past..."),
       { parallel: [{ action: 'animate', character: 'mage', anim: 'walk' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'react', effect: 'glow-pulse', position: 'left' }, { action: 'text_popup', text: '✨ GLOWING STAFF ✨', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'animate', character: 'mage', anim: 'get_hit' }, { action: 'emote', character: 'mage', emoji: '😅' }, { action: 'text_popup', text: '💡 TOO BRIGHT! 💡', position: 'center', size: 'large' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'animate', character: 'mage', anim: 'get_hit' }, { action: 'emote', character: 'mage', emoji: 'nervous' }, { action: 'text_popup', text: '💡 TOO BRIGHT! 💡', position: 'center', size: 'large' }], delayAfter: 0.5 },
       { parallel: [{ action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
     ],
     feedback: {
@@ -163,15 +234,18 @@ const MAGE_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'funny_fail',
     steps: [
+      ...NARRATOR("The mage faces the arena, ready to prove their combat skills..."),
       { parallel: [{ action: 'spawn', asset: 'pillar_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'mage', position: 'left', anim: 'spawn_air' }, { action: 'emote', character: 'mage', emoji: '💪' }], delayAfter: 0.4 },
+      { parallel: [{ action: 'spawn_character', character: 'mage', position: 'left', anim: 'spawn_air' }, { action: 'emote', character: 'mage', emoji: 'heroic' }], delayAfter: 0.4 },
+      ...WALK_TO('mage', 'cs-center'),
+      ...CHARACTER_SPEAK('mage', 'proud', "I can fight without magic!"),
       { parallel: [{ action: 'animate', character: 'mage', anim: 'throw' }, { action: 'text_popup', text: '👊 WEAK PUNCH! 👊', position: 'center', size: 'large' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'animate', character: 'mage', anim: 'get_hit' }, { action: 'emote', character: 'mage', emoji: '😵' }, { action: 'react', effect: 'stars-spin', position: 'left' }, { action: 'text_popup', text: '💫 TOO WEAK! 💫', position: 'center', size: 'huge' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'animate', character: 'mage', anim: 'get_hit' }, { action: 'emote', character: 'mage', emoji: 'dizzy' }, { action: 'react', effect: 'stars-spin', position: 'left' }, { action: 'text_popup', text: '💫 WRONG SKILL! 💫', position: 'center', size: 'huge' }], delayAfter: 0.5 },
       { parallel: [{ action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
     ],
     feedback: {
-      title: '💪 TOO FRAIL!',
-      message: 'Mages are not built for hand-to-hand combat! Use magic instead of fists.',
+      title: '💪 WRONG SKILL!',
+      message: "Mages aren't fighters! Use magic instead of muscles.",
       skillTaught: 'Specificity',
       tip: 'Mages fight with spells, not swords!',
     },
@@ -183,8 +257,12 @@ const MAGE_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      ...NARRATOR("The concert hall awaits the mage's magical performance..."),
+      { parallel: [{ action: 'spawn', asset: 'concert_stage', position: 'center' }, { action: 'spawn', asset: 'microphone', position: 'left' }, { action: 'spawn', asset: 'drums', position: 'us-left' }, { action: 'spawn', asset: 'keyboard', position: 'us-right' }, { action: 'spawn', asset: 'bass_speakers', position: 'right' }, { action: 'spawn', asset: 'guitar_amp', position: 'ds-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'mage', position: 'left', anim: 'spawn_air' }, { action: 'emote', character: 'mage', emoji: '🪄' }], delayAfter: 0.4 },
+      ...WALK_TO('mage', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('microphone', 'left', 1.5),
+      ...CHARACTER_EXCLAIM('mage', 'excited', "Time for my grand spell!"),
       { parallel: [{ action: 'animate', character: 'mage', anim: 'cast_long' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'text_popup', text: '🪄 ARCANE POWER! 🪄', position: 'top', size: 'huge' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'explosion-cartoon', position: 'center' }, { action: 'react', effect: 'stars-spin', position: 'center' }, { action: 'screen_flash', color: 'purple', duration: 0.3 }, { action: 'camera_shake', intensity: 0.6, duration: 0.8 }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'mage', anim: 'jump_big' }, { action: 'react', effect: 'stars-spin', position: 'center' }, { action: 'text_popup', text: '✨ SPELL SUCCESS! ✨', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
@@ -203,11 +281,13 @@ const MAGE_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'funny_fail',
     steps: [
+      ...NARRATOR("A locked backstage door blocks the mage's path..."),
       { parallel: [{ action: 'spawn', asset: 'door_iron', position: 'center' }, { action: 'spawn', asset: 'lock', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'mage', position: 'left', anim: 'spawn_air' }, { action: 'emote', character: 'mage', emoji: '🔓' }], delayAfter: 0.4 },
+      ...WALK_TO('mage', 'ds-center'),
       { parallel: [{ action: 'animate', character: 'mage', anim: 'cast_spell' }, { action: 'text_popup', text: '🔮 UNLOCK SPELL! 🔮', position: 'center', size: 'large' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'explosion-cartoon', position: 'center' }, { action: 'text_popup', text: '💥 LOCK EXPLODES! 💥', position: 'center', size: 'huge' }, { action: 'camera_shake', intensity: 0.7, duration: 0.8 }], delayAfter: 0.5 },
-      { parallel: [{ action: 'animate', character: 'mage', anim: 'idle' }, { action: 'emote', character: 'mage', emoji: '😬' }, { action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
+      { parallel: [{ action: 'animate', character: 'mage', anim: 'idle' }, { action: 'emote', character: 'mage', emoji: 'worried' }, { action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
     ],
     feedback: {
       title: '💥 WRONG SPELL!',
@@ -223,8 +303,12 @@ const MAGE_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      ...NARRATOR("The mage prepares to create an illusion for the crowd..."),
+      { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'spawn', asset: 'cauldron_medieval', position: 'right' }, { action: 'spawn', asset: 'potion', position: 'ds-right' }, { action: 'spawn', asset: 'potion_bottle', position: 'ds-left' }, { action: 'spawn', asset: 'potion_flask', position: 'left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'mage', position: 'left', anim: 'spawn_air' }, { action: 'emote', character: 'mage', emoji: '🎭' }], delayAfter: 0.4 },
+      ...WALK_TO('mage', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('cauldron_medieval', 'right', 1.3),
+      ...CHARACTER_SPEAK('mage', 'mischievous', "Watch this magical illusion!"),
       { parallel: [{ action: 'animate', character: 'mage', anim: 'cast_spell' }, { action: 'text_popup', text: '🎪 ILLUSION SPELL! 🎪', position: 'center', size: 'large' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'hearts-float', position: 'right' }, { action: 'react', effect: 'stars-spin', position: 'center' }, { action: 'text_popup', text: '✨ MAGICAL DISTRACTION! ✨', position: 'center', size: 'huge' }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'mage', anim: 'Cheering' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
@@ -243,15 +327,17 @@ const MAGE_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'funny_fail',
     steps: [
+      ...NARRATOR("Obstacles block the way to the stage..."),
       { parallel: [{ action: 'spawn', asset: 'crate_wood', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'mage', position: 'left', anim: 'spawn_air' }, { action: 'emote', character: 'mage', emoji: '💪' }], delayAfter: 0.4 },
+      { parallel: [{ action: 'spawn_character', character: 'mage', position: 'left', anim: 'spawn_air' }, { action: 'emote', character: 'mage', emoji: 'heroic' }], delayAfter: 0.4 },
+      ...WALK_TO('mage', 'cs-left'),
       { parallel: [{ action: 'animate', character: 'mage', anim: 'throw' }, { action: 'text_popup', text: '🪄 WEAK HIT! 🪄', position: 'center', size: 'large' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'animate', character: 'mage', anim: 'get_hit' }, { action: 'emote', character: 'mage', emoji: '😓' }, { action: 'text_popup', text: '💫 NO STRENGTH! 💫', position: 'center', size: 'huge' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'animate', character: 'mage', anim: 'get_hit' }, { action: 'emote', character: 'mage', emoji: 'exhausted' }, { action: 'text_popup', text: '💫 NO STRENGTH! 💫', position: 'center', size: 'huge' }], delayAfter: 0.5 },
       { parallel: [{ action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
     ],
     feedback: {
-      title: '💪 TOO WEAK!',
-      message: 'Mages lack the strength to smash things! Use magic spells, not physical force.',
+      title: '💪 WRONG SKILL!',
+      message: 'Mages use spells, not muscles! Try a magic approach instead.',
       skillTaught: 'Specificity',
       tip: 'Mages use magic, not muscles!',
     },
@@ -267,10 +353,13 @@ const ROGUE_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      ...NARRATOR("Shadows fill the dungeon corridor as the rogue approaches..."),
       { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'spawn', asset: 'torch_wall', position: 'right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'rogue', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'rogue', emoji: '🤫' }], delayAfter: 0.4 },
+      { parallel: [{ action: 'spawn_character', character: 'rogue', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'rogue', emoji: 'sneaky' }], delayAfter: 0.4 },
+      ...WALK_TO('rogue', 'cs-center'),
+      ...CHARACTER_SPEAK('rogue', 'mischievous', "The shadows are my friends..."),
       { parallel: [{ action: 'animate', character: 'rogue', anim: 'walk' }, { action: 'text_popup', text: '👤 SILENT STEPS... 👤', position: 'center', size: 'large' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'emote', character: 'rogue', emoji: '😌' }, { action: 'text_popup', text: '✅ UNDETECTED! ✅', position: 'center', size: 'large' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'emote', character: 'rogue', emoji: 'grateful' }, { action: 'text_popup', text: '✅ UNDETECTED! ✅', position: 'center', size: 'large' }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'rogue', anim: 'taunt' }, { action: 'react', effect: 'hearts-float', position: 'center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
     ],
     feedback: {
@@ -287,8 +376,10 @@ const ROGUE_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'partial',
     steps: [
+      ...NARRATOR("The rogue enters the combat pit, daggers ready..."),
       { parallel: [{ action: 'spawn', asset: 'pillar_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'rogue', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'rogue', emoji: '🗡️' }], delayAfter: 0.4 },
+      ...RUN_TO('rogue', 'ds-center'),
       { parallel: [{ action: 'animate', character: 'rogue', anim: 'throw' }, { action: 'text_popup', text: '🗡️ QUICK STRIKES! 🗡️', position: 'center', size: 'large' }, { action: 'react', effect: 'stars-spin', position: 'center' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'explosion-cartoon', position: 'center' }, { action: 'camera_shake', intensity: 0.5, duration: 0.6 }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'rogue', anim: 'jump_big' }, { action: 'react', effect: 'stars-spin', position: 'center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
@@ -307,10 +398,13 @@ const ROGUE_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'funny_fail',
     steps: [
+      ...NARRATOR("The rogue tries to remember a spell they once heard..."),
       { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'rogue', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'rogue', emoji: '🪄' }], delayAfter: 0.4 },
+      ...WALK_TO('rogue', 'cs-center'),
+      ...CHARACTER_SPEAK('rogue', 'confused', "Was it abracadabra or...?"),
       { parallel: [{ action: 'animate', character: 'rogue', anim: 'cast_spell' }, { action: 'text_popup', text: '✨ UH... MAGIC? ✨', position: 'center', size: 'large' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'react', effect: 'question-marks', position: 'center' }, { action: 'emote', character: 'rogue', emoji: '❓' }, { action: 'text_popup', text: '🤷 NO MAGIC! 🤷', position: 'center', size: 'huge' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'react', effect: 'question-marks', position: 'center' }, { action: 'emote', character: 'rogue', emoji: 'confused' }, { action: 'text_popup', text: '🤷 NO MAGIC! 🤷', position: 'center', size: 'huge' }], delayAfter: 0.5 },
       { parallel: [{ action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
     ],
     feedback: {
@@ -327,8 +421,11 @@ const ROGUE_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
+      ...NARRATOR("A complex lock guards the treasure room door..."),
       { parallel: [{ action: 'spawn', asset: 'door_iron', position: 'center' }, { action: 'spawn', asset: 'lock', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'rogue', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'rogue', emoji: '🗝️' }], delayAfter: 0.4 },
+      ...WALK_TO('rogue', 'ds-center'),
+      ...CHARACTER_SPEAK('rogue', 'excited', "This lock won't stand a chance!"),
       { parallel: [{ action: 'animate', character: 'rogue', anim: 'interact' }, { action: 'text_popup', text: '🔓 EXPERT PICKING... 🔓', position: 'center', size: 'large' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'stars-spin', position: 'center' }, { action: 'text_popup', text: '✨ CLICK! ✨', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'rogue', anim: 'Cheering' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'text_popup', text: '🗝️ LOCK OPENED! 🗝️', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
@@ -347,8 +444,11 @@ const ROGUE_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      ...NARRATOR("The rogue spots an opportunity for mischief..."),
+      { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'spawn', asset: 'scroll', position: 'right' }, { action: 'spawn', asset: 'wolf', position: 'us-left' }, { action: 'spawn', asset: 'orc', position: 'us-right' }, { action: 'spawn', asset: 'barrel_medieval', position: 'left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'rogue', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'rogue', emoji: '🪙' }], delayAfter: 0.4 },
+      ...WALK_TO('rogue', 'cs-left'),
+      ...CHARACTER_SPEAK('rogue', 'mischievous', "A little coin trick should work..."),
       { parallel: [{ action: 'animate', character: 'rogue', anim: 'throw' }, { action: 'text_popup', text: '🪙 COIN TOSS! 🪙', position: 'top', size: 'large' }, { action: 'react', effect: 'sparkle-magic', position: 'right' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
       { parallel: [{ action: 'text_popup', text: '✨ DISTRACTION! ✨', position: 'right', size: 'large' }, { action: 'react', effect: 'stars-spin', position: 'right' }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'rogue', anim: 'wave' }, { action: 'react', effect: 'glow-pulse', position: 'center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
@@ -367,15 +467,17 @@ const ROGUE_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'funny_fail',
     steps: [
+      ...NARRATOR("A wooden crate stands in the rogue's path..."),
       { parallel: [{ action: 'spawn', asset: 'crate_wood', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'rogue', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'rogue', emoji: '💪' }], delayAfter: 0.4 },
+      { parallel: [{ action: 'spawn_character', character: 'rogue', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'rogue', emoji: 'heroic' }], delayAfter: 0.4 },
+      ...WALK_TO('rogue', 'cs-center'),
       { parallel: [{ action: 'animate', character: 'rogue', anim: 'throw' }, { action: 'text_popup', text: '🗡️ WEAK HIT! 🗡️', position: 'center', size: 'large' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'animate', character: 'rogue', anim: 'idle' }, { action: 'emote', character: 'rogue', emoji: '😬' }, { action: 'text_popup', text: '💪 NOT STRONG ENOUGH! 💪', position: 'center', size: 'huge' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'animate', character: 'rogue', anim: 'idle' }, { action: 'emote', character: 'rogue', emoji: 'worried' }, { action: 'text_popup', text: '💪 NOT STRONG ENOUGH! 💪', position: 'center', size: 'huge' }], delayAfter: 0.5 },
       { parallel: [{ action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
     ],
     feedback: {
-      title: '💪 TOO WEAK!',
-      message: 'Rogues lack the strength to smash! Use stealth or lockpicking instead.',
+      title: '💪 NOT THEIR STYLE!',
+      message: 'Rogues are sneaky, not strong! Use stealth or lockpicking instead.',
       skillTaught: 'Specificity',
       tip: 'Rogues are nimble, not strong. Try sneak or lockpick!',
     },
@@ -391,10 +493,13 @@ const SKELETON_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'funny_fail',
     steps: [
+      ...NARRATOR("The skeleton warrior rattles down the corridor..."),
       { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'skeleton_warrior', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'skeleton_warrior', emoji: '🤫' }], delayAfter: 0.4 },
+      { parallel: [{ action: 'spawn_character', character: 'skeleton_warrior', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'skeleton_warrior', emoji: 'sneaky' }], delayAfter: 0.4 },
+      ...WALK_TO('skeleton_warrior', 'cs-center'),
+      ...CHARACTER_SPEAK('skeleton_warrior', 'nervous', "I'll be quiet... bone quiet..."),
       { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'walk' }, { action: 'text_popup', text: '💀 RATTLE RATTLE RATTLE 💀', position: 'center', size: 'huge' }, { action: 'camera_shake', intensity: 0.5, duration: 1.0 }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'emote', character: 'skeleton_warrior', emoji: '😅' }, { action: 'text_popup', text: '🦴 TOO NOISY! 🦴', position: 'center', size: 'large' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'emote', character: 'skeleton_warrior', emoji: 'nervous' }, { action: 'text_popup', text: '🦴 TOO NOISY! 🦴', position: 'center', size: 'large' }], delayAfter: 0.5 },
       { parallel: [{ action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
     ],
     feedback: {
@@ -411,8 +516,13 @@ const SKELETON_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'pillar_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      ...NARRATOR("Bones clattering, the skeleton enters the battle arena..."),
+      { parallel: [{ action: 'spawn', asset: 'pillar_stone', position: 'center' }, { action: 'spawn', asset: 'sword', position: 'left' }, { action: 'spawn', asset: 'shield', position: 'right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'skeleton_warrior', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'skeleton_warrior', emoji: '⚔️' }], delayAfter: 0.4 },
+      ...RUN_TO('skeleton_warrior', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('sword', 'left', 1.5),
+      ...OBJECT_GROW_REVEAL('shield', 'right', 1.3),
+      ...CHARACTER_EXCLAIM('skeleton_warrior', 'heroic', "Time to rattle some bones!"),
       { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'spin_attack' }, { action: 'text_popup', text: '💀 BONE ATTACK! 💀', position: 'top', size: 'huge' }, { action: 'react', effect: 'explosion-cartoon', position: 'center' }, { action: 'camera_shake', intensity: 0.7, duration: 0.8 }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'stars-spin', position: 'center' }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'taunt' }, { action: 'react', effect: 'hearts-float', position: 'center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
@@ -431,11 +541,14 @@ const SKELETON_VIGNETTES: Vignette[] = [
     tier: 'absolute_chaos',
     promptScore: 'chaotic',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      ...NARRATOR("The skeleton attempts to channel dark energies..."),
+      { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'spawn', asset: 'skull_candle', position: 'left' }, { action: 'spawn', asset: 'ghost', position: 'right' }, { action: 'spawn', asset: 'bat', position: 'us-center' }, { action: 'spawn', asset: 'zombie', position: 'us-left' }, { action: 'spawn', asset: 'skeleton_creature', position: 'us-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'skeleton_warrior', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'skeleton_warrior', emoji: '🪄' }], delayAfter: 0.4 },
+      ...WALK_TO('skeleton_warrior', 'cs-center'),
+      ...CHARACTER_SPEAK('skeleton_warrior', 'confused', "How hard can dark magic be?"),
       { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'cast_spell' }, { action: 'text_popup', text: '💀 DARK MAGIC! 💀', position: 'center', size: 'large' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'explosion-cartoon', position: 'left' }, { action: 'text_popup', text: '🦴 BONES FALL APART! 🦴', position: 'center', size: 'huge' }, { action: 'camera_shake', intensity: 0.6, duration: 0.8 }], delayAfter: 0.5 },
-      { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'die_flop' }, { action: 'emote', character: 'skeleton_warrior', emoji: '😵' }, { action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
+      { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'die_flop' }, { action: 'emote', character: 'skeleton_warrior', emoji: 'dizzy' }, { action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
     ],
     feedback: {
       title: '🦴 BONES APART!',
@@ -451,8 +564,11 @@ const SKELETON_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'chaotic',
     steps: [
+      ...NARRATOR("The skeleton faces a locked door, bones ready..."),
       { parallel: [{ action: 'spawn', asset: 'door_iron', position: 'center' }, { action: 'spawn', asset: 'lock', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'skeleton_warrior', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'skeleton_warrior', emoji: '🦴' }], delayAfter: 0.4 },
+      ...WALK_TO('skeleton_warrior', 'ds-center'),
+      ...CHARACTER_SPEAK('skeleton_warrior', 'mischievous', "I've got the perfect skeleton key!"),
       { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'interact' }, { action: 'text_popup', text: '🦴 RIB BONE LOCKPICK! 🦴', position: 'center', size: 'large' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'stars-spin', position: 'center' }, { action: 'text_popup', text: '💀 LITERAL SKELETON KEY! 💀', position: 'center', size: 'huge' }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'jump_big' }, { action: 'react', effect: 'stars-spin', position: 'center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
@@ -471,8 +587,10 @@ const SKELETON_VIGNETTES: Vignette[] = [
     tier: 'absolute_chaos',
     promptScore: 'chaotic',
     steps: [
+      ...NARRATOR("The skeleton prepares a bone-chilling surprise..."),
       { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'skeleton_warrior', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'skeleton_warrior', emoji: '💀' }], delayAfter: 0.4 },
+      ...WALK_TO('skeleton_warrior', 'cs-center'),
       { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'throw' }, { action: 'text_popup', text: '💀 HEAD TOSS! 💀', position: 'top', size: 'huge' }, { action: 'react', effect: 'explosion-cartoon', position: 'right' }, { action: 'camera_shake', intensity: 0.7, duration: 0.8 }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'stars-spin', position: 'right' }, { action: 'text_popup', text: '😱 FLYING HEAD! 😱', position: 'right', size: 'large' }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'Cheering' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
@@ -491,8 +609,10 @@ const SKELETON_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'crate_wood', position: 'center' }, { action: 'spawn', asset: 'barrel', position: 'right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'skeleton_warrior', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'skeleton_warrior', emoji: '💪' }], delayAfter: 0.4 },
+      ...NARRATOR("Crates and barrels block the skeleton's path..."),
+      { parallel: [{ action: 'spawn', asset: 'crate_wood', position: 'center' }, { action: 'spawn', asset: 'barrel', position: 'right' }, { action: 'spawn', asset: 'siege-ballista', position: 'us-left' }, { action: 'spawn', asset: 'siege-trebuchet', position: 'us-right' }, { action: 'spawn', asset: 'drumstick', position: 'left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'spawn_character', character: 'skeleton_warrior', position: 'left', anim: 'spawn_ground' }, { action: 'emote', character: 'skeleton_warrior', emoji: 'heroic' }], delayAfter: 0.4 },
+      ...RUN_TO('skeleton_warrior', 'ds-center'),
       { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'spin_attack' }, { action: 'text_popup', text: '💀 BONE SMASH! 💀', position: 'top', size: 'huge' }, { action: 'react', effect: 'explosion-cartoon', position: 'center' }, { action: 'camera_shake', intensity: 0.8, duration: 0.8 }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'explosion-cartoon', position: 'right' }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'wave' }, { action: 'react', effect: 'glow-pulse', position: 'center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
@@ -515,10 +635,12 @@ const NECROMANCER_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'funny_fail',
     steps: [
+      ...NARRATOR("The necromancer glides through the shadows, dark energy swirling..."),
       { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'necromancer', position: 'left', anim: 'spawn_air' }, { action: 'emote', character: 'necromancer', emoji: '🤫' }], delayAfter: 0.4 },
+      { parallel: [{ action: 'spawn_character', character: 'necromancer', position: 'left', anim: 'spawn_air' }, { action: 'emote', character: 'necromancer', emoji: 'sneaky' }], delayAfter: 0.4 },
+      ...WALK_TO('necromancer', 'cs-center'),
       { parallel: [{ action: 'animate', character: 'necromancer', anim: 'walk' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'text_popup', text: '👻 ACCIDENTAL GHOSTS! 👻', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'react', effect: 'explosion-cartoon', position: 'right' }, { action: 'emote', character: 'necromancer', emoji: '😅' }, { action: 'text_popup', text: '💀 TOO SPOOKY! 💀', position: 'center', size: 'large' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'react', effect: 'explosion-cartoon', position: 'right' }, { action: 'emote', character: 'necromancer', emoji: 'nervous' }, { action: 'text_popup', text: '💀 TOO SPOOKY! 💀', position: 'center', size: 'large' }], delayAfter: 0.5 },
       { parallel: [{ action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
     ],
     feedback: {
@@ -535,8 +657,10 @@ const NECROMANCER_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'pillar_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      ...NARRATOR("The necromancer raises their staff, ready to summon allies..."),
+      { parallel: [{ action: 'spawn', asset: 'pillar_stone', position: 'center' }, { action: 'spawn', asset: 'grave', position: 'us-left' }, { action: 'spawn', asset: 'coffin', position: 'us-right' }, { action: 'spawn', asset: 'pumpkin_jackolantern', position: 'left' }, { action: 'spawn', asset: 'scarecrow', position: 'right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'necromancer', position: 'left', anim: 'spawn_air' }, { action: 'emote', character: 'necromancer', emoji: '💀' }], delayAfter: 0.4 },
+      ...WALK_TO('necromancer', 'cs-center'),
       { parallel: [{ action: 'animate', character: 'necromancer', anim: 'cast_spell' }, { action: 'text_popup', text: '💀 RAISE MINIONS! 💀', position: 'top', size: 'huge' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
       { parallel: [{ action: 'spawn_character', character: 'skeleton_minion', position: 'center', anim: 'spawn_ground' }, { action: 'react', effect: 'explosion-cartoon', position: 'center' }, { action: 'camera_shake', intensity: 0.7, duration: 0.8 }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'necromancer', anim: 'taunt' }, { action: 'react', effect: 'hearts-float', position: 'center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
@@ -555,8 +679,10 @@ const NECROMANCER_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
+      ...NARRATOR("Dark magic fills the air as the necromancer prepares..."),
       { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'necromancer', position: 'left', anim: 'spawn_air' }, { action: 'emote', character: 'necromancer', emoji: '🪄' }], delayAfter: 0.4 },
+      ...WALK_TO('necromancer', 'cs-center'),
       { parallel: [{ action: 'animate', character: 'necromancer', anim: 'cast_long' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'text_popup', text: '🌑 DARK MAGIC! 🌑', position: 'top', size: 'huge' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'explosion-cartoon', position: 'center' }, { action: 'react', effect: 'stars-spin', position: 'center' }, { action: 'screen_flash', color: 'purple', duration: 0.3 }, { action: 'camera_shake', intensity: 0.7, duration: 0.8 }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'necromancer', anim: 'jump_big' }, { action: 'react', effect: 'stars-spin', position: 'center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
@@ -575,8 +701,10 @@ const NECROMANCER_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'chaotic',
     steps: [
+      ...NARRATOR("A sealed door stands before the necromancer..."),
       { parallel: [{ action: 'spawn', asset: 'door_iron', position: 'center' }, { action: 'spawn', asset: 'lock', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'necromancer', position: 'left', anim: 'spawn_air' }, { action: 'emote', character: 'necromancer', emoji: '👻' }], delayAfter: 0.4 },
+      { parallel: [{ action: 'spawn_character', character: 'necromancer', position: 'left', anim: 'spawn_air' }, { action: 'emote', character: 'necromancer', emoji: 'ghost' }], delayAfter: 0.4 },
+      ...WALK_TO('necromancer', 'ds-center'),
       { parallel: [{ action: 'animate', character: 'necromancer', anim: 'cast_spell' }, { action: 'text_popup', text: '👻 SUMMON GHOST! 👻', position: 'center', size: 'large' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'text_popup', text: '💨 GHOST PHASES THROUGH! 💨', position: 'center', size: 'huge' }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'necromancer', anim: 'Cheering' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
@@ -595,8 +723,10 @@ const NECROMANCER_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
-      { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'necromancer', position: 'left', anim: 'spawn_air' }, { action: 'emote', character: 'necromancer', emoji: '👻' }], delayAfter: 0.4 },
+      ...NARRATOR("The necromancer begins channeling spectral energies..."),
+      { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'spawn', asset: 'demon', position: 'us-left' }, { action: 'spawn', asset: 'goblin', position: 'us-right' }, { action: 'spawn', asset: 'chest_wood', position: 'left' }, { action: 'spawn', asset: 'chest_closed', position: 'right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'spawn_character', character: 'necromancer', position: 'left', anim: 'spawn_air' }, { action: 'emote', character: 'necromancer', emoji: 'ghost' }], delayAfter: 0.4 },
+      ...WALK_TO('necromancer', 'cs-center'),
       { parallel: [{ action: 'animate', character: 'necromancer', anim: 'cast_spell' }, { action: 'text_popup', text: '👻 SPOOKY SPIRITS! 👻', position: 'top', size: 'huge' }, { action: 'react', effect: 'sparkle-magic', position: 'right' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'explosion-cartoon', position: 'right' }, { action: 'text_popup', text: '😱 GHOSTLY DISTRACTION! 😱', position: 'right', size: 'large' }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'necromancer', anim: 'wave' }, { action: 'react', effect: 'glow-pulse', position: 'center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
@@ -615,10 +745,12 @@ const NECROMANCER_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'funny_fail',
     steps: [
+      ...NARRATOR("The necromancer faces a physical barrier..."),
       { parallel: [{ action: 'spawn', asset: 'crate_wood', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn_character', character: 'necromancer', position: 'left', anim: 'spawn_air' }, { action: 'emote', character: 'necromancer', emoji: '💪' }], delayAfter: 0.4 },
+      { parallel: [{ action: 'spawn_character', character: 'necromancer', position: 'left', anim: 'spawn_air' }, { action: 'emote', character: 'necromancer', emoji: 'heroic' }], delayAfter: 0.4 },
+      ...WALK_TO('necromancer', 'cs-left'),
       { parallel: [{ action: 'animate', character: 'necromancer', anim: 'throw' }, { action: 'text_popup', text: '🪄 WEAK HIT! 🪄', position: 'center', size: 'large' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'animate', character: 'necromancer', anim: 'get_hit' }, { action: 'emote', character: 'necromancer', emoji: '😓' }, { action: 'text_popup', text: '💀 TOO FRAIL! 💀', position: 'center', size: 'huge' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'animate', character: 'necromancer', anim: 'get_hit' }, { action: 'emote', character: 'necromancer', emoji: 'exhausted' }, { action: 'text_popup', text: '💀 WRONG SKILL! 💀', position: 'center', size: 'huge' }], delayAfter: 0.5 },
       { parallel: [{ action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
     ],
     feedback: {
@@ -639,6 +771,7 @@ const TEAM_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'funny_fail',
     steps: [
+      ...NARRATOR("The adventuring party gathers to plan their stealth approach..."),
       { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'knight', position: 'left', anim: 'spawn_ground' }, { action: 'spawn_character', character: 'mage', position: 'left', anim: 'spawn_air' }, { action: 'spawn_character', character: 'rogue', position: 'left', anim: 'spawn_ground' }], delayAfter: 0.4 },
       { parallel: [{ action: 'crowd_react', characters: ['knight', 'mage', 'rogue'], anim: 'idle' }, { action: 'text_popup', text: '🤫 SHHH! 🤫', position: 'top', size: 'large' }], delayAfter: 0.6 },
@@ -659,10 +792,12 @@ const TEAM_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
+      ...NARRATOR("The team assembles for a coordinated assault..."),
       { parallel: [{ action: 'spawn', asset: 'pillar_stone', position: 'left' }, { action: 'spawn', asset: 'pillar_stone', position: 'right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'knight', position: 'left', anim: 'spawn_ground' }, { action: 'spawn_character', character: 'mage', position: 'left', anim: 'spawn_air' }, { action: 'spawn_character', character: 'rogue', position: 'left', anim: 'spawn_ground' }], delayAfter: 0.4 },
       { parallel: [{ action: 'crowd_react', characters: ['knight', 'mage', 'rogue'], anim: 'taunt' }, { action: 'text_popup', text: '⚔️ TEAM ATTACK! ⚔️', position: 'top', size: 'huge' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
       { parallel: [{ action: 'animate', character: 'knight', anim: 'sword_slash' }, { action: 'animate', character: 'mage', anim: 'cast_spell' }, { action: 'animate', character: 'rogue', anim: 'throw' }, { action: 'react', effect: 'explosion-cartoon', position: 'center' }, { action: 'camera_shake', intensity: 0.9, duration: 1.5 }], delayAfter: 0.5 },
+      ...CROWD_CHEER(['knight', 'mage', 'rogue']),
       { parallel: [{ action: 'animate', character: 'knight', anim: 'taunt' }, { action: 'animate', character: 'mage', anim: 'jump_big' }, { action: 'animate', character: 'rogue', anim: 'Cheering' }, { action: 'react', effect: 'hearts-float', position: 'center' }, { action: 'text_popup', text: '🏆 TEAM VICTORY! 🏆', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
     ],
     feedback: {
@@ -679,6 +814,7 @@ const TEAM_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'funny_fail',
     steps: [
+      ...NARRATOR("The party tries to combine their magical abilities..."),
       { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'knight', position: 'left', anim: 'spawn_ground' }, { action: 'spawn_character', character: 'mage', position: 'left', anim: 'spawn_air' }, { action: 'spawn_character', character: 'rogue', position: 'left', anim: 'spawn_ground' }], delayAfter: 0.4 },
       { parallel: [{ action: 'crowd_react', characters: ['knight', 'mage', 'rogue'], anim: 'cast_spell' }, { action: 'text_popup', text: '🪄 EVERYONE CASTS! 🪄', position: 'top', size: 'large' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
@@ -699,10 +835,11 @@ const TEAM_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'partial',
     steps: [
+      ...NARRATOR("The team surrounds a locked door, each ready to help..."),
       { parallel: [{ action: 'spawn', asset: 'door_iron', position: 'center' }, { action: 'spawn', asset: 'lock', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'knight', position: 'left', anim: 'spawn_ground' }, { action: 'spawn_character', character: 'mage', position: 'left', anim: 'spawn_air' }, { action: 'spawn_character', character: 'rogue', position: 'left', anim: 'spawn_ground' }], delayAfter: 0.4 },
       { parallel: [{ action: 'animate', character: 'rogue', anim: 'interact' }, { action: 'text_popup', text: '🔓 ROGUE PICKS... 🔓', position: 'center', size: 'large' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
-      { parallel: [{ action: 'emote', character: 'knight', emoji: '👀' }, { action: 'emote', character: 'mage', emoji: '👀' }, { action: 'text_popup', text: '👀 OTHERS JUST WATCH 👀', position: 'top', size: 'large' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'emote', character: 'knight', emoji: 'suspicious' }, { action: 'emote', character: 'mage', emoji: 'suspicious' }, { action: 'text_popup', text: '👀 OTHERS JUST WATCH 👀', position: 'top', size: 'large' }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'rogue', anim: 'wave' }, { action: 'react', effect: 'stars-spin', position: 'center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
     ],
     feedback: {
@@ -719,6 +856,7 @@ const TEAM_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
+      ...NARRATOR("The adventurers prepare a multi-pronged distraction..."),
       { parallel: [{ action: 'spawn', asset: 'wall_stone', position: 'center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'knight', position: 'left', anim: 'spawn_ground' }, { action: 'spawn_character', character: 'mage', position: 'left', anim: 'spawn_air' }, { action: 'spawn_character', character: 'rogue', position: 'left', anim: 'spawn_ground' }], delayAfter: 0.4 },
       { parallel: [{ action: 'animate', character: 'knight', anim: 'sword_slash' }, { action: 'animate', character: 'mage', anim: 'cast_spell' }, { action: 'animate', character: 'rogue', anim: 'throw' }, { action: 'text_popup', text: '🎪 CHAOS DISTRACTION! 🎪', position: 'top', size: 'huge' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
@@ -739,6 +877,7 @@ const TEAM_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
+      ...NARRATOR("The team faces obstacles that need breaking..."),
       { parallel: [{ action: 'spawn', asset: 'crate_wood', position: 'center' }, { action: 'spawn', asset: 'barrel', position: 'right' }, { action: 'spawn', asset: 'barrel', position: 'left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn_character', character: 'knight', position: 'left', anim: 'spawn_ground' }, { action: 'spawn_character', character: 'mage', position: 'left', anim: 'spawn_air' }, { action: 'spawn_character', character: 'rogue', position: 'left', anim: 'spawn_ground' }], delayAfter: 0.4 },
       { parallel: [{ action: 'crowd_react', characters: ['knight', 'mage', 'rogue'], anim: 'spin_attack' }, { action: 'text_popup', text: '💥 TEAM SMASH! 💥', position: 'top', size: 'huge' }, { action: 'react', effect: 'explosion-cartoon', position: 'center' }, { action: 'camera_shake', intensity: 0.9, duration: 1.2 }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
@@ -836,7 +975,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'skeleton_warrior', position: 'right', anim: 'spawn_ground' },
-          { action: 'emote', character: 'skeleton_warrior', emoji: '💤' },
+          { action: 'emote', character: 'skeleton_warrior', emoji: 'sleeping' },
           { action: 'text_popup', text: '💤 GUARD ASLEEP 💤', position: 'top', size: 'large' },
         ],
         delayAfter: 0.5,
@@ -854,7 +993,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'skeleton_warrior', anim: 'idle' },
-          { action: 'emote', character: 'skeleton_warrior', emoji: '❗' },
+          { action: 'emote', character: 'skeleton_warrior', emoji: 'shocked' },
           { action: 'text_popup', text: '🚨 ALARM! 🚨', position: 'top', size: 'huge' },
           { action: 'sfx', sound: 'fail' },
         ],
@@ -863,7 +1002,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'knight', anim: 'get_hit' },
-          { action: 'emote', character: 'knight', emoji: '😱' },
+          { action: 'emote', character: 'knight', emoji: 'scared' },
           { action: 'react', effect: 'stars-spin', position: 'left' },
         ],
         delayAfter: 2.0,
@@ -967,6 +1106,9 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
         parallel: [
           { action: 'spawn', asset: 'floor_stone', position: 'center' },
           { action: 'spawn', asset: 'crate_wood', position: 'right' },
+          { action: 'spawn', asset: 'bridge-straight', position: 'us-center' },
+          { action: 'spawn', asset: 'wall-doorway', position: 'us-right' },
+          { action: 'spawn', asset: 'pitchfork', position: 'left' },
           { action: 'sfx', sound: 'spawn' },
         ],
         delayAfter: 0.5,
@@ -974,7 +1116,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'clown', position: 'left', anim: 'spawn_air' },
-          { action: 'emote', character: 'clown', emoji: '🤡' },
+          { action: 'emote', character: 'clown', emoji: 'silly' },
         ],
         delayAfter: 0.5,
       },
@@ -1000,7 +1142,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'clown', anim: 'get_hit' },
-          { action: 'emote', character: 'clown', emoji: '😵' },
+          { action: 'emote', character: 'clown', emoji: 'dizzy' },
           { action: 'react', effect: 'stars-spin', position: 'left' },
         ],
         delayAfter: 2.0,
@@ -1038,7 +1180,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'skeleton_warrior', position: 'center', anim: 'spawn_ground' },
-          { action: 'emote', character: 'skeleton_warrior', emoji: '💤' },
+          { action: 'emote', character: 'skeleton_warrior', emoji: 'sleeping' },
           { action: 'text_popup', text: '💤 GUARD PATROL 💤', position: 'top', size: 'large' },
         ],
         delayAfter: 0.5,
@@ -1061,7 +1203,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       },
       {
         parallel: [
-          { action: 'emote', character: 'skeleton_warrior', emoji: '💤' },
+          { action: 'emote', character: 'skeleton_warrior', emoji: 'sleeping' },
         ],
         delayAfter: 0.5,
       },
@@ -1099,6 +1241,10 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
         parallel: [
           { action: 'spawn', asset: 'door_iron', position: 'center' },
           { action: 'spawn', asset: 'lock', position: 'center' },
+          { action: 'spawn', asset: 'lantern_hanging', position: 'us-left' },
+          { action: 'spawn', asset: 'lantern_standing', position: 'us-right' },
+          { action: 'spawn', asset: 'wagon', position: 'left' },
+          { action: 'spawn', asset: 'key', position: 'right' },
           { action: 'sfx', sound: 'spawn' },
         ],
         delayAfter: 0.5,
@@ -1175,7 +1321,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
         parallel: [
           { action: 'spawn_character', character: 'necromancer', position: 'left', anim: 'spawn_air' },
           { action: 'react', effect: 'sparkle-magic', position: 'left' },
-          { action: 'emote', character: 'necromancer', emoji: '👻' },
+          { action: 'emote', character: 'necromancer', emoji: 'ghost' },
         ],
         delayAfter: 0.5,
       },
@@ -1250,6 +1396,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
         ],
         delayAfter: 0.5,
       },
+      ...RUN_TO('knight', 'ds-center'),
       {
         parallel: [
           { action: 'animate', character: 'knight', anim: 'sword_slash' },
@@ -1325,7 +1472,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'rogue', anim: 'idle' },
-          { action: 'emote', character: 'rogue', emoji: '😌' },
+          { action: 'emote', character: 'rogue', emoji: 'grateful' },
         ],
         delayAfter: 1.0,
       },
@@ -1372,7 +1519,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'mage', position: 'left', anim: 'spawn_air' },
-          { action: 'emote', character: 'mage', emoji: '🤔' },
+          { action: 'emote', character: 'mage', emoji: 'thinking' },
         ],
         delayAfter: 0.3,
       },
@@ -1398,7 +1545,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'mage', anim: 'Cheering' },
-          { action: 'emote', character: 'mage', emoji: '😎' },
+          { action: 'emote', character: 'mage', emoji: 'cool' },
         ],
         delayAfter: 2.0,
       },
@@ -1436,8 +1583,8 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
         parallel: [
           { action: 'spawn_character', character: 'skeleton_warrior', position: 'center', anim: 'spawn_ground' },
           { action: 'spawn_character', character: 'skeleton_mage', position: 'right', anim: 'spawn_air' },
-          { action: 'emote', character: 'skeleton_warrior', emoji: '💤' },
-          { action: 'emote', character: 'skeleton_mage', emoji: '💤' },
+          { action: 'emote', character: 'skeleton_warrior', emoji: 'sleeping' },
+          { action: 'emote', character: 'skeleton_mage', emoji: 'sleeping' },
         ],
         delayAfter: 0.5,
       },
@@ -1446,7 +1593,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
           { action: 'spawn_character', character: 'knight', position: 'left', anim: 'spawn_ground' },
           { action: 'spawn_character', character: 'mage', position: 'left', anim: 'spawn_air' },
           { action: 'spawn_character', character: 'rogue', position: 'left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'knight', emoji: '🤫' },
+          { action: 'emote', character: 'knight', emoji: 'sneaky' },
           { action: 'sfx', sound: 'spawn' },
         ],
         delayAfter: 0.5,
@@ -1511,7 +1658,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'skeleton_warrior', position: 'right', anim: 'spawn_ground' },
-          { action: 'emote', character: 'skeleton_warrior', emoji: '💤' },
+          { action: 'emote', character: 'skeleton_warrior', emoji: 'sleeping' },
           { action: 'text_popup', text: '💤 GUARD ON DUTY 💤', position: 'top', size: 'large' },
         ],
         delayAfter: 0.5,
@@ -1536,7 +1683,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'skeleton_warrior', anim: 'idle' },
-          { action: 'emote', character: 'skeleton_warrior', emoji: '❓' },
+          { action: 'emote', character: 'skeleton_warrior', emoji: 'confused' },
           { action: 'react', effect: 'question-marks', position: 'right' },
         ],
         delayAfter: 0.5,
@@ -1581,7 +1728,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'necromancer', position: 'left', anim: 'spawn_air' },
-          { action: 'emote', character: 'necromancer', emoji: '🤫' },
+          { action: 'emote', character: 'necromancer', emoji: 'sneaky' },
         ],
         delayAfter: 0.5,
       },
@@ -1644,7 +1791,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'rogue', position: 'left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'rogue', emoji: '🤫' },
+          { action: 'emote', character: 'rogue', emoji: 'sneaky' },
           { action: 'text_popup', text: '🔒 LOCKED DOOR 🔒', position: 'top', size: 'large' },
         ],
         delayAfter: 0.5,
@@ -1709,7 +1856,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'barbarian', position: 'left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'barbarian', emoji: '😤' },
+          { action: 'emote', character: 'barbarian', emoji: 'angry' },
         ],
         delayAfter: 0.3,
       },
@@ -1735,7 +1882,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'barbarian', anim: 'celebrate' },
-          { action: 'emote', character: 'barbarian', emoji: '😅' },
+          { action: 'emote', character: 'barbarian', emoji: 'nervous' },
           { action: 'react', effect: 'stars-spin', position: 'center' },
         ],
         delayAfter: 2.0,
@@ -1909,7 +2056,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'mage', position: 'left', anim: 'spawn_air' },
-          { action: 'emote', character: 'mage', emoji: '🤫' },
+          { action: 'emote', character: 'mage', emoji: 'sneaky' },
         ],
         delayAfter: 0.5,
       },
@@ -1979,7 +2126,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'barbarian', position: 'left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'barbarian', emoji: '💪' },
+          { action: 'emote', character: 'barbarian', emoji: 'heroic' },
         ],
         delayAfter: 0.3,
       },
@@ -2003,7 +2150,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'barbarian', anim: 'taunt' },
-          { action: 'emote', character: 'barbarian', emoji: '😅' },
+          { action: 'emote', character: 'barbarian', emoji: 'nervous' },
           { action: 'react', effect: 'sparkle-magic', position: 'center' },
           { action: 'text_popup', text: '📦 CHEST "OPENED"! 📦', position: 'center', size: 'huge' },
           { action: 'sfx', sound: 'success' },
@@ -2068,8 +2215,8 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       },
       {
         parallel: [
-          { action: 'emote', character: 'skeleton_warrior', emoji: '❓' },
-          { action: 'emote', character: 'skeleton_mage', emoji: '❓' },
+          { action: 'emote', character: 'skeleton_warrior', emoji: 'confused' },
+          { action: 'emote', character: 'skeleton_mage', emoji: 'confused' },
           { action: 'react', effect: 'question-marks', position: 'center' },
         ],
         delayAfter: 1.0,
@@ -2095,7 +2242,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       vagueResult: "Necromancer waves at skeletons",
       specific: "The necromancer INVISIBLY distracts the skeleton army SLOWLY",
       specificResult: "Invisible voice slowly drives skeletons crazy!",
-      why: "Invisible and slow create psychological warfare!",
+      why: "Invisible and slow create spooky mind tricks!",
     },
   },
 
@@ -2185,14 +2332,14 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'knight', position: 'left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'knight', emoji: '🤔' },
+          { action: 'emote', character: 'knight', emoji: 'thinking' },
         ],
         delayAfter: 0.5,
       },
       {
         parallel: [
           { action: 'animate', character: 'knight', anim: 'sword_slash' },
-          { action: 'emote', character: 'knight', emoji: '🤫' },
+          { action: 'emote', character: 'knight', emoji: 'sneaky' },
           { action: 'react', effect: 'smoke', position: 'center' },
           { action: 'text_popup', text: '🤫💥 QUIET SMASH? 💥🤫', position: 'center', size: 'large' },
         ],
@@ -2209,7 +2356,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'knight', anim: 'get_hit' },
-          { action: 'emote', character: 'knight', emoji: '😅' },
+          { action: 'emote', character: 'knight', emoji: 'nervous' },
           { action: 'react', effect: 'question-marks', position: 'left' },
         ],
         delayAfter: 2.0,
@@ -2248,7 +2395,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'skeleton_warrior', position: 'center', anim: 'spawn_ground' },
-          { action: 'emote', character: 'skeleton_warrior', emoji: '💤' },
+          { action: 'emote', character: 'skeleton_warrior', emoji: 'sleeping' },
           { action: 'text_popup', text: '💤 GUARD DUTY 💤', position: 'top', size: 'large' },
         ],
         delayAfter: 0.5,
@@ -2275,7 +2422,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'skeleton_warrior', anim: 'idle' },
-          { action: 'emote', character: 'skeleton_warrior', emoji: '❓' },
+          { action: 'emote', character: 'skeleton_warrior', emoji: 'confused' },
           { action: 'react', effect: 'question-marks', position: 'center' },
         ],
         delayAfter: 0.8,
@@ -2324,7 +2471,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'skeleton', position: 'left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'skeleton', emoji: '🤫' },
+          { action: 'emote', character: 'skeleton', emoji: 'sneaky' },
           { action: 'text_popup', text: '🚪 LOCKED DOOR 🚪', position: 'top', size: 'large' },
         ],
         delayAfter: 0.5,
@@ -2341,7 +2488,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       },
       {
         parallel: [
-          { action: 'emote', character: 'skeleton', emoji: '😱' },
+          { action: 'emote', character: 'skeleton', emoji: 'scared' },
           { action: 'text_popup', text: '🚨 GUARDS ALERTED! 🚨', position: 'center', size: 'huge' },
           { action: 'sfx', sound: 'fail' },
         ],
@@ -2399,7 +2546,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'rogue', anim: 'idle' },
-          { action: 'emote', character: 'rogue', emoji: '😏' },
+          { action: 'emote', character: 'rogue', emoji: 'smirk' },
           { action: 'text_popup', text: '🚪 INSPECTING DOOR... 🚪', position: 'center', size: 'large' },
         ],
         delayAfter: 0.5,
@@ -2510,6 +2657,9 @@ export const DUNGEON_CONCERT_STAGE_3: Vignette[] = [
           { action: 'spawn', asset: 'pillar_stone', position: 'left' },
           { action: 'spawn', asset: 'pillar_stone', position: 'right' },
           { action: 'spawn', asset: 'throne', position: 'center' },
+          { action: 'spawn', asset: 'stairs-stone', position: 'ds-center' },
+          { action: 'spawn', asset: 'tower-square', position: 'us-left' },
+          { action: 'spawn', asset: 'banner_blue', position: 'us-right' },
           { action: 'text_popup', text: '👑 THRONE ROOM 👑', position: 'top', size: 'large' },
           { action: 'sfx', sound: 'spawn' },
         ],
@@ -2518,7 +2668,7 @@ export const DUNGEON_CONCERT_STAGE_3: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'skeleton_warrior', position: 'center', anim: 'spawn_ground' },
-          { action: 'emote', character: 'skeleton_warrior', emoji: '💤' },
+          { action: 'emote', character: 'skeleton_warrior', emoji: 'sleeping' },
         ],
         delayAfter: 0.5,
       },
@@ -2567,7 +2717,7 @@ export const DUNGEON_CONCERT_STAGE_3: Vignette[] = [
     ],
     feedback: {
       title: '🌑 SECRET COMBO: SHADOW STRIKE!',
-      message: "You discovered SHADOW STRIKE! Sneak + Fight + Shadow = stealth assassination. The ultimate rogue technique!",
+      message: "You discovered SHADOW STRIKE! Sneak + Fight + Shadow = silent victory. The ultimate rogue move!",
       skillTaught: 'Combo Thinking',
       tip: "Combining opposite skills creates powerful new moves!",
     },
@@ -2587,6 +2737,11 @@ export const DUNGEON_CONCERT_STAGE_3: Vignette[] = [
           { action: 'spawn', asset: 'lock', position: 'center' },
           { action: 'spawn', asset: 'crate_wood', position: 'left' },
           { action: 'spawn', asset: 'crate_wood', position: 'right' },
+          { action: 'spawn', asset: 'chest_gold_item', position: 'us-left' },
+          { action: 'spawn', asset: 'gold_bag', position: 'us-right' },
+          { action: 'spawn', asset: 'coin_item', position: 'ds-left' },
+          { action: 'spawn', asset: 'gem_blue', position: 'ds-center' },
+          { action: 'spawn', asset: 'gem_green', position: 'ds-right' },
           { action: 'text_popup', text: '💰 TREASURY 💰', position: 'top', size: 'large' },
           { action: 'sfx', sound: 'spawn' },
         ],
@@ -2654,6 +2809,10 @@ export const DUNGEON_CONCERT_STAGE_3: Vignette[] = [
           { action: 'spawn', asset: 'wall_stone', position: 'center' },
           { action: 'spawn', asset: 'barrel', position: 'left' },
           { action: 'spawn', asset: 'barrel', position: 'right' },
+          { action: 'spawn', asset: 'speaker', position: 'us-left' },
+          { action: 'spawn', asset: 'floor_monitor', position: 'us-right' },
+          { action: 'spawn', asset: 'effects_pedal', position: 'ds-left' },
+          { action: 'spawn', asset: 'headphones', position: 'ds-right' },
           { action: 'text_popup', text: '⚔️ ARMORY ⚔️', position: 'top', size: 'large' },
           { action: 'sfx', sound: 'spawn' },
         ],
@@ -2662,14 +2821,14 @@ export const DUNGEON_CONCERT_STAGE_3: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'skeleton_warrior', position: 'center', anim: 'spawn_ground' },
-          { action: 'emote', character: 'skeleton_warrior', emoji: '👀' },
+          { action: 'emote', character: 'skeleton_warrior', emoji: 'suspicious' },
         ],
         delayAfter: 0.5,
       },
       {
         parallel: [
           { action: 'spawn_character', character: 'clown', position: 'left', anim: 'spawn_air' },
-          { action: 'emote', character: 'clown', emoji: '🎵' },
+          { action: 'emote', character: 'clown', emoji: 'musical' },
         ],
         delayAfter: 0.5,
       },
@@ -2684,7 +2843,7 @@ export const DUNGEON_CONCERT_STAGE_3: Vignette[] = [
       },
       {
         parallel: [
-          { action: 'emote', character: 'skeleton_warrior', emoji: '🤔' },
+          { action: 'emote', character: 'skeleton_warrior', emoji: 'thinking' },
           { action: 'react', effect: 'question-marks', position: 'center' },
         ],
         delayAfter: 0.5,
@@ -2722,7 +2881,7 @@ export const DUNGEON_CONCERT_STAGE_3: Vignette[] = [
   // ── SECRET COMBO 4: fight + magic = "Spell Blade" ──────────────────────────
   {
     id: 'dc3_spell_blade',
-    description: 'Combining fighting with magic creates Spell Blade — enchanted weapon combat.',
+    description: 'Combining fighting with magic creates Spell Blade — enchanted sword skills.',
     trigger: { method1: 'fight', method2: 'magic', element: 'ice', room: 'library' },
     tier: 'spectacular',
     promptScore: 'perfect',
@@ -2732,6 +2891,10 @@ export const DUNGEON_CONCERT_STAGE_3: Vignette[] = [
           { action: 'spawn', asset: 'wall_stone', position: 'left' },
           { action: 'spawn', asset: 'wall_stone', position: 'right' },
           { action: 'spawn', asset: 'crate_wood', position: 'center' },
+          { action: 'spawn', asset: 'book', position: 'us-left' },
+          { action: 'spawn', asset: 'bookstand', position: 'us-right' },
+          { action: 'spawn', asset: 'scroll_ancient', position: 'ds-left' },
+          { action: 'spawn', asset: 'bridge-draw', position: 'ds-right' },
           { action: 'text_popup', text: '📚 LIBRARY 📚', position: 'top', size: 'large' },
           { action: 'sfx', sound: 'spawn' },
         ],
@@ -2791,9 +2954,9 @@ export const DUNGEON_CONCERT_STAGE_3: Vignette[] = [
     ],
     feedback: {
       title: '🗡️ SECRET COMBO: SPELL BLADE!',
-      message: "You discovered SPELL BLADE! Fight + Magic + Ice = enchanted weapon attacks. Sword meets sorcery!",
+      message: "You discovered SPELL BLADE! Fight + Magic + Ice = enchanted sword moves. Sword meets sorcery!",
       skillTaught: 'Combo Thinking',
-      tip: "Magic enhances physical combat for devastating combos!",
+      tip: "Magic enhances sword skills for powerful combos!",
     },
   },
 
@@ -2818,7 +2981,7 @@ export const DUNGEON_CONCERT_STAGE_3: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'skeleton_warrior', position: 'center', anim: 'spawn_ground' },
-          { action: 'emote', character: 'skeleton_warrior', emoji: '👀' },
+          { action: 'emote', character: 'skeleton_warrior', emoji: 'suspicious' },
         ],
         delayAfter: 0.5,
       },
@@ -2842,7 +3005,7 @@ export const DUNGEON_CONCERT_STAGE_3: Vignette[] = [
       {
         parallel: [
           { action: 'animate', character: 'skeleton_warrior', anim: 'idle' },
-          { action: 'emote', character: 'skeleton_warrior', emoji: '❓' },
+          { action: 'emote', character: 'skeleton_warrior', emoji: 'confused' },
           { action: 'react', effect: 'question-marks', position: 'center' },
         ],
         delayAfter: 0.5,
@@ -2905,7 +3068,7 @@ export const DUNGEON_CONCERT_STAGE_3: Vignette[] = [
       },
       {
         parallel: [
-          { action: 'emote', character: 'rogue', emoji: '😤' },
+          { action: 'emote', character: 'rogue', emoji: 'angry' },
           { action: 'text_popup', text: '❌ LOCK TOO HARD! ❌', position: 'center', size: 'large' },
           { action: 'sfx', sound: 'fail' },
         ],
@@ -2984,7 +3147,7 @@ export const DUNGEON_CONCERT_DEFAULT_3: Vignette = {
     },
     {
       parallel: [
-        { action: 'emote', character: 'knight', emoji: '❓' },
+        { action: 'emote', character: 'knight', emoji: 'confused' },
         { action: 'react', effect: 'question-marks', position: 'center' },
         { action: 'text_popup', text: '💭 NO COMBO FOUND 💭', position: 'center', size: 'large' },
       ],

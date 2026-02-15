@@ -15,7 +15,9 @@ import { CHARACTERS, ASSET_BASE } from './data/asset-manifest';
 import { PLAYER_CHARACTERS } from './data/player-characters';
 import { WORLDS } from './data/worlds';
 import { BADGES } from './services/badge-system';
-import { getQuestStage, getQuestStages } from './data/quest-stages';
+import { getQuestStage, getQuestStages, getLevel4Stage, getLevel5Stage } from './data/quest-stages';
+import Level4Input from './components/Level4Input';
+import Level5Input from './components/Level5Input';
 import CameraControls from './components/CameraControls';
 import { Minimap } from './game/Minimap';
 import ControlsOverlay from './components/ControlsOverlay';
@@ -124,17 +126,22 @@ export default function App() {
               <span className="text-sm font-heading font-bold text-quest-text-dark bg-white/80 px-3 py-1.5 rounded-xl border border-quest-purple/20 flex items-center gap-2">
                 <span>{world.emoji} {world.label}</span>
                 {currentZone && (() => {
-                  const totalStages = getQuestStages(currentZone).length;
-                  if (totalStages <= 1) return null;
+                  const madLibStages = getQuestStages(currentZone).length;
+                  // Total dots: mad-libs stages + Level 4 + Level 5
+                  const totalDots = madLibStages + 2;
                   return (
                     <span className="flex items-center gap-0.5 text-xs">
-                      <span className="text-quest-text-muted">Lv{stageNumber}</span>
+                      <span className="text-quest-text-muted">
+                        {stageNumber <= madLibStages ? `Lv${stageNumber}` : stageNumber === 4 ? 'Free Text' : 'Full Prompt'}
+                      </span>
                       <span className="flex gap-0.5">
-                        {Array.from({ length: totalStages }, (_, i) => (
+                        {Array.from({ length: totalDots }, (_, i) => (
                           <span
                             key={i}
                             className={`w-1.5 h-1.5 rounded-full ${
-                              i < stageNumber ? 'bg-quest-purple' : 'bg-quest-border'
+                              i < stageNumber
+                                ? i < madLibStages ? 'bg-quest-purple' : i === madLibStages ? 'bg-quest-orange' : 'bg-quest-yellow'
+                                : 'bg-quest-border'
                             }`}
                           />
                         ))}
@@ -180,11 +187,19 @@ export default function App() {
             </div>
           </div>
 
-          {/* Input Panel — Mad Libs if quest stage exists, otherwise free-text */}
+          {/* Input Panel — routes to Mad Libs (L1-3), Level4Input (L4), Level5Input (L5), or free-text */}
           {!expanded && !playingIntro && (
             currentZone ? (
               <div className="transition-opacity duration-500">
-                {questStage ? <MadLibsInput stage={questStage} /> : <PromptInput />}
+                {stageNumber >= 5 && getLevel5Stage(currentZone) ? (
+                  <Level5Input stage={getLevel5Stage(currentZone)!} />
+                ) : stageNumber === 4 && getLevel4Stage(currentZone) ? (
+                  <Level4Input stage={getLevel4Stage(currentZone)!} />
+                ) : questStage ? (
+                  <MadLibsInput stage={questStage} />
+                ) : (
+                  <PromptInput />
+                )}
               </div>
             ) : (
               <div className="px-5 py-4 text-center">

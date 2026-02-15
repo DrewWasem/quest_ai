@@ -15,6 +15,7 @@ interface ClaudeResponse {
 export async function callClaude(
   systemPrompt: string,
   userMessage: string,
+  options?: { model?: string; maxTokens?: number; timeoutMs?: number },
 ): Promise<string> {
   const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY;
   if (!apiKey) {
@@ -22,7 +23,8 @@ export async function callClaude(
   }
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  const effectiveTimeout = options?.timeoutMs ?? TIMEOUT_MS;
+  const timeout = setTimeout(() => controller.abort(), effectiveTimeout);
 
   try {
     const response = await fetch(CLAUDE_API_URL, {
@@ -34,8 +36,8 @@ export async function callClaude(
         'anthropic-dangerous-direct-browser-access': 'true',
       },
       body: JSON.stringify({
-        model: 'claude-opus-4-6',
-        max_tokens: 1500,
+        model: options?.model ?? 'claude-opus-4-6',
+        max_tokens: options?.maxTokens ?? 1500,
         system: systemPrompt,
         messages: [{ role: 'user', content: userMessage }] as ClaudeMessage[],
       }),

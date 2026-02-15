@@ -62,6 +62,14 @@ npm run preview               # Preview production build
 vercel --prod                 # Deploy to Vercel
 ```
 
+## Key Reference Docs (read on demand, not always in context)
+
+- `docs/ROADMAP.md` — Post-hackathon roadmap (Phases 1-3 complete, Free Play Zone next)
+- `docs/Prompt-Quest-Backend-Architecture.html` — Claude Code primitives mapping
+- `docs/Prompt-Quest-Execution-Playbook.html` — Risk mitigation, demo failsafes
+- `docs/Prompt-Quest-Outrageous-Tasks-Asset-Library.html` — Tasks, asset library, vocabulary contract
+- `docs/Prompt-Quest-Research-Analysis.html` — Child development, hackathon strategy
+
 ## Key Files
 
 - `frontend/src/App.tsx` — Main app with header, canvas, input panel

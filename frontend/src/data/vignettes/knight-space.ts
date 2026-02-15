@@ -6,7 +6,16 @@
  */
 
 import type { Vignette } from '../../types/madlibs';
-import { enterDuo, setupProps, composeBlocking, MARK } from '../blocking-templates';
+import {
+  ENTER_FROM_LEFT, ENTER_FROM_RIGHT, CHARGE_IN_LEFT,
+  DROP_IN, SNEAK_IN_LEFT,
+  WALK_TO, RUN_TO, JUMP_TO,
+  CONVERGE_MEET,
+  OBJECT_DROP, OBJECT_GROW_REVEAL,
+  CHARACTER_SPEAK, EMOTIONAL_REACT,
+  BOUNCE_ENTRANCE, DANCE, FLASH,
+  NARRATOR, IMPACT, CELEBRATION, DISAPPOINTMENT, DRAMATIC_PAUSE,
+} from '../movement-templates';
 
 // ─── STAGE 1 VIGNETTES ──────────────────────────────────────────────────────
 
@@ -21,78 +30,52 @@ const RANGER_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
-      // Space station appears
+      // SETUP: Scene description + station + broken panel
+      ...NARRATOR("The space station's lights flicker as the solar panel sparks dangerously!"),
       {
         parallel: [
           { action: 'spawn', asset: 'space_station', position: 'center' },
           { action: 'spawn', asset: 'satellite_dish', position: 'left' },
-          { action: 'sfx', sound: 'spawn' },
+          { action: 'sfx', sound: 'engine' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.4,
       },
-      // Broken solar panel sparking
+      ...OBJECT_DROP('solar_panel', 'right'),
       {
         parallel: [
-          { action: 'spawn', asset: 'solar_panel', position: 'right' },
           { action: 'react', effect: 'stars-spin', position: 'right' },
-          { action: 'sfx', sound: 'fail' },
-          { action: 'text_popup', text: '⚠️ POWER CRITICAL! ⚠️', position: 'top', size: 'large' },
+          { action: 'sfx', sound: 'explosion' },
+          { action: 'text_popup', text: 'POWER CRITICAL!', position: 'top', size: 'large' },
         ],
         delayAfter: 0.5,
       },
-      // Space ranger arrives
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'space_ranger', position: 'left', anim: 'spawn_air' },
-          { action: 'react', effect: 'sparkle-magic', position: 'left' },
-          { action: 'sfx', sound: 'spawn' },
-        ],
-        delayAfter: 0.5,
-      },
-      // Ranger salutes
-      {
-        parallel: [
-          { action: 'animate', character: 'space_ranger', anim: 'wave' },
-          { action: 'emote', character: 'space_ranger', emoji: '🔧' },
-        ],
-        delayAfter: 0.5,
-      },
-      // Ranger moves to solar panel
-      {
-        parallel: [
-          { action: 'animate', character: 'space_ranger', anim: 'walk' },
-          { action: 'sfx', sound: 'move' },
-        ],
-        delayAfter: 0.5,
-      },
-      // Ranger repairs panel
+      // INTENT: Ranger arrives with mission focus
+      ...ENTER_FROM_LEFT('space_ranger'),
+      ...CHARACTER_SPEAK('space_ranger', 'determined', "I'll get that panel operational, stat!"),
+      ...EMOTIONAL_REACT('space_ranger', 'determined', 'left'),
+      // ACTION: Ranger repairs with precision
+      ...WALK_TO('space_ranger', 'right'),
       {
         parallel: [
           { action: 'animate', character: 'space_ranger', anim: 'interact' },
           { action: 'react', effect: 'sparkle-magic', position: 'right' },
-          { action: 'sfx', sound: 'react' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 1.0,
       },
-      // Solar panel fixed!
+      // CONSEQUENCE: Power restored!
+      ...IMPACT(),
       {
         parallel: [
-          { action: 'react', effect: 'sparkle-magic', position: 'right' },
           { action: 'screen_flash', color: 'yellow', duration: 0.2 },
-          { action: 'sfx', sound: 'success' },
-          { action: 'text_popup', text: '⚡ POWER RESTORED! ⚡', position: 'top', size: 'huge' },
+          { action: 'text_popup', text: 'POWER RESTORED!', position: 'top', size: 'huge' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      // Ranger celebrates
-      {
-        parallel: [
-          { action: 'animate', character: 'space_ranger', anim: 'Cheering' },
-          { action: 'react', effect: 'stars-spin', position: 'center' },
-          { action: 'sfx', sound: 'success' },
-        ],
-        delayAfter: 2.0,
-      },
+      ...EMOTIONAL_REACT('space_ranger', 'proud', 'right'),
+      // RESOLUTION: Celebration + educational narrator
+      ...CELEBRATION(['space_ranger']),
+      ...NARRATOR("You specified WHO (ranger), WHAT (repair), and the TOOL — that detail saved the mission!"),
     ],
     feedback: {
       title: '🌟 PERFECT REPAIR!',
@@ -105,50 +88,52 @@ const RANGER_VIGNETTES: Vignette[] = [
   // ── ranger + launch ─────────────────────────────────────────────────────────
   {
     id: 'ks_ranger_launch',
-    description: 'Ranger silently preps a stealth probe launch for sector reconnaissance.',
+    description: 'Ranger silently preps a stealth probe launch for sector scouting.',
     trigger: { crew: 'ranger', task: 'launch', tool: '*' },
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Stealth mission atmosphere
+      ...NARRATOR("The ranger prepares a scouting probe for a tactical stealth launch."),
       {
         parallel: [
           { action: 'spawn', asset: 'rocket', position: 'cs-center' },
           { action: 'spawn', asset: 'satellite_dish', position: 'ds-right' },
-          { action: 'sfx', sound: 'spawn' },
+          { action: 'spawn', asset: 'moon', position: 'far-right' },
+          { action: 'sfx', sound: 'engine' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'space_ranger', position: 'off-left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'space_ranger', emoji: '🔍' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Ranger arrives with stealth focus
+      ...SNEAK_IN_LEFT('space_ranger'),
+      ...CHARACTER_SPEAK('space_ranger', 'calm', "Initiating silent launch protocol."),
+      ...EMOTIONAL_REACT('space_ranger', 'calm', 'off-left'),
+      ...WALK_TO('space_ranger', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('rocket', 'cs-center', 1.3),
+      // ACTION: Precise launch sequence
       {
         parallel: [
           { action: 'animate', character: 'space_ranger', anim: 'interact' },
           { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
-          { action: 'sfx', sound: 'react' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.6,
       },
+      // CONSEQUENCE: Successful stealth launch
       {
         parallel: [
           { action: 'react', effect: 'fire', position: 'cs-center' },
           { action: 'camera_shake', intensity: 0.3, duration: 0.5 },
-          { action: 'text_popup', text: '🚀 STEALTH LAUNCH!', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'STEALTH LAUNCH!', position: 'top', size: 'large' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'animate', character: 'space_ranger', anim: 'wave' },
-          { action: 'react', effect: 'stars-spin', position: 'center' },
-        ],
-        delayAfter: 1.5,
-      },
+      ...EMOTIONAL_REACT('space_ranger', 'proud', 'off-left'),
+      ...FLASH('blue', 0.2),
+      // RESOLUTION: Mission success
+      ...CELEBRATION(['space_ranger']),
+      ...NARRATOR("You chose the ranger for a tactical launch — perfect for scouting missions!"),
     ],
     feedback: {
       title: '🔍 Stealth Launch',
@@ -166,44 +151,42 @@ const RANGER_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Building materials ready
+      ...NARRATOR("The ranger plans a modular outpost with natural design principles."),
       {
         parallel: [
           { action: 'spawn', asset: 'cargo_crate', position: 'ds-left' },
           { action: 'spawn', asset: 'cargo_crate', position: 'ds-right' },
-          { action: 'sfx', sound: 'spawn' },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'space_ranger', position: 'off-left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'space_ranger', emoji: '🌿' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Ranger arrives with building vision
+      ...ENTER_FROM_LEFT('space_ranger'),
+      ...CHARACTER_SPEAK('space_ranger', 'calm', "I'll build this with organic harmony in mind."),
+      ...EMOTIONAL_REACT('space_ranger', 'calm', 'off-left'),
+      // ACTION: Assembling the dome
       {
         parallel: [
           { action: 'animate', character: 'space_ranger', anim: 'interact' },
           { action: 'spawn', asset: 'dome', position: 'cs-center' },
           { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
+          { action: 'sfx', sound: 'magic' },
         ],
         delayAfter: 0.6,
       },
+      // CONSEQUENCE: Outpost complete
       {
         parallel: [
           { action: 'react', effect: 'sparkle-magic', position: 'center' },
-          { action: 'text_popup', text: '🏗️ MODULAR OUTPOST!', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'MODULAR OUTPOST!', position: 'top', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'animate', character: 'space_ranger', anim: 'wave' },
-          { action: 'react', effect: 'hearts-float', position: 'center' },
-        ],
-        delayAfter: 1.5,
-      },
+      ...EMOTIONAL_REACT('space_ranger', 'proud', 'off-left'),
+      // RESOLUTION: Nature meets technology
+      ...CELEBRATION(['space_ranger']),
+      ...NARRATOR("The ranger brought natural harmony to space construction — perfect crew choice!"),
     ],
     feedback: {
       title: '🌿 Organic Design',
@@ -221,45 +204,50 @@ const RANGER_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Emergency situation
+      ...NARRATOR("A crew member is lost in the void — time for a rescue mission!"),
       {
         parallel: [
           { action: 'spawn', asset: 'space_station', position: 'cs-center' },
-          { action: 'text_popup', text: '🆘 CREW LOST!', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'fail' },
+          { action: 'text_popup', text: 'CREW LOST!', position: 'top', size: 'large' },
+          { action: 'sfx', sound: 'explosion' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'space_ranger', position: 'off-left', anim: 'spawn_air' },
-          { action: 'emote', character: 'space_ranger', emoji: '🔍' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Ranger on the case
+      ...DROP_IN('space_ranger'),
+      ...CHARACTER_SPEAK('space_ranger', 'determined', "I'll track them down. No one gets left behind."),
+      ...EMOTIONAL_REACT('space_ranger', 'determined', 'off-left'),
+      ...RUN_TO('space_ranger', 'cs-center'),
+      ...WALK_TO('space_ranger', 'ds-right'),
+      // ACTION: Tracking and searching
       {
         parallel: [
           { action: 'animate', character: 'space_ranger', anim: 'walk' },
           { action: 'react', effect: 'question-marks', position: 'ds-right' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.6,
       },
+      // CONSEQUENCE: Found!
       {
         parallel: [
           { action: 'spawn_character', character: 'engineer', position: 'ds-right', anim: 'spawn_ground' },
           { action: 'react', effect: 'hearts-float', position: 'ds-right' },
-          { action: 'text_popup', text: '✅ FOUND!', position: 'center', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'FOUND!', position: 'center', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
       {
         parallel: [
-          { action: 'animate', character: 'space_ranger', anim: 'taunt' },
+          { action: 'animate', character: 'space_ranger', anim: 'wave' },
           { action: 'animate', character: 'engineer', anim: 'wave' },
-          { action: 'react', effect: 'glow-pulse', position: 'center' },
         ],
-        delayAfter: 1.5,
+        delayAfter: 0.5,
       },
+      // RESOLUTION: Rescue complete
+      ...CELEBRATION(['space_ranger', 'engineer']),
+      ...NARRATOR("The ranger's tracking skills saved the day — perfect crew for rescue missions!"),
     ],
     feedback: {
       title: '🔍 Tracker Supreme',
@@ -277,42 +265,42 @@ const RANGER_VIGNETTES: Vignette[] = [
     tier: 'subtle',
     promptScore: 'perfect',
     steps: [
+      // SETUP: New territory to explore
+      ...NARRATOR("The ranger begins methodical exploration of an uncharted sector."),
       {
         parallel: [
           { action: 'spawn', asset: 'satellite_dish', position: 'cs-center' },
-          { action: 'sfx', sound: 'spawn' },
+          { action: 'spawn', asset: 'compass', position: 'ds-left' },
+          { action: 'spawn', asset: 'map', position: 'ds-right' },
+          { action: 'sfx', sound: 'engine' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'space_ranger', position: 'off-left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'space_ranger', emoji: '🗺️' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Careful approach
+      ...ENTER_FROM_LEFT('space_ranger'),
+      ...CHARACTER_SPEAK('space_ranger', 'curious', "Let me scout this area carefully and map everything."),
+      ...EMOTIONAL_REACT('space_ranger', 'curious', 'off-left'),
+      // ACTION: Exploring and mapping
       {
         parallel: [
           { action: 'animate', character: 'space_ranger', anim: 'walk' },
           { action: 'react', effect: 'sparkle-magic', position: 'ds-right' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.6,
       },
+      // CONSEQUENCE: Territory mapped
       {
         parallel: [
           { action: 'spawn', asset: 'flag', position: 'ds-right' },
-          { action: 'text_popup', text: '🗺️ SECTOR MAPPED!', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'SECTOR MAPPED!', position: 'top', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'animate', character: 'space_ranger', anim: 'wave' },
-          { action: 'react', effect: 'stars-spin', position: 'center' },
-        ],
-        delayAfter: 1.5,
-      },
+      ...EMOTIONAL_REACT('space_ranger', 'proud', 'off-left'),
+      // RESOLUTION: Mission complete
+      ...CELEBRATION(['space_ranger']),
+      ...NARRATOR("The ranger's thorough scouting mapped the sector perfectly!"),
     ],
     feedback: {
       title: '🗺️ Scout Report',
@@ -330,46 +318,54 @@ const RANGER_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Incoming threat
+      ...NARRATOR("Alert! A hostile presence approaches the station!"),
       {
         parallel: [
           { action: 'spawn', asset: 'space_station', position: 'cs-center' },
-          { action: 'text_popup', text: '⚠️ THREAT DETECTED!', position: 'top', size: 'large' },
+          { action: 'spawn', asset: 'basemodule_A', position: 'far-left' },
+          { action: 'text_popup', text: 'THREAT DETECTED!', position: 'top', size: 'large' },
           { action: 'camera_shake', intensity: 0.2, duration: 0.5 },
-          { action: 'sfx', sound: 'fail' },
+          { action: 'sfx', sound: 'explosion' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'space_ranger', position: 'off-left', anim: 'spawn_air' },
-          { action: 'emote', character: 'space_ranger', emoji: '🎯' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Ranger tactical response
+      ...DROP_IN('space_ranger'),
+      ...CHARACTER_SPEAK('space_ranger', 'determined', "Setting up tactical perimeter defenses."),
+      ...EMOTIONAL_REACT('space_ranger', 'determined', 'off-left'),
+      ...RUN_TO('space_ranger', 'ds-left'),
+      ...OBJECT_GROW_REVEAL('laser_gun', 'ds-left', 1.5),
+      ...RUN_TO('space_ranger', 'ds-right'),
+      ...OBJECT_GROW_REVEAL('laser_gun', 'ds-right', 1.5),
+      // ACTION: Deploy defenses
       {
         parallel: [
           { action: 'animate', character: 'space_ranger', anim: 'interact' },
           { action: 'spawn', asset: 'laser_gun', position: 'ds-left' },
           { action: 'spawn', asset: 'laser_gun', position: 'ds-right' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.6,
       },
+      // CONSEQUENCE: Threat neutralized
+      ...IMPACT(),
       {
         parallel: [
           { action: 'react', effect: 'explosion-cartoon', position: 'off-right' },
+          { action: 'spawn', asset: 'crystal_big', position: 'far-right' },
+          { action: 'spawn', asset: 'thunder', position: 'off-right' },
           { action: 'camera_shake', intensity: 0.4, duration: 0.5 },
-          { action: 'text_popup', text: '🎯 THREAT NEUTRALIZED!', position: 'center', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'THREAT NEUTRALIZED!', position: 'center', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'animate', character: 'space_ranger', anim: 'jump_big' },
-          { action: 'react', effect: 'hearts-float', position: 'center' },
-        ],
-        delayAfter: 1.5,
-      },
+      ...EMOTIONAL_REACT('space_ranger', 'heroic', 'off-left'),
+      ...DANCE('space_ranger'),
+      ...FLASH('red', 0.2),
+      // RESOLUTION: Tactical victory
+      ...CELEBRATION(['space_ranger']),
+      ...NARRATOR("The ranger's tactical precision saved the station — strategy over brute force!"),
     ],
     feedback: {
       title: '🎯 Tactical Defense',
@@ -391,44 +387,42 @@ const ROBOT_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Broken panel needs fixing
+      ...NARRATOR("A damaged solar panel requires immediate mechanical repair."),
       {
         parallel: [
           { action: 'spawn', asset: 'solar_panel', position: 'cs-center' },
           { action: 'react', effect: 'smoke', position: 'cs-center' },
-          { action: 'sfx', sound: 'fail' },
+          { action: 'sfx', sound: 'explosion' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'robot', position: 'off-left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'robot', emoji: '🔧' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Robot on the job
+      ...ENTER_FROM_LEFT('robot'),
+      ...CHARACTER_SPEAK('robot', 'calm', "INITIATING REPAIR PROTOCOL. MALFUNCTION DETECTED."),
+      ...EMOTIONAL_REACT('robot', 'calm', 'off-left'),
+      // ACTION: Systematic repair
       {
         parallel: [
           { action: 'animate', character: 'robot', anim: 'interact' },
           { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
-          { action: 'text_popup', text: '⚙️ REPAIR PROTOCOL...', position: 'center', size: 'large' },
+          { action: 'text_popup', text: 'REPAIR PROTOCOL...', position: 'center', size: 'large' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.8,
       },
+      // CONSEQUENCE: Repair successful
       {
         parallel: [
           { action: 'react', effect: 'glow-pulse', position: 'cs-center' },
-          { action: 'text_popup', text: '✅ REPAIR COMPLETE', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'REPAIR COMPLETE', position: 'top', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'animate', character: 'robot', anim: 'Cheering' },
-          { action: 'react', effect: 'stars-spin', position: 'center' },
-        ],
-        delayAfter: 1.5,
-      },
+      ...EMOTIONAL_REACT('robot', 'proud', 'off-left'),
+      // RESOLUTION: Efficient completion
+      ...CELEBRATION(['robot']),
+      ...NARRATOR("The robot's mechanical precision got the job done fast!"),
     ],
     feedback: {
       title: '⚙️ Efficient Repair',
@@ -446,44 +440,48 @@ const ROBOT_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Rocket ready for launch
+      ...NARRATOR("The robot calculates the perfect launch trajectory with mathematical precision."),
       {
         parallel: [
           { action: 'spawn', asset: 'rocket', position: 'cs-center' },
-          { action: 'sfx', sound: 'spawn' },
+          { action: 'spawn', asset: 'planet', position: 'far-right' },
+          { action: 'spawn', asset: 'basemodule_B', position: 'far-left' },
+          { action: 'sfx', sound: 'engine' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'robot', position: 'off-left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'robot', emoji: '🧮' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Robot's analytical approach
+      ...ENTER_FROM_LEFT('robot'),
+      ...CHARACTER_SPEAK('robot', 'calm', "COMPUTING OPTIMAL TRAJECTORY. STANDBY."),
+      ...EMOTIONAL_REACT('robot', 'calm', 'off-left'),
+      ...WALK_TO('robot', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('rocket', 'cs-center', 1.4),
+      // ACTION: Calculation and launch
       {
         parallel: [
           { action: 'animate', character: 'robot', anim: 'interact' },
-          { action: 'text_popup', text: '🧮 CALCULATING...', position: 'center', size: 'large' },
+          { action: 'text_popup', text: 'CALCULATING...', position: 'center', size: 'large' },
           { action: 'react', effect: 'question-marks', position: 'cs-center' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.8,
       },
+      // CONSEQUENCE: Perfect trajectory
+      ...IMPACT(),
       {
         parallel: [
           { action: 'react', effect: 'explosion-cartoon', position: 'cs-center' },
           { action: 'camera_shake', intensity: 0.5, duration: 0.5 },
-          { action: 'text_popup', text: '🚀 TRAJECTORY: PERFECT!', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'TRAJECTORY: PERFECT!', position: 'top', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'animate', character: 'robot', anim: 'wave' },
-          { action: 'react', effect: 'stars-spin', position: 'center' },
-        ],
-        delayAfter: 1.5,
-      },
+      ...EMOTIONAL_REACT('robot', 'proud', 'off-left'),
+      ...FLASH('yellow', 0.2),
+      // RESOLUTION: Mathematical success
+      ...CELEBRATION(['robot']),
+      ...NARRATOR("The robot's precise calculations ensured a flawless launch!"),
     ],
     feedback: {
       title: '🧮 Perfect Math',
@@ -501,44 +499,46 @@ const ROBOT_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Materials ready for assembly
+      ...NARRATOR("The robot prepares to assemble a structure with mechanical efficiency."),
       {
         parallel: [
           { action: 'spawn', asset: 'cargo_crate', position: 'ds-left' },
           { action: 'spawn', asset: 'cargo_crate', position: 'ds-right' },
-          { action: 'sfx', sound: 'spawn' },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'robot', position: 'off-left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'robot', emoji: '🏗️' },
-        ],
-        delayAfter: 0.3,
-      },
+      // INTENT: Robot's systematic approach
+      ...BOUNCE_ENTRANCE('robot', 'cs-center', 'left'),
+      ...CHARACTER_SPEAK('robot', 'calm', "ASSEMBLING STRUCTURE. EFFICIENCY MODE ENGAGED."),
+      ...EMOTIONAL_REACT('robot', 'calm', 'cs-center'),
+      ...RUN_TO('robot', 'ds-left'),
+      ...RUN_TO('robot', 'ds-right'),
+      ...RUN_TO('robot', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('dome', 'cs-center', 1.6),
+      // ACTION: Rapid assembly
       {
         parallel: [
           { action: 'animate', character: 'robot', anim: 'interact' },
           { action: 'spawn', asset: 'dome', position: 'cs-center' },
           { action: 'react', effect: 'dust', position: 'cs-center' },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.4,
       },
+      // CONSEQUENCE: Build complete
       {
         parallel: [
           { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
-          { action: 'text_popup', text: '🏗️ BUILD COMPLETE!', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'BUILD COMPLETE!', position: 'top', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'animate', character: 'robot', anim: 'wave' },
-          { action: 'react', effect: 'glow-pulse', position: 'center' },
-        ],
-        delayAfter: 1.5,
-      },
+      ...EMOTIONAL_REACT('robot', 'proud', 'off-left'),
+      // RESOLUTION: Assembly line success
+      ...CELEBRATION(['robot']),
+      ...NARRATOR("The robot's assembly-line speed built the structure in record time!"),
     ],
     feedback: {
       title: '🏗️ Assembly Line',
@@ -556,45 +556,50 @@ const ROBOT_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Rescue emergency
+      ...NARRATOR("A crew member is missing — the robot deploys search algorithms!"),
       {
         parallel: [
           { action: 'spawn', asset: 'space_station', position: 'cs-center' },
-          { action: 'text_popup', text: '🆘 RESCUE NEEDED!', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'fail' },
+          { action: 'text_popup', text: 'RESCUE NEEDED!', position: 'top', size: 'large' },
+          { action: 'sfx', sound: 'explosion' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'robot', position: 'off-left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'robot', emoji: '📡' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Robot scanner mode
+      ...BOUNCE_ENTRANCE('robot', 'cs-center', 'left'),
+      ...CHARACTER_SPEAK('robot', 'calm', "DEPLOYING SEARCH ALGORITHM. SCANNING ALL SECTORS."),
+      ...EMOTIONAL_REACT('robot', 'calm', 'cs-center'),
+      ...WALK_TO('robot', 'ds-right'),
+      // ACTION: Systematic scanning
       {
         parallel: [
           { action: 'animate', character: 'robot', anim: 'interact' },
           { action: 'react', effect: 'stars-spin', position: 'ds-right' },
-          { action: 'text_popup', text: '📡 SCANNING...', position: 'center', size: 'large' },
+          { action: 'text_popup', text: 'SCANNING...', position: 'center', size: 'large' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.8,
       },
+      // CONSEQUENCE: Target located
       {
         parallel: [
           { action: 'spawn_character', character: 'knight', position: 'ds-right', anim: 'spawn_ground' },
           { action: 'react', effect: 'sparkle-magic', position: 'ds-right' },
-          { action: 'text_popup', text: '✅ LOCATED!', position: 'center', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'LOCATED!', position: 'center', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
       {
         parallel: [
           { action: 'animate', character: 'robot', anim: 'taunt' },
           { action: 'animate', character: 'knight', anim: 'wave' },
         ],
-        delayAfter: 1.5,
+        delayAfter: 0.5,
       },
+      // RESOLUTION: Technological rescue
+      ...CELEBRATION(['robot', 'knight']),
+      ...NARRATOR("The robot's sensors found the lost crew member instantly!"),
     ],
     feedback: {
       title: '📡 Scanner Mode',
@@ -612,42 +617,44 @@ const ROBOT_VIGNETTES: Vignette[] = [
     tier: 'subtle',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Exploration zone
+      ...NARRATOR("The robot begins a systematic sensor sweep of the unknown sector."),
       {
         parallel: [
           { action: 'spawn', asset: 'satellite_dish', position: 'cs-center' },
-          { action: 'sfx', sound: 'spawn' },
+          { action: 'spawn', asset: 'rover', position: 'ds-left' },
+          { action: 'spawn', asset: 'magnifying_glass', position: 'ds-right' },
+          { action: 'sfx', sound: 'engine' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'robot', position: 'off-left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'robot', emoji: '📊' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Robotic survey
+      ...ENTER_FROM_LEFT('robot'),
+      ...CHARACTER_SPEAK('robot', 'calm', "INITIATING SENSOR ARRAY. COLLECTING DATA."),
+      ...EMOTIONAL_REACT('robot', 'calm', 'off-left'),
+      ...WALK_TO('robot', 'cs-center'),
+      // ACTION: Data collection
       {
         parallel: [
           { action: 'animate', character: 'robot', anim: 'walk' },
           { action: 'react', effect: 'glow-pulse', position: 'cs-center' },
-          { action: 'text_popup', text: '📊 SCANNING SECTOR...', position: 'center', size: 'large' },
+          { action: 'text_popup', text: 'SCANNING SECTOR...', position: 'center', size: 'large' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.8,
       },
+      // CONSEQUENCE: Data acquired
       {
         parallel: [
           { action: 'react', effect: 'sparkle-magic', position: 'center' },
-          { action: 'text_popup', text: '✅ DATA COLLECTED!', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'DATA COLLECTED!', position: 'top', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'animate', character: 'robot', anim: 'wave' },
-        ],
-        delayAfter: 1.5,
-      },
+      ...EMOTIONAL_REACT('robot', 'proud', 'off-left'),
+      // RESOLUTION: Systematic success
+      ...CELEBRATION(['robot']),
+      ...NARRATOR("The robot's sensors gathered complete data on the sector!"),
     ],
     feedback: {
       title: '📊 Data Acquired',
@@ -665,51 +672,56 @@ const ROBOT_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Intruder detected
+      ...NARRATOR("Intruder alert! The robot activates automated defense systems!"),
       {
         parallel: [
           { action: 'spawn', asset: 'space_station', position: 'cs-center' },
-          { action: 'text_popup', text: '⚠️ INTRUDER ALERT!', position: 'top', size: 'large' },
+          { action: 'text_popup', text: 'INTRUDER ALERT!', position: 'top', size: 'large' },
           { action: 'camera_shake', intensity: 0.3, duration: 0.5 },
-          { action: 'sfx', sound: 'fail' },
+          { action: 'sfx', sound: 'explosion' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'robot', position: 'off-left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'robot', emoji: '🔫' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Robot defense mode
+      ...BOUNCE_ENTRANCE('robot', 'cs-center', 'left'),
+      ...CHARACTER_SPEAK('robot', 'determined', "DEFENSE MODE ACTIVATED. DEPLOYING TURRETS."),
+      ...EMOTIONAL_REACT('robot', 'determined', 'cs-center'),
+      ...RUN_TO('robot', 'ds-left'),
+      ...RUN_TO('robot', 'ds-right'),
+      // ACTION: Turret deployment
       {
         parallel: [
           { action: 'animate', character: 'robot', anim: 'interact' },
           { action: 'spawn', asset: 'laser_gun', position: 'ds-left' },
           { action: 'spawn', asset: 'laser_gun', position: 'ds-right' },
-          { action: 'text_popup', text: '🔫 TURRETS ARMED!', position: 'center', size: 'large' },
+          { action: 'text_popup', text: 'TURRETS ARMED!', position: 'center', size: 'large' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.6,
       },
+      // CONSEQUENCE: Threat eliminated
+      ...IMPACT(),
       {
         parallel: [
           { action: 'react', effect: 'explosion-cartoon', position: 'off-right' },
+          { action: 'spawn', asset: 'fireball', position: 'far-right' },
+          { action: 'spawn', asset: 'crystal_small', position: 'off-right' },
           { action: 'camera_shake', intensity: 0.5, duration: 0.5 },
-          { action: 'text_popup', text: '💥 THREAT ELIMINATED!', position: 'center', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'THREAT ELIMINATED!', position: 'center', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'animate', character: 'robot', anim: 'jump_big' },
-          { action: 'react', effect: 'glow-pulse', position: 'center' },
-        ],
-        delayAfter: 1.5,
-      },
+      ...EMOTIONAL_REACT('robot', 'proud', 'off-left'),
+      ...DANCE('robot'),
+      ...FLASH('white', 0.2),
+      // RESOLUTION: Automated success
+      ...CELEBRATION(['robot']),
+      ...NARRATOR("The robot's automated turrets defended the station perfectly!"),
     ],
     feedback: {
       title: '🔫 Auto-Turrets',
-      message: 'Robot defense systems are automated and deadly!',
+      message: 'Robot defense systems are automated and unstoppable!',
       skillTaught: 'Specificity',
       tip: 'Robots defend with technology.',
     },
@@ -727,45 +739,46 @@ const ENGINEER_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Broken panel
+      ...NARRATOR("The engineer approaches a simple repair with... excessive enthusiasm."),
       {
         parallel: [
           { action: 'spawn', asset: 'solar_panel', position: 'cs-center' },
           { action: 'react', effect: 'smoke', position: 'cs-center' },
-          { action: 'sfx', sound: 'fail' },
+          { action: 'sfx', sound: 'explosion' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'engineer', position: 'off-left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'engineer', emoji: '🤓' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Engineer's over-engineering mindset
+      ...BOUNCE_ENTRANCE('engineer', 'cs-center', 'left'),
+      ...CHARACTER_SPEAK('engineer', 'excited', "This needs 17 backup systems! Maybe 18!"),
+      ...EMOTIONAL_REACT('engineer', 'excited', 'cs-center'),
+      ...JUMP_TO('engineer', 'ds-left'),
+      ...JUMP_TO('engineer', 'ds-right'),
+      ...JUMP_TO('engineer', 'cs-center'),
+      // ACTION: Adding excessive redundancy
       {
         parallel: [
           { action: 'animate', character: 'engineer', anim: 'interact' },
           { action: 'spawn', asset: 'cargo_crate', position: 'ds-left' },
           { action: 'spawn', asset: 'cargo_crate', position: 'ds-right' },
-          { action: 'text_popup', text: '🔧 ADDING REDUNDANCY...', position: 'center', size: 'large' },
+          { action: 'text_popup', text: 'ADDING REDUNDANCY...', position: 'center', size: 'large' },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.8,
       },
+      // CONSEQUENCE: Overly complex success
       {
         parallel: [
           { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
-          { action: 'text_popup', text: '✅ 17 BACKUPS INSTALLED!', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: '17 BACKUPS INSTALLED!', position: 'top', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'animate', character: 'engineer', anim: 'Cheering' },
-          { action: 'react', effect: 'glow-pulse', position: 'center' },
-        ],
-        delayAfter: 1.5,
-      },
+      ...EMOTIONAL_REACT('engineer', 'proud', 'off-left'),
+      // RESOLUTION: Over-engineered victory
+      ...CELEBRATION(['engineer']),
+      ...NARRATOR("The engineer never does a simple fix — but it'll never break again!"),
     ],
     feedback: {
       title: '🤓 Over-Engineered',
@@ -783,44 +796,47 @@ const ENGINEER_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Launch preparation
+      ...NARRATOR("The engineer approaches the launch with 99 safety protocols in mind."),
       {
         parallel: [
           { action: 'spawn', asset: 'rocket', position: 'cs-center' },
-          { action: 'sfx', sound: 'spawn' },
+          { action: 'spawn', asset: 'basemodule_garage', position: 'far-left' },
+          { action: 'spawn', asset: 'planet', position: 'far-right' },
+          { action: 'sfx', sound: 'engine' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'engineer', position: 'off-left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'engineer', emoji: '📐' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Safety-first mindset
+      ...ENTER_FROM_LEFT('engineer'),
+      ...CHARACTER_SPEAK('engineer', 'nervous', "Running safety checks 1 through 99 first!"),
+      ...EMOTIONAL_REACT('engineer', 'nervous', 'off-left'),
+      ...WALK_TO('engineer', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('wrench', 'ds-left', 2.0),
+      // ACTION: Exhaustive safety checks
       {
         parallel: [
           { action: 'animate', character: 'engineer', anim: 'interact' },
           { action: 'spawn', asset: 'cargo_crate', position: 'ds-left' },
-          { action: 'text_popup', text: '📐 SAFETY CHECK 1/99...', position: 'center', size: 'large' },
+          { action: 'text_popup', text: 'SAFETY CHECK 1/99...', position: 'center', size: 'large' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.8,
       },
+      // CONSEQUENCE: All checks passed
+      ...IMPACT(),
       {
         parallel: [
           { action: 'react', effect: 'explosion-cartoon', position: 'cs-center' },
           { action: 'camera_shake', intensity: 0.6, duration: 0.5 },
-          { action: 'text_popup', text: '🚀 ALL CHECKS PASSED!', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'ALL CHECKS PASSED!', position: 'top', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'animate', character: 'engineer', anim: 'wave' },
-          { action: 'react', effect: 'hearts-float', position: 'center' },
-        ],
-        delayAfter: 1.5,
-      },
+      ...EMOTIONAL_REACT('engineer', 'proud', 'off-left'),
+      // RESOLUTION: Ultra-safe launch
+      ...CELEBRATION(['engineer']),
+      ...NARRATOR("The engineer's excessive safety protocols ensured a perfect launch!"),
     ],
     feedback: {
       title: '📐 Safety First',
@@ -838,46 +854,44 @@ const ENGINEER_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Maximum building materials
+      ...NARRATOR("The engineer sees a building project as an opportunity for maximum complexity."),
       {
         parallel: [
           { action: 'spawn', asset: 'cargo_crate', position: 'ds-left' },
           { action: 'spawn', asset: 'cargo_crate', position: 'cs-center' },
           { action: 'spawn', asset: 'cargo_crate', position: 'ds-right' },
-          { action: 'sfx', sound: 'spawn' },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'engineer', position: 'off-left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'engineer', emoji: '🏗️' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Over-complicated vision
+      ...ENTER_FROM_LEFT('engineer'),
+      ...CHARACTER_SPEAK('engineer', 'excited', "Let's make this REALLY intricate!"),
+      ...EMOTIONAL_REACT('engineer', 'excited', 'off-left'),
+      // ACTION: Complex construction
       {
         parallel: [
           { action: 'animate', character: 'engineer', anim: 'interact' },
           { action: 'spawn', asset: 'dome', position: 'us-center' },
           { action: 'react', effect: 'dust', position: 'center' },
-          { action: 'text_popup', text: '🏗️ COMPLEXITY LEVEL: MAX!', position: 'center', size: 'large' },
+          { action: 'text_popup', text: 'COMPLEXITY LEVEL: MAX!', position: 'center', size: 'large' },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.8,
       },
+      // CONSEQUENCE: Masterpiece complete
       {
         parallel: [
           { action: 'react', effect: 'sparkle-magic', position: 'center' },
-          { action: 'text_popup', text: '✅ MASTERPIECE COMPLETE!', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'MASTERPIECE COMPLETE!', position: 'top', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'animate', character: 'engineer', anim: 'taunt' },
-          { action: 'react', effect: 'stars-spin', position: 'center' },
-        ],
-        delayAfter: 1.5,
-      },
+      ...EMOTIONAL_REACT('engineer', 'proud', 'off-left'),
+      // RESOLUTION: Over-engineered glory
+      ...CELEBRATION(['engineer']),
+      ...NARRATOR("The engineer turned a simple build into a modular masterpiece!"),
     ],
     feedback: {
       title: '🏗️ Complex Build',
@@ -895,46 +909,52 @@ const ENGINEER_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Rescue emergency
+      ...NARRATOR("A crew member is lost — the engineer designs an elaborate rescue contraption!"),
       {
         parallel: [
           { action: 'spawn', asset: 'space_station', position: 'cs-center' },
-          { action: 'text_popup', text: '🆘 RESCUE MISSION!', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'fail' },
+          { action: 'text_popup', text: 'RESCUE MISSION!', position: 'top', size: 'large' },
+          { action: 'sfx', sound: 'explosion' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'engineer', position: 'off-left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'engineer', emoji: '⚙️' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Engineer's gadget solution
+      ...BOUNCE_ENTRANCE('engineer', 'cs-center', 'left'),
+      ...CHARACTER_SPEAK('engineer', 'excited', "I'll build a multi-part pulley system!"),
+      ...EMOTIONAL_REACT('engineer', 'excited', 'cs-center'),
+      ...RUN_TO('engineer', 'ds-left'),
+      ...RUN_TO('engineer', 'ds-right'),
+      // ACTION: Deploy rescue contraption
       {
         parallel: [
           { action: 'animate', character: 'engineer', anim: 'interact' },
           { action: 'spawn', asset: 'cargo_crate', position: 'ds-left' },
           { action: 'spawn', asset: 'cargo_crate', position: 'ds-right' },
-          { action: 'text_popup', text: '⚙️ PULLEY SYSTEM ENGAGED!', position: 'center', size: 'large' },
+          { action: 'text_popup', text: 'PULLEY SYSTEM ENGAGED!', position: 'center', size: 'large' },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.8,
       },
+      // CONSEQUENCE: Rescued!
       {
         parallel: [
           { action: 'spawn_character', character: 'space_ranger', position: 'us-center', anim: 'spawn_air' },
           { action: 'react', effect: 'sparkle-magic', position: 'us-center' },
-          { action: 'text_popup', text: '✅ RESCUED!', position: 'center', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'RESCUED!', position: 'center', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
       {
         parallel: [
           { action: 'animate', character: 'engineer', anim: 'jump_big' },
           { action: 'animate', character: 'space_ranger', anim: 'wave' },
         ],
-        delayAfter: 1.5,
+        delayAfter: 0.5,
       },
+      // RESOLUTION: Gadget success
+      ...CELEBRATION(['engineer', 'space_ranger']),
+      ...NARRATOR("The engineer's elaborate contraption saved the day!"),
     ],
     feedback: {
       title: '⚙️ Contraption Rescue',
@@ -952,43 +972,47 @@ const ENGINEER_VIGNETTES: Vignette[] = [
     tier: 'subtle',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Exploration zone
+      ...NARRATOR("The engineer deploys a comprehensive sensor grid for exploration."),
       {
         parallel: [
           { action: 'spawn', asset: 'satellite_dish', position: 'cs-center' },
-          { action: 'sfx', sound: 'spawn' },
+          { action: 'spawn', asset: 'blueprint', position: 'ds-left' },
+          { action: 'spawn', asset: 'compass', position: 'ds-right' },
+          { action: 'sfx', sound: 'engine' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'engineer', position: 'off-left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'engineer', emoji: '📡' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Systematic survey
+      ...ENTER_FROM_LEFT('engineer'),
+      ...CHARACTER_SPEAK('engineer', 'excited', "Let's deploy a full sensor array!"),
+      ...EMOTIONAL_REACT('engineer', 'excited', 'off-left'),
+      ...WALK_TO('engineer', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('satellite_dish', 'ds-left', 1.8),
+      ...OBJECT_GROW_REVEAL('satellite_dish', 'ds-right', 1.8),
+      // ACTION: Grid deployment
       {
         parallel: [
           { action: 'animate', character: 'engineer', anim: 'interact' },
           { action: 'spawn', asset: 'satellite_dish', position: 'ds-left' },
           { action: 'spawn', asset: 'satellite_dish', position: 'ds-right' },
-          { action: 'text_popup', text: '📡 SENSOR GRID ACTIVE!', position: 'center', size: 'large' },
+          { action: 'text_popup', text: 'SENSOR GRID ACTIVE!', position: 'center', size: 'large' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.8,
       },
+      // CONSEQUENCE: Complete mapping
       {
         parallel: [
           { action: 'react', effect: 'sparkle-magic', position: 'center' },
-          { action: 'text_popup', text: '✅ SECTOR MAPPED!', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'SECTOR MAPPED!', position: 'top', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'animate', character: 'engineer', anim: 'wave' },
-        ],
-        delayAfter: 1.5,
-      },
+      ...EMOTIONAL_REACT('engineer', 'proud', 'off-left'),
+      // RESOLUTION: Instrumental success
+      ...CELEBRATION(['engineer']),
+      ...NARRATOR("The engineer's sensor grid mapped every detail of the sector!"),
     ],
     feedback: {
       title: '📡 Sensor Array',
@@ -1006,48 +1030,51 @@ const ENGINEER_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Incoming threat
+      ...NARRATOR("A threat approaches — the engineer builds defensive fortifications!"),
       {
         parallel: [
           { action: 'spawn', asset: 'space_station', position: 'cs-center' },
-          { action: 'text_popup', text: '⚠️ INCOMING THREAT!', position: 'top', size: 'large' },
+          { action: 'text_popup', text: 'INCOMING THREAT!', position: 'top', size: 'large' },
           { action: 'camera_shake', intensity: 0.3, duration: 0.5 },
-          { action: 'sfx', sound: 'fail' },
+          { action: 'sfx', sound: 'explosion' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'engineer', position: 'off-left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'engineer', emoji: '🛡️' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Engineer's defensive plan
+      ...BOUNCE_ENTRANCE('engineer', 'cs-center', 'left'),
+      ...CHARACTER_SPEAK('engineer', 'determined', "I'll build a multi-layered fortress!"),
+      ...EMOTIONAL_REACT('engineer', 'determined', 'cs-center'),
+      ...RUN_TO('engineer', 'ds-left'),
+      ...RUN_TO('engineer', 'ds-right'),
+      ...RUN_TO('engineer', 'us-center'),
+      // ACTION: Fortification construction
       {
         parallel: [
           { action: 'animate', character: 'engineer', anim: 'interact' },
           { action: 'spawn', asset: 'cargo_crate', position: 'ds-left' },
           { action: 'spawn', asset: 'cargo_crate', position: 'ds-right' },
           { action: 'spawn', asset: 'laser_gun', position: 'us-center' },
-          { action: 'text_popup', text: '🛡️ FORTIFYING...', position: 'center', size: 'large' },
+          { action: 'spawn', asset: 'cargo_A', position: 'far-left' },
+          { action: 'text_popup', text: 'FORTIFYING...', position: 'center', size: 'large' },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.8,
       },
+      // CONSEQUENCE: Threat repelled
+      ...IMPACT(),
       {
         parallel: [
           { action: 'react', effect: 'explosion-cartoon', position: 'off-right' },
           { action: 'camera_shake', intensity: 0.4, duration: 0.5 },
-          { action: 'text_popup', text: '✅ FORTRESS COMPLETE!', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'FORTRESS COMPLETE!', position: 'top', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'animate', character: 'engineer', anim: 'Cheering' },
-          { action: 'react', effect: 'glow-pulse', position: 'center' },
-        ],
-        delayAfter: 1.5,
-      },
+      ...EMOTIONAL_REACT('engineer', 'proud', 'off-left'),
+      // RESOLUTION: Fortified defense
+      ...CELEBRATION(['engineer']),
+      ...NARRATOR("The engineer's elaborate fortress stopped the threat cold!"),
     ],
     feedback: {
       title: '🛡️ Fortress Mode',
@@ -1069,47 +1096,51 @@ const KNIGHT_VIGNETTES: Vignette[] = [
     tier: 'absolute_chaos',
     promptScore: 'chaotic',
     steps: [
+      // SETUP: Broken tech
+      ...NARRATOR("The knight faces a broken solar panel with medieval confidence..."),
       {
         parallel: [
           { action: 'spawn', asset: 'solar_panel', position: 'cs-center' },
           { action: 'react', effect: 'smoke', position: 'cs-center' },
-          { action: 'sfx', sound: 'fail' },
+          { action: 'sfx', sound: 'explosion' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'knight', position: 'off-left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'knight', emoji: '⚔️' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Knight's misguided approach
+      ...CHARGE_IN_LEFT('knight'),
+      ...CHARACTER_SPEAK('knight', 'confused', "I shall smite this cursed machine!"),
+      ...EMOTIONAL_REACT('knight', 'confused', 'off-left'),
+      ...RUN_TO('knight', 'cs-center'),
+      // ACTION: Sword "repair"
       {
         parallel: [
           { action: 'animate', character: 'knight', anim: 'sword_slash' },
           { action: 'react', effect: 'explosion-cartoon', position: 'cs-center' },
           { action: 'camera_shake', intensity: 0.5, duration: 0.5 },
-          { action: 'text_popup', text: '⚔️ PERCUSSIVE MAINTENANCE!', position: 'center', size: 'large' },
+          { action: 'text_popup', text: 'PERCUSSIVE MAINTENANCE!', position: 'center', size: 'large' },
           { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.6,
       },
+      // CONSEQUENCE: Made it worse
       {
         parallel: [
           { action: 'react', effect: 'smoke', position: 'cs-center' },
-          { action: 'text_popup', text: '💥 ...WORSE NOW!', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'fail' },
+          { action: 'text_popup', text: '...WORSE NOW!', position: 'top', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
       {
         parallel: [
           { action: 'animate', character: 'knight', anim: 'get_hit' },
-          { action: 'emote', character: 'knight', emoji: '😅' },
           { action: 'react', effect: 'sad-cloud', position: 'off-left' },
         ],
-        delayAfter: 1.5,
+        delayAfter: 0.3,
       },
+      ...EMOTIONAL_REACT('knight', 'shocked', 'off-left'),
+      // RESOLUTION: Wrong crew for the job
+      ...DISAPPOINTMENT(['knight']),
+      ...NARRATOR("Swords don't fix solar panels! Next time, pick an engineer or robot for repairs."),
     ],
     feedback: {
       title: '⚔️ Wrong Tool',
@@ -1127,44 +1158,48 @@ const KNIGHT_VIGNETTES: Vignette[] = [
     tier: 'absolute_chaos',
     promptScore: 'chaotic',
     steps: [
+      // SETUP: Rocket ready for launch
+      ...NARRATOR("The knight approaches the rocket with... unconventional ideas."),
       {
         parallel: [
           { action: 'spawn', asset: 'rocket', position: 'cs-center' },
-          { action: 'sfx', sound: 'spawn' },
+          { action: 'spawn', asset: 'moon', position: 'far-right' },
+          { action: 'spawn', asset: 'spaceship', position: 'far-left' },
+          { action: 'sfx', sound: 'engine' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'knight', position: 'off-left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'knight', emoji: '💪' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Knight's absurd plan
+      ...CHARGE_IN_LEFT('knight'),
+      ...CHARACTER_SPEAK('knight', 'excited', "I shall use my sword as a mighty lever!"),
+      ...EMOTIONAL_REACT('knight', 'excited', 'off-left'),
+      ...RUN_TO('knight', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('sword', 'ds-left', 2.0),
+      // ACTION: Sword lever technique
       {
         parallel: [
           { action: 'animate', character: 'knight', anim: 'sword_thrust' },
-          { action: 'text_popup', text: '⚔️ LEVER TECHNIQUE!', position: 'center', size: 'large' },
+          { action: 'text_popup', text: 'LEVER TECHNIQUE!', position: 'center', size: 'large' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.6,
       },
+      // CONSEQUENCE: Somehow... it worked?!
+      ...IMPACT(),
       {
         parallel: [
           { action: 'react', effect: 'explosion-cartoon', position: 'cs-center' },
           { action: 'camera_shake', intensity: 0.7, duration: 0.8 },
-          { action: 'text_popup', text: '🚀 IT WORKED?!', position: 'top', size: 'huge' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'IT WORKED?!', position: 'top', size: 'huge' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'animate', character: 'knight', anim: 'wave' },
-          { action: 'react', effect: 'hearts-float', position: 'center' },
-          { action: 'emote', character: 'knight', emoji: '😎' },
-        ],
-        delayAfter: 1.5,
-      },
+      ...EMOTIONAL_REACT('knight', 'triumphant', 'off-left'),
+      ...DANCE('knight'),
+      ...FLASH('yellow', 0.3),
+      // RESOLUTION: Chaotic success
+      ...CELEBRATION(['knight']),
+      ...NARRATOR("The knight used a SWORD as a lever! Absurd, but somehow it worked!"),
     ],
     feedback: {
       title: '⚔️ Chaotic Success',
@@ -1182,44 +1217,43 @@ const KNIGHT_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'funny_fail',
     steps: [
+      // SETUP: Building materials
+      ...NARRATOR("The knight sees crates and thinks... castle tower!"),
       {
         parallel: [
           { action: 'spawn', asset: 'cargo_crate', position: 'ds-left' },
           { action: 'spawn', asset: 'cargo_crate', position: 'ds-right' },
-          { action: 'sfx', sound: 'spawn' },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'knight', position: 'off-left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'knight', emoji: '🏰' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Medieval building approach
+      ...BOUNCE_ENTRANCE('knight', 'ds-left', 'left'),
+      ...CHARACTER_SPEAK('knight', 'excited', "I shall construct a mighty tower!"),
+      ...EMOTIONAL_REACT('knight', 'excited', 'ds-left'),
+      ...WALK_TO('knight', 'cs-center'),
+      // ACTION: Castle stacking
       {
         parallel: [
           { action: 'animate', character: 'knight', anim: 'interact' },
           { action: 'spawn', asset: 'cargo_crate', position: 'cs-center' },
-          { action: 'text_popup', text: '🏰 CASTLE TECHNIQUE!', position: 'center', size: 'large' },
+          { action: 'text_popup', text: 'CASTLE TECHNIQUE!', position: 'center', size: 'large' },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.6,
       },
+      // CONSEQUENCE: Tower complete
       {
         parallel: [
           { action: 'react', effect: 'dust', position: 'center' },
-          { action: 'text_popup', text: '📦 TOWER COMPLETE!', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'TOWER COMPLETE!', position: 'top', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'animate', character: 'knight', anim: 'taunt' },
-          { action: 'react', effect: 'sparkle-magic', position: 'center' },
-        ],
-        delayAfter: 1.5,
-      },
+      ...EMOTIONAL_REACT('knight', 'proud', 'off-left'),
+      // RESOLUTION: Medieval meets space
+      ...CELEBRATION(['knight']),
+      ...NARRATOR("The knight built a space tower using castle techniques!"),
     ],
     feedback: {
       title: '🏰 Castle Builder',
@@ -1237,46 +1271,57 @@ const KNIGHT_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Rescue emergency
+      ...NARRATOR("A crew member needs rescue — the knight's time to shine!"),
       {
         parallel: [
           { action: 'spawn', asset: 'space_station', position: 'cs-center' },
-          { action: 'text_popup', text: '🆘 RESCUE NEEDED!', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'fail' },
+          { action: 'text_popup', text: 'RESCUE NEEDED!', position: 'top', size: 'large' },
+          { action: 'sfx', sound: 'explosion' },
         ],
         delayAfter: 0.5,
       },
+      // INTENT: Knight's heroic charge
+      ...DROP_IN('knight'),
       {
         parallel: [
-          { action: 'spawn_character', character: 'knight', position: 'off-left', anim: 'spawn_air' },
-          { action: 'emote', character: 'knight', emoji: '🛡️' },
-          { action: 'text_popup', text: '⚔️ FOR HONOR!', position: 'center', size: 'large' },
+          { action: 'text_popup', text: 'FOR HONOR!', position: 'center', size: 'large' },
         ],
-        delayAfter: 0.4,
+        delayAfter: 0.2,
       },
+      ...CHARACTER_SPEAK('knight', 'heroic', "No one shall be left behind!"),
+      ...EMOTIONAL_REACT('knight', 'heroic', 'off-left'),
+      ...RUN_TO('knight', 'ds-right'),
+      // ACTION: Heroic dash
       {
         parallel: [
           { action: 'animate', character: 'knight', anim: 'dash' },
           { action: 'camera_shake', intensity: 0.3, duration: 0.5 },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.6,
       },
+      // CONSEQUENCE: Rescued!
       {
         parallel: [
           { action: 'spawn_character', character: 'mage', position: 'ds-right', anim: 'spawn_ground' },
           { action: 'react', effect: 'hearts-float', position: 'ds-right' },
-          { action: 'text_popup', text: '✅ RESCUED!', position: 'center', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'RESCUED!', position: 'center', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
       {
         parallel: [
           { action: 'animate', character: 'knight', anim: 'jump_big' },
           { action: 'animate', character: 'mage', anim: 'wave' },
-          { action: 'react', effect: 'stars-spin', position: 'center' },
         ],
-        delayAfter: 1.5,
+        delayAfter: 0.5,
       },
+      ...DANCE('knight'),
+      ...FLASH('blue', 0.2),
+      // RESOLUTION: Valor succeeds
+      ...CELEBRATION(['knight', 'mage']),
+      ...NARRATOR("The knight's bravery works anywhere — even in space!"),
     ],
     feedback: {
       title: '🛡️ Heroic Rescue',
@@ -1294,43 +1339,45 @@ const KNIGHT_VIGNETTES: Vignette[] = [
     tier: 'subtle',
     promptScore: 'funny_fail',
     steps: [
+      // SETUP: Unknown territory
+      ...NARRATOR("The knight explores... with shield raised and extreme caution."),
       {
         parallel: [
           { action: 'spawn', asset: 'satellite_dish', position: 'cs-center' },
-          { action: 'sfx', sound: 'spawn' },
+          { action: 'spawn', asset: 'astronaut', position: 'far-left' },
+          { action: 'spawn', asset: 'spacesuit', position: 'far-right' },
+          { action: 'sfx', sound: 'engine' },
         ],
         delayAfter: 0.5,
       },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'knight', position: 'off-left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'knight', emoji: '🛡️' },
-        ],
-        delayAfter: 0.4,
-      },
+      // INTENT: Defensive exploration
+      ...SNEAK_IN_LEFT('knight'),
+      ...CHARACTER_SPEAK('knight', 'nervous', "I shall advance... carefully!"),
+      ...EMOTIONAL_REACT('knight', 'nervous', 'off-left'),
+      ...WALK_TO('knight', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('shield', 'ds-left', 1.5),
+      // ACTION: Cautious approach
       {
         parallel: [
           { action: 'animate', character: 'knight', anim: 'walk' },
           { action: 'react', effect: 'question-marks', position: 'cs-center' },
-          { action: 'text_popup', text: '🛡️ CAUTIOUS APPROACH...', position: 'center', size: 'large' },
+          { action: 'text_popup', text: 'CAUTIOUS APPROACH...', position: 'center', size: 'large' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.6,
       },
+      // CONSEQUENCE: Territory claimed
       {
         parallel: [
           { action: 'spawn', asset: 'flag', position: 'ds-right' },
-          { action: 'text_popup', text: '🚩 CLAIMED!', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'CLAIMED!', position: 'top', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'animate', character: 'knight', anim: 'wave' },
-          { action: 'react', effect: 'stars-spin', position: 'center' },
-        ],
-        delayAfter: 1.5,
-      },
+      ...EMOTIONAL_REACT('knight', 'proud', 'off-left'),
+      // RESOLUTION: Defensive success
+      ...CELEBRATION(['knight']),
+      ...NARRATOR("The knight explored with shield up — very cautious!"),
     ],
     feedback: {
       title: '🛡️ Shield First',
@@ -1340,7 +1387,7 @@ const KNIGHT_VIGNETTES: Vignette[] = [
     },
   },
 
-  // ── knight + defend (already exists as partial) ─────────────────────────────
+  // ── knight + defend ─────────────────────────────────────────────────────────
   {
     id: 'ks_knight_defend',
     description: 'A medieval knight swings a sword in space, confusing everyone at the station.',
@@ -1348,75 +1395,71 @@ const KNIGHT_VIGNETTES: Vignette[] = [
     tier: 'absolute_chaos',
     promptScore: 'chaotic',
     steps: [
-      // Space station
+      // SETUP: Space station
+      ...NARRATOR("The knight tries to defend the station... with a sword. In space."),
       {
         parallel: [
           { action: 'spawn', asset: 'space_station', position: 'center' },
-          { action: 'sfx', sound: 'spawn' },
+          { action: 'spawn', asset: 'geodesic_dome', position: 'far-left' },
+          { action: 'spawn', asset: 'space_house', position: 'far-right' },
+          { action: 'sfx', sound: 'engine' },
         ],
         delayAfter: 0.3,
       },
-      // Knight appears IN SPACE
+      // INTENT: Medieval defense mindset
+      ...CHARGE_IN_LEFT('knight'),
       {
         parallel: [
-          { action: 'spawn_character', character: 'knight', position: 'left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'knight', emoji: '⚔️' },
-          { action: 'sfx', sound: 'spawn' },
+          { action: 'text_popup', text: 'FOR HONOR!', position: 'top', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.2,
       },
-      // Knight charges (medieval style)
+      ...CHARACTER_SPEAK('knight', 'confused', "I shall defend with blade and honor!"),
+      ...EMOTIONAL_REACT('knight', 'confused', 'left'),
+      ...RUN_TO('knight', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('sword', 'cs-left', 2.5),
+      // ACTION: Confused sword swinging
       {
         parallel: [
           { action: 'animate', character: 'knight', anim: 'sword_slash' },
-          { action: 'sfx', sound: 'move' },
-          { action: 'text_popup', text: '⚔️ FOR HONOR! ⚔️', position: 'top', size: 'large' },
+          { action: 'sfx', sound: 'whoosh' },
+        ],
+        delayAfter: 0.3,
+      },
+      ...DRAMATIC_PAUSE(),
+      {
+        parallel: [
+          { action: 'react', effect: 'question-marks', position: 'center' },
         ],
         delayAfter: 0.5,
       },
-      // Confused pause
-      {
-        parallel: [
-          { action: 'animate', character: 'knight', anim: 'idle' },
-          { action: 'emote', character: 'knight', emoji: '🤔' },
-          { action: 'react', effect: 'question-marks', position: 'center' },
-        ],
-        delayAfter: 1.0,
-      },
-      // Knight swings at nothing
       {
         parallel: [
           { action: 'animate', character: 'knight', anim: 'spin_attack' },
-          { action: 'sfx', sound: 'move' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.5,
       },
-      // Gets dizzy
+      // CONSEQUENCE: Gets dizzy
       {
         parallel: [
           { action: 'animate', character: 'knight', anim: 'get_hit' },
           { action: 'react', effect: 'stars-spin', position: 'left' },
-          { action: 'sfx', sound: 'fail' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      // Robot appears to help
+      ...EMOTIONAL_REACT('knight', 'shocked', 'left'),
+      // RESOLUTION: Robot facepalm
+      ...ENTER_FROM_RIGHT('robot'),
       {
         parallel: [
-          { action: 'spawn_character', character: 'robot', position: 'right', anim: 'spawn_ground' },
-          { action: 'emote', character: 'robot', emoji: '🤖' },
-        ],
-        delayAfter: 0.5,
-      },
-      // Robot facepalms
-      {
-        parallel: [
-          { action: 'animate', character: 'robot', anim: 'idle' },
           { action: 'react', effect: 'sad-cloud', position: 'right' },
-          { action: 'text_popup', text: '🤦 WRONG JOB! 🤦', position: 'center', size: 'large' },
+          { action: 'text_popup', text: 'WRONG JOB!', position: 'center', size: 'large' },
         ],
-        delayAfter: 2.0,
+        delayAfter: 0.5,
       },
+      ...DISAPPOINTMENT(['knight', 'robot']),
+      ...NARRATOR("Swords don't work in space! Pick a ranger or robot for station defense."),
     ],
     feedback: {
       title: '⚔️ MEDIEVAL CHAOS!',
@@ -1438,54 +1481,68 @@ const EVERYONE_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Major emergency
+      ...NARRATOR("A major malfunction requires the entire crew working together!"),
       {
         parallel: [
           { action: 'spawn', asset: 'solar_panel', position: 'cs-center' },
           { action: 'react', effect: 'smoke', position: 'cs-center' },
-          { action: 'text_popup', text: '⚠️ MAJOR MALFUNCTION!', position: 'top', size: 'huge' },
-          { action: 'sfx', sound: 'fail' },
+          { action: 'text_popup', text: 'MAJOR MALFUNCTION!', position: 'top', size: 'huge' },
+          { action: 'sfx', sound: 'explosion' },
         ],
         delayAfter: 0.5,
       },
+      // INTENT: Full crew assembly
       {
         parallel: [
           { action: 'spawn_character', character: 'space_ranger', position: 'ds-left', anim: 'spawn_ground' },
           { action: 'spawn_character', character: 'robot', position: 'ds-right', anim: 'spawn_ground' },
           { action: 'spawn_character', character: 'engineer', position: 'off-left', anim: 'spawn_ground' },
           { action: 'spawn_character', character: 'knight', position: 'off-right', anim: 'spawn_ground' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.5,
       },
       {
         parallel: [
           { action: 'crowd_react', characters: 'all', anim: 'wave' },
-          { action: 'text_popup', text: '👥 ALL HANDS ON DECK!', position: 'center', size: 'large' },
+          { action: 'text_popup', text: 'ALL HANDS ON DECK!', position: 'center', size: 'large' },
         ],
-        delayAfter: 0.6,
+        delayAfter: 0.4,
       },
+      ...WALK_TO('space_ranger', 'cs-left'),
+      ...WALK_TO('robot', 'cs-right'),
+      ...WALK_TO('engineer', 'cs-center'),
+      ...WALK_TO('knight', 'ds-center'),
+      // ACTION: Coordinated teamwork
       {
         parallel: [
           { action: 'crowd_react', characters: 'all', anim: 'interact' },
           { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.8,
       },
+      // CONSEQUENCE: Perfect teamwork
+      ...IMPACT(),
       {
         parallel: [
           { action: 'react', effect: 'sparkle-magic', position: 'center' },
           { action: 'screen_flash', color: 'green', duration: 0.2 },
-          { action: 'text_popup', text: '✅ TEAMWORK SUCCESS!', position: 'top', size: 'huge' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'TEAMWORK SUCCESS!', position: 'top', size: 'huge' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
       {
         parallel: [
-          { action: 'crowd_react', characters: 'all', anim: 'Cheering' },
-          { action: 'react', effect: 'stars-spin', position: 'center' },
+          { action: 'crowd_react', characters: 'all', anim: 'jump_big' },
         ],
-        delayAfter: 1.5,
+        delayAfter: 0.3,
       },
+      ...FLASH('green', 0.3),
+      // RESOLUTION: Group celebration
+      ...CELEBRATION(['space_ranger', 'robot', 'engineer', 'knight']),
+      ...NARRATOR("The entire crew working together accomplished the impossible!"),
     ],
     feedback: {
       title: '👥 Team Repair',
@@ -1495,7 +1552,7 @@ const EVERYONE_VIGNETTES: Vignette[] = [
     },
   },
 
-  // ── everyone + launch (already exists) ──────────────────────────────────────
+  // ── everyone + launch ───────────────────────────────────────────────────────
   {
     id: 'ks_everyone_launch',
     description: 'The entire crew assembles for a dramatic countdown and rocket launch from the space station.',
@@ -1503,41 +1560,48 @@ const EVERYONE_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
-      // Launch pad setup
+      // SETUP: Launch pad ready
+      ...NARRATOR("The entire crew assembles for the ultimate mission — a rocket launch!"),
       {
         parallel: [
           { action: 'spawn', asset: 'rocket', position: 'center' },
           { action: 'spawn', asset: 'cargo_crate', position: 'left' },
           { action: 'spawn', asset: 'cargo_crate', position: 'right' },
-          { action: 'sfx', sound: 'spawn' },
+          { action: 'spawn', asset: 'planet', position: 'far-right' },
+          { action: 'spawn', asset: 'moon', position: 'far-left' },
+          { action: 'sfx', sound: 'engine' },
         ],
         delayAfter: 0.5,
       },
-      // Crew assembles
+      // INTENT: Full crew coordination
       {
         parallel: [
           { action: 'spawn_character', character: 'space_ranger', position: 'left', anim: 'spawn_ground' },
           { action: 'spawn_character', character: 'robot', position: 'right', anim: 'spawn_ground' },
           { action: 'spawn_character', character: 'engineer', position: 'bottom', anim: 'spawn_ground' },
           { action: 'spawn_character', character: 'knight', position: 'center', anim: 'spawn_ground' },
-          { action: 'sfx', sound: 'spawn' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.5,
       },
-      // Everyone gets ready
       {
         parallel: [
           { action: 'crowd_react', characters: 'all', anim: 'wave' },
-          { action: 'text_popup', text: '🚀 LAUNCH SEQUENCE! 🚀', position: 'top', size: 'huge' },
-          { action: 'sfx', sound: 'react' },
+          { action: 'text_popup', text: 'LAUNCH SEQUENCE!', position: 'top', size: 'huge' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      // Countdown
+      ...RUN_TO('space_ranger', 'ds-left'),
+      ...RUN_TO('robot', 'ds-right'),
+      ...JUMP_TO('knight', 'cs-center'),
+      ...WALK_TO('engineer', 'cs-left'),
+      ...OBJECT_GROW_REVEAL('rocket', 'center', 1.5),
+      // ACTION: Dramatic countdown
       {
         parallel: [
           { action: 'text_popup', text: '3...', position: 'center', size: 'huge' },
           { action: 'camera_shake', intensity: 0.2, duration: 0.5 },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.5,
       },
@@ -1545,6 +1609,7 @@ const EVERYONE_VIGNETTES: Vignette[] = [
         parallel: [
           { action: 'text_popup', text: '2...', position: 'center', size: 'huge' },
           { action: 'camera_shake', intensity: 0.4, duration: 0.5 },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.5,
       },
@@ -1552,31 +1617,25 @@ const EVERYONE_VIGNETTES: Vignette[] = [
         parallel: [
           { action: 'text_popup', text: '1...', position: 'center', size: 'huge' },
           { action: 'camera_shake', intensity: 0.6, duration: 0.5 },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.5,
       },
-      // LIFTOFF!
+      // CONSEQUENCE: Liftoff!
+      ...IMPACT(),
       {
         parallel: [
           { action: 'react', effect: 'explosion-cartoon', position: 'center' },
           { action: 'react', effect: 'fire-sneeze', position: 'center' },
           { action: 'screen_flash', color: 'orange', duration: 0.3 },
           { action: 'camera_shake', intensity: 0.8, duration: 1.5 },
-          { action: 'sfx', sound: 'success' },
-          { action: 'text_popup', text: '🚀 LIFTOFF! 🚀', position: 'top', size: 'huge' },
+          { action: 'text_popup', text: 'LIFTOFF!', position: 'top', size: 'huge' },
         ],
         delayAfter: 0.8,
       },
-      // Everyone celebrates
-      {
-        parallel: [
-          { action: 'crowd_react', characters: 'all', anim: 'wave' },
-          { action: 'react', effect: 'glow-pulse', position: 'center' },
-          { action: 'react', effect: 'stars-spin', position: 'center' },
-          { action: 'sfx', sound: 'success' },
-        ],
-        delayAfter: 2.0,
-      },
+      // RESOLUTION: Legendary teamwork
+      ...CELEBRATION(['space_ranger', 'robot', 'engineer', 'knight']),
+      ...NARRATOR("The entire crew coordinated a perfect launch — ultimate teamwork!"),
     ],
     feedback: {
       title: '🚀 LEGENDARY LAUNCH!',
@@ -1594,54 +1653,60 @@ const EVERYONE_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Massive build project
+      ...NARRATOR("The entire crew tackles a massive station expansion together!"),
       {
         parallel: [
           { action: 'spawn', asset: 'cargo_crate', position: 'ds-left' },
           { action: 'spawn', asset: 'cargo_crate', position: 'cs-center' },
           { action: 'spawn', asset: 'cargo_crate', position: 'ds-right' },
-          { action: 'sfx', sound: 'spawn' },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.5,
       },
+      // INTENT: Full team assembly
       {
         parallel: [
           { action: 'spawn_character', character: 'space_ranger', position: 'off-left', anim: 'spawn_ground' },
           { action: 'spawn_character', character: 'robot', position: 'off-right', anim: 'spawn_ground' },
           { action: 'spawn_character', character: 'engineer', position: 'ds-left', anim: 'spawn_ground' },
           { action: 'spawn_character', character: 'knight', position: 'ds-right', anim: 'spawn_ground' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.5,
       },
       {
         parallel: [
           { action: 'crowd_react', characters: 'all', anim: 'wave' },
-          { action: 'text_popup', text: '🏗️ BUILD TOGETHER!', position: 'top', size: 'huge' },
+          { action: 'text_popup', text: 'BUILD TOGETHER!', position: 'top', size: 'huge' },
         ],
-        delayAfter: 0.6,
+        delayAfter: 0.4,
       },
+      ...WALK_TO('space_ranger', 'cs-left'),
+      ...WALK_TO('robot', 'cs-right'),
+      ...WALK_TO('engineer', 'cs-center'),
+      ...WALK_TO('knight', 'ds-center'),
+      // ACTION: Coordinated construction
       {
         parallel: [
           { action: 'crowd_react', characters: 'all', anim: 'interact' },
           { action: 'spawn', asset: 'dome', position: 'us-center' },
           { action: 'react', effect: 'dust', position: 'center' },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.8,
       },
+      // CONSEQUENCE: Expansion complete
       {
         parallel: [
           { action: 'react', effect: 'hearts-float', position: 'center' },
-          { action: 'text_popup', text: '✅ EXPANSION COMPLETE!', position: 'top', size: 'huge' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'EXPANSION COMPLETE!', position: 'top', size: 'huge' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'crowd_react', characters: 'all', anim: 'taunt' },
-          { action: 'react', effect: 'stars-spin', position: 'center' },
-        ],
-        delayAfter: 1.5,
-      },
+      // RESOLUTION: Team triumph
+      ...CELEBRATION(['space_ranger', 'robot', 'engineer', 'knight']),
+      ...NARRATOR("The entire crew built a massive expansion with perfect teamwork!"),
     ],
     feedback: {
       title: '🏗️ Mega Build',
@@ -1659,54 +1724,56 @@ const EVERYONE_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Emergency rescue
+      ...NARRATOR("Emergency! The entire crew mobilizes for a dramatic rescue operation!"),
       {
         parallel: [
           { action: 'spawn', asset: 'space_station', position: 'cs-center' },
-          { action: 'text_popup', text: '🆘 EMERGENCY RESCUE!', position: 'top', size: 'huge' },
+          { action: 'text_popup', text: 'EMERGENCY RESCUE!', position: 'top', size: 'huge' },
           { action: 'camera_shake', intensity: 0.3, duration: 0.5 },
-          { action: 'sfx', sound: 'fail' },
+          { action: 'sfx', sound: 'explosion' },
         ],
         delayAfter: 0.5,
       },
+      // INTENT: Full team deployment
       {
         parallel: [
           { action: 'spawn_character', character: 'space_ranger', position: 'ds-left', anim: 'spawn_air' },
           { action: 'spawn_character', character: 'robot', position: 'ds-right', anim: 'spawn_air' },
           { action: 'spawn_character', character: 'engineer', position: 'off-left', anim: 'spawn_air' },
           { action: 'spawn_character', character: 'knight', position: 'off-right', anim: 'spawn_air' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.5,
       },
       {
         parallel: [
           { action: 'crowd_react', characters: 'all', anim: 'wave' },
-          { action: 'text_popup', text: '👥 RESCUE TEAM!', position: 'center', size: 'large' },
+          { action: 'text_popup', text: 'RESCUE TEAM!', position: 'center', size: 'large' },
         ],
-        delayAfter: 0.6,
+        delayAfter: 0.4,
       },
+      // ACTION: Coordinated rescue
       {
         parallel: [
           { action: 'crowd_react', characters: 'all', anim: 'interact' },
           { action: 'spawn_character', character: 'mage', position: 'us-center', anim: 'spawn_air' },
           { action: 'react', effect: 'hearts-float', position: 'us-center' },
+          { action: 'sfx', sound: 'magic' },
         ],
         delayAfter: 0.8,
       },
+      // CONSEQUENCE: Rescue successful
       {
         parallel: [
           { action: 'react', effect: 'stars-spin', position: 'center' },
-          { action: 'text_popup', text: '✅ RESCUE SUCCESS!', position: 'top', size: 'huge' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'RESCUE SUCCESS!', position: 'top', size: 'huge' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'crowd_react', characters: 'all', anim: 'jump_big' },
-          { action: 'react', effect: 'stars-spin', position: 'center' },
-        ],
-        delayAfter: 1.5,
-      },
+      // RESOLUTION: Team victory
+      ...CELEBRATION(['space_ranger', 'robot', 'engineer', 'knight', 'mage']),
+      ...NARRATOR("The entire crew coordinated a perfect rescue — teamwork saves lives!"),
     ],
     feedback: {
       title: '🆘 Team Rescue',
@@ -1724,51 +1791,55 @@ const EVERYONE_VIGNETTES: Vignette[] = [
     tier: 'moderate',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Unknown territory
+      ...NARRATOR("The entire crew ventures into uncharted territory together!"),
       {
         parallel: [
           { action: 'spawn', asset: 'satellite_dish', position: 'cs-center' },
-          { action: 'sfx', sound: 'spawn' },
+          { action: 'spawn', asset: 'compass', position: 'far-left' },
+          { action: 'spawn', asset: 'map', position: 'far-right' },
+          { action: 'sfx', sound: 'engine' },
         ],
         delayAfter: 0.5,
       },
+      // INTENT: Full team exploration
       {
         parallel: [
           { action: 'spawn_character', character: 'space_ranger', position: 'off-left', anim: 'spawn_ground' },
           { action: 'spawn_character', character: 'robot', position: 'off-right', anim: 'spawn_ground' },
           { action: 'spawn_character', character: 'engineer', position: 'ds-left', anim: 'spawn_ground' },
           { action: 'spawn_character', character: 'knight', position: 'ds-right', anim: 'spawn_ground' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.5,
       },
       {
         parallel: [
           { action: 'crowd_react', characters: 'all', anim: 'wave' },
-          { action: 'text_popup', text: '🗺️ EXPLORE TOGETHER!', position: 'top', size: 'large' },
+          { action: 'text_popup', text: 'EXPLORE TOGETHER!', position: 'top', size: 'large' },
         ],
-        delayAfter: 0.6,
+        delayAfter: 0.4,
       },
+      // ACTION: Coordinated exploration
       {
         parallel: [
           { action: 'crowd_react', characters: 'all', anim: 'walk' },
           { action: 'react', effect: 'sparkle-magic', position: 'center' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.8,
       },
+      // CONSEQUENCE: Sector mapped
       {
         parallel: [
           { action: 'spawn', asset: 'flag', position: 'us-center' },
-          { action: 'text_popup', text: '✅ NEW SECTOR MAPPED!', position: 'top', size: 'large' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'NEW SECTOR MAPPED!', position: 'top', size: 'large' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'crowd_react', characters: 'all', anim: 'Cheering' },
-          { action: 'react', effect: 'sparkle-magic', position: 'center' },
-        ],
-        delayAfter: 1.5,
-      },
+      // RESOLUTION: Team discovery
+      ...CELEBRATION(['space_ranger', 'robot', 'engineer', 'knight']),
+      ...NARRATOR("The entire crew explored and mapped the sector with perfect coordination!"),
     ],
     feedback: {
       title: '🗺️ Team Exploration',
@@ -1786,56 +1857,60 @@ const EVERYONE_VIGNETTES: Vignette[] = [
     tier: 'spectacular',
     promptScore: 'perfect',
     steps: [
+      // SETUP: Station under attack
+      ...NARRATOR("The station is under attack — the entire crew forms a defensive perimeter!"),
       {
         parallel: [
           { action: 'spawn', asset: 'space_station', position: 'cs-center' },
-          { action: 'text_popup', text: '⚠️ UNDER ATTACK!', position: 'top', size: 'huge' },
+          { action: 'text_popup', text: 'UNDER ATTACK!', position: 'top', size: 'huge' },
           { action: 'camera_shake', intensity: 0.4, duration: 0.8 },
-          { action: 'sfx', sound: 'fail' },
+          { action: 'sfx', sound: 'explosion' },
         ],
         delayAfter: 0.5,
       },
+      // INTENT: Full team defense
       {
         parallel: [
           { action: 'spawn_character', character: 'space_ranger', position: 'ds-left', anim: 'spawn_air' },
           { action: 'spawn_character', character: 'robot', position: 'ds-right', anim: 'spawn_air' },
           { action: 'spawn_character', character: 'engineer', position: 'off-left', anim: 'spawn_air' },
           { action: 'spawn_character', character: 'knight', position: 'off-right', anim: 'spawn_air' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.5,
       },
       {
         parallel: [
           { action: 'crowd_react', characters: 'all', anim: 'wave' },
-          { action: 'text_popup', text: '🛡️ DEFENSIVE POSITIONS!', position: 'center', size: 'large' },
+          { action: 'text_popup', text: 'DEFENSIVE POSITIONS!', position: 'center', size: 'large' },
         ],
-        delayAfter: 0.6,
+        delayAfter: 0.4,
       },
+      // ACTION: Coordinated defense
       {
         parallel: [
           { action: 'crowd_react', characters: 'all', anim: 'interact' },
           { action: 'spawn', asset: 'laser_gun', position: 'us-left' },
           { action: 'spawn', asset: 'laser_gun', position: 'us-right' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.8,
       },
+      // CONSEQUENCE: Station secured
+      ...IMPACT(),
       {
         parallel: [
           { action: 'react', effect: 'explosion-cartoon', position: 'off-top' },
+          { action: 'spawn', asset: 'thunder', position: 'far-right' },
+          { action: 'spawn', asset: 'crystal_big', position: 'far-left' },
           { action: 'camera_shake', intensity: 0.6, duration: 0.5 },
-          { action: 'text_popup', text: '💥 STATION SECURE!', position: 'top', size: 'huge' },
-          { action: 'sfx', sound: 'success' },
+          { action: 'text_popup', text: 'STATION SECURE!', position: 'top', size: 'huge' },
         ],
-        delayAfter: 0.5,
+        delayAfter: 0.3,
       },
-      {
-        parallel: [
-          { action: 'crowd_react', characters: 'all', anim: 'wave' },
-          { action: 'react', effect: 'glow-pulse', position: 'center' },
-          { action: 'react', effect: 'stars-spin', position: 'center' },
-        ],
-        delayAfter: 1.5,
-      },
+      // RESOLUTION: United defense triumph
+      ...CELEBRATION(['space_ranger', 'robot', 'engineer', 'knight']),
+      ...NARRATOR("The entire crew defended the station together — unstoppable teamwork!"),
     ],
     feedback: {
       title: '🛡️ Team Defense',
@@ -1902,7 +1977,7 @@ const PAIR_VIGNETTES: Vignette[] = [
       // Confusion
       {
         parallel: [
-          { action: 'emote', character: 'robot', emoji: '🤷' },
+          { action: 'emote', character: 'robot', emoji: 'confused' },
           { action: 'react', effect: 'question-marks', position: 'center' },
           { action: 'text_popup', text: '💥 PEW PEW? 💥', position: 'top', size: 'large' },
         ],
@@ -1928,25 +2003,35 @@ export const KNIGHT_SPACE_DEFAULT: Vignette = {
   trigger: { crew: '*', task: '*', tool: '*' },
   tier: 'subtle',
   promptScore: 'partial',
-  steps: composeBlocking(
+  steps: [
     // Space station props
-    setupProps([{ asset: 'space_station', mark: MARK.US_CENTER }]),
-    // Duo entrance — ranger from left, robot from right
-    enterDuo(
-      'space_ranger', MARK.DS_LEFT,
-      'robot', MARK.DS_RIGHT,
-      { arrivalAnim: 'wave' },
-    ),
-    // Final scene
-    [{
+    {
       parallel: [
-        { action: 'react', effect: 'sparkle-magic', position: MARK.CS_CENTER },
+        { action: 'spawn', asset: 'space_station', position: 'center' },
+        { action: 'sfx', sound: 'spawn' },
+      ],
+      delayAfter: 0.5,
+    },
+    // Duo entrance — ranger from left, robot from right
+    ...CONVERGE_MEET('space_ranger', 'robot'),
+    {
+      parallel: [
+        { action: 'animate', character: 'space_ranger', anim: 'wave' },
+        { action: 'animate', character: 'robot', anim: 'wave' },
+        { action: 'sfx', sound: 'whoosh' },
+      ],
+      delayAfter: 0.8,
+    },
+    // Final scene
+    {
+      parallel: [
+        { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
         { action: 'sfx', sound: 'success' },
         { action: 'text_popup', text: '🛸 SPACE MISSION! 🛸', position: 'center', size: 'large' },
       ],
       delayAfter: 2.0,
-    }],
-  ),
+    },
+  ],
   feedback: {
     title: '🛸 Space Station Online!',
     message: "Something happened at the space station! But WHO fixed it? WHAT did they do? With WHAT tool? Fill in the blanks for a real mission!",
@@ -2024,6 +2109,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
           { action: 'spawn', asset: 'space_station', position: 'center' },
           { action: 'spawn', asset: 'cargo_crate', position: 'left' },
           { action: 'spawn', asset: 'cargo_crate', position: 'right' },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.5,
       },
@@ -2032,6 +2118,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
           { action: 'spawn_character', character: 'engineer', position: 'left', anim: 'spawn_ground' },
           { action: 'spawn_character', character: 'robot', position: 'right', anim: 'spawn_ground' },
           { action: 'spawn_character', character: 'space_ranger', position: 'center', anim: 'spawn_ground' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.5,
       },
@@ -2039,6 +2126,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
         parallel: [
           { action: 'crowd_react', characters: 'all', anim: 'wave' },
           { action: 'text_popup', text: '🤝 TEAMWORK TIME!', position: 'top', size: 'large' },
+          { action: 'sfx', sound: 'react' },
         ],
         delayAfter: 1.0,
       },
@@ -2350,10 +2438,18 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn_character', character: 'space_ranger', position: 'left', anim: 'spawn_air' },
-          { action: 'emote', character: 'space_ranger', emoji: '😱' },
+          { action: 'emote', character: 'space_ranger', emoji: 'scared' },
           { action: 'camera_shake', intensity: 0.5, duration: 1.0 },
+          { action: 'sfx', sound: 'explosion' },
         ],
-        delayAfter: 2.0,
+        delayAfter: 0.5,
+      },
+      {
+        parallel: [
+          { action: 'react', effect: 'smoke', position: 'center' },
+          { action: 'sfx', sound: 'impact' },
+        ],
+        delayAfter: 1.5,
       },
     ],
     feedback: {
@@ -2382,6 +2478,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
           { action: 'spawn', asset: 'cargo_crate', position: 'right' },
           { action: 'text_popup', text: '⚠️ URGENT TASK!', position: 'top', size: 'large' },
           { action: 'camera_shake', intensity: 0.2, duration: 0.5 },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.3,
       },
@@ -2389,6 +2486,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
         parallel: [
           { action: 'spawn_character', character: 'robot', position: 'left', anim: 'spawn_ground' },
           { action: 'emote', character: 'robot', emoji: '💨' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.3,
       },
@@ -2396,6 +2494,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
         parallel: [
           { action: 'animate', character: 'robot', anim: 'interact' },
           { action: 'react', effect: 'sparkle-magic', position: 'right' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.5,
       },
@@ -2431,6 +2530,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn', asset: 'space_station', position: 'center' },
+          { action: 'sfx', sound: 'spawn' },
         ],
         delayAfter: 0.5,
       },
@@ -2438,6 +2538,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
         parallel: [
           { action: 'spawn_character', character: 'engineer', position: 'left', anim: 'spawn_ground' },
           { action: 'emote', character: 'engineer', emoji: '💡' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.5,
       },
@@ -2446,6 +2547,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
           { action: 'spawn', asset: 'flag', position: 'right' },
           { action: 'animate', character: 'engineer', anim: 'throw' },
           { action: 'react', effect: 'question-marks', position: 'center' },
+          { action: 'sfx', sound: 'react' },
         ],
         delayAfter: 0.5,
       },
@@ -2488,6 +2590,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn', asset: 'rocket', position: 'center' },
+          { action: 'sfx', sound: 'engine' },
         ],
         delayAfter: 0.3,
       },
@@ -2495,6 +2598,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
         parallel: [
           { action: 'spawn_character', character: 'space_ranger', position: 'left', anim: 'spawn_air' },
           { action: 'emote', character: 'space_ranger', emoji: '💨' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.3,
       },
@@ -2502,6 +2606,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
         parallel: [
           { action: 'animate', character: 'space_ranger', anim: 'interact' },
           { action: 'react', effect: 'sparkle-magic', position: 'center' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.3,
       },
@@ -2540,14 +2645,16 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
           { action: 'react', effect: 'explosion-cartoon', position: 'right' },
           { action: 'camera_shake', intensity: 0.8, duration: 2.0 },
           { action: 'text_popup', text: '🚨 CATASTROPHIC! 🚨', position: 'top', size: 'huge' },
+          { action: 'sfx', sound: 'explosion' },
         ],
         delayAfter: 0.5,
       },
       {
         parallel: [
           { action: 'spawn_character', character: 'engineer', position: 'left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'engineer', emoji: '🤔' },
+          { action: 'emote', character: 'engineer', emoji: 'thinking' },
           { action: 'camera_shake', intensity: 0.6, duration: 1.0 },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 1.0,
       },
@@ -2556,6 +2663,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
           { action: 'animate', character: 'engineer', anim: 'idle' },
           { action: 'react', effect: 'question-marks', position: 'left' },
           { action: 'camera_shake', intensity: 0.7, duration: 1.0 },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 1.0,
       },
@@ -2592,13 +2700,15 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
       {
         parallel: [
           { action: 'spawn', asset: 'space_station', position: 'center' },
+          { action: 'sfx', sound: 'spawn' },
         ],
         delayAfter: 0.5,
       },
       {
         parallel: [
           { action: 'spawn_character', character: 'robot', position: 'left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'robot', emoji: '🤷' },
+          { action: 'emote', character: 'robot', emoji: 'confused' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.5,
       },
@@ -2607,6 +2717,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
           { action: 'animate', character: 'robot', anim: 'wave' },
           { action: 'react', effect: 'question-marks', position: 'center' },
           { action: 'text_popup', text: '👥 WHERE IS EVERYONE?', position: 'top', size: 'large' },
+          { action: 'sfx', sound: 'react' },
         ],
         delayAfter: 1.0,
       },
@@ -2644,6 +2755,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
           { action: 'spawn', asset: 'space_station', position: 'center' },
           { action: 'spawn', asset: 'cargo_crate', position: 'left' },
           { action: 'spawn', asset: 'cargo_crate', position: 'right' },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.3,
       },
@@ -2651,6 +2763,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
         parallel: [
           { action: 'spawn_character', character: 'space_ranger', position: 'left', anim: 'spawn_ground' },
           { action: 'emote', character: 'space_ranger', emoji: '⚡' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.3,
       },
@@ -2659,6 +2772,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
           { action: 'move', character: 'space_ranger', to: 'center', duration: 0.5 },
           { action: 'animate', character: 'space_ranger', anim: 'interact' },
           { action: 'react', effect: 'sparkle-magic', position: 'left' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.5,
       },
@@ -2763,6 +2877,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
           { action: 'spawn', asset: 'space_station', position: 'center' },
           { action: 'spawn', asset: 'solar_panel', position: 'left' },
           { action: 'react', effect: 'question-marks', position: 'center' },
+          { action: 'sfx', sound: 'spawn' },
         ],
         delayAfter: 0.5,
       },
@@ -2771,6 +2886,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
           { action: 'spawn_character', character: 'robot', position: 'right', anim: 'spawn_ground' },
           { action: 'emote', character: 'robot', emoji: '💡' },
           { action: 'text_popup', text: '⚠️ URGENT: POWER NEEDED', position: 'top', size: 'large' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.5,
       },
@@ -2779,6 +2895,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
           { action: 'animate', character: 'robot', anim: 'interact' },
           { action: 'spawn', asset: 'battery', position: 'center' },
           { action: 'react', effect: 'sparkle-magic', position: 'center' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 1.0,
       },
@@ -3071,7 +3188,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
           { action: 'react', effect: 'smoke', position: 'center' },
           { action: 'camera_shake', intensity: 'high', duration: 1.0 },
           { action: 'animate', character: 'engineer', anim: 'idle' },
-          { action: 'emote', character: 'engineer', emoji: '😱' },
+          { action: 'emote', character: 'engineer', emoji: 'scared' },
           { action: 'text_popup', text: '💥 TOO FAST = MELTDOWN!', position: 'top', size: 'large' },
           { action: 'sfx', sound: 'fail' },
         ],
@@ -3159,6 +3276,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
           { action: 'spawn', asset: 'satellite_dish', position: 'far-right' },
           { action: 'react', effect: 'question-marks', position: 'right' },
           { action: 'text_popup', text: '⚠️ SCOUT BEFORE COLLAPSE!', position: 'top', size: 'large' },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.5,
       },
@@ -3166,6 +3284,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
         parallel: [
           { action: 'spawn_character', character: 'knight', position: 'left', anim: 'spawn_ground' },
           { action: 'emote', character: 'knight', emoji: '⚡' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.3,
       },
@@ -3173,6 +3292,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
         parallel: [
           { action: 'move', character: 'knight', to: 'center', duration: 0.5 },
           { action: 'react', effect: 'sparkle-magic', position: 'center' },
+          { action: 'sfx', sound: 'react' },
         ],
         delayAfter: 0.5,
       },
@@ -3194,7 +3314,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
     ],
     feedback: {
       title: '⚡ Speed Scout',
-      message: "URGENT + FAST + EXPLORE = rapid reconnaissance under time pressure! Compare to ROUTINE + CAREFUL + EXPLORE which would be leisurely!",
+      message: "URGENT + FAST + EXPLORE = rapid scouting under time pressure! Compare to ROUTINE + CAREFUL + EXPLORE which would be leisurely!",
       skillTaught: 'Specificity',
       vagueComparison: {
         vagueInput: "Explore the sector",
@@ -3217,6 +3337,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
           { action: 'spawn', asset: 'space_station', position: 'center' },
           { action: 'spawn', asset: 'turret', position: 'left' },
           { action: 'spawn', asset: 'turret', position: 'right' },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.5,
       },
@@ -3224,6 +3345,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
         parallel: [
           { action: 'spawn_character', character: 'space_ranger', position: 'center', anim: 'spawn_ground' },
           { action: 'emote', character: 'space_ranger', emoji: '🎯' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.5,
       },
@@ -3232,6 +3354,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
           { action: 'animate', character: 'space_ranger', anim: 'interact' },
           { action: 'spawn', asset: 'target_dummy', position: 'far-right' },
           { action: 'react', effect: 'sparkle-magic', position: 'far-right' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 1.0,
       },
@@ -3330,6 +3453,7 @@ export const KNIGHT_SPACE_DEFAULT_2: Vignette = {
       parallel: [
         { action: 'spawn', asset: 'space_station', position: 'center' },
         { action: 'spawn', asset: 'satellite_dish', position: 'right' },
+        { action: 'sfx', sound: 'spawn' },
       ],
       delayAfter: 0.5,
     },
@@ -3337,6 +3461,7 @@ export const KNIGHT_SPACE_DEFAULT_2: Vignette = {
       parallel: [
         { action: 'spawn_character', character: 'space_ranger', position: 'left', anim: 'spawn_ground' },
         { action: 'spawn_character', character: 'robot', position: 'right', anim: 'spawn_ground' },
+        { action: 'sfx', sound: 'engine' },
       ],
       delayAfter: 0.5,
     },
@@ -3344,6 +3469,7 @@ export const KNIGHT_SPACE_DEFAULT_2: Vignette = {
       parallel: [
         { action: 'crowd_react', characters: 'all', anim: 'wave' },
         { action: 'text_popup', text: '🛸 MISSION START!', position: 'center', size: 'large' },
+        { action: 'sfx', sound: 'whoosh' },
       ],
       delayAfter: 2.0,
     },
@@ -3377,6 +3503,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
           { action: 'spawn', asset: 'space_station', position: 'center' },
           { action: 'spawn', asset: 'solar_panel', position: 'left' },
           { action: 'text_popup', text: '☀️ SOLAR LASER COMBO!', position: 'top', size: 'huge' },
+          { action: 'sfx', sound: 'spawn' },
         ],
         delayAfter: 0.5,
       },
@@ -3384,6 +3511,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
         parallel: [
           { action: 'spawn_character', character: 'engineer', position: 'left', anim: 'spawn_ground' },
           { action: 'emote', character: 'engineer', emoji: '🔬' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.5,
       },
@@ -3392,6 +3520,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
           { action: 'spawn', asset: 'laser_gun', position: 'right' },
           { action: 'animate', character: 'engineer', anim: 'interact' },
           { action: 'react', effect: 'sparkle-magic', position: 'left' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.5,
       },
@@ -3400,6 +3529,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
           { action: 'react', effect: 'sparkle-magic', position: 'right' },
           { action: 'screen_flash', color: 'yellow', duration: 0.3 },
           { action: 'text_popup', text: '⚡ SOLAR BEAM!', position: 'center', size: 'huge' },
+          { action: 'sfx', sound: 'magic' },
         ],
         delayAfter: 0.5,
       },
@@ -3504,6 +3634,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
         parallel: [
           { action: 'spawn', asset: 'space_station', position: 'center' },
           { action: 'text_popup', text: '🚩 SIGNAL BEACON COMBO!', position: 'top', size: 'huge' },
+          { action: 'sfx', sound: 'spawn' },
         ],
         delayAfter: 0.5,
       },
@@ -3511,6 +3642,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
         parallel: [
           { action: 'spawn', asset: 'cargo_crate', position: 'center' },
           { action: 'spawn', asset: 'flag', position: 'right' },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.5,
       },
@@ -3518,6 +3650,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
         parallel: [
           { action: 'spawn_character', character: 'robot', position: 'left', anim: 'spawn_ground' },
           { action: 'emote', character: 'robot', emoji: '📡' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.5,
       },
@@ -3525,6 +3658,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
         parallel: [
           { action: 'animate', character: 'robot', anim: 'throw' },
           { action: 'react', effect: 'sparkle-magic', position: 'center' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.5,
       },
@@ -3565,6 +3699,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
         parallel: [
           { action: 'spawn', asset: 'space_station', position: 'center' },
           { action: 'text_popup', text: '🛡️ FORCE SHIELD COMBO!', position: 'top', size: 'huge' },
+          { action: 'sfx', sound: 'spawn' },
         ],
         delayAfter: 0.5,
       },
@@ -3572,6 +3707,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
         parallel: [
           { action: 'spawn', asset: 'laser_gun', position: 'left' },
           { action: 'spawn', asset: 'mystery_crate', position: 'right' },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.5,
       },
@@ -3579,6 +3715,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
         parallel: [
           { action: 'spawn_character', character: 'engineer', position: 'center', anim: 'spawn_ground' },
           { action: 'emote', character: 'engineer', emoji: '🔬' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.5,
       },
@@ -3587,6 +3724,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
           { action: 'animate', character: 'engineer', anim: 'interact' },
           { action: 'react', effect: 'sparkle-magic', position: 'left' },
           { action: 'react', effect: 'sparkle-magic', position: 'right' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.5,
       },
@@ -3627,6 +3765,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
         parallel: [
           { action: 'spawn', asset: 'rocket', position: 'center' },
           { action: 'text_popup', text: '🚀 SOLAR SAIL COMBO!', position: 'top', size: 'huge' },
+          { action: 'sfx', sound: 'engine' },
         ],
         delayAfter: 0.5,
       },
@@ -3634,6 +3773,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
         parallel: [
           { action: 'spawn', asset: 'solar_panel', position: 'left' },
           { action: 'spawn', asset: 'solar_panel', position: 'right' },
+          { action: 'sfx', sound: 'spawn' },
         ],
         delayAfter: 0.5,
       },
@@ -3641,6 +3781,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
         parallel: [
           { action: 'spawn_character', character: 'space_ranger', position: 'left', anim: 'spawn_ground' },
           { action: 'emote', character: 'space_ranger', emoji: '☀️' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.5,
       },
@@ -3649,6 +3790,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
           { action: 'animate', character: 'space_ranger', anim: 'interact' },
           { action: 'react', effect: 'sparkle-magic', position: 'left' },
           { action: 'react', effect: 'sparkle-magic', position: 'right' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.5,
       },
@@ -3690,6 +3832,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
         parallel: [
           { action: 'spawn', asset: 'space_station', position: 'center' },
           { action: 'text_popup', text: '📦 CARGO CANNON COMBO!', position: 'top', size: 'huge' },
+          { action: 'sfx', sound: 'spawn' },
         ],
         delayAfter: 0.5,
       },
@@ -3697,6 +3840,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
         parallel: [
           { action: 'spawn', asset: 'cargo_crate', position: 'left' },
           { action: 'spawn', asset: 'rocket', position: 'right' },
+          { action: 'sfx', sound: 'impact' },
         ],
         delayAfter: 0.5,
       },
@@ -3704,6 +3848,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
         parallel: [
           { action: 'spawn_character', character: 'robot', position: 'center', anim: 'spawn_ground' },
           { action: 'emote', character: 'robot', emoji: '🚀' },
+          { action: 'sfx', sound: 'whoosh' },
         ],
         delayAfter: 0.5,
       },
@@ -3711,6 +3856,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
         parallel: [
           { action: 'animate', character: 'robot', anim: 'interact' },
           { action: 'react', effect: 'sparkle-magic', position: 'left' },
+          { action: 'sfx', sound: 'laser' },
         ],
         delayAfter: 0.5,
       },
@@ -3756,6 +3902,7 @@ export const KNIGHT_SPACE_DEFAULT_3: Vignette = {
         { action: 'spawn', asset: 'space_station', position: 'center' },
         { action: 'spawn', asset: 'cargo_crate', position: 'left' },
         { action: 'spawn', asset: 'mystery_crate', position: 'right' },
+        { action: 'sfx', sound: 'impact' },
       ],
       delayAfter: 0.5,
     },
@@ -3763,6 +3910,7 @@ export const KNIGHT_SPACE_DEFAULT_3: Vignette = {
       parallel: [
         { action: 'spawn_character', character: 'engineer', position: 'left', anim: 'spawn_ground' },
         { action: 'spawn_character', character: 'robot', position: 'right', anim: 'spawn_ground' },
+        { action: 'sfx', sound: 'whoosh' },
       ],
       delayAfter: 0.5,
     },
@@ -3771,6 +3919,7 @@ export const KNIGHT_SPACE_DEFAULT_3: Vignette = {
         { action: 'crowd_react', characters: 'all', anim: 'wave' },
         { action: 'react', effect: 'question-marks', position: 'center' },
         { action: 'text_popup', text: '🤔 COMBO?', position: 'center', size: 'large' },
+        { action: 'sfx', sound: 'react' },
       ],
       delayAfter: 2.0,
     },

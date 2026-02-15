@@ -192,6 +192,8 @@ This entire project — every line of code, every system prompt, every cache ent
 - **Persistent memory tree** — cross-session knowledge storage for decisions, patterns, bugs, and preferences
 - **Custom hooks** — automatic TypeScript checking, context management, pre-commit validation
 
+For a detailed walkthrough of the project — architecture, educational design, the 7-day build journey, and how Opus 4.6 powers everything — see the **[Judge's Guide](docs/judges-guide.md)**.
+
 ## License
 
 [MIT](LICENSE)

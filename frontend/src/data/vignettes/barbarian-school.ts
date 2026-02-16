@@ -1795,6 +1795,224 @@ export const BARBARIAN_SCHOOL_STAGE_3: Vignette[] = [
       tip: 'Combining games in sequence creates exciting multi-stage challenges!',
     },
   },
+
+  // ── wrestling + jumping: Trampoline Wrestling ──
+  {
+    id: 'bs_wrestling_jumping',
+    description: 'Wrestling while bouncing on invisible trampolines — mid-air grappling chaos',
+    trigger: { game1: 'wrestling', game2: 'jumping', style: '*', playground: '*' },
+    tier: 'spectacular',
+    promptScore: 'perfect',
+    steps: [
+      ...NARRATOR("Wrestling plus jumping equals MID-AIR COMBAT!"),
+      { parallel: [
+        { action: 'spawn', asset: 'trampoline', position: 'cs-left' },
+        { action: 'spawn', asset: 'trampoline', position: 'cs-right' },
+        { action: 'spawn', asset: 'flag', position: 'ds-center' },
+        { action: 'sfx', sound: 'spawn' },
+      ], delayAfter: 0.3 },
+      { parallel: [
+        { action: 'spawn_character', character: 'barbarian', position: 'off-left', anim: 'spawn_ground' },
+        { action: 'spawn_character', character: 'clown', position: 'off-right', anim: 'spawn_ground' },
+        { action: 'sfx', sound: 'spawn' },
+      ], delayAfter: 0.5 },
+      ...CHARACTER_SPEAK('barbarian', 'excited', "BOUNCE AND SMASH!"),
+      ...RUN_TO('barbarian', 'cs-left'),
+      { parallel: [
+        { action: 'animate', character: 'barbarian', anim: 'jump_full' },
+        { action: 'sfx', sound: 'whoosh' },
+      ], delayAfter: 0.4 },
+      ...RUN_TO('clown', 'cs-right'),
+      { parallel: [
+        { action: 'animate', character: 'clown', anim: 'jump_full' },
+        { action: 'animate', character: 'barbarian', anim: 'punch' },
+        { action: 'react', effect: 'stars-spin', position: 'cs-center' },
+        { action: 'sfx', sound: 'impact' },
+      ], delayAfter: 0.5 },
+      ...CROWD_CHEER(),
+      ...CELEBRATION(['barbarian', 'clown']),
+    ],
+    feedback: {
+      title: '🤸 TRAMPOLINE WRESTLING!',
+      message: 'Bouncing plus grappling — the most extreme playground sport ever invented!',
+      skillTaught: 'Creativity',
+      tip: 'Combining physical games creates new extreme sports!',
+    },
+  },
+
+  // ── race + climbing: Obstacle Course ──
+  {
+    id: 'bs_race_climbing',
+    description: 'Racing while climbing creates an epic obstacle course',
+    trigger: { game1: 'race', game2: 'climbing', style: '*', playground: '*' },
+    tier: 'spectacular',
+    promptScore: 'perfect',
+    steps: [
+      ...NARRATOR("Race meets climbing — OBSTACLE COURSE TIME!"),
+      { parallel: [
+        { action: 'spawn', asset: 'slide', position: 'cs-left' },
+        { action: 'spawn', asset: 'fence', position: 'cs-center' },
+        { action: 'spawn', asset: 'ladder', position: 'cs-right' },
+        { action: 'spawn', asset: 'flag', position: 'ds-right' },
+        { action: 'sfx', sound: 'spawn' },
+      ], delayAfter: 0.3 },
+      { parallel: [
+        { action: 'spawn_character', character: 'barbarian', position: 'off-left', anim: 'spawn_ground' },
+        { action: 'spawn_character', character: 'robot', position: 'off-left', anim: 'spawn_ground' },
+        { action: 'sfx', sound: 'spawn' },
+      ], delayAfter: 0.5 },
+      ...CHARACTER_SPEAK('barbarian', 'excited', "FIRST TO THE TOP WINS!"),
+      ...CHARGE_IN_LEFT('barbarian'),
+      ...RUN_TO('barbarian', 'cs-center'),
+      { parallel: [
+        { action: 'animate', character: 'barbarian', anim: 'climb' },
+        { action: 'sfx', sound: 'whoosh' },
+      ], delayAfter: 0.4 },
+      ...ENTER_FROM_LEFT('robot', 'cs-left'),
+      ...RUN_TO('robot', 'cs-right'),
+      { parallel: [
+        { action: 'animate', character: 'robot', anim: 'climb' },
+        { action: 'sfx', sound: 'whoosh' },
+      ], delayAfter: 0.4 },
+      ...CROWD_CHEER(),
+      ...CELEBRATION(['barbarian', 'robot']),
+    ],
+    feedback: {
+      title: '🧗 OBSTACLE COURSE!',
+      message: 'Racing while climbing — you invented the ultimate playground obstacle course!',
+      skillTaught: 'Sequencing',
+      tip: 'Adding challenges to a race makes it way more exciting!',
+    },
+  },
+
+  // ── tag + race: Speed Tag ──
+  {
+    id: 'bs_tag_race',
+    description: 'Tag at maximum speed — lightning-fast chase game',
+    trigger: { game1: 'tag', game2: 'race', style: '*', playground: '*' },
+    tier: 'spectacular',
+    promptScore: 'perfect',
+    steps: [
+      ...NARRATOR("Tag plus racing equals SPEED TAG!"),
+      { parallel: [
+        { action: 'spawn', asset: 'flag', position: 'cs-left' },
+        { action: 'spawn', asset: 'flag', position: 'cs-right' },
+        { action: 'spawn', asset: 'cone', position: 'ds-left' },
+        { action: 'spawn', asset: 'cone', position: 'ds-right' },
+        { action: 'sfx', sound: 'spawn' },
+      ], delayAfter: 0.3 },
+      { parallel: [
+        { action: 'spawn_character', character: 'ninja', position: 'off-left', anim: 'spawn_ground' },
+        { action: 'spawn_character', character: 'barbarian', position: 'off-right', anim: 'spawn_ground' },
+        { action: 'sfx', sound: 'spawn' },
+      ], delayAfter: 0.5 },
+      ...CHARACTER_SPEAK('ninja', 'mischievous', "Catch me if you can!"),
+      ...CHASE('barbarian', 'ninja', 'cs-right'),
+      ...RUN_TO('ninja', 'cs-left'),
+      ...CHASE('barbarian', 'ninja', 'cs-left'),
+      { parallel: [
+        { action: 'animate', character: 'barbarian', anim: 'punch' },
+        { action: 'react', effect: 'sparkle-burst', position: 'cs-left' },
+        { action: 'sfx', sound: 'impact' },
+        { action: 'text_popup', text: 'TAGGED!', position: 'center', size: 'large' },
+      ], delayAfter: 0.5 },
+      ...CELEBRATION(['barbarian', 'ninja']),
+    ],
+    feedback: {
+      title: '⚡ SPEED TAG!',
+      message: 'Tag at top speed — the fastest playground game ever!',
+      skillTaught: 'Creativity',
+      tip: 'Adding speed to any game cranks up the excitement!',
+    },
+  },
+
+  // ── hide_seek + climbing: Vertical Hide & Seek ──
+  {
+    id: 'bs_hide_climbing',
+    description: 'Hide-and-seek where you hide by climbing up high',
+    trigger: { game1: 'hide_seek', game2: 'climbing', style: '*', playground: '*' },
+    tier: 'moderate',
+    promptScore: 'perfect',
+    steps: [
+      ...NARRATOR("Hide-and-seek goes VERTICAL!"),
+      { parallel: [
+        { action: 'spawn', asset: 'ladder', position: 'cs-left' },
+        { action: 'spawn', asset: 'tree', position: 'cs-right' },
+        { action: 'spawn', asset: 'haybale', position: 'ds-center' },
+        { action: 'sfx', sound: 'spawn' },
+      ], delayAfter: 0.3 },
+      { parallel: [
+        { action: 'spawn_character', character: 'ninja', position: 'off-left', anim: 'spawn_ground' },
+        { action: 'spawn_character', character: 'barbarian', position: 'off-right', anim: 'spawn_ground' },
+        { action: 'sfx', sound: 'spawn' },
+      ], delayAfter: 0.5 },
+      ...SNEAK_IN_LEFT('ninja', 'cs-left'),
+      { parallel: [
+        { action: 'animate', character: 'ninja', anim: 'climb' },
+        { action: 'sfx', sound: 'whoosh' },
+      ], delayAfter: 0.5 },
+      ...CHARACTER_SPEAK('barbarian', 'confused', "WHERE DID NINJA GO?"),
+      ...WALK_TO('barbarian', 'cs-right'),
+      ...WALK_TO('barbarian', 'cs-left'),
+      { parallel: [
+        { action: 'animate', character: 'barbarian', anim: 'Looking_Around' },
+        { action: 'emote', character: 'barbarian', emoji: 'confused' },
+      ], delayAfter: 0.6 },
+      { parallel: [
+        { action: 'animate', character: 'ninja', anim: 'taunt' },
+        { action: 'react', effect: 'confetti-burst', position: 'cs-left' },
+        { action: 'text_popup', text: 'UP HERE!', position: 'top', size: 'large' },
+        { action: 'sfx', sound: 'success' },
+      ], delayAfter: 0.5 },
+      ...CELEBRATION(['ninja']),
+    ],
+    feedback: {
+      title: '🌳 VERTICAL HIDE & SEEK!',
+      message: 'Hiding up high — nobody thought to look UP! Genius hiding strategy!',
+      skillTaught: 'Specificity',
+      tip: 'Adding a direction (up, under, behind) makes hiding way more creative!',
+    },
+  },
+
+  // ── wrestling + race: Chase Wrestling ──
+  {
+    id: 'bs_wrestling_race',
+    description: 'Wrestling combined with racing — grab opponents while running',
+    trigger: { game1: 'wrestling', game2: 'race', style: '*', playground: '*' },
+    tier: 'spectacular',
+    promptScore: 'perfect',
+    steps: [
+      ...NARRATOR("Wrestling plus racing — CHASE WRESTLING!"),
+      { parallel: [
+        { action: 'spawn', asset: 'cone', position: 'cs-left' },
+        { action: 'spawn', asset: 'cone', position: 'cs-right' },
+        { action: 'spawn', asset: 'flag', position: 'ds-center' },
+        { action: 'sfx', sound: 'spawn' },
+      ], delayAfter: 0.3 },
+      { parallel: [
+        { action: 'spawn_character', character: 'barbarian', position: 'off-left', anim: 'spawn_ground' },
+        { action: 'spawn_character', character: 'clown', position: 'cs-right', anim: 'spawn_ground' },
+        { action: 'sfx', sound: 'spawn' },
+      ], delayAfter: 0.5 },
+      ...CHARACTER_SPEAK('barbarian', 'excited', "RUN AND GRAB!"),
+      ...CHARGE_IN_LEFT('barbarian'),
+      ...CHASE('barbarian', 'clown', 'cs-left'),
+      { parallel: [
+        { action: 'animate', character: 'barbarian', anim: 'kick' },
+        { action: 'animate', character: 'clown', anim: 'get_bonked' },
+        { action: 'react', effect: 'stars-spin', position: 'cs-left' },
+        { action: 'sfx', sound: 'impact' },
+      ], delayAfter: 0.5 },
+      ...CROWD_CHEER(),
+      ...CELEBRATION(['barbarian', 'clown']),
+    ],
+    feedback: {
+      title: '🏃 CHASE WRESTLING!',
+      message: 'Grabbing opponents while running at full speed — total chaos!',
+      skillTaught: 'Creativity',
+      tip: 'Combining movement games with contact games creates wild new sports!',
+    },
+  },
 ];
 
 export const BARBARIAN_SCHOOL_DEFAULT_3: Vignette = {

@@ -14,7 +14,7 @@ import { CHARACTERS, ASSET_BASE } from './data/asset-manifest';
 import { PLAYER_CHARACTERS } from './data/player-characters';
 import { WORLDS } from './data/worlds';
 import { BADGES } from './services/badge-system';
-import { getQuestStage, getQuestStages, getLevel4Stage, getLevel5Stage } from './data/quest-stages';
+import { getQuestStage, getLevel4Stage, getLevel5Stage } from './data/quest-stages';
 import Level4Input from './components/Level4Input';
 import Level5Input from './components/Level5Input';
 import CameraControls from './components/CameraControls';
@@ -123,30 +123,6 @@ export default function App() {
             {world && (
               <span className="text-sm font-heading font-bold text-quest-text-dark bg-white/80 px-3 py-1.5 rounded-xl border border-quest-purple/20 flex items-center gap-2">
                 <span>{world.emoji} {world.label}</span>
-                {currentZone && (() => {
-                  const madLibStages = getQuestStages(currentZone).length;
-                  // Total dots: mad-libs stages + Level 4 + Level 5
-                  const totalDots = madLibStages + 2;
-                  return (
-                    <span className="flex items-center gap-0.5 text-xs">
-                      <span className="text-quest-text-muted">
-                        {stageNumber <= madLibStages ? `Lv${stageNumber}` : stageNumber === 4 ? 'Free Text' : 'Full Prompt'}
-                      </span>
-                      <span className="flex gap-0.5">
-                        {Array.from({ length: totalDots }, (_, i) => (
-                          <span
-                            key={i}
-                            className={`w-1.5 h-1.5 rounded-full ${
-                              i < stageNumber
-                                ? i < madLibStages ? 'bg-quest-purple' : i === madLibStages ? 'bg-quest-orange' : 'bg-quest-yellow'
-                                : 'bg-quest-border'
-                            }`}
-                          />
-                        ))}
-                      </span>
-                    </span>
-                  );
-                })()}
               </span>
             )}
           </div>

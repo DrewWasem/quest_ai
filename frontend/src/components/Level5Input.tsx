@@ -43,7 +43,7 @@ export default function Level5Input({ stage }: Level5InputProps) {
     try {
       const systemPrompt = getLevel5SystemPrompt(stage.systemPromptKey);
       const raw = await callClaude(systemPrompt, trimmed, {
-        model: 'claude-sonnet-4-5-20250929',
+        model: 'claude-opus-4-6',
         maxTokens: 1500,
         timeoutMs: 12000,
       });

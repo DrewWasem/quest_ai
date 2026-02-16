@@ -1699,6 +1699,206 @@ const STAGE3_COMBO_VIGNETTES: Vignette[] = [
       tip: 'Combining opposite spells creates powerful reactions!',
     },
   },
+
+  // ── grow + shrink combo: Size Swap ──
+  {
+    id: 'mk3_grow_shrink',
+    description: 'Grow and shrink spells collide, swapping sizes of everything in the kitchen',
+    trigger: { spell1: 'grow_spell', spell2: 'shrink_spell', appliance: '*', result: '*' },
+    tier: 'spectacular',
+    promptScore: 'perfect',
+    steps: [
+      ...NARRATOR("Grow meets shrink — SIZE SWAP!"),
+      ...TELEPORT_IN('mage', 'ds-left'),
+      ...OBJECT_DROP('pot', 'cs-left'),
+      ...OBJECT_DROP('frying_pan', 'cs-right'),
+      ...CHARACTER_SPEAK('mage', 'excited', 'Big then small... or small then BIG?'),
+      { parallel: [
+        { action: 'animate', character: 'mage', anim: 'cast_long' },
+        { action: 'react', effect: 'sparkle-magic', position: 'cs-left' },
+        { action: 'sfx', sound: 'magic' },
+        { action: 'text_popup', text: 'GROW!', position: 'top', size: 'large' },
+      ], delayAfter: 0.6 },
+      { parallel: [
+        { action: 'animate', character: 'mage', anim: 'cast_spell' },
+        { action: 'react', effect: 'sparkle-burst', position: 'cs-right' },
+        { action: 'sfx', sound: 'magic' },
+        { action: 'text_popup', text: 'SHRINK!', position: 'bottom', size: 'large' },
+      ], delayAfter: 0.6 },
+      { parallel: [
+        { action: 'react', effect: 'confetti-burst', position: 'cs-center' },
+        { action: 'camera_shake', intensity: 0.5, duration: 0.8 },
+        { action: 'sfx', sound: 'explosion' },
+        { action: 'text_popup', text: 'SIZE SWAP!', position: 'center', size: 'huge' },
+      ], delayAfter: 1.0 },
+      ...CELEBRATION(['mage']),
+      ...NARRATOR("Everything swapped sizes — tiny pots and giant spoons!"),
+    ],
+    feedback: {
+      title: '🔄 SIZE SWAP!',
+      message: 'Grow + Shrink at the same time = everything swaps sizes! Kitchen chaos!',
+      skillTaught: 'Combos',
+      tip: 'Opposite spells create the wildest combos!',
+    },
+  },
+
+  // ── levitate + transform combo: Flying Parade ──
+  {
+    id: 'mk3_levitate_transform',
+    description: 'Levitating and transforming creates a flying parade of morphing kitchen items',
+    trigger: { spell1: 'levitate', spell2: 'transform', appliance: '*', result: '*' },
+    tier: 'spectacular',
+    promptScore: 'perfect',
+    steps: [
+      ...NARRATOR("Levitate plus transform — FLYING PARADE!"),
+      ...TELEPORT_IN('mage', 'ds-center'),
+      ...OBJECT_DROP('plate', 'cs-left'),
+      ...OBJECT_DROP('cup', 'cs-center'),
+      ...OBJECT_DROP('bowl', 'cs-right'),
+      ...CHARACTER_SPEAK('mage', 'excited', 'Float AND change!'),
+      { parallel: [
+        { action: 'animate', character: 'mage', anim: 'cast_long' },
+        { action: 'react', effect: 'sparkle-magic', position: 'cs-left' },
+        { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
+        { action: 'react', effect: 'sparkle-magic', position: 'cs-right' },
+        { action: 'sfx', sound: 'magic' },
+      ], delayAfter: 0.8 },
+      { parallel: [
+        { action: 'animate', character: 'mage', anim: 'cast_spell' },
+        { action: 'react', effect: 'sparkle-burst', position: 'wide' },
+        { action: 'sfx', sound: 'magic' },
+        { action: 'text_popup', text: 'FLYING PARADE!', position: 'center', size: 'huge' },
+      ], delayAfter: 0.8 },
+      { parallel: [
+        { action: 'react', effect: 'confetti-burst', position: 'wide' },
+        { action: 'sfx', sound: 'success' },
+      ], delayAfter: 1.0 },
+      ...CELEBRATION(['mage']),
+      ...NARRATOR("A parade of floating, morphing kitchen things!"),
+    ],
+    feedback: {
+      title: '✨ FLYING PARADE!',
+      message: 'Levitate + Transform = a flying parade of shapeshifting dishes! Magical!',
+      skillTaught: 'Combos',
+      tip: 'Movement spells combined with change spells create the most spectacular effects!',
+    },
+  },
+
+  // ── fire + stove combo: Volcano Kitchen ──
+  {
+    id: 'mk3_fire_stove',
+    description: 'Fire spell on a stove creates a kitchen volcano',
+    trigger: { spell1: 'fire_spell', spell2: '*', appliance: 'stove', result: '*' },
+    tier: 'spectacular',
+    promptScore: 'perfect',
+    steps: [
+      ...NARRATOR("Fire spell on the stove — KITCHEN VOLCANO!"),
+      ...TELEPORT_IN('mage', 'ds-left'),
+      ...OBJECT_DROP('stove', 'cs-center'),
+      ...CHARACTER_SPEAK('mage', 'excited', 'Maximum heat on the stove!'),
+      { parallel: [
+        { action: 'animate', character: 'mage', anim: 'cast_spell' },
+        { action: 'react', effect: 'fire', position: 'cs-center' },
+        { action: 'sfx', sound: 'magic' },
+      ], delayAfter: 0.6 },
+      { parallel: [
+        { action: 'react', effect: 'fire', position: 'cs-center' },
+        { action: 'react', effect: 'fire', position: 'cs-left' },
+        { action: 'react', effect: 'fire', position: 'cs-right' },
+        { action: 'camera_shake', intensity: 1.0, duration: 1.5 },
+        { action: 'sfx', sound: 'explosion' },
+        { action: 'text_popup', text: 'VOLCANO!', position: 'center', size: 'huge' },
+      ], delayAfter: 1.0 },
+      { parallel: [
+        { action: 'react', effect: 'smoke', position: 'wide' },
+        { action: 'animate', character: 'mage', anim: 'Cheering' },
+        { action: 'sfx', sound: 'success' },
+      ], delayAfter: 1.0 },
+      ...CELEBRATION(['mage']),
+    ],
+    feedback: {
+      title: '🌋 KITCHEN VOLCANO!',
+      message: 'Fire on the stove = a volcano eruption in the kitchen! The most dramatic cooking ever!',
+      skillTaught: 'Combos',
+      tip: 'Matching spells to appliances creates unique reactions!',
+    },
+  },
+
+  // ── ice + oven combo: Perfect Temperature ──
+  {
+    id: 'mk3_ice_oven',
+    description: 'Ice spell on the hot oven finds the perfect temperature',
+    trigger: { spell1: 'ice_spell', spell2: '*', appliance: 'oven', result: '*' },
+    tier: 'moderate',
+    promptScore: 'perfect',
+    steps: [
+      ...NARRATOR("Ice spell meets hot oven — PERFECT TEMPERATURE!"),
+      ...TELEPORT_IN('mage', 'ds-left'),
+      ...OBJECT_DROP('oven', 'cs-center'),
+      { parallel: [
+        { action: 'react', effect: 'fire', position: 'cs-center' },
+        { action: 'sfx', sound: 'spawn' },
+      ], delayAfter: 0.3 },
+      ...CHARACTER_SPEAK('mage', 'thinking', 'Too hot... let me cool it down...'),
+      { parallel: [
+        { action: 'animate', character: 'mage', anim: 'cast_spell' },
+        { action: 'react', effect: 'ice-sparkle', position: 'cs-center' },
+        { action: 'sfx', sound: 'magic' },
+      ], delayAfter: 0.6 },
+      { parallel: [
+        { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
+        { action: 'text_popup', text: 'PERFECT TEMP!', position: 'center', size: 'huge' },
+        { action: 'sfx', sound: 'success' },
+      ], delayAfter: 0.8 },
+      ...CELEBRATION(['mage']),
+      ...NARRATOR("Ice on a hot oven — perfectly balanced temperature!"),
+    ],
+    feedback: {
+      title: '🌡️ PERFECT TEMPERATURE!',
+      message: 'Ice on the hot oven = perfectly balanced cooking temperature! Smart thinking!',
+      skillTaught: 'Combos',
+      tip: 'Using opposite elements on appliances can create balance instead of chaos!',
+    },
+  },
+
+  // ── transform + sink combo: Potion Fountain ──
+  {
+    id: 'mk3_transform_sink',
+    description: 'Transform spell on the sink turns water into a magical potion fountain',
+    trigger: { spell1: 'transform', spell2: '*', appliance: 'sink', result: '*' },
+    tier: 'spectacular',
+    promptScore: 'perfect',
+    steps: [
+      ...NARRATOR("Transform spell on the sink — POTION FOUNTAIN!"),
+      ...TELEPORT_IN('mage', 'ds-left'),
+      ...OBJECT_DROP('sink', 'cs-center'),
+      ...CHARACTER_SPEAK('mage', 'excited', 'Transform that water!'),
+      { parallel: [
+        { action: 'animate', character: 'mage', anim: 'cast_long' },
+        { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
+        { action: 'sfx', sound: 'magic' },
+      ], delayAfter: 0.6 },
+      { parallel: [
+        { action: 'react', effect: 'sparkle-burst', position: 'cs-center' },
+        { action: 'react', effect: 'sparkle-magic', position: 'cs-left' },
+        { action: 'react', effect: 'sparkle-magic', position: 'cs-right' },
+        { action: 'sfx', sound: 'magic' },
+        { action: 'text_popup', text: 'POTION FOUNTAIN!', position: 'center', size: 'huge' },
+      ], delayAfter: 0.8 },
+      { parallel: [
+        { action: 'react', effect: 'confetti-burst', position: 'wide' },
+        { action: 'sfx', sound: 'success' },
+      ], delayAfter: 1.0 },
+      ...CELEBRATION(['mage']),
+      ...NARRATOR("The sink became a magical potion fountain!"),
+    ],
+    feedback: {
+      title: '⛲ POTION FOUNTAIN!',
+      message: 'Transform on the sink = water becomes magical potions! A fountain of magic!',
+      skillTaught: 'Combos',
+      tip: 'Transform spell works on anything with liquid — sinks, pots, cups!',
+    },
+  },
 ];
 
 export const MAGE_KITCHEN_STAGE_3: Vignette[] = [

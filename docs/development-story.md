@@ -2,7 +2,7 @@
 
 > One developer. Seven days. 125 commits. An AI collaborator that never slept.
 >
-> This is the story of how a solo hackathon sprint became a 3D game with 4,270 models, 27 animated characters, and a skeleton who drops birthday cakes when you forget to say "candles."
+> This is the story of how a solo hackathon sprint became a 3D game with 9,500+ models, 27 animated characters, and a skeleton who drops birthday cakes when you forget to say "candles."
 
 ---
 
@@ -54,7 +54,7 @@ The morning started with a re-read of the hackathon requirements. Colored rectan
 
 The game needed to be 3D. With five days left.
 
-Throwing away all the Phaser rendering code was terrifying. But one discovery made it worth the risk: **KayKit** — a CC0 asset pack with 27 animated character models sharing a single skeleton rig, and 139 animation clips that worked across all of them. Combined with Tiny Treats for food and furniture, the library was 4,270+ GLTF models. Professional 3D characters with skeletal animations, not colored rectangles.
+Throwing away all the Phaser rendering code was terrifying. But one discovery made it worth the risk: **KayKit** — a CC0 asset pack with 27 animated character models sharing a single skeleton rig, and 139 animation clips that worked across all of them. Combined with Tiny Treats for food and furniture, the library was 9,500+ GLTF models. Professional 3D characters with skeletal animations, not colored rectangles.
 
 The village world was built in a single session. Not isolated screens — a persistent medieval village on hex tiles. A thousand tiles forming grass terrain and a stone road. KayKit buildings lining the streets. Glowing pillars with golden orbs marking quest zones. Mountains ringing the horizon. The camera flies smoothly to each zone in two seconds — no loading screens, no scene swaps. The village is always there.
 
@@ -102,7 +102,7 @@ And then the content push: **476 vignettes** across all 7 zones. Each one a hand
 
 **18 commits. The day everything got richer.**
 
-A sobering analysis: 7,834 3D models on disk. Only 1,389 used. That's 17.7%. The audio was worse — 665 OGG files available, only 10 wired up. 1,686 props registered in the vocabulary contract, but only ~175 appeared in actual scenes.
+A sobering analysis: 9,500+ 3D models on disk. Only 1,389 used initially. The audio was worse — 666 OGG files available, only 10 wired up. 1,694 props registered in the vocabulary contract, but only ~175 appeared in scenes initially.
 
 This triggered the most ambitious operation of the project: a **13-phase vignette overhaul** run through parallel AI agents. Emotions expanded from 41 to 61. Sound effects went from 9 categories to 24. A movement template library — 40 reusable choreography patterns — was created, and every vignette was restructured into a 5-beat comic strip: Setup, Intent, Action, Consequence, Resolution.
 
@@ -110,7 +110,7 @@ All 7 zones were rewritten. 476 vignettes enhanced or rebuilt from scratch.
 
 The **movement templates** were the breakthrough. Instead of writing individual actions for each scene, composable patterns like `ENTER_FROM_LEFT('knight')`, `CROWD_CHEER(['skeleton', 'mage'])`, and `OBJECT_GROW_REVEAL('cake')` let complex choreography be assembled in a few lines. The next day's quality audit would prove it: vignettes using templates scored a full letter grade higher than static ones.
 
-**665 OGG files** from Kenney went live. The audio system used a clever trick: first play uses Web Audio API synthesis (instant, always works), while the real audio file loads asynchronously for next time. Zero perceived latency.
+**666 OGG files** from Kenney went live. The audio system used a clever trick: first play uses Web Audio API synthesis (instant, always works), while the real audio file loads asynchronously for next time. Zero perceived latency.
 
 Level 4 (Hybrid Free Text) and Level 5 (Full Prompt) were implemented. Level 5 calls Claude Opus 4.6 live — the vocabulary contract ensuring it only references assets that actually exist as loaded models.
 
@@ -146,7 +146,7 @@ Documentation blitz in the afternoon: README, Judge's Guide, Architecture Overvi
 
 The cinematic intro got a configurable speed runner for smooth video capture. The text gradient logo replaced an image file. Debug coordinates were removed. The zone camera angle was lowered 5 degrees for a better view of the action. A two-tier demo system was built — a showcase runner cycling 21 curated vignettes for highlight reels, and a zone runner that can play all 250 stage-1 vignettes for exhaustive testing.
 
-The brand brief was updated to v4.0 — reflecting the final state: sky-blue village (not the dark void from Day 1), the text gradient wordmark, 4,270+ models, 665 audio files, the Mad Libs progression system, the village world architecture.
+The brand brief was updated to v4.0 — reflecting the final state: sky-blue village (not the dark void from Day 1), the text gradient wordmark, 9,500+ models, 666 audio files, the Mad Libs progression system, the village world architecture.
 
 All documentation refreshed with final stats. The video was recorded.
 
@@ -173,9 +173,9 @@ The `.claude/` directory grew into something no one planned: an orchestration la
 | Quest zones | 8 (7 themed + 1 sandbox) |
 | Animated characters | 27 with shared skeleton rig |
 | Animation clips | 139 across 8 packs |
-| Registered props | 1,686 with fuzzy name resolution |
-| 3D models | 4,270+ GLTF assets |
-| Audio files | 665 OGGs + synthesized fallbacks |
+| Registered props | 1,694 with fuzzy name resolution |
+| 3D models | 9,500+ GLTF assets |
+| Audio files | 666 OGGs + synthesized fallbacks |
 | Hand-crafted vignettes | 421 across 7 zone files |
 | Movement templates | 53 reusable choreography patterns |
 | Golden cache entries | 166 instant demo responses |

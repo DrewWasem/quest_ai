@@ -228,7 +228,7 @@ Puppeteer tests deferred (requires browser automation setup).
 | Feb 10 | Project scaffold, Claude API, first scene | Foundation |
 | Feb 11 | 3D pivot (Phaser → R3F), village world | Architecture |
 | Feb 12 | Game juice, atmosphere, TTS, SFX | Polish |
-| Feb 13 | Asset mega-integration (4,270+ models) | Content |
+| Feb 13 | Asset mega-integration (9,500+ models) | Content |
 | Feb 14 | Mad-libs pivot, Level 4/5, 13-phase vignette overhaul | Core gameplay |
 | Feb 15 AM | Wow-factor audit, SFX uplift, dialogue density | Quality |
 | Feb 15 PM | 12 new templates, 630+ action variety calls across all zones | Quality |
@@ -252,7 +252,7 @@ Puppeteer tests deferred (requires browser automation setup).
 | 3D Engine | React Three Fiber + Drei |
 | State | Zustand |
 | AI | Claude Opus 4.6 |
-| Assets | KayKit + Tiny Treats + FoodMegaPack (4,270+ GLTF models) |
-| Audio | Web Audio API (synthesized) + Kenney Audio (665 OGGs) + SpeechSynthesis (TTS) |
+| Assets | KayKit + Tiny Treats + FoodMegaPack (9,500+ GLTF models) |
+| Audio | Web Audio API (synthesized) + Kenney Audio (666 OGGs) + SpeechSynthesis (TTS) |
 | Styling | Tailwind CSS + Fredoka/Nunito fonts |
 | Deploy | Vercel |

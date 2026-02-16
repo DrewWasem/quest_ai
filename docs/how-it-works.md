@@ -29,7 +29,7 @@ RULE: ONLY use assets from the lists above — NEVER invent asset names
 
 This is dynamically generated per quest zone from `worlds.ts` — each zone has its own curated set of characters, props, and animations. Claude physically cannot reference an asset outside the contract.
 
-**The result:** 1,686 registered props, 27 characters, 139 animation clips — all addressable by name, all guaranteed to exist as loaded GLTF models.
+**The result:** 1,694 registered props, 27 characters, 139 animation clips — all addressable by name, all guaranteed to exist as loaded GLTF models.
 
 ## The Three-Tier Response System: Zero-Error Demos
 
@@ -121,7 +121,7 @@ The game world is a persistent medieval village built with hex tiles, not a seri
 
 The village is always rendered. Entering a zone doesn't load a new scene — the camera flies to that part of the world while the UI switches to quest mode.
 
-## The Asset Pipeline: 4,270+ Models, Zero Runtime Generation
+## The Asset Pipeline: 9,500+ Models, Zero Runtime Generation
 
 Every 3D asset is pre-loaded. Nothing is generated at runtime.
 
@@ -137,9 +137,9 @@ Every 3D asset is pre-loaded. Nothing is generated at runtime.
 
 **Character system:** 27 character GLBs share a common skeleton (`Rig_Medium`), enabling 139 animation clips to work across all characters via `SkeletonUtils.clone()`.
 
-**Prop resolution:** The `PROP_PATHS` registry maps 1,686 semantic names to GLTF file paths. Fuzzy matching strips suffixes and tries hyphenated variants, so Claude can say "birthday_cake" or "birthday-cake" and both resolve.
+**Prop resolution:** The `PROP_PATHS` registry maps 1,694 semantic names to GLTF file paths. Fuzzy matching strips suffixes and tries hyphenated variants, so Claude can say "birthday_cake" or "birthday-cake" and both resolve.
 
-**Audio:** 665 OGG files from Kenney with synthesized fallbacks. First play uses Web Audio API synthesis (instant), while the real audio file loads asynchronously for subsequent plays.
+**Audio:** 666 OGG files from Kenney with synthesized fallbacks. First play uses Web Audio API synthesis (instant), while the real audio file loads asynchronously for subsequent plays.
 
 ## Built With Claude Code
 
@@ -160,9 +160,9 @@ The SME system is particularly notable: when creating a new quest task, the `/co
 | Quest zones | 8 (7 themed + 1 sandbox) |
 | Animated characters | 27 |
 | Animation clips | 139 |
-| Registered props | 1,686 |
-| 3D models total | 4,270+ |
-| Audio files | 665 |
+| Registered props | 1,694 |
+| 3D models total | 9,500+ |
+| Audio files | 666 |
 | Hand-crafted vignettes | 421 across 7 zone files |
 | Movement templates | 53 reusable choreography patterns |
 | Golden cache entries | 166 |
@@ -172,4 +172,4 @@ The SME system is particularly notable: when creating a new quest task, the `/co
 | TypeScript errors | 0 |
 | Build size | ~2,158 kB JS (~497 kB gzipped) |
 | Development time | 7 days (solo) |
-| Lines of ScenePlayer3D | ~4,500 |
+| Lines of ScenePlayer3D | ~4,650 |

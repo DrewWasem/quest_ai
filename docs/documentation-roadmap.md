@@ -97,9 +97,9 @@ git clone ... && cd frontend && npm install && npm run dev
 
 - 7 quest tasks + 1 free-play zone, 8 zones total
 - 166 golden cache entries (instant demo responses)
-- 4,270+ 3D models, 27 animated characters, 139 animation clips
-- 665 audio files, real-time SFX + background music
-- 1,686 registered props with fuzzy name resolution
+- 9,500+ 3D models, 27 animated characters, 139 animation clips
+- 666 audio files, real-time SFX + background music
+- 1,694 registered props with fuzzy name resolution
 - 0 TypeScript errors, production build passes
 
 ## Architecture
@@ -147,7 +147,7 @@ descriptions — teaching descriptive precision without ever saying the
 word "learning."
 
 [Technical scope] Built solo in 7 days: React Three Fiber for 3D
-rendering, 4,270+ GLTF models (KayKit, Kenney CC0 assets), 139
+rendering, 9,500+ GLTF models (KayKit, Kenney CC0 assets), 139
 skeletal animation clips, real OGG audio with synthesized fallbacks,
 Zustand state management, persistent hex-tile village world with
 camera-fly zone transitions, and a Mad Libs progression system
@@ -381,7 +381,7 @@ This is unusual for a hackathon project and shows deep Claude Code expertise.
 
 **Screen:** Let the celebration play out for a moment. Then:
 
-> "Under the hood, Claude generates a JSON scene script with spawn, move, animate, and react actions. Every prop name is constrained to our vocabulary contract — 1,686 registered 3D models. The AI literally cannot hallucinate an asset that doesn't exist."
+> "Under the hood, Claude generates a JSON scene script with spawn, move, animate, and react actions. Every prop name is constrained to our vocabulary contract — 1,694 registered 3D models. The AI literally cannot hallucinate an asset that doesn't exist."
 
 ---
 

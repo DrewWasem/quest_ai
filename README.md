@@ -83,7 +83,7 @@ Kid types a description
 | 3D Engine | React Three Fiber + Drei + Three.js r170 |
 | State | Zustand |
 | AI | Claude Opus 4.6 (scene script generation) |
-| Audio | Web Audio API + 665 OGG files (Kenney) |
+| Audio | Web Audio API + 666 OGG files (Kenney) |
 | Build | Vite 5 |
 | Deployment | Vercel |
 
@@ -91,7 +91,7 @@ Kid types a description
 
 Every player description flows through a **vocabulary-contract system** that constrains Claude's output to valid assets:
 
-- **Scene scripts** — Claude generates JSON with `spawn`, `move`, `animate`, `emote`, and `react` actions, each referencing only assets from the 1,686-entry prop registry and 27 character models
+- **Scene scripts** — Claude generates JSON with `spawn`, `move`, `animate`, `emote`, and `react` actions, each referencing only assets from the 1,694-entry prop registry and 27 character models
 - **Comedy calibration** — The system prompt instructs Claude to make failures funnier than successes. A vague description about a birthday party produces a skeleton slipping on frosting, not a generic error
 - **Three-tier response** — (1) Instant cache lookup against 166 pre-computed golden responses, (2) live Opus 4.6 API call with vocabulary enforcement, (3) pre-written fallback scripts so the demo never shows an error
 - **Five difficulty levels** — Mad Libs fill-in-the-blank (levels 1-3) progresses to free-text description (levels 4-5), scaffolding kids from structured to open-ended thinking
@@ -130,11 +130,11 @@ cp ../.env.example .env
 | Hand-crafted vignettes | 421 across 7 zone files |
 | Movement templates | 53 reusable choreography patterns |
 | Golden cache entries | 166 instant demo responses |
-| 3D models | 4,270+ GLTF assets |
+| 3D models | 9,500+ GLTF assets |
 | Animated characters | 27 with shared skeleton rig |
 | Animation clips | 139 (idle, walk, run, attack, dance, cheer...) |
-| Registered props | 1,686 with fuzzy name resolution |
-| Audio files | 665 OGGs + synthesized fallbacks |
+| Registered props | 1,694 with fuzzy name resolution |
+| Audio files | 666 OGGs + synthesized fallbacks |
 | Named emotions | 61 semantic mappings to pixel-art emotes |
 | TypeScript errors | 0 |
 
@@ -146,11 +146,11 @@ cp ../.env.example .env
 +------------------+------------------+-----------------------+
 |   Village World  |  Scene Player 3D |   Prompt Input        |
 |   Hex terrain    |  Action executor |   Mad Libs + Free     |
-|   Zone markers   |  1000+ lines     |   Voice input         |
+|   Zone markers   |  ~4,650 lines    |   Voice input         |
 |   Camera fly     |  Zone-relative   |   TTS narration       |
 +------------------+------------------+-----------------------+
 |              React Three Fiber Canvas                        |
-|  Characters (27) | Props (1,686) | Atmosphere | Audio       |
+|  Characters (27) | Props (1,694) | Atmosphere | Audio       |
 +-------------------------------------------------------------+
 |           Three-Tier Response System                         |
 |  Cache (166) --> Claude Opus 4.6 --> Fallback (8)           |
@@ -180,7 +180,7 @@ All 3D assets are open-source and free for commercial use:
 
 | Pack | Models | License | Author |
 |------|--------|---------|--------|
-| [Kenney](https://kenney.nl) | 1,636 GLBs + 665 OGGs | CC0 | Kenney |
+| [Kenney](https://kenney.nl) | 1,636 GLBs + 666 OGGs | CC0 | Kenney |
 | [KayKit](https://kaylousberg.itch.io/) | Characters, animations, buildings | CC0 | Kay Lousberg |
 | [Tiny Treats](https://tinytreats.itch.io/) | 96 props (kitchen, park, furniture) | CC0 | Tiny Treats |
 | [Quaternius](https://quaternius.com/) | 150 props | CC0 | Quaternius |

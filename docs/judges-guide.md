@@ -11,7 +11,7 @@ Quest AI is an AI-powered 3D game that teaches kids (ages 7-11) descriptive thin
 
 Vague descriptions produce hilarious failures. Specific descriptions produce celebrations. Kids retry not because they're told to, but because they want to see what happens next.
 
-No chatbot. No text walls. Just a medieval village, 27 animated characters, and 1,686 props waiting to be described into existence.
+No chatbot. No text walls. Just a medieval village, 27 animated characters, and 1,694 props waiting to be described into existence.
 
 ---
 
@@ -47,7 +47,7 @@ The biggest challenge connecting an LLM to a 3D renderer: Claude might reference
 
 Every system prompt includes an exhaustive list of exactly which assets are available — characters, props, animations, effects. Claude physically cannot reference an asset outside the contract. This is dynamically generated per quest zone from the game's asset manifest.
 
-**Result:** 1,686 registered props, 27 characters, 139 animation clips — all addressable by name, all guaranteed to exist.
+**Result:** 1,694 registered props, 27 characters, 139 animation clips — all addressable by name, all guaranteed to exist.
 
 ### Scene Script Format
 
@@ -68,7 +68,7 @@ Claude doesn't write 3D code. It generates a simple JSON scene script:
 }
 ```
 
-The ScenePlayer3D component (~4,500 lines) executes these actions sequentially with proper timing, tween animations, particle effects, and spatial audio.
+The ScenePlayer3D component (~4,650 lines) executes these actions sequentially with proper timing, tween animations, particle effects, and spatial audio.
 
 ---
 
@@ -84,7 +84,7 @@ Started with a Phaser 2D scaffold. Built the Claude API client, Zustand game sto
 
 **The biggest risk of the project.** Re-read the hackathon docs, realized the game needed to be 3D. Made the call to abandon Phaser and migrate to React Three Fiber with 4 build days left.
 
-**Why it was worth it:** KayKit + Tiny Treats = 4,270 pre-built GLTF models with a shared skeleton rig and 139 animation clips. Professional 3D assets instead of colored rectangles.
+**Why it was worth it:** KayKit + Tiny Treats = 9,500+ pre-built GLTF models with a shared skeleton rig and 139 animation clips. Professional 3D assets instead of colored rectangles.
 
 Built the persistent village world in one session — ~1,000 hex tiles, 12 buildings, zone markers, camera fly-through transitions.
 
@@ -92,11 +92,11 @@ Built the persistent village world in one session — ~1,000 hex tiles, 12 build
 
 ### Days 3-4 (Feb 12-13) — Asset Integration
 
-Deployed 665 OGG audio files with a smart fallback system: first play uses synthesized audio (instant), real OGG loads asynchronously for next time. Registered 1,686 props in ScenePlayer3D from 7 asset packs.
+Deployed 666 OGG audio files with a smart fallback system: first play uses synthesized audio (instant), real OGG loads asynchronously for next time. Registered 1,694 props in ScenePlayer3D from 7 asset packs.
 
 ### Day 5 (Feb 14) — The Vignette Revolution
 
-**Discovery:** The engine used less than 15% of available assets. 665 audio files on disk, only 10 used. 1,686 props registered, only ~175 appeared in scenes.
+**Discovery:** The engine used less than 15% of available assets. 666 audio files on disk, only 10 used. 1,694 props registered, only ~175 appeared in scenes.
 
 **Response:** A 13-phase vignette overhaul completed in a single session via parallel agent dispatch. Every vignette rewritten to a 5-beat comic strip structure (SETUP, INTENT, ACTION, CONSEQUENCE, RESOLUTION). 53 reusable movement templates created. Scene complexity now scales with prompt quality — vague descriptions get simple scenes, specific descriptions get spectacular ones.
 
@@ -234,7 +234,7 @@ ECE Professor review flagged 14 instances of violent language in kid-facing text
 
 ### Audio Latency (Day 3)
 
-Loading 665 OGG files at startup would be slow. Built a smart fallback: first play uses Web Audio API synthesis (instant), real OGG loads asynchronously for subsequent plays. Seamless transition, zero perceived latency.
+Loading 666 OGG files at startup would be slow. Built a smart fallback: first play uses Web Audio API synthesis (instant), real OGG loads asynchronously for subsequent plays. Seamless transition, zero perceived latency.
 
 ---
 
@@ -245,9 +245,9 @@ Loading 665 OGG files at startup would be slow. Built a smart fallback: first pl
 | Quest zones | 8 (7 themed + 1 sandbox) on a medieval village circle |
 | Animated characters | 27 with shared skeleton rig |
 | Animation clips | 139 across 8 packs |
-| Registered props | 1,686 with fuzzy name resolution |
-| 3D models on disk | 4,270+ GLTF assets (all CC0/CC-BY) |
-| Audio files | 665 OGGs + synthesized fallbacks |
+| Registered props | 1,694 with fuzzy name resolution |
+| 3D models on disk | 9,500+ GLTF assets (all CC0/CC-BY) |
+| Audio files | 666 OGGs + synthesized fallbacks |
 | Vignettes | 421 hand-crafted across 7 zones |
 | Movement templates | 53 reusable choreography patterns |
 | Golden cache entries | 166 instant demo responses |

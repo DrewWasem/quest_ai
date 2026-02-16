@@ -40,7 +40,7 @@
 │  │                                                             │ │
 │  │  ┌────────────┐ ┌────────────┐ ┌──────────────────────┐   │ │
 │  │  │ Character  │ │ Prop3D     │ │ Particle Effects     │   │ │
-│  │  │ 3D (27     │ │ (1,686     │ │ (confetti, hearts,   │   │ │
+│  │  │ 3D (27     │ │ (1,694     │ │ (confetti, hearts,   │   │ │
 │  │  │ models,    │ │ registered │ │  explosions, etc.)   │   │ │
 │  │  │ 139 anims) │ │ props)     │ │                      │   │ │
 │  │  └────────────┘ └────────────┘ └──────────────────────┘   │ │
@@ -73,7 +73,7 @@
 │                                                                  │
 │  ┌─────────────────────────────────────────────────────────────┐ │
 │  │  Audio: SoundManager3D                                      │ │
-│  │  665 OGG files + synthesized fallbacks                      │ │
+│  │  666 OGG files + synthesized fallbacks                      │ │
 │  │  Per-zone background music (loop + crossfade)               │ │
 │  └─────────────────────────────────────────────────────────────┘ │
 └──────────────────────────────────────────────────────────────────┘
@@ -138,7 +138,7 @@
 
 | Component | File | Lines | Purpose |
 |-----------|------|-------|---------|
-| ScenePlayer3D | `game/ScenePlayer3D.tsx` | ~4,500 | Action executor, prop/character resolution, tweening |
+| ScenePlayer3D | `game/ScenePlayer3D.tsx` | ~4,650 | Action executor, prop/character resolution, tweening |
 | VillageWorld | `game/VillageWorld.tsx` | ~800 | Hex terrain, buildings, zone markers, decorations |
 | VillageCamera | `game/VillageCamera.tsx` | ~200 | Camera controller, zone transitions |
 | Character3D | `game/Character3D.tsx` | ~300 | KayKit character with SkeletonUtils clone |

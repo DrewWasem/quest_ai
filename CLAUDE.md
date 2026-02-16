@@ -74,7 +74,7 @@ vercel --prod                 # Deploy to Vercel
 - `frontend/src/App.tsx` — Main app with header, canvas, input panel
 - `frontend/src/game/VillageWorld.tsx` — Persistent hex village with zones
 - `frontend/src/game/VillageCamera.tsx` — Camera controller with zone transitions
-- `frontend/src/game/ScenePlayer3D.tsx` — 3D action executor (~4,500 lines)
+- `frontend/src/game/ScenePlayer3D.tsx` — 3D action executor (~4,650 lines)
 - `frontend/src/game/Character3D.tsx` — KayKit character with SkeletonUtils clone
 - `frontend/src/game/Prop3D.tsx` — GLTF prop component with bounce entrance
 - `frontend/src/game/AnimationController.ts` — Shared animation system (139 clips)
@@ -89,11 +89,11 @@ vercel --prod                 # Deploy to Vercel
 
 ## Assets
 
-- **3D Models**: 4,270+ GLTFs (KayKit, Kenney, Tiny Treats, Poly Pizza, FoodMegaPack)
+- **3D Models**: 9,500+ GLTFs (KayKit, Kenney, Tiny Treats, Poly Pizza, FoodMegaPack)
 - **Characters**: 27 GLBs with shared Rig_Medium skeleton
 - **Animations**: 8 GLBs containing 139 clips
-- **Audio**: 665 OGGs (Kenney) + synthesized fallbacks
-- **PROP_PATHS**: 1,686 registered entries in ScenePlayer3D.tsx
+- **Audio**: 666 OGGs (Kenney) + synthesized fallbacks
+- **PROP_PATHS**: 1,694 registered entries in ScenePlayer3D.tsx
 - **Location**: `frontend/public/assets/3d/` and `frontend/public/assets/audio/`
 
 ## Scene Script Format

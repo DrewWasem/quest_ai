@@ -32,7 +32,7 @@ Quest AI is built for kids ages 7-11. Every design decision prioritizes their sa
 ### Input Handling
 
 - Player descriptions are sent to Claude's API with a constrained system prompt
-- Claude can only reference assets from a fixed vocabulary contract (1,686 props, 27 characters)
+- Claude can only reference assets from a fixed vocabulary contract (1,694 props, 27 characters)
 - The AI cannot generate arbitrary text that displays to the child — all output is structured JSON that maps to pre-loaded 3D assets
 - Invalid or unexpected API responses fall back to pre-written safe scripts
 

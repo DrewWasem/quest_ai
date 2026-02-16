@@ -24,9 +24,9 @@ Layout specifications and file inventory for the hackathon submission video end 
 - **Content:**
   - 7,686 lines (vignette code)
   - 27 characters
-  - 1,686 props
+  - 1,694 props
   - 139 animations
-  - 665 sounds
+  - 666 sounds
 
 ### Right Column - Photo + Text
 - **Position:** `right: 60px`, vertically centered

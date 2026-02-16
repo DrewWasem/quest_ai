@@ -4,7 +4,7 @@
 
 ## The Challenge
 
-Build an AI-powered 3D game for kids — in one week — that connects Claude Opus 4.6 to a real-time 3D renderer with 4,270+ models, 27 animated characters, and 139 animation clips. The game needs to be educational, age-appropriate, and genuinely fun.
+Build an AI-powered 3D game for kids — in one week — that connects Claude Opus 4.6 to a real-time 3D renderer with 9,500+ models, 27 animated characters, and 139 animation clips. The game needs to be educational, age-appropriate, and genuinely fun.
 
 One person. Seven days. No team.
 
@@ -90,7 +90,7 @@ This prevented dozens of false starts during the 7-day sprint.
 
 ## 3. Persistent Memory: Knowledge That Survives Context Windows
 
-Claude Code's context window fills up. With a 4,500-line scene executor, 1,686 prop registrations, and 8 quest zones, a single conversation can't hold everything.
+Claude Code's context window fills up. With a 4,650-line scene executor, 1,694 prop registrations, and 8 quest zones, a single conversation can't hold everything.
 
 The memory system solves this with **69 files across 10 domains**:
 
@@ -195,7 +195,7 @@ Three rule files enforce constraints automatically — Claude Code checks them b
 | `implementer` | Execute plan tasks with verification |
 | `reviewer` | Two-pass code review (spec + quality) |
 | `content-auditor` | Scan for brand voice violations |
-| `explore-assets` | Navigate 4,270+ 3D model library |
+| `explore-assets` | Navigate 9,500+ 3D model library |
 
 **These run in parallel.** When researching a new feature, I typically dispatch 3 agents simultaneously — one searching the codebase, one checking memory, one analyzing code paths. Results converge in the parent context without the token cost of doing it all sequentially.
 

@@ -9,7 +9,6 @@ import TitleScreen from './components/TitleScreen';
 import { useGameStore } from './stores/gameStore';
 import { preloadAllAnimations } from './game/AnimationController';
 import { SoundManager3D } from './game/SoundManager3D';
-import type { MusicZone } from './game/SoundManager3D';
 import { useGLTF } from '@react-three/drei';
 import { CHARACTERS, ASSET_BASE } from './data/asset-manifest';
 import { PLAYER_CHARACTERS } from './data/player-characters';
@@ -62,12 +61,11 @@ export default function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Background music — switch track on zone change
+  // Background music — play in village, stop in zones so SFX are clear
   useEffect(() => {
     if (!started) return;
-    const zone = currentZone as MusicZone | null;
-    if (zone) {
-      SoundManager3D.playMusic(zone);
+    if (currentZone) {
+      SoundManager3D.stopMusic();
     } else {
       SoundManager3D.playMusic('village');
     }

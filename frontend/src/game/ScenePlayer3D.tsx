@@ -26,6 +26,9 @@ import { CHARACTERS, ANIMAL_MODELS, type CharacterKey } from '../data/asset-mani
 import { useGameStore, ZONE_CENTERS } from '../stores/gameStore'
 import { getEmojiBubblePath, getEmojiOutlinePath } from '../data/emoji-map'
 
+// Playback speed multiplier — 3x faster vignette/action execution
+const PLAYBACK_SPEED = 3
+
 // Compute character facing for a zone — face toward village center (0,0,0)
 let _zoneCharRotationCache: Record<string, [number, number, number]> | null = null
 function getZoneCharRotation(zoneId: string): [number, number, number] | undefined {
@@ -2506,10 +2509,13 @@ const PROP_SCALE: Record<string, number> = {
   stove: 2.0, fridge: 2.0, pot: 2.5, pan: 2.5, oven: 2.0,
   // Restaurant food
   pizza: 2.5, pizza_pepperoni: 2.5, pizza_cheese: 2.5, plate: 2.5, plates: 2.0,
-  // Park
-  bench: 2.0, tree: 2.0, tree_large: 2.0, bush: 2.0,
-  // Playground
-  slide: 2.0, swing: 2.0, seesaw: 2.0, sandbox: 2.0, merry_go_round: 2.0,
+  // Park (Tiny Treats — roughly character-scale at 1.5x)
+  bench: 1.5, tree: 1.5, tree_large: 1.5, bush: 1.5,
+  // Playground (Tiny Treats — 1.0x is roughly character-height for "large" variants)
+  slide: 1.0, swing: 1.0, seesaw: 1.0, sandbox: 1.0, merry_go_round: 1.0,
+  // School/Furniture (KayKit — hex-game scale, needs 2.0x for adventure scale)
+  desk: 2.0, chair: 2.0, chair_A: 2.0, book_stack: 2.0,
+  flag: 2.0, book: 2.0,
   // Holiday
   present: 2.5, present_A_red: 2.5, present_B_blue: 2.5, present_C_green: 2.5,
   balloon: 2.5, candle: 2.5,
@@ -3400,8 +3406,8 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
         console.warn('[ScenePlayer3D] Action failed (skipping):', action.type, err)
       }
 
-      // Duration after action (default 800ms)
-      const duration = 'duration_ms' in action ? action.duration_ms || 800 : 800
+      // Duration after action (default 800ms), scaled by playback speed
+      const duration = ('duration_ms' in action ? action.duration_ms || 800 : 800) / PLAYBACK_SPEED
       await sleep(duration, signal)
     }
   }
@@ -3479,7 +3485,7 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
         break
 
       case 'delay':
-        await sleep(((action as any).duration_ms ?? 1000), signal)
+        await sleep(((action as any).duration_ms ?? 1000) / PLAYBACK_SPEED, signal)
         break
 
       default:
@@ -3511,8 +3517,8 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
 
       await Promise.all(actionPromises)
 
-      // Delay before next step
-      const delayMs = (step.delayAfter ?? 0.5) * 1000
+      // Delay before next step, scaled by playback speed
+      const delayMs = (step.delayAfter ?? 0.5) * 1000 / PLAYBACK_SPEED
       if (delayMs > 0 && !signal.aborted) {
         await sleep(delayMs, signal)
       }
@@ -3775,7 +3781,13 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
       setActors(prev => prev.map(a =>
         a.id === target ? { ...a, rotation: [0, moveAngle, 0] as [number, number, number] } : a
       ))
-      handleAnimate(target, 'Walking_A')
+      // Only set Walking_A if not already playing a locomotion animation
+      // (preserves Running_A from templates like CHARGE_IN_LEFT, RUN_TO)
+      const locomotionAnims = ['Running_A', 'Running_B', 'Walking_B']
+      const currentAnim = currentActor.animation
+      if (!currentAnim || !locomotionAnims.includes(currentAnim)) {
+        handleAnimate(target, 'Walking_A')
+      }
     }
 
     // Sound effect

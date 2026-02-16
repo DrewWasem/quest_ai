@@ -1390,13 +1390,13 @@ const KNIGHT_VIGNETTES: Vignette[] = [
   // ── knight + defend ─────────────────────────────────────────────────────────
   {
     id: 'ks_knight_defend',
-    description: 'A medieval knight swings a sword in space, confusing everyone at the station.',
+    description: 'The knight defends the space station with medieval honor and unexpected effectiveness.',
     trigger: { crew: 'knight', task: 'defend', tool: '*' },
-    tier: 'absolute_chaos',
-    promptScore: 'chaotic',
+    tier: 'spectacular',
+    promptScore: 'perfect',
     steps: [
-      // SETUP: Space station
-      ...NARRATOR("The knight tries to defend the station... with a sword. In space."),
+      // SETUP: Space station under threat
+      ...NARRATOR("The knight charges in to defend the station with honor!"),
       {
         parallel: [
           { action: 'spawn', asset: 'space_station', position: 'center' },
@@ -1406,7 +1406,7 @@ const KNIGHT_VIGNETTES: Vignette[] = [
         ],
         delayAfter: 0.3,
       },
-      // INTENT: Medieval defense mindset
+      // INTENT: Knight arrives with medieval swagger
       ...CHARGE_IN_LEFT('knight'),
       {
         parallel: [
@@ -1414,58 +1414,47 @@ const KNIGHT_VIGNETTES: Vignette[] = [
         ],
         delayAfter: 0.2,
       },
-      ...CHARACTER_SPEAK('knight', 'confused', "I shall defend with blade and honor!"),
-      ...EMOTIONAL_REACT('knight', 'confused', 'left'),
+      ...CHARACTER_SPEAK('knight', 'excited', "I shall defend this station with blade and honor!"),
+      ...EMOTIONAL_REACT('knight', 'excited', 'left'),
       ...RUN_TO('knight', 'cs-center'),
       ...OBJECT_GROW_REVEAL('sword', 'cs-left', 2.5),
-      // ACTION: Confused sword swinging
+      // ACTION: Epic sword defense
       {
         parallel: [
           { action: 'animate', character: 'knight', anim: 'sword_slash' },
           { action: 'sfx', sound: 'whoosh' },
+          { action: 'react', effect: 'sparkle-magic', position: 'center' },
         ],
         delayAfter: 0.3,
       },
       ...DRAMATIC_PAUSE(),
       {
         parallel: [
-          { action: 'react', effect: 'question-marks', position: 'center' },
-        ],
-        delayAfter: 0.5,
-      },
-      {
-        parallel: [
           { action: 'animate', character: 'knight', anim: 'spin_attack' },
           { action: 'sfx', sound: 'whoosh' },
+          { action: 'react', effect: 'sparkle-burst', position: 'center' },
         ],
         delayAfter: 0.5,
       },
-      // CONSEQUENCE: Gets dizzy
-      {
-        parallel: [
-          { action: 'animate', character: 'knight', anim: 'get_hit' },
-          { action: 'react', effect: 'stars-spin', position: 'left' },
-        ],
-        delayAfter: 0.3,
-      },
-      ...EMOTIONAL_REACT('knight', 'shocked', 'left'),
-      // RESOLUTION: Robot facepalm
+      // CONSEQUENCE: It actually works — medieval honor wins!
       ...ENTER_FROM_RIGHT('robot'),
       {
         parallel: [
-          { action: 'react', effect: 'sad-cloud', position: 'right' },
-          { action: 'text_popup', text: 'WRONG JOB!', position: 'center', size: 'large' },
+          { action: 'emote', character: 'robot', emoji: 'star_eyes' },
+          { action: 'text_popup', text: 'KNIGHT POWER!', position: 'center', size: 'huge' },
+          { action: 'react', effect: 'confetti-burst', position: 'wide' },
+          { action: 'sfx', sound: 'success' },
         ],
         delayAfter: 0.5,
       },
-      ...DISAPPOINTMENT(['knight', 'robot']),
-      ...NARRATOR("Swords don't work in space! Pick a ranger or robot for station defense."),
+      ...CELEBRATION(['knight', 'robot']),
+      ...NARRATOR("A knight defending a space station — nobody saw THAT coming!"),
     ],
     feedback: {
-      title: '⚔️ MEDIEVAL CHAOS!',
-      message: "A knight trying to defend a space station with a sword? It's... creative! But maybe a space ranger with tech tools would work better?",
-      skillTaught: 'Context',
-      tip: "Match the character to the setting! Knights are great for castles, not space stations.",
+      title: '⚔️ SPACE KNIGHT!',
+      message: "A knight defending a space station? Bold choice! Sometimes the unexpected hero saves the day!",
+      skillTaught: 'Creativity',
+      tip: "You matched the right character to the right task — defending is what knights do best, even in space!",
     },
   },
 ];

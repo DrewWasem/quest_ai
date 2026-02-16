@@ -81,15 +81,15 @@ export type MusicZone =
 
 /** Background music track per zone */
 const ZONE_MUSIC: Record<MusicZone, string> = {
-  'village':              '/assets/audio/music/Mishief-Stroll.ogg',
-  'skeleton-birthday':    '/assets/audio/music/Retro-Mystic.ogg',
-  'knight-space':         '/assets/audio/music/Space-Cadet.ogg',
-  'mage-kitchen':         '/assets/audio/music/Italian-Mom.ogg',
-  'barbarian-school':     '/assets/audio/music/Cheerful-Annoyance.ogg',
-  'dungeon-concert':      '/assets/audio/music/Alpha-Dance.ogg',
-  'skeleton-pizza':       '/assets/audio/music/Retro-Comedy.ogg',
-  'adventurers-picnic':   '/assets/audio/music/Farm-Frolics.ogg',
-  'title':                '/assets/audio/music/Wacky-Waiting.ogg',
+  'village':              '/assets/audio/music/Island-Adventure.ogg',
+  'skeleton-birthday':    '/assets/audio/music/Island-Adventure.ogg',
+  'knight-space':         '/assets/audio/music/Island-Adventure.ogg',
+  'mage-kitchen':         '/assets/audio/music/Island-Adventure.ogg',
+  'barbarian-school':     '/assets/audio/music/Island-Adventure.ogg',
+  'dungeon-concert':      '/assets/audio/music/Island-Adventure.ogg',
+  'skeleton-pizza':       '/assets/audio/music/Island-Adventure.ogg',
+  'adventurers-picnic':   '/assets/audio/music/Island-Adventure.ogg',
+  'title':                '/assets/audio/music/Island-Adventure.ogg',
 }
 
 class SoundManager3DClass {

@@ -920,7 +920,7 @@ export const SKELETON_PIZZA_STAGES: QuestStage[] = [
     },
     vignettes: SKELETON_PIZZA_STAGE_2,
     defaultVignette: SKELETON_PIZZA_DEFAULT_2,
-    successTags: [['blazing', 'pizza', 'mountain'], ['cold', 'cake', 'single']],
+    successTags: [['blazing', 'pizza', 'mountain'], ['cold', 'cake', 'mountain']],
   },
   {
     id: 'skeleton-pizza-3',
@@ -1180,7 +1180,7 @@ export const ADVENTURERS_PICNIC_STAGES: QuestStage[] = [
     },
     vignettes: ADVENTURERS_PICNIC_STAGE_2,
     defaultVignette: ADVENTURERS_PICNIC_DEFAULT_2,
-    successTags: [['stealthy', 'midnight', 'treasure'], ['reckless', 'dawn', 'magic_portal']],
+    successTags: [['stealthy', 'midnight', 'treasure'], ['bold', 'dawn', 'magic_portal']],
   },
   {
     id: 'adventurers-picnic-3',
@@ -1699,7 +1699,7 @@ export const MAGE_KITCHEN_STAGES: QuestStage[] = [
     },
     vignettes: MAGE_KITCHEN_STAGE_2,
     defaultVignette: MAGE_KITCHEN_DEFAULT_2,
-    successTags: [['mega', 'fire_spell', 'cook_perfectly'], ['tiny', 'ice_spell', 'calm_down']],
+    successTags: [['tiny', 'fire_spell', 'cook_perfectly']],
   },
   {
     id: 'mage-kitchen-3',

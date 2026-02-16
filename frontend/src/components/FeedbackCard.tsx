@@ -48,6 +48,7 @@ interface FeedbackCardProps {
   feedback: VignetteFeedback;
   promptScore: PromptScore;
   filledSentence: string;
+  matchExplanation?: string;
   discoveredCount: number;
   totalVignettes: number;
   onTryAgain: () => void;
@@ -60,6 +61,7 @@ export default function FeedbackCard({
   feedback,
   promptScore,
   filledSentence,
+  matchExplanation,
   discoveredCount,
   totalVignettes,
   onTryAgain,
@@ -87,9 +89,16 @@ export default function FeedbackCard({
       </div>
 
       {/* Filled sentence */}
-      <p className="text-sm text-quest-text-mid italic mb-3 bg-white/50 rounded-lg px-3 py-2">
+      <p className="text-sm text-quest-text-mid italic mb-2 bg-white/50 rounded-lg px-3 py-2">
         {filledSentence}
       </p>
+
+      {/* Match explanation — shows which choices triggered this scene */}
+      {matchExplanation && (
+        <p className="text-xs text-quest-purple font-heading font-semibold mb-3 px-1"
+          dangerouslySetInnerHTML={{ __html: matchExplanation.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }}
+        />
+      )}
 
       {/* Feedback message */}
       <p className="font-body font-bold text-base text-quest-text-dark leading-relaxed mb-2">

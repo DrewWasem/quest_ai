@@ -205,7 +205,9 @@ const FIRE_VIGNETTES: Vignette[] = [
       ...FLASH('orange'),
       { parallel: [
         { action: 'animate', character: 'skeleton_warrior', anim: 'run_panic' },
+        { action: 'move', character: 'skeleton_warrior', to: 'off-right', style: 'linear' },
         { action: 'animate', character: 'mage', anim: 'run_panic' },
+        { action: 'move', character: 'mage', to: 'off-left', style: 'linear' },
         { action: 'react', effect: 'smoke', position: 'center' },
         { action: 'camera_shake', intensity: 0.5, duration: 0.8 },
       ], delayAfter: 1.5 },
@@ -872,6 +874,7 @@ const SHRINK_VIGNETTES: Vignette[] = [
       ...CROWD_CHEER(['cat']),
       { parallel: [
         { action: 'animate', character: 'cat', anim: 'run_panic' },
+        { action: 'move', character: 'cat', to: 'off-right', style: 'linear' },
         { action: 'react', effect: 'chaos-lines', position: 'center' },
       ], delayAfter: 1.5 },
     ],

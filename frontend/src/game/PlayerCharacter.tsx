@@ -168,6 +168,7 @@ export function PlayerCharacter({ enabled, onPositionUpdate }: PlayerCharacterPr
   return (
     <group ref={groupRef} position={[0, 0, 5]} visible={enabled}>
       <Character3D
+        key={selectedCharacter}
         ref={characterRef}
         characterId={selectedCharacter}
         animationPacks={['general', 'movement_basic', 'simulation']}

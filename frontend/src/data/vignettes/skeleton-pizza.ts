@@ -1103,7 +1103,7 @@ export const SKELETON_PIZZA_STAGE_2: Vignette[] = [
     description: 'Skeleton tries to cook a pizza at cold temperature and ends up with a frozen disaster.',
     trigger: { chef: 'skeleton', dish: 'pizza', heat: 'cold', amount: 'single' },
     tier: 'moderate',
-    promptScore: 'perfect',
+    promptScore: 'chaotic',
     steps: [
       {
         parallel: [

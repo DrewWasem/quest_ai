@@ -57,6 +57,7 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
   const [feedback, setFeedback] = useState<{
     vignette: Vignette;
     filledSentence: string;
+    matchExplanation: string;
   } | null>(null);
 
   // Discovered vignettes tracking (persisted in gameStore)
@@ -154,13 +155,20 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
       if (nonDefault.length >= stage.comboRequired) {
         completeStage(stage.questId, stage.stageNumber);
       }
-    } else if (stage.successTags) {
-      // Level 1/2: success-tag-based completion
-      const selectedValues = Object.values(selectedTags);
-      const isSuccess = stage.successTags.some(combo =>
-        combo.every(tag => selectedValues.includes(tag))
-      );
-      if (isSuccess) {
+    } else {
+      // Level 1/2: complete on ANY perfect vignette OR specific successTag combos.
+      // This way kids just need to find a good combo, not guess a magic one.
+      let completed = false;
+      if (vignette.promptScore === 'perfect') {
+        completed = true;
+      }
+      if (!completed && stage.successTags) {
+        const selectedValues = Object.values(selectedTags);
+        completed = stage.successTags.some(combo =>
+          combo.every(tag => selectedValues.includes(tag))
+        );
+      }
+      if (completed) {
         completeStage(stage.questId, stage.stageNumber);
       }
     }
@@ -179,8 +187,21 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
       (sum, step) => sum + (step.delayAfter ?? 0.5) * 1000 + 800,
       0
     );
+    // Build match explanation — show which choices triggered this scene
+    const matchedLabels: string[] = [];
+    for (const slot of stage.template.slots) {
+      const triggerVal = vignette.trigger[slot.id.toLowerCase()];
+      if (triggerVal !== undefined && triggerVal !== '*') {
+        const option = (slotOptions[slot.id] ?? slot.defaultOptions).find(o => o.tag === selectedTags[slot.id]);
+        matchedLabels.push(option?.label ?? selectedTags[slot.id]);
+      }
+    }
+    const matchExplanation = matchedLabels.length > 0
+      ? `Your ${matchedLabels.map(l => `**${l}**`).join(' + ')} combo unlocked this scene!`
+      : '';
+
     setTimeout(() => {
-      setFeedback({ vignette, filledSentence });
+      setFeedback({ vignette, filledSentence, matchExplanation });
       setIsPlaying(false);
     }, Math.min(totalDuration + 500, 8000));
   }, [selectedTags, stage, slotOptions, currentSentence, setLastScript, setVignetteSteps, speak, stageKey, recordDiscovery, discoveredIds, completeStage]);
@@ -205,6 +226,7 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
             feedback={feedback.vignette.feedback}
             promptScore={feedback.vignette.promptScore}
             filledSentence={feedback.filledSentence}
+            matchExplanation={feedback.matchExplanation}
             discoveredCount={discoveredIds.size}
             totalVignettes={stage.vignettes.length + 1}
             onTryAgain={handleTryAgain}

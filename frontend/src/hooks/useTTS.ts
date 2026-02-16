@@ -42,13 +42,18 @@ export function useTTS() {
         utterance.pitch = 1.1 // Slightly higher, friendlier
         utterance.volume = 0.8
 
-        // Try to find a friendly English voice
+        // Pick the best available English voice.
+        // Chrome ships high-quality "Google US English" neural voices that sound
+        // significantly more natural than the default system voices. Prefer those,
+        // then fall back through other decent options.
         const voices = window.speechSynthesis.getVoices()
-        const englishVoice = voices.find(
-          (v) => v.lang.startsWith('en') && v.name.toLowerCase().includes('samantha'),
-        ) || voices.find((v) => v.lang.startsWith('en-US'))
-        if (englishVoice) {
-          utterance.voice = englishVoice
+        const pick =
+          voices.find((v) => v.name === 'Google US English') ||
+          voices.find((v) => v.name.startsWith('Google') && v.lang.startsWith('en')) ||
+          voices.find((v) => v.lang.startsWith('en') && v.name.toLowerCase().includes('samantha')) ||
+          voices.find((v) => v.lang.startsWith('en-US'))
+        if (pick) {
+          utterance.voice = pick
         }
 
         utterance.onstart = () => setIsSpeaking(true)

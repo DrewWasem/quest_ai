@@ -102,6 +102,8 @@ Every player description flows through a **vocabulary-contract system** that con
 
 **[Play the live demo](https://quest-ai-smoky.vercel.app/)** — hosted on Vercel's free tier, so the initial load may take a moment while the 3D assets stream in. Once loaded, cached responses play instantly.
 
+> **Best on Google Chrome.** Chrome ships high-quality neural text-to-speech voices that make narrations sound natural and kid-friendly. Other browsers fall back to their built-in system voices, which work but sound more robotic.
+
 ## Run locally
 
 ```bash

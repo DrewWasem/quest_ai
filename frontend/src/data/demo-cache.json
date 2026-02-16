@@ -4508,10 +4508,21 @@
       "narration": "Mage sprints in circles \u2014 not much cooking happening!",
       "actions": [
         {
-          "type": "animate",
+          "type": "spawn",
           "target": "mage",
-          "anim": "Running_A",
-          "duration_ms": 800
+          "position": "left"
+        },
+        {
+          "type": "move",
+          "target": "mage",
+          "to": "right",
+          "style": "linear"
+        },
+        {
+          "type": "move",
+          "target": "mage",
+          "to": "left",
+          "style": "linear"
         },
         {
           "type": "emote",
@@ -4727,6 +4738,11 @@
           "position": "center"
         },
         {
+          "type": "spawn",
+          "target": "barbarian",
+          "position": "left"
+        },
+        {
           "type": "move",
           "target": "barbarian",
           "to": "center",
@@ -4735,8 +4751,7 @@
         {
           "type": "animate",
           "target": "barbarian",
-          "anim": "Running_A",
-          "duration_ms": 700
+          "anim": "Cheering"
         },
         {
           "type": "react",
@@ -4851,10 +4866,20 @@
           "position": "center"
         },
         {
+          "type": "spawn",
+          "target": "barbarian",
+          "position": "left"
+        },
+        {
+          "type": "move",
+          "target": "barbarian",
+          "to": "center",
+          "style": "bounce"
+        },
+        {
           "type": "animate",
           "target": "barbarian",
-          "anim": "Running_A",
-          "duration_ms": 700
+          "anim": "Interact"
         },
         {
           "type": "react",
@@ -5519,10 +5544,15 @@
       "narration": "Skeleton sprints off without the pizza \u2014 worst delivery ever!",
       "actions": [
         {
-          "type": "animate",
+          "type": "spawn",
           "target": "skeleton_warrior",
-          "anim": "Running_B",
-          "duration_ms": 800
+          "position": "center"
+        },
+        {
+          "type": "move",
+          "target": "skeleton_warrior",
+          "to": "off-right",
+          "style": "linear"
         },
         {
           "type": "emote",

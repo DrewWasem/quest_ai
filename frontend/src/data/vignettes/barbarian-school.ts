@@ -94,7 +94,7 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
       title: '💪 BARBARIAN SMASH!',
       message: 'This barbarian plays tag like a wrecking ball! Too much power for a friendly game of tag.',
       skillTaught: 'Detail',
-      tip: 'Adding gentle or careful to your prompt could prevent playground chaos!',
+      tip: 'Try picking a different Monster — some are gentler at tag than others!',
     },
   },
   {
@@ -183,7 +183,7 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
       title: '🙈 WORST HIDING SPOT!',
       message: 'A massive barbarian behind a tiny haybale? Everyone can see you! Hide-and-seek needs a better strategy.',
       skillTaught: 'Focus',
-      tip: 'Adding where or how to hide in your prompt helps your monster make smarter choices!',
+      tip: 'Switch the Equipment — some spots are way better for hiding!',
     },
   },
   {
@@ -191,10 +191,10 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
     description: 'Barbarian smashes through all obstacles instead of running around them during a race',
     trigger: { monster: 'barbarian', equipment: '*', activity: 'race' },
     tier: 'spectacular',
-    promptScore: 'chaotic',
+    promptScore: 'perfect',
     steps: [
       ...ANNOUNCE("RACE START!"),
-      ...NARRATOR("Obstacles? The barbarian has a different strategy!"),
+      ...NARRATOR("The barbarian has the BEST race strategy!"),
       { parallel: [
         { action: 'spawn', asset: 'crate', position: 'cs-left' },
         { action: 'spawn', asset: 'barrel', position: 'cs-center' },
@@ -235,10 +235,10 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
       ...CROWD_CHEER(),
     ],
     feedback: {
-      title: '🏃 DESTRUCTION DERBY!',
-      message: 'This barbarian treats the race course like a demolition zone! Smashing through obstacles is one way to win.',
+      title: '🏆 UNSTOPPABLE RACER!',
+      message: 'Nothing stops this barbarian! Smashing through every obstacle and crossing the finish line first!',
       skillTaught: 'Sequencing',
-      tip: 'Use words like avoid or go around to teach your monster better race strategies!',
+      tip: 'You matched the perfect energy with the perfect activity! MEGA Hyper + Racing = unstoppable!',
     },
   },
   {
@@ -291,7 +291,7 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
       title: '🦘 GROUND POUNDER!',
       message: 'Barbarian jumping creates earthquakes! The landing shockwave knocked everyone else over.',
       skillTaught: 'Detail',
-      tip: 'Try adding softly or gently to control how your monster performs actions!',
+      tip: 'Try Sleepy energy in Level 2 — it totally changes how monsters play!',
     },
   },
   {
@@ -559,7 +559,7 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
       title: '🎪 CIRCUS JUMP!',
       message: 'This clown used the ball as a trampoline for an epic launch! Perfect form, perfect landing.',
       skillTaught: 'Detail',
-      tip: 'Adding how your monster jumps (high, far, carefully) creates more interesting scenes!',
+      tip: 'Try different Equipment — each spot makes jumping look totally different!',
     },
   },
   {
@@ -734,7 +734,7 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
       title: '👤 PERFECT CAMOUFLAGE!',
       message: 'This ninja hid so well, nobody could find them! Stealth mastery at its finest.',
       skillTaught: 'Specificity',
-      tip: 'Ninja powers work best when you describe their stealth techniques!',
+      tip: 'Ninjas shine with Hide & Seek — try switching the Activity!',
     },
   },
   {
@@ -830,7 +830,7 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
       title: '🥷 TRIPLE FLIP!',
       message: 'This ninja jumped with style! The triple backflip impressed everyone watching.',
       skillTaught: 'Detail',
-      tip: 'Adding style details like gracefully or powerfully makes jumps more impressive!',
+      tip: 'Pick a different Monster — each one jumps in their own hilarious way!',
     },
   },
   {
@@ -911,7 +911,7 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
       title: '🤖 CALCULATION ERROR!',
       message: 'This robot calculated perfect angles but everyone escaped! Speed matters more than math in tag.',
       skillTaught: 'Focus',
-      tip: 'Adding quickly or speedily helps your robot keep up with the action!',
+      tip: 'Try a different Activity — robots excel at some playground games!',
     },
   },
   {
@@ -992,7 +992,7 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
       title: '💡 GLOWING MISTAKE!',
       message: 'This robot tried to hide but the LED lights gave them away! Turn off the lights for better stealth.',
       skillTaught: 'Specificity',
-      tip: 'Adding dark mode or lights off could help your robot hide better!',
+      tip: 'Try Snowy or Windy weather in Level 2 — hiding gets way harder!',
     },
   },
   {
@@ -1168,7 +1168,7 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
       title: '🪨 CLUB TAG!',
       message: 'This caveman thinks tag means bonking with a club! Creative, but not quite right.',
       skillTaught: 'Focus',
-      tip: 'Adding gently or lightly helps your caveman understand modern tag rules!',
+      tip: 'Cavemen are better at Wrestling — try switching the Activity!',
     },
   },
   {
@@ -1333,7 +1333,7 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
       title: '🦴 EARTHQUAKE JUMP!',
       message: 'This caveman jumped with such power it shook the whole playground! Prehistoric strength.',
       skillTaught: 'Detail',
-      tip: 'Adding power words like mighty or strong enhances caveman actions!',
+      tip: 'Caveman + Jumping is always chaos — try Ninja for graceful leaps!',
     },
   },
   {
@@ -1491,7 +1491,7 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
       title: '🙈 GROUP FAIL!',
       message: 'Everyone hiding in the same tiny spot? Found immediately! Hide-and-seek needs spreading out.',
       skillTaught: 'Focus',
-      tip: 'Adding separately or different spots helps everyone hide better!',
+      tip: 'Too crowded? Try the Open Field — more room for everyone!',
     },
   },
   {
@@ -1541,7 +1541,7 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
       title: '🏁 FINISH LINE PILEUP!',
       message: 'Everyone racing together caused an epic pileup! Who won? Impossible to tell!',
       skillTaught: 'Sequencing',
-      tip: 'Adding one at a time or in order helps organize group races!',
+      tip: 'Switch to a smaller Monster crew — not everyone can race at once!',
     },
   },
   {
@@ -1630,7 +1630,7 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
       title: '🧗 OVERLOAD!',
       message: 'Too many climbers on one slide! The equipment couldn\'t handle everyone at once.',
       skillTaught: 'Focus',
-      tip: 'Adding take turns or one at a time prevents equipment collapse!',
+      tip: 'Some Equipment handles crowds better — try the Open Field!',
     },
   },
 ];
@@ -1664,7 +1664,7 @@ export const BARBARIAN_SCHOOL_DEFAULT: Vignette = {
     title: '🎪 PLAYGROUND FUN!',
     message: 'Your monster had fun at recess! Try different activities for more exciting scenes.',
     skillTaught: 'Focus',
-    tip: 'Being more specific about the action creates better playground scenes!',
+    tip: 'Each Activity plays totally different — try them all to find the wildest combo!',
   },
 };
 
@@ -1707,7 +1707,7 @@ export const BARBARIAN_SCHOOL_DEFAULT_2: Vignette = {
     title: '🌦️ WEATHER RECESS!',
     message: 'Your monster played in interesting weather! Try different energy levels for more variety.',
     skillTaught: 'Detail',
-    tip: 'Adding energy descriptions and weather makes scenes more dynamic!',
+    tip: 'Try MEGA Hyper or Sleepy energy — and Snowy weather changes everything!',
   },
 };
 

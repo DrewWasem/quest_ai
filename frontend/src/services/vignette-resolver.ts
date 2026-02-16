@@ -24,25 +24,37 @@ export function resolveVignette(
   const slotIds = stage.template.slots.map(s => s.id);
 
   // Priority 1: EXACT match (all tags)
+  // undefined trigger keys are treated as wildcards so Stage 1 vignettes
+  // can match in Stage 2 (which adds extra slots like ENERGY/WEATHER).
   const exact = vignettes.find(v => {
     return slotIds.every(id => {
       const triggerVal = v.trigger[id.toLowerCase()];
-      return triggerVal === selectedTags[id] || triggerVal === '*';
+      return triggerVal === undefined || triggerVal === selectedTags[id] || triggerVal === '*';
     });
   });
   if (exact && !isAllWildcard(exact, slotIds)) return exact;
 
   // Priority 2: PAIR match (2+ of N tags match)
-  const pairMatches = vignettes.filter(v => {
+  // Ranked by match count (best first), then by prompt quality on ties,
+  // so good input reliably produces good scenes instead of random chaos.
+  const SCORE_ORDER: Record<string, number> = { perfect: 3, partial: 2, chaotic: 1, funny_fail: 0 };
+  const pairMatches: Array<{ v: Vignette; matchCount: number }> = [];
+  for (const v of vignettes) {
     let matchCount = 0;
     for (const id of slotIds) {
       const triggerVal = v.trigger[id.toLowerCase()];
-      if (triggerVal === selectedTags[id] || triggerVal === '*') matchCount++;
+      if (triggerVal === undefined || triggerVal === selectedTags[id] || triggerVal === '*') matchCount++;
     }
-    return matchCount >= 2 && matchCount < slotIds.length;
-  });
+    if (matchCount >= 2 && matchCount < slotIds.length) {
+      pairMatches.push({ v, matchCount });
+    }
+  }
   if (pairMatches.length > 0) {
-    return pairMatches[Math.floor(Math.random() * pairMatches.length)];
+    pairMatches.sort((a, b) => {
+      if (b.matchCount !== a.matchCount) return b.matchCount - a.matchCount;
+      return (SCORE_ORDER[b.v.promptScore] ?? 1) - (SCORE_ORDER[a.v.promptScore] ?? 1);
+    });
+    return pairMatches[0].v;
   }
 
   // Priority 3: VIBE match — match the last slot (usually vibe/mood)
@@ -67,7 +79,10 @@ export function resolveVignette(
 }
 
 function isAllWildcard(v: Vignette, slotIds: string[]): boolean {
-  return slotIds.every(id => v.trigger[id.toLowerCase()] === '*');
+  return slotIds.every(id => {
+    const val = v.trigger[id.toLowerCase()];
+    return val === '*' || val === undefined;
+  });
 }
 
 /**

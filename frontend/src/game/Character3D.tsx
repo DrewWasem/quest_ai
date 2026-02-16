@@ -137,10 +137,12 @@ const Character3DInner = forwardRef<Character3DHandle, Character3DProps>(
       },
     }))
 
-    // Play initial animation on mount
+    // Play initial animation on mount — instant (no fade from bind pose)
+    // and advance the mixer so the first rendered frame shows the animation,
+    // not the T-pose.
     useEffect(() => {
-      playAnimation(currentAnimation, 0.3)
-      // Signal ready after first animation loads
+      playAnimation(currentAnimation, 0)
+      if (mixer) mixer.update(0.001)
       if (onReady) onReady()
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

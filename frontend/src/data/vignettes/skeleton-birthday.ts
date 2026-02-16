@@ -72,7 +72,7 @@ const CAKE_VIGNETTES: Vignette[] = [
       title: 'PERFECT PARTY!',
       message: "You planned an amazing birthday! You said WHAT food (cake) and WHAT entertainment (magic show). When you're specific about all the details, everything comes together perfectly!",
       skillTaught: 'Specificity',
-      tip: 'Great prompts answer WHO, WHAT, WHERE, and HOW — you nailed it!',
+      tip: 'You nailed every choice — the right Food, Entertainment, and Vibe make magic!',
     },
   },
 
@@ -789,7 +789,7 @@ const FEAST_VIGNETTES: Vignette[] = [
       title: 'LEGENDARY!',
       message: "An epic feast with fireworks?! That's EXACTLY how a legendary skeleton celebrates! You nailed every detail.",
       skillTaught: 'Specificity',
-      tip: "You're a natural prompt engineer! Try the other quests to test your skills!",
+      tip: "You're a natural scene creator! Try the other quests for more adventures!",
     },
   },
 
@@ -3119,7 +3119,7 @@ export const SKELETON_BIRTHDAY_DEFAULT_2: Vignette = {
   ],
   feedback: {
     title: '🤷 Vague Party...',
-    message: "Something sort of happened... but HOW BIG? HOW does the skeleton FEEL? Be more specific!",
+    message: "Something sort of happened... but HOW BIG? HOW does the skeleton FEEL? Try picking a Size and Mood!",
     skillTaught: 'Specificity',
     tip: "Try setting the SIZE and MOOD — they change everything about the party!",
     vagueComparison: {
@@ -3374,7 +3374,7 @@ const STAGE3_SECRET_COMBOS: Vignette[] = [
       title: '💥 SECRET: EXPLOSIVE GAMES!',
       message: 'Fireworks + Games = every game action explodes with fireworks! Musical chairs goes BOOM!',
       skillTaught: 'Combo Thinking',
-      tip: 'Adding fireworks to games makes them EXPLOSIVE! Combine for surprises!',
+      tip: 'Fireworks + any game = EXPLOSIVE combo! Mix different Activities for surprises!',
     },
   },
 

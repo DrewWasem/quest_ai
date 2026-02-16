@@ -196,6 +196,7 @@ Puppeteer tests deferred (requires browser automation setup).
 | Mobile layout check | Touch controls, responsive canvas |
 | Accessibility pass | Screen reader labels, color contrast |
 | README update | Screenshots, new zone count, updated pitch |
+| Built-in TTS voice | Replace browser SpeechSynthesis with a neural TTS API (ElevenLabs or OpenAI) for consistent, high-quality narration across all browsers |
 
 ---
 

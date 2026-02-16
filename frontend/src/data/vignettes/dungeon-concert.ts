@@ -777,6 +777,11 @@ const TEAM_VIGNETTES: Vignette[] = [
       { parallel: [{ action: 'crowd_react', characters: ['knight', 'mage', 'rogue'], anim: 'idle' }, { action: 'text_popup', text: '🤫 SHHH! 🤫', position: 'top', size: 'large' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'question-marks', position: 'center' }, { action: 'text_popup', text: '❓ WHO GOES FIRST? ❓', position: 'center', size: 'huge' }, { action: 'camera_shake', intensity: 0.5, duration: 0.8 }, { action: 'sfx', sound: 'react' }], delayAfter: 0.5 },
       { parallel: [{ action: 'text_popup', text: '💥 TOO MUCH ARGUING! 💥', position: 'center', size: 'large' }, { action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('knight', 'excited', 'A knight never gives up!'),
+    ...CHARACTER_SPEAK('mage', 'excited', 'Ooh — powerful energy here!'),
+    ...CHARACTER_SPEAK('rogue', 'excited', 'Nobody saw THAT coming!'),
+    ...CHARACTER_SPEAK('knight', 'star_eyes', 'A noble triumph!'),
     ],
     feedback: {
       title: '🤫 TOO MANY COOKS!',
@@ -797,6 +802,11 @@ const TEAM_VIGNETTES: Vignette[] = [
       { parallel: [{ action: 'spawn_character', character: 'knight', position: 'left', anim: 'spawn_ground' }, { action: 'spawn_character', character: 'mage', position: 'left', anim: 'spawn_air' }, { action: 'spawn_character', character: 'rogue', position: 'left', anim: 'spawn_ground' }], delayAfter: 0.4 },
       { parallel: [{ action: 'crowd_react', characters: ['knight', 'mage', 'rogue'], anim: 'taunt' }, { action: 'text_popup', text: '⚔️ TEAM ATTACK! ⚔️', position: 'top', size: 'huge' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
       { parallel: [{ action: 'animate', character: 'knight', anim: 'sword_slash' }, { action: 'animate', character: 'mage', anim: 'cast_spell' }, { action: 'animate', character: 'rogue', anim: 'throw' }, { action: 'react', effect: 'explosion-cartoon', position: 'center' }, { action: 'camera_shake', intensity: 0.9, duration: 1.5 }], delayAfter: 0.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('knight', 'excited', 'A knight never gives up!'),
+    ...CHARACTER_SPEAK('mage', 'excited', 'My magic is TINGLING!'),
+    ...CHARACTER_SPEAK('rogue', 'excited', 'Nobody saw THAT coming!'),
+    ...CHARACTER_SPEAK('knight', 'star_eyes', 'Victory is ours!'),
       ...CROWD_CHEER(['knight', 'mage', 'rogue']),
       { parallel: [{ action: 'animate', character: 'knight', anim: 'taunt' }, { action: 'animate', character: 'mage', anim: 'jump_big' }, { action: 'animate', character: 'rogue', anim: 'Cheering' }, { action: 'react', effect: 'hearts-float', position: 'center' }, { action: 'text_popup', text: '🏆 TEAM VICTORY! 🏆', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
     ],
@@ -820,6 +830,11 @@ const TEAM_VIGNETTES: Vignette[] = [
       { parallel: [{ action: 'crowd_react', characters: ['knight', 'mage', 'rogue'], anim: 'cast_spell' }, { action: 'text_popup', text: '🪄 EVERYONE CASTS! 🪄', position: 'top', size: 'large' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'react', effect: 'question-marks', position: 'left' }, { action: 'react', effect: 'question-marks', position: 'right' }, { action: 'text_popup', text: '❓ ONLY MAGE HAS MAGIC! ❓', position: 'center', size: 'huge' }], delayAfter: 0.5 },
       { parallel: [{ action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('knight', 'excited', 'For glory!'),
+    ...CHARACTER_SPEAK('mage', 'excited', 'My magic is TINGLING!'),
+    ...CHARACTER_SPEAK('rogue', 'excited', 'Nobody saw THAT coming!'),
+    ...CHARACTER_SPEAK('knight', 'star_eyes', 'A noble triumph!'),
     ],
     feedback: {
       title: '🪄 NOT EVERYONE IS A MAGE!',
@@ -862,6 +877,11 @@ const TEAM_VIGNETTES: Vignette[] = [
       { parallel: [{ action: 'animate', character: 'knight', anim: 'sword_slash' }, { action: 'animate', character: 'mage', anim: 'cast_spell' }, { action: 'animate', character: 'rogue', anim: 'throw' }, { action: 'text_popup', text: '🎪 CHAOS DISTRACTION! 🎪', position: 'top', size: 'huge' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'explosion-cartoon', position: 'right' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'react', effect: 'stars-spin', position: 'left' }, { action: 'camera_shake', intensity: 0.8, duration: 1.0 }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'knight', anim: 'Cheering' }, { action: 'animate', character: 'mage', anim: 'wave' }, { action: 'animate', character: 'rogue', anim: 'taunt' }, { action: 'react', effect: 'sparkle-magic', position: 'center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('knight', 'excited', 'A knight never gives up!'),
+    ...CHARACTER_SPEAK('mage', 'excited', 'My magic is TINGLING!'),
+    ...CHARACTER_SPEAK('rogue', 'excited', 'Sneaky and stylish!'),
+    ...CHARACTER_SPEAK('knight', 'star_eyes', 'A noble triumph!'),
     ],
     feedback: {
       title: '🎪 TEAM CHAOS!',
@@ -883,6 +903,11 @@ const TEAM_VIGNETTES: Vignette[] = [
       { parallel: [{ action: 'crowd_react', characters: ['knight', 'mage', 'rogue'], anim: 'spin_attack' }, { action: 'text_popup', text: '💥 TEAM SMASH! 💥', position: 'top', size: 'huge' }, { action: 'react', effect: 'explosion-cartoon', position: 'center' }, { action: 'camera_shake', intensity: 0.9, duration: 1.2 }, { action: 'sfx', sound: 'react' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'explosion-cartoon', position: 'right' }, { action: 'react', effect: 'explosion-cartoon', position: 'left' }, { action: 'screen_flash', color: 'orange', duration: 0.3 }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'knight', anim: 'jump_big' }, { action: 'animate', character: 'mage', anim: 'taunt' }, { action: 'animate', character: 'rogue', anim: 'wave' }, { action: 'react', effect: 'glow-pulse', position: 'center' }, { action: 'text_popup', text: '🏆 DEMOLISHED! 🏆', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('knight', 'excited', 'By my sword — incredible!'),
+    ...CHARACTER_SPEAK('mage', 'excited', 'Spell-tacular!'),
+    ...CHARACTER_SPEAK('rogue', 'excited', 'Nobody saw THAT coming!'),
+    ...CHARACTER_SPEAK('knight', 'star_eyes', 'Victory is ours!'),
     ],
     feedback: {
       title: '💥 COMBINED FORCE!',
@@ -938,6 +963,8 @@ export const DUNGEON_CONCERT_DEFAULT: Vignette = {
       ],
       delayAfter: 2.0,
     },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('knight', 'excited', 'A knight never gives up!'),
   ],
   feedback: {
     title: '🏰 Dungeon Escape!',
@@ -1081,6 +1108,9 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
         ],
         delayAfter: 2.0,
       },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'My bones are rattling with excitement!'),
+    ...CHARACTER_SPEAK('skeleton_minion', 'excited', 'Me too me too!'),
     ],
     feedback: {
       title: '⚔️ EPIC BATTLE!',
@@ -1626,6 +1656,9 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
         ],
         delayAfter: 2.0,
       },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('mage', 'excited', 'Spell-tacular!'),
+    ...CHARACTER_SPEAK('rogue', 'excited', 'Quick fingers FTW!'),
     ],
     feedback: {
       title: '🤫 SILENT TEAMWORK!',
@@ -1952,6 +1985,9 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
         ],
         delayAfter: 2.0,
       },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('knight', 'excited', 'For glory!'),
+    ...CHARACTER_SPEAK('knight', 'star_eyes', 'Victory is ours!'),
     ],
     feedback: {
       title: '👻 INVISIBLE COMBAT!',
@@ -2594,6 +2630,7 @@ export const DUNGEON_CONCERT_STAGE_2: Vignette[] = [
     },
   },
 
+  ...DUNGEON_CONCERT_STAGE_1,  // Stage 1 vignettes work here — undefined trigger keys act as wildcards
 ];
 
 // ─── DEFAULT VIGNETTE (Stage 2 — always works) ─────────────────────────────
@@ -2627,6 +2664,8 @@ export const DUNGEON_CONCERT_DEFAULT_2: Vignette = {
       ],
       delayAfter: 2.0,
     },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('knight', 'excited', 'For glory!'),
   ],
   feedback: {
     title: '🏰 Vague Escape',
@@ -3112,6 +3151,7 @@ export const DUNGEON_CONCERT_STAGE_3: Vignette[] = [
     },
   },
 
+  ...DUNGEON_CONCERT_STAGE_2,  // Includes stage 1+2 vignettes as fallbacks
 ];
 
 // ─── DEFAULT VIGNETTE (Stage 3 — always works) ─────────────────────────────

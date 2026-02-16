@@ -1,4 +1,4 @@
-# Accelerated Roadmap — Prompt Quest
+# Accelerated Roadmap — Quest AI
 
 **Created:** 2026-02-10
 **Last Updated:** 2026-02-10
@@ -78,7 +78,7 @@ SceneScriptPlayer, AssetLoader, SoundManager, and resolver need ZERO changes —
 - [x] `prompts/octopus-band.ts` — guitar, drums, keyboard, microphone
 - [x] `OctopusBandScene.ts` — underwater stage, persistent octopus
 - [x] Card grid task selector (2x3, emoji + title + description)
-- [x] "All Tasks" button + Prompt Quest title return to grid
+- [x] "All Tasks" button + Quest AI title return to grid
 - [x] Fallback scripts for both tasks
 - [x] Per-task placeholders in PromptInput for all 6 tasks
 

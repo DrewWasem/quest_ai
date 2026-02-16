@@ -2,7 +2,7 @@
 
 ## Project
 
-Prompt Quest: AI-powered 3D game teaching kids (ages 7-11) descriptive thinking through play.
+Quest AI: AI-powered 3D game teaching kids (ages 7-11) descriptive thinking through play.
 Built with Opus 4.6 for the Claude Code Hackathon (Feb 10-16, 2026).
 Solo developer: Drew.
 
@@ -64,7 +64,7 @@ vercel --prod                 # Deploy to Vercel
 
 ## Key Reference Docs (read on demand, not always in context)
 
-- `docs/ROADMAP.md` — Post-hackathon roadmap (Phases 1-3 complete, Free Play Zone next)
+- `docs/ROADMAP.md` — Post-hackathon roadmap (Phases 1-4 complete, Game Engine Evolution next)
 - `docs/how-it-works.md` — Technical deep dive (vocabulary contract, three-tier response, comedy pedagogy)
 - `docs/architecture-overview.md` — System architecture diagrams + data flow
 - `docs/claude-code-showcase.md` — How Claude Code extensibility built the project

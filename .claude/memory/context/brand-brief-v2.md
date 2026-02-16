@@ -1,13 +1,13 @@
 # Brand Brief v2 — Quick Reference
 
-**Source:** `docs/prompt-quest-brand-brief-v2.html`
+**Source:** `docs/quest-ai-brand-brief-v2.html`
 **Status:** CANONICAL — use this for ALL scripts, UI elements, and design decisions
 
 ---
 
 ## Core Identity
 
-- **Name:** Prompt Quest
+- **Name:** Quest AI
 - **Tagline:** "Your words are your superpower."
 - **Game loop:** "Type it. Watch it. Laugh."
 - **Philosophy:** "The funnier the fail, the better the lesson."

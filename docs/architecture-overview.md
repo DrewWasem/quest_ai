@@ -24,7 +24,7 @@
 │  │  ┌─────────────┐  ┌─────────────┐  ┌────────────────────┐ │ │
 │  │  │ Tier 1      │  │ Tier 2      │  │ Tier 3             │ │ │
 │  │  │ CACHE       │→ │ LIVE API    │→ │ FALLBACK           │ │ │
-│  │  │ 166 golden  │  │ Opus 4.6    │  │ 13 pre-written     │ │ │
+│  │  │ 166 golden  │  │ Opus 4.6    │  │ 8 pre-written     │ │ │
 │  │  │ responses   │  │ 6s timeout  │  │ scripts            │ │ │
 │  │  │ (instant)   │  │ (1-8s)      │  │ (instant)          │ │ │
 │  │  └─────────────┘  └─────────────┘  └────────────────────┘ │ │
@@ -57,11 +57,12 @@
 │  │  │  │  Mountain Perimeter (backdrop)                │  │   │ │
 │  │  │  └───────────────────────────────────────────────┘  │   │ │
 │  │  │                                                      │   │ │
-│  │  │  ┌──────────────────┐  ┌──────────────────────────┐ │   │ │
-│  │  │  │ Dungeon Zone     │  │ Park Zone                │ │   │ │
-│  │  │  │ Z = -16          │  │ Z = +16                  │ │   │ │
-│  │  │  │ skeleton-birthday│  │ adventurers-picnic        │ │   │ │
-│  │  │  └──────────────────┘  └──────────────────────────┘ │   │ │
+│  │  │  ┌──────────────────────────────────────────────────┐ │   │ │
+│  │  │  │  8 Quest Zones (arranged in a circle)            │ │   │ │
+│  │  │  │  skeleton-birthday, knight-space, barbarian-     │ │   │ │
+│  │  │  │  school, skeleton-pizza, adventurers-picnic,     │ │   │ │
+│  │  │  │  dungeon-concert, mage-kitchen, free-play        │ │   │ │
+│  │  │  └──────────────────────────────────────────────────┘ │   │ │
 │  │  │                                                      │   │ │
 │  │  │  VillageCamera (smooth zone transitions, 2s cubic)  │   │ │
 │  │  └──────────────────────────────────────────────────────┘   │ │
@@ -152,15 +153,18 @@
 
 ## Quest Zones
 
-| Zone | Location | Theme | Characters |
+8 zones arranged in a circle around the village center:
+
+| Zone | Position | Theme | Characters |
 |------|----------|-------|------------|
-| Skeleton's Birthday | Z = -16 | Dungeon party | Skeleton, Knight, Mage, Clown |
-| Knight's Space Mission | — | Space station | Knight, SpaceRanger, Robot |
-| Mage vs Kitchen | — | Cooking chaos | Mage, Witch |
-| Barbarian's School | — | Monster recess | Barbarian, Clown, Ninja |
-| Dungeon Rock Concert | — | Underground music | All characters + Skeleton |
-| Skeleton Pizza Delivery | — | Restaurant | Skeletons |
-| Adventurers' Picnic | Z = +16 | Park outing | All 5 Adventurers |
+| Skeleton's Birthday | [0, 0, -70] | Dungeon party | Skeleton, Knight, Mage, Clown |
+| Knight's Space Mission | [38, 0, -38] | Space station | Knight, SpaceRanger, Robot |
+| Barbarian's School | [48, 0, 5] | Monster recess | Barbarian, Clown, Ninja |
+| Skeleton Pizza Delivery | [38, 0, 38] | Restaurant | Skeletons |
+| Adventurers' Picnic | [0, 0, 48] | Park outing | All 5 Adventurers |
+| Dungeon Rock Concert | [-35, 0, 35] | Underground music | All characters + Skeleton |
+| Mage vs Kitchen | [-48, 0, 5] | Cooking chaos | Mage, Witch |
+| Creative Playground | [-38, 0, -38] | Sandbox (unlocks after 3 zones) | All 26 characters |
 
 ## Tech Stack
 

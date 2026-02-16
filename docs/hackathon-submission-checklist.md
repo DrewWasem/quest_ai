@@ -14,7 +14,7 @@ Sources: [Kickoff Page](https://hackathon-kickoff.vercel.app/) | [Cerebral Valle
 
 Judges review your **video first**. The organizers explicitly said: "Dedicate real time to making this."
 
-- [ ] **Record a demo video** showing Prompt Quest in action
+- [ ] **Record a demo video** showing Quest AI in action
 - [ ] Show the full player journey: title screen → village → enter zone → type description → watch scene play out
 - [ ] Show at least 2 different outcomes (FULL_SUCCESS + FUNNY_FAIL) to demonstrate AI-driven variety
 - [ ] Explain what it is and why it matters (kids learning descriptive thinking through play)

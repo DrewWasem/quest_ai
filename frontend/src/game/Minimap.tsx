@@ -101,8 +101,6 @@ export function Minimap() {
     ctx.fill();
 
     // Camera direction chevron
-    // cameraYaw: 0 = looking along -Z (north on minimap = up)
-    // Canvas: up = -Y. So angle on canvas = cameraYaw (clockwise from north)
     const angle = cameraYaw;
     const chevronDist = 8;
     const chevronSize = 4;
@@ -120,6 +118,7 @@ export function Minimap() {
     ctx.closePath();
     ctx.fillStyle = '#FACC15';
     ctx.fill();
+
   }, [playerPosition, cameraYaw, currentZone]);
 
   return (

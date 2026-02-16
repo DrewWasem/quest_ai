@@ -11,12 +11,12 @@
 }
 
 @layer components {
-  /* Display text (headings) — Fredoka */
+  /* Display text (headings) — Baloo 2 / Fredoka */
   .font-display {
-    font-family: 'Fredoka', 'Nunito', system-ui, sans-serif;
+    font-family: 'Baloo 2', 'Fredoka', 'Nunito', system-ui, sans-serif;
   }
 
-  /* Game-themed button — v2 purple with glow */
+  /* Game-themed button — v3 blue with glow */
   .btn-game {
     @apply px-6 py-3.5 font-heading font-bold rounded-[14px]
            transition-all duration-150 transform
@@ -24,7 +24,7 @@
            disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100;
   }
 
-  /* Glowing input field — dark canvas theme */
+  /* Glowing input field — dark ocean theme */
   .input-magic {
     @apply w-full p-4 rounded-[14px]
            font-body text-base
@@ -32,16 +32,16 @@
            focus:outline-none
            disabled:opacity-40 transition-all duration-300;
     min-height: 100px;
-    background: #1A0F2E;
+    background: #122240;
     color: #FFFFFF;
-    border: 2px solid #3D2B7A;
+    border: 2px solid #2E5078;
   }
   .input-magic::placeholder {
-    color: #A99CC8;
+    color: #98AEBF;
   }
   .input-magic:focus {
-    border-color: #7C3AED;
-    box-shadow: 0 0 24px rgba(124, 58, 237, 0.15), 0 0 60px rgba(124, 58, 237, 0.08);
+    border-color: #4A90D9;
+    box-shadow: 0 0 24px rgba(74, 144, 217, 0.15), 0 0 60px rgba(74, 144, 217, 0.08);
   }
 
   /* Result speech bubble — light theme */
@@ -52,11 +52,11 @@
   /* Primary CTA button */
   .btn-primary {
     @apply btn-game text-white;
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-    box-shadow: 0 0 24px rgba(124, 58, 237, 0.15);
+    background: linear-gradient(135deg, #4A90D9 0%, #3A7BC8 100%);
+    box-shadow: 0 0 24px rgba(74, 144, 217, 0.15);
   }
   .btn-primary:hover {
-    box-shadow: 0 0 30px rgba(124, 58, 237, 0.3);
+    box-shadow: 0 0 30px rgba(74, 144, 217, 0.3);
   }
 
   /* Secondary CTA button */
@@ -71,22 +71,22 @@
 /* Stars background decoration — light version for UI wrapper */
 .stars-bg-light {
   background-image:
-    radial-gradient(2px 2px at 20px 30px, rgba(124, 58, 237, 0.08), transparent),
-    radial-gradient(2px 2px at 40px 70px, rgba(251, 191, 36, 0.06), transparent),
-    radial-gradient(1px 1px at 90px 40px, rgba(56, 189, 248, 0.08), transparent),
+    radial-gradient(2px 2px at 20px 30px, rgba(74, 144, 217, 0.08), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(245, 200, 66, 0.06), transparent),
+    radial-gradient(1px 1px at 90px 40px, rgba(78, 205, 196, 0.08), transparent),
     radial-gradient(1px 1px at 130px 80px, rgba(236, 72, 153, 0.06), transparent),
-    radial-gradient(2px 2px at 160px 30px, rgba(124, 58, 237, 0.06), transparent);
+    radial-gradient(2px 2px at 160px 30px, rgba(74, 144, 217, 0.06), transparent);
   background-size: 200px 100px;
 }
 
 /* Stars background decoration — dark version for canvas area */
 .stars-bg {
   background-image:
-    radial-gradient(2px 2px at 20px 30px, rgba(124, 58, 237, 0.3), transparent),
-    radial-gradient(2px 2px at 40px 70px, rgba(251, 191, 36, 0.2), transparent),
-    radial-gradient(1px 1px at 90px 40px, rgba(56, 189, 248, 0.3), transparent),
+    radial-gradient(2px 2px at 20px 30px, rgba(74, 144, 217, 0.3), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(245, 200, 66, 0.2), transparent),
+    radial-gradient(1px 1px at 90px 40px, rgba(78, 205, 196, 0.3), transparent),
     radial-gradient(1px 1px at 130px 80px, rgba(236, 72, 153, 0.2), transparent),
-    radial-gradient(2px 2px at 160px 30px, rgba(124, 58, 237, 0.2), transparent);
+    radial-gradient(2px 2px at 160px 30px, rgba(74, 144, 217, 0.2), transparent);
   background-size: 200px 100px;
 }
 
@@ -97,7 +97,7 @@
 }
 
 .animate-shimmer {
-  background: linear-gradient(90deg, transparent 25%, rgba(124, 58, 237, 0.12) 50%, transparent 75%);
+  background: linear-gradient(90deg, transparent 25%, rgba(74, 144, 217, 0.12) 50%, transparent 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -146,5 +146,5 @@
 
 .progress-bar-fill {
   animation: progress-fill 0.3s ease-out forwards;
-  background: linear-gradient(90deg, #7C3AED, #FF8C42, #FBBF24);
+  background: linear-gradient(90deg, #4A90D9, #FF8C42, #F5C842);
 }

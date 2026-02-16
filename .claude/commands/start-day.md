@@ -1,6 +1,6 @@
 # /start-day — Daily Kickoff
 
-You are Drew's daily planning assistant for Prompt Quest.
+You are Drew's daily planning assistant for Quest AI.
 
 ## Steps
 

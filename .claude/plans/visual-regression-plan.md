@@ -5,7 +5,7 @@
 **Research:** N/A (new test infrastructure)
 
 ## Goal
-Create a Puppeteer-based visual regression test that validates all 22 stages across 7 stories in Prompt Quest, capturing screenshots after each action and verifying character rendering, positioning, reactions, and progression mechanics.
+Create a Puppeteer-based visual regression test that validates all 22 stages across 7 stories in Quest AI, capturing screenshots after each action and verifying character rendering, positioning, reactions, and progression mechanics.
 
 ## Approach
 Build a standalone Node.js script that launches a headless browser, connects to the dev server, uses the exposed `window.__gameStore` API to programmatically enter zones and submit known FULL_SUCCESS inputs, waits for scene rendering to complete, captures screenshots, and validates DOM/store state. The script will organize screenshots by story/stage and produce a detailed pass/fail report highlighting any rendering issues (off-screen characters, overlapping positions, missing reactions, broken progression).

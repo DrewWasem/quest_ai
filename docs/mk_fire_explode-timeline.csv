@@ -1,0 +1,46 @@
+step,sub,template,action_type,target,detail,authored_delay_s,real_delay_ms,move_dur_ms,step_total_ms,cumul_start_ms,appear_ms,disappear_ms,persist,issue
+1,,NARRATOR,text_popup,,"""The mage casts fire on a bubbling pot..."" (large center)",1.5,250,0,250,0,0,2250,no — 2s auto-remove,Text vanishes at t=2250 while setup still happening
+2,a,OBJECT_SPIN_IN,spawn+sfx,stove,Spawn stove at off-left [-7 0 0] + whoosh sfx,0.1,17,0,17,250,250,NEVER,YES — never removed,"Stove stays on stage forever, cluttering cs-center"
+2,b,OBJECT_SPIN_IN,move+react,stove,Arc stove off-left → cs-center [0 0 0] (7 units) + sparkle-magic,0.8,133,1750,1883,267,267,NEVER,YES,Move is AWAITED so step blocks 1750ms — this feels right
+3,a,OBJECT_DROP,spawn+sfx,pot,Drop pot at cs-center [0 0 0] + thud sfx,0.5,83,0,83,2150,2150,NEVER,YES — until launched step 9,"Pot spawns ON TOP of stove — same position, overlapping models"
+3,b,OBJECT_DROP,react,dust,Dust effect at cs-center,0.3,50,0,50,2233,2233,~4500,no — effect auto-remove,Dust visible ~2.3s
+4,a,TELEPORT_IN,screen_flash+sfx,,White flash 150ms + magic sfx,0.2,33,0,33,2283,2283,2433,no — flash 150ms,"Flash too fast to register at 33ms step, BUT flash is CSS timed (150ms)"
+4,b,TELEPORT_IN,spawn+react,mage,Mage spawns at ds-left [-2 0 1.5] + sparkle-magic,0.5,83,0,83,2316,2316,NEVER,YES,Mage persists
+4,c,TELEPORT_IN,animate,mage,Mage → Idle_A,0.3,50,0,50,2399,2399,—,—,Instant animation swap
+5,a,CHARACTER_EXCLAIM,animate+emote+shake,mage,"Mage Cheering + emote 'nervous' text 'Maximum heat!' + camera_shake (0.2 intensity 0.3s)",2.0,333,0,333,2449,2449,8949,emote stays 6500ms!,"Emote bubble persists through steps 5b-14! Still visible when cat charges in. Emote text is the MAIN dialogue — only 333ms of focus before scene moves on"
+5,b,CHARACTER_EXCLAIM,animate,mage,Mage → Idle_A,0.3,50,0,50,2782,2782,—,—,
+6,a,SPELL_CAST,animate+sfx,mage,Mage Casting_Long + magic sfx,0.5,83,0,83,2832,2832,—,—,83ms is very fast — Casting_Long animation plays but scene advances before anim finishes
+6,b,SPELL_CAST,react×2+flash,,sparkle-magic + magic_circle at cs-center + purple flash 150ms,0.8,133,0,133,2915,2915,~5400,effects ~2.5s,Two overlapping effects + flash
+6,c,SPELL_CAST,animate,mage,Mage → Idle_A,0.3,50,0,50,3048,3048,—,—,
+7,,ANNOUNCE,text_popup+sfx,,"Text 'FIRE OVERLOAD!' (huge center) + react sfx",1.5,250,0,250,3098,3098,5098,no — 2s auto-remove,"HUGE text. Still visible during dramatic pause, pot launch, flash, and impact"
+8,,DRAMATIC_PAUSE,delay,,1500ms delay ÷ GAP_SPEED=6 = 250ms real + 250ms delayAfter,1.5,250,0,500,3348,—,—,—,"DRAMATIC_PAUSE is only 500ms real time — NOT dramatic at all. Should be ~1.5s but GAP_SPEED kills it"
+9,,RAW PARALLEL,move+react+sfx+shake,pot,"Pot arcs cs-center→off-top [0 5 0] (dx=0 dz=0 → 600ms min) + smoke + explosion sfx + camera_shake (0.7 intensity 1.0s)",0.5,83,600,683,3848,3848,NEVER,pot stays at Y=5!,"POT NEVER REMOVED — it floats above the scene at Y=5 forever. Camera shake runs 1s. Smoke effect at cs-center."
+10,,FLASH,screen_flash+sfx,,Orange flash 300ms + impact sfx,0.3,50,0,50,4531,4531,4831,no — 300ms,
+11,,IMPACT,flash+shake+sfx,,White flash 200ms + camera_shake (0.5 intensity 0.5s) + impact sfx,0.6,100,0,100,4581,4581,4781,no,Second impact sfx in rapid succession with step 10
+12,,OBJECT_RAIN,spawn_rain,,6 burgers rain from Y=8 wide X spread. 80ms/6 stagger = ~13ms each. Fall: 1000-1500ms bounce. Auto-remove: 2000ms post-settle,2.0,333,80,413,4681,4681,~8180,"no — auto-remove ~3.5s after spawn","Burgers visible until ~t=8180. delayAfter only 333ms but burgers need 3500ms to finish falling+removing. Scene advances while burgers are MID-AIR."
+13,,CROWD_GASP,crowd_react+sfx,,All characters Hit_A + react sfx,0.8,133,0,133,5094,5094,—,—,"Only 'mage' is on stage — crowd_react('all') only hits mage. Burgers still falling overhead."
+14,a,CHARGE_IN_RIGHT,spawn+animate+sfx,cat,Cat spawns off-right [7 0 0] + Running_A + whoosh sfx,0.2,33,0,33,5227,5227,NEVER,YES (until flee),
+14,b,CHARGE_IN_RIGHT,move,cat,Cat runs off-right→cs-right [3 0 0] (4 units = 1000ms),0.8,133,1000,1133,5260,5260,—,—,Move is AWAITED — 1000ms feels right
+14,c,CHARGE_IN_RIGHT,animate,cat,Cat → Idle_A,0.2,33,0,33,6393,6393,—,—,Cat visible at cs-right for only 33ms before flee starts!
+15,a,FLEE_LEFT,animate+react+sfx,cat,Cat Running_A + scared effect at cs-center + whoosh sfx,0.2,33,0,33,6426,6426,~8900,scared ~2.5s,
+15,b,FLEE_LEFT,move+emote,cat,"Cat runs cs-right→off-left [-7 0 0] (10 units = 2500ms capped) + emote 'scared' text 'AHHHH!'",1.0,167,2500,2667,6459,6459,off-screen,cat stays at off-left,"Move is AWAITED — 2500ms. Cat runs off screen. Emote 'AHHHH!' appears but cat is moving fast — emote tracks actor position? Still visible 6500ms."
+16,,EMOTIONAL_REACT,react+animate,mage,"shock-lines effect at ds-left + mage Hit_A",0.8,133,0,133,9126,9126,~11600,effect ~2.5s,"Mage reacts. Burgers should be cleaned up by now (~t=8180)."
+17,a,DISAPPOINTMENT,animate+react+sfx,mage,"Mage Hit_A (AGAIN) + sad-cloud at cs-center + fail sfx",0.5,83,0,83,9259,9259,~11750,effect ~2.5s,Mage plays Hit_A a second time in a row — redundant
+17,b,DISAPPOINTMENT,react,,question-marks at cs-center,1.0,167,0,167,9342,9342,~11800,effect ~2.5s,
+18,,NARRATOR,text_popup,,"Text ""Fire + explode = KABOOM!..."" (large center)",1.5,250,0,250,9509,9509,11509,no — 2s auto-remove,Final narration
+END,,,,,,,,,,9759,,,,Total ~9.8 seconds
+
+SUMMARY OF ISSUES:
+issue_id,category,severity,description
+I1,persistence,HIGH,"Pot launched to off-top [0 5 0] but NEVER removed — floats above scene permanently"
+I2,persistence,MEDIUM,"Stove spawns at cs-center and is never removed — stays visible after explosion"
+I3,overlap,MEDIUM,"Pot spawns at cs-center ON TOP of stove — same position, models clip"
+I4,timing,HIGH,"DRAMATIC_PAUSE only 500ms real time (GAP_SPEED=6 kills the drama). Should feel like 1.5s"
+I5,timing,HIGH,"Non-move steps are 33-133ms — animations/emotes start but scene races past. Mage Casting_Long gets 83ms of focus before effects trigger"
+I6,timing,MEDIUM,"Cat arrives at cs-right and gets 33ms before fleeing — no time for player to register the cat appeared"
+I7,timing,MEDIUM,"OBJECT_RAIN delayAfter=333ms but burgers need ~3500ms to fall+settle. Scene advances while food is mid-air"
+I8,redundancy,LOW,"Mage plays Hit_A twice in succession (steps 16 and 17a)"
+I9,overlap,LOW,"Text popups 'FIRE OVERLOAD!' (step 7) and narrator text (step 1) can overlap if step 1 text hasn't auto-removed"
+I10,timing,LOW,"Emote 'Maximum heat!' bubble persists 6500ms (steps 5-14) — visible through explosion and cat scenes. May be good or distracting"
+I11,timing,MEDIUM,"Second FLASH + IMPACT sfx at steps 10-11 happen 50ms apart — sounds merge into one"
+I12,persistence,LOW,"Cat left at off-left after fleeing — not visible but never removed from actor list"

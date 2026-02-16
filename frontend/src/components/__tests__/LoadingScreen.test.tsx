@@ -14,9 +14,9 @@ describe('LoadingScreen', () => {
   // ═══════════════════════════════════════════════════════════════════════════
 
   describe('Basic rendering', () => {
-    it('should render the title "Quest AI"', () => {
+    it('should render the title "QuestAI"', () => {
       render(<LoadingScreen />);
-      expect(screen.getByText('Quest AI')).toBeInTheDocument();
+      expect(screen.getByText('QuestAI')).toBeInTheDocument();
     });
 
     it('should render the subtitle "Your words are your superpower."', () => {
@@ -103,7 +103,7 @@ describe('LoadingScreen', () => {
       const { container } = render(<LoadingScreen progress={60} />);
       const progressBar = container.querySelector('.h-full.rounded-full.transition-all');
       expect(progressBar).toHaveStyle({
-        background: 'linear-gradient(90deg, #7C3AED 0%, #FF8C42 100%)',
+        background: 'linear-gradient(90deg, #4A90D9 0%, #4ECDC4 100%)',
       });
     });
   });
@@ -165,16 +165,16 @@ describe('LoadingScreen', () => {
     it('should have the correct background color', () => {
       const { container } = render(<LoadingScreen />);
       const wrapper = container.firstChild as HTMLElement;
-      expect(wrapper).toHaveStyle({ backgroundColor: '#0F0A1A' });
+      expect(wrapper).toHaveStyle({ backgroundColor: '#0A1628' });
     });
 
     it('should have gradient text on title', () => {
       render(<LoadingScreen />);
-      const title = screen.getByText('Quest AI');
+      const title = screen.getByText('QuestAI');
 
       // Check that gradient is applied (jsdom may not fully support all webkit properties)
       expect(title).toHaveStyle({
-        background: 'linear-gradient(135deg, #7C3AED 0%, #FF8C42 100%)',
+        background: 'linear-gradient(135deg, #4A90D9 0%, #4ECDC4 100%)',
       });
 
       // Verify webkit properties are set (even if jsdom doesn't compute them)
@@ -218,7 +218,7 @@ describe('LoadingScreen', () => {
 
     it('should render title with semantic heading element', () => {
       render(<LoadingScreen />);
-      const title = screen.getByText('Quest AI');
+      const title = screen.getByText('QuestAI');
       expect(title.tagName).toBe('H1');
     });
 

@@ -9,7 +9,7 @@
 ### Phase 1: Dependencies & Cleanup
 - Installed `phaser` + `zustand` in frontend
 - Replaced App.tsx: stripped SaaS pages/providers, replaced with game layout
-- Updated index.html title to "Prompt Quest"
+- Updated index.html title to "Quest AI"
 
 ### Phase 2: Phaser in React
 - Created `EventBus.ts` — Phaser.Events.EventEmitter for React↔Phaser bridge

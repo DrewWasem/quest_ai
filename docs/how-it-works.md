@@ -1,10 +1,10 @@
-# How Prompt Quest Works: A Technical Deep Dive
+# How Quest AI Works: A Technical Deep Dive
 
 > Built solo in 7 days with Claude Code + Opus 4.6 for the Claude Code Hackathon (Feb 10-16, 2026)
 
 ## The Core Idea
 
-Prompt Quest teaches kids (ages 7-11) descriptive thinking through play. A child types a description like *"the skeleton juggles three birthday cakes while riding a unicycle"* and Claude Opus 4.6 generates a 3D animated scene that plays out in the browser. The twist: vague descriptions produce hilarious failures, making kids *want* to try again with more detail.
+Quest AI teaches kids (ages 7-11) descriptive thinking through play. A child types a description like *"the skeleton juggles three birthday cakes while riding a unicycle"* and Claude Opus 4.6 generates a 3D animated scene that plays out in the browser. The twist: vague descriptions produce hilarious failures, making kids *want* to try again with more detail.
 
 No chatbot. No text walls. Just a medieval village, 27 animated characters, and thousands of props waiting to be described into existence.
 
@@ -95,7 +95,7 @@ The `ScenePlayer3D` component (~4,500 lines) executes these actions sequentially
 
 ## Comedy-First Pedagogy: Why Failure is Funnier Than Success
 
-Most educational software punishes mistakes. Prompt Quest makes them hilarious.
+Most educational software punishes mistakes. Quest AI makes them hilarious.
 
 When a kid types something vague like "have a party," the skeleton doesn't just stand there — it **taunts the camera**, pizza emojis rain from the sky, and laugh-tears float around. The narration reads: *"The skeleton starts a party... for one. It's awkward."*
 
@@ -114,7 +114,7 @@ The game world is a persistent medieval village built with hex tiles, not a seri
 
 - **~1,000 hex tiles** form the terrain (grass + stone road)
 - **Village center** with scaled KayKit buildings (town hall, church, tavern)
-- **Two quest zones** at Z=-16 (dungeon) and Z=+16 (park)
+- **8 quest zones** arranged in a circle around the village center (7 themed quests + 1 sandbox)
 - **Glowing zone markers** — clickable pillars with golden orbs
 - **Mountain perimeter** at 22-36 units out for backdrop
 - **Smooth camera transitions** — 2-second ease-out cubic fly-through when entering a zone
@@ -157,15 +157,19 @@ The SME system is particularly notable: when creating a new quest task, the `/co
 
 | Metric | Value |
 |--------|-------|
-| Quest tasks | 7 |
+| Quest zones | 8 (7 themed + 1 sandbox) |
 | Animated characters | 27 |
 | Animation clips | 139 |
 | Registered props | 1,686 |
 | 3D models total | 4,270+ |
 | Audio files | 665 |
+| Hand-crafted vignettes | 421 across 7 zone files |
+| Movement templates | 53 reusable choreography patterns |
 | Golden cache entries | 166 |
 | Fallback scripts | 8 |
+| Named emotions | 61 semantic mappings |
+| Badge system | 8 achievement badges |
 | TypeScript errors | 0 |
-| Build size | 2,128 kB JS (493 kB gzipped) |
+| Build size | ~2,158 kB JS (~497 kB gzipped) |
 | Development time | 7 days (solo) |
 | Lines of ScenePlayer3D | ~4,500 |

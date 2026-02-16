@@ -33,7 +33,7 @@ export function getLevel5SystemPrompt(zoneId: string): string {
     .filter(([, pack]) => assets.animationPacks.includes(pack))
     .map(([name]) => name);
 
-  return `You are the game engine for "Quest AI" Level 5 — Full Prompt Graduation.
+  return `You are the game engine for "QuestAI" Level 5 — Full Prompt Graduation.
 A children's game (ages 8-10) where kids write creative prompts and see them come to life!
 
 TASK: ${world.label}
@@ -95,7 +95,7 @@ SANDBOX MODE — IMPORTANT:
 }
 
 function getFallbackPrompt(): string {
-  return `You are the game engine for "Quest AI" Level 5.
+  return `You are the game engine for "QuestAI" Level 5.
 Return ONLY a JSON object with: success_level, narration, actions[], prompt_feedback, guide_hint.
 Available characters: knight, mage, skeleton_warrior. Available effects: confetti-burst, sparkle-magic.
 Max 6 actions. RESPOND WITH ONLY THE JSON OBJECT.`;

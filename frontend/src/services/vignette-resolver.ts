@@ -10,8 +10,9 @@
  */
 
 import type { Vignette, VignetteStep, VignetteAction, QuestStage, Level4Stage, Level4ParsedTags } from '../types/madlibs';
-import type { Action, SceneScript } from '../types/scene-script';
+import type { Action, SceneScript, PromptAnalysis } from '../types/scene-script';
 import { resolveAnimationVerb } from '../data/animation-verbs';
+// VIGNETTE_OUTRO replaced by amplifyVignetteSteps' built-in celebration outro
 
 /**
  * Resolve which vignette to play based on selected tags.
@@ -22,6 +23,13 @@ export function resolveVignette(
 ): Vignette {
   const vignettes = stage.vignettes;
   const slotIds = stage.template.slots.map(s => s.id);
+
+  // For combo stages, also try matching with the first two slots swapped
+  // so "Grow + Shrink" and "Shrink + Grow" both find the same combo vignette.
+  const isCombo = !!stage.comboRequired && slotIds.length >= 2;
+  const swappedTags = isCombo
+    ? { ...selectedTags, [slotIds[0]]: selectedTags[slotIds[1]], [slotIds[1]]: selectedTags[slotIds[0]] }
+    : selectedTags;
 
   // Priority 1: EXACT match (all tags)
   // undefined trigger keys are treated as wildcards so Stage 1 vignettes
@@ -34,7 +42,18 @@ export function resolveVignette(
   });
   if (exact && !isAllWildcard(exact, slotIds)) return exact;
 
-  // Priority 2: PAIR match (2+ of N tags match)
+  // Priority 1b: EXACT match with swapped combo slots
+  if (isCombo) {
+    const swapExact = vignettes.find(v => {
+      return slotIds.every(id => {
+        const triggerVal = v.trigger[id.toLowerCase()];
+        return triggerVal === undefined || triggerVal === swappedTags[id] || triggerVal === '*';
+      });
+    });
+    if (swapExact && !isAllWildcard(swapExact, slotIds)) return swapExact;
+  }
+
+  // Priority 2: PAIR match (2+ EXACT tag matches, wildcards don't count)
   // Ranked by match count (best first), then by prompt quality on ties,
   // so good input reliably produces good scenes instead of random chaos.
   const SCORE_ORDER: Record<string, number> = { perfect: 3, partial: 2, chaotic: 1, funny_fail: 0 };
@@ -43,7 +62,17 @@ export function resolveVignette(
     let matchCount = 0;
     for (const id of slotIds) {
       const triggerVal = v.trigger[id.toLowerCase()];
-      if (triggerVal === undefined || triggerVal === selectedTags[id] || triggerVal === '*') matchCount++;
+      // Only count exact tag matches — wildcards and undefined mean "don't care"
+      if (triggerVal === selectedTags[id]) matchCount++;
+    }
+    // Also try swapped tags for combo stages
+    if (isCombo) {
+      let swapCount = 0;
+      for (const id of slotIds) {
+        const triggerVal = v.trigger[id.toLowerCase()];
+        if (triggerVal === swappedTags[id]) swapCount++;
+      }
+      matchCount = Math.max(matchCount, swapCount);
     }
     if (matchCount >= 2 && matchCount < slotIds.length) {
       pairMatches.push({ v, matchCount });
@@ -165,13 +194,272 @@ export function rankVignettes(
 }
 
 /**
+ * Pad vignette steps to ensure minimum action count for engaging scenes.
+ * Adds contextual reactions/effects based on prompt score and existing characters.
+ * Called BEFORE amplification so both systems compound.
+ */
+function padVignetteSteps(steps: VignetteStep[], promptScore: string, minActions = 30): VignetteStep[] {
+  const actionCount = steps.reduce((sum, s) => sum + s.parallel.length, 0);
+  if (actionCount >= minActions) return steps;
+
+  // Extract character names from existing steps
+  const chars = new Set<string>();
+  for (const step of steps) {
+    for (const a of step.parallel) {
+      if (a.character && typeof a.character === 'string') {
+        chars.add(a.character);
+      }
+    }
+  }
+  const charList = [...chars];
+  const main = charList[0] || 'skeleton';
+  const isFail = promptScore === 'funny_fail' || promptScore === 'chaotic';
+
+  const extra: VignetteStep[] = [];
+  let count = actionCount;
+
+  // Block A: Main character reacts (+3)
+  if (count < minActions) {
+    extra.push({ parallel: [
+      { action: 'animate', character: main, anim: isFail ? 'Hit_A' : 'Cheering' },
+      { action: 'emote', character: main, emoji: isFail ? 'dizzy' : 'star_eyes', text: isFail ? 'Whoa!' : 'WOW!' },
+      { action: 'sfx', sound: isFail ? 'fail' : 'react' },
+    ], delayAfter: 1.5 });
+    count += 3;
+  }
+
+  // Block B: Scene sparkle (+2)
+  if (count < minActions) {
+    extra.push({ parallel: [
+      { action: 'react', effect: isFail ? 'explosion-cartoon' : 'sparkle-magic', position: 'cs-center' },
+      { action: 'sfx', sound: 'react' },
+    ], delayAfter: 0.8 });
+    count += 2;
+  }
+
+  // Block C: Second character reacts (+2)
+  if (count < minActions && charList[1]) {
+    extra.push({ parallel: [
+      { action: 'animate', character: charList[1], anim: 'Waving' },
+      { action: 'emote', character: charList[1], emoji: isFail ? 'confused' : 'excited' },
+    ], delayAfter: 1.2 });
+    count += 2;
+  }
+
+  // Block D: Crowd reaction (+2)
+  if (count < minActions) {
+    extra.push({ parallel: [
+      { action: 'crowd_react', characters: 'all', anim: isFail ? 'Hit_A' : 'Cheering' },
+      { action: 'sfx', sound: isFail ? 'react' : 'success' },
+    ], delayAfter: 1.0 });
+    count += 2;
+  }
+
+  // Block E: Main speaks (+3)
+  if (count < minActions) {
+    extra.push(
+      { parallel: [
+        { action: 'animate', character: main, anim: 'Waving' },
+        { action: 'emote', character: main, emoji: isFail ? 'laughing' : 'happy', text: isFail ? 'Well THAT happened!' : 'That was amazing!' },
+      ], delayAfter: 2.0 },
+      { parallel: [
+        { action: 'animate', character: main, anim: 'Idle_A' },
+      ], delayAfter: 0.3 },
+    );
+    count += 3;
+  }
+
+  // Block F: Camera shake + effects (+3)
+  if (count < minActions) {
+    extra.push({ parallel: [
+      { action: 'react', effect: isFail ? 'sad-cloud' : 'confetti-burst', position: 'cs-center' },
+      { action: 'camera_shake', intensity: 0.2, duration: 0.3 },
+      { action: 'sfx', sound: 'impact' },
+    ], delayAfter: 0.6 });
+    count += 3;
+  }
+
+  // Block G: Multi-character emotes (+varies)
+  if (count < minActions) {
+    const emojis = isFail ? ['surprised', 'confused', 'laughing'] : ['love', 'happy', 'star_eyes'];
+    extra.push({ parallel: [
+      ...charList.slice(0, 3).map((c, i) => ({ action: 'emote', character: c, emoji: emojis[i % emojis.length] })),
+      { action: 'react', effect: 'sparkle-magic', position: 'cs-left' },
+      { action: 'react', effect: 'sparkle-magic', position: 'cs-right' },
+    ], delayAfter: 1.0 });
+    count += Math.min(charList.length, 3) + 2;
+  }
+
+  // Block H: Finale celebration/disappointment (+varies)
+  if (count < minActions) {
+    if (isFail) {
+      extra.push(
+        { parallel: [
+          ...charList.slice(0, 3).map(c => ({ action: 'animate', character: c, anim: 'Hit_A' })),
+          { action: 'react', effect: 'question-marks', position: 'cs-center' },
+          { action: 'sfx', sound: 'fail' },
+        ], delayAfter: 0.5 },
+        { parallel: [
+          { action: 'react', effect: 'sad-cloud', position: 'cs-center' },
+        ], delayAfter: 1.0 },
+      );
+    } else {
+      extra.push(
+        { parallel: [
+          ...charList.slice(0, 3).map(c => ({ action: 'animate', character: c, anim: 'Cheering' })),
+          { action: 'react', effect: 'confetti-burst', position: 'cs-center' },
+          { action: 'sfx', sound: 'success' },
+        ], delayAfter: 0.5 },
+        { parallel: [
+          { action: 'react', effect: 'celebrating', position: 'cs-center' },
+        ], delayAfter: 1.0 },
+      );
+    }
+    count += Math.min(charList.length, 3) + 3;
+  }
+
+  // Block I: Extra emotes if still short (+1 each)
+  const extraEmojis = isFail
+    ? ['laughing', 'dizzy', 'confused', 'surprised', 'angry']
+    : ['happy', 'love', 'star_eyes', 'excited', 'music'];
+  let ei = 0;
+  while (count < minActions && ei < extraEmojis.length) {
+    extra.push({ parallel: [
+      { action: 'emote', character: charList[ei % (charList.length || 1)] || main, emoji: extraEmojis[ei] },
+    ], delayAfter: 1.0 });
+    count += 1;
+    ei++;
+  }
+
+  // Block J: Trailing sparkle effects as last resort (+2 each)
+  while (count < minActions) {
+    extra.push({ parallel: [
+      { action: 'react', effect: 'sparkle-magic', position: ['cs-left', 'cs-center', 'cs-right'][count % 3] },
+      { action: 'sfx', sound: 'react' },
+    ], delayAfter: 0.5 });
+    count += 2;
+  }
+
+  return [...steps, ...extra];
+}
+
+/**
+ * Amplify vignette steps to ~3x length for spectacular scenes.
+ * After each step, inserts a contextual reaction/effect step.
+ * Adds a rich 3-step celebration outro.
+ */
+function amplifyVignetteSteps(steps: VignetteStep[]): VignetteStep[] {
+  const EFFECTS: VignetteAction['effect'][] = ['sparkle-magic', 'confetti-burst', 'celebrating'];
+  const POSITIONS = ['cs-center', 'cs-left', 'cs-right'];
+  const result: VignetteStep[] = [];
+
+  for (let i = 0; i < steps.length; i++) {
+    const step = steps[i];
+    // Push original step with original delay (keeping natural pacing)
+    result.push({ ...step, delayAfter: step.delayAfter ?? 0.5 });
+
+    const actions = step.parallel;
+    const hasCharSpawn = actions.some(a => a.action === 'spawn_character');
+    const hasPropSpawn = actions.some(a => a.action === 'spawn' && !a.character);
+    const hasAnimate = actions.some(a => a.action === 'animate');
+    const hasMove = actions.some(a => a.action === 'move');
+    const hasEmote = actions.some(a => a.action === 'emote');
+    const hasPopup = actions.some(a => a.action === 'text_popup');
+    const hasReact = actions.some(a => a.action === 'react');
+    const hasCrowd = actions.some(a => a.action === 'crowd_react');
+
+    // Insert contextual amplification step after each original step
+    if (hasCharSpawn) {
+      // Character entrance sparkle
+      const chars = actions.filter(a => a.action === 'spawn_character');
+      result.push({
+        parallel: [
+          ...chars.map(c => ({ action: 'emote' as const, character: c.character!, emoji: '✨' })),
+          { action: 'react' as const, effect: 'sparkle-magic', position: POSITIONS[i % 3] },
+          { action: 'sfx' as const, sound: 'spawn' },
+        ],
+        delayAfter: 0.4,
+      });
+    } else if (hasPropSpawn) {
+      // Prop reveal sparkle
+      result.push({
+        parallel: [
+          { action: 'react' as const, effect: 'sparkle-magic', position: POSITIONS[i % 3] },
+          { action: 'sfx' as const, sound: 'react' },
+        ],
+        delayAfter: 0.3,
+      });
+    } else if (hasMove) {
+      // Movement trail
+      result.push({
+        parallel: [
+          { action: 'sfx' as const, sound: 'whoosh' },
+          { action: 'react' as const, effect: 'sparkle-magic', position: POSITIONS[(i + 1) % 3] },
+        ],
+        delayAfter: 0.3,
+      });
+    } else if (hasAnimate && !hasCrowd) {
+      // Animation reaction burst
+      result.push({
+        parallel: [
+          { action: 'react' as const, effect: EFFECTS[i % EFFECTS.length], position: POSITIONS[i % 3] },
+          { action: 'sfx' as const, sound: 'react' },
+        ],
+        delayAfter: 0.4,
+      });
+    } else if (hasEmote || hasPopup) {
+      // Emphasis effect
+      result.push({
+        parallel: [
+          { action: 'react' as const, effect: 'celebrating', position: 'cs-center' },
+          { action: 'sfx' as const, sound: 'react' },
+        ],
+        delayAfter: 0.4,
+      });
+    } else if (hasReact && !hasCrowd) {
+      // Echo reaction at different position
+      result.push({
+        parallel: [
+          { action: 'react' as const, effect: 'sparkle-magic', position: POSITIONS[(i + 1) % 3] },
+        ],
+        delayAfter: 0.3,
+      });
+    }
+    // Skip amplification for SFX-only or crowd-react steps (already dramatic)
+  }
+
+  // Rich 3-step celebration outro
+  result.push(
+    { parallel: [
+      { action: 'crowd_react', characters: 'all', anim: 'Cheering' },
+      { action: 'sfx', sound: 'success' },
+    ], delayAfter: 0.6 },
+    { parallel: [
+      { action: 'react', effect: 'confetti-burst', position: 'cs-center' },
+      { action: 'react', effect: 'sparkle-magic', position: 'cs-left' },
+      { action: 'react', effect: 'sparkle-magic', position: 'cs-right' },
+      { action: 'sfx', sound: 'react' },
+    ], delayAfter: 0.8 },
+    { parallel: [
+      { action: 'react', effect: 'celebrating', position: 'cs-center' },
+      { action: 'crowd_react', characters: 'all', anim: 'wave' },
+    ], delayAfter: 1.0 },
+  );
+
+  return result;
+}
+
+/**
  * Convert a Vignette into a SceneScript for the playback engine.
  */
 export function buildVignetteScript(
   vignette: Vignette,
   _selectedTags: Record<string, string>,
 ): SceneScript {
-  const actions = vignetteStepsToActions(vignette.steps);
+  // Pad short vignettes to 30+ actions, then amplify for spectacular scenes
+  const padded = padVignetteSteps(vignette.steps, vignette.promptScore);
+  const amplified = amplifyVignetteSteps(padded);
+  const actions = vignetteStepsToActions(amplified);
 
   // Map prompt score to success level
   const successMap: Record<string, 'FULL_SUCCESS' | 'PARTIAL_SUCCESS' | 'FUNNY_FAIL'> = {
@@ -181,12 +469,28 @@ export function buildVignetteScript(
     funny_fail: 'FUNNY_FAIL',
   };
 
+  // Synthesize prompt_analysis from vignette content so badges work in Mad Libs mode
+  const tagCount = Object.keys(_selectedTags).length;
+  const charActions = vignette.steps.flatMap(s => s.parallel).filter(a => a.action === 'spawn_character');
+  const uniqueChars = new Set(charActions.map(a => a.character).filter(Boolean));
+  const hasEnvProps = vignette.steps.some(s => s.parallel.some(a => a.action === 'spawn' && !a.character));
+
+  const prompt_analysis: PromptAnalysis = {
+    has_character: uniqueChars.size > 0,
+    has_action: tagCount >= 2,
+    has_sequence: tagCount >= 3 || vignette.steps.length >= 4,
+    has_detail: vignette.promptScore === 'perfect',
+    has_multi_char: uniqueChars.size >= 2,
+    has_environment: hasEnvProps,
+  };
+
   return {
     success_level: successMap[vignette.promptScore] ?? 'PARTIAL_SUCCESS',
     narration: vignette.feedback.title,
     actions,
     prompt_feedback: vignette.feedback.message,
     guide_hint: vignette.feedback.tip,
+    prompt_analysis,
   };
 }
 
@@ -325,7 +629,14 @@ function vignetteActionToAction(va: VignetteAction, delayMs: number): Action | n
     case 'delay':
       return {
         type: 'wait',
-        duration_ms: (va.duration ?? 1) * 1000,
+        duration_ms: va.duration ?? 1000,  // Already in ms from DRAMATIC_PAUSE macro
+        delay_ms,
+      };
+
+    case 'remove':
+      return {
+        type: 'remove',
+        target: (va.asset ?? va.character ?? '') as any,
         delay_ms,
       };
 

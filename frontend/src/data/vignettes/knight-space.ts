@@ -1530,6 +1530,12 @@ const EVERYONE_VIGNETTES: Vignette[] = [
       },
       ...FLASH('green', 0.3),
       // RESOLUTION: Group celebration
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('space_ranger', 'excited', 'To infinity!'),
+    ...CHARACTER_SPEAK('robot', 'excited', 'BEEP BOOP — engaging fun mode!'),
+    ...CHARACTER_SPEAK('engineer', 'excited', 'The calculations are perfect!'),
+    ...CHARACTER_SPEAK('knight', 'excited', 'For glory!'),
+    ...CHARACTER_SPEAK('space_ranger', 'star_eyes', 'Stars and stripes forever!'),
       ...CELEBRATION(['space_ranger', 'robot', 'engineer', 'knight']),
       ...NARRATOR("The entire crew working together accomplished the impossible!"),
     ],
@@ -1586,30 +1592,6 @@ const EVERYONE_VIGNETTES: Vignette[] = [
       ...WALK_TO('engineer', 'cs-left'),
       ...OBJECT_GROW_REVEAL('rocket', 'center', 1.5),
       // ACTION: Dramatic countdown
-      {
-        parallel: [
-          { action: 'text_popup', text: '3...', position: 'center', size: 'huge' },
-          { action: 'camera_shake', intensity: 0.2, duration: 0.5 },
-          { action: 'sfx', sound: 'laser' },
-        ],
-        delayAfter: 0.5,
-      },
-      {
-        parallel: [
-          { action: 'text_popup', text: '2...', position: 'center', size: 'huge' },
-          { action: 'camera_shake', intensity: 0.4, duration: 0.5 },
-          { action: 'sfx', sound: 'laser' },
-        ],
-        delayAfter: 0.5,
-      },
-      {
-        parallel: [
-          { action: 'text_popup', text: '1...', position: 'center', size: 'huge' },
-          { action: 'camera_shake', intensity: 0.6, duration: 0.5 },
-          { action: 'sfx', sound: 'laser' },
-        ],
-        delayAfter: 0.5,
-      },
       // CONSEQUENCE: Liftoff!
       ...IMPACT(),
       {
@@ -1623,6 +1605,12 @@ const EVERYONE_VIGNETTES: Vignette[] = [
         delayAfter: 0.8,
       },
       // RESOLUTION: Legendary teamwork
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('space_ranger', 'excited', 'To infinity!'),
+    ...CHARACTER_SPEAK('robot', 'excited', 'BEEP BOOP — engaging fun mode!'),
+    ...CHARACTER_SPEAK('engineer', 'excited', 'The calculations are perfect!'),
+    ...CHARACTER_SPEAK('knight', 'excited', 'For glory!'),
+    ...CHARACTER_SPEAK('space_ranger', 'star_eyes', 'Stars and stripes forever!'),
       ...CELEBRATION(['space_ranger', 'robot', 'engineer', 'knight']),
       ...NARRATOR("The entire crew coordinated a perfect launch — ultimate teamwork!"),
     ],
@@ -1694,6 +1682,12 @@ const EVERYONE_VIGNETTES: Vignette[] = [
         delayAfter: 0.3,
       },
       // RESOLUTION: Team triumph
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('space_ranger', 'excited', 'Space ranger reporting for awesomeness!'),
+    ...CHARACTER_SPEAK('robot', 'excited', 'BEEP BOOP — engaging fun mode!'),
+    ...CHARACTER_SPEAK('engineer', 'excited', 'Science is amazing!'),
+    ...CHARACTER_SPEAK('knight', 'excited', 'A knight never gives up!'),
+    ...CHARACTER_SPEAK('space_ranger', 'star_eyes', 'Mission complete, space cadet!'),
       ...CELEBRATION(['space_ranger', 'robot', 'engineer', 'knight']),
       ...NARRATOR("The entire crew built a massive expansion with perfect teamwork!"),
     ],
@@ -1761,6 +1755,13 @@ const EVERYONE_VIGNETTES: Vignette[] = [
         delayAfter: 0.3,
       },
       // RESOLUTION: Team victory
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('space_ranger', 'excited', 'To infinity!'),
+    ...CHARACTER_SPEAK('robot', 'excited', 'BEEP BOOP — engaging fun mode!'),
+    ...CHARACTER_SPEAK('engineer', 'excited', 'Science is amazing!'),
+    ...CHARACTER_SPEAK('knight', 'excited', 'For glory!'),
+    ...CHARACTER_SPEAK('mage', 'excited', 'My magic is TINGLING!'),
+    ...CHARACTER_SPEAK('space_ranger', 'star_eyes', 'Stars and stripes forever!'),
       ...CELEBRATION(['space_ranger', 'robot', 'engineer', 'knight', 'mage']),
       ...NARRATOR("The entire crew coordinated a perfect rescue — teamwork saves lives!"),
     ],
@@ -1827,6 +1828,12 @@ const EVERYONE_VIGNETTES: Vignette[] = [
         delayAfter: 0.3,
       },
       // RESOLUTION: Team discovery
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('space_ranger', 'excited', 'Space ranger reporting for awesomeness!'),
+    ...CHARACTER_SPEAK('robot', 'excited', 'BEEP BOOP — engaging fun mode!'),
+    ...CHARACTER_SPEAK('engineer', 'excited', 'Science is amazing!'),
+    ...CHARACTER_SPEAK('knight', 'excited', 'A knight never gives up!'),
+    ...CHARACTER_SPEAK('space_ranger', 'star_eyes', 'Stars and stripes forever!'),
       ...CELEBRATION(['space_ranger', 'robot', 'engineer', 'knight']),
       ...NARRATOR("The entire crew explored and mapped the sector with perfect coordination!"),
     ],
@@ -1898,6 +1905,12 @@ const EVERYONE_VIGNETTES: Vignette[] = [
         delayAfter: 0.3,
       },
       // RESOLUTION: United defense triumph
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('space_ranger', 'excited', 'To infinity!'),
+    ...CHARACTER_SPEAK('robot', 'excited', 'BEEP BOOP — engaging fun mode!'),
+    ...CHARACTER_SPEAK('engineer', 'excited', 'Science is amazing!'),
+    ...CHARACTER_SPEAK('knight', 'excited', 'A knight never gives up!'),
+    ...CHARACTER_SPEAK('space_ranger', 'star_eyes', 'Stars and stripes forever!'),
       ...CELEBRATION(['space_ranger', 'robot', 'engineer', 'knight']),
       ...NARRATOR("The entire crew defended the station together — unstoppable teamwork!"),
     ],
@@ -2020,6 +2033,10 @@ export const KNIGHT_SPACE_DEFAULT: Vignette = {
       ],
       delayAfter: 2.0,
     },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('space_ranger', 'excited', 'To infinity!'),
+    ...CHARACTER_SPEAK('robot', 'excited', 'Processing... excitement levels MAXIMUM!'),
+    ...CHARACTER_SPEAK('space_ranger', 'star_eyes', 'Mission complete, space cadet!'),
   ],
   feedback: {
     title: '🛸 Space Station Online!',
@@ -2127,6 +2144,11 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
         ],
         delayAfter: 2.0,
       },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('engineer', 'excited', 'Science is amazing!'),
+    ...CHARACTER_SPEAK('robot', 'excited', 'Processing... excitement levels MAXIMUM!'),
+    ...CHARACTER_SPEAK('space_ranger', 'excited', 'Space ranger reporting for awesomeness!'),
+    ...CHARACTER_SPEAK('engineer', 'star_eyes', 'Engineering excellence!'),
     ],
     feedback: {
       title: '🤝 Team Effort',
@@ -2391,6 +2413,11 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
         ],
         delayAfter: 2.0,
       },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('space_ranger', 'excited', 'Space ranger reporting for awesomeness!'),
+    ...CHARACTER_SPEAK('engineer', 'excited', 'Science is amazing!'),
+    ...CHARACTER_SPEAK('robot', 'excited', 'BEEP BOOP — engaging fun mode!'),
+    ...CHARACTER_SPEAK('space_ranger', 'star_eyes', 'Stars and stripes forever!'),
     ],
     feedback: {
       title: '🦸 Heroes United',
@@ -2637,24 +2664,6 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
           { action: 'sfx', sound: 'explosion' },
         ],
         delayAfter: 0.5,
-      },
-      {
-        parallel: [
-          { action: 'spawn_character', character: 'engineer', position: 'left', anim: 'spawn_ground' },
-          { action: 'emote', character: 'engineer', emoji: 'thinking' },
-          { action: 'camera_shake', intensity: 0.6, duration: 1.0 },
-          { action: 'sfx', sound: 'whoosh' },
-        ],
-        delayAfter: 1.0,
-      },
-      {
-        parallel: [
-          { action: 'animate', character: 'engineer', anim: 'idle' },
-          { action: 'react', effect: 'question-marks', position: 'left' },
-          { action: 'camera_shake', intensity: 0.7, duration: 1.0 },
-          { action: 'sfx', sound: 'impact' },
-        ],
-        delayAfter: 1.0,
       },
       {
         parallel: [
@@ -3068,6 +3077,12 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
         ],
         delayAfter: 2.0,
       },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('engineer', 'excited', 'The calculations are perfect!'),
+    ...CHARACTER_SPEAK('robot', 'excited', 'BEEP BOOP — engaging fun mode!'),
+    ...CHARACTER_SPEAK('space_ranger', 'excited', 'To infinity!'),
+    ...CHARACTER_SPEAK('knight', 'excited', 'A knight never gives up!'),
+    ...CHARACTER_SPEAK('engineer', 'star_eyes', 'Engineering excellence!'),
     ],
     feedback: {
       title: '🤝 Critical Coordination',
@@ -3427,6 +3442,7 @@ export const KNIGHT_SPACE_STAGE_2: Vignette[] = [
     },
   },
 
+  ...KNIGHT_SPACE_STAGE_1,  // Stage 1 vignettes work here — undefined trigger keys act as wildcards
 ];
 
 // ─── STAGE 2 DEFAULT ────────────────────────────────────────────────────────
@@ -3462,6 +3478,9 @@ export const KNIGHT_SPACE_DEFAULT_2: Vignette = {
       ],
       delayAfter: 2.0,
     },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('space_ranger', 'excited', 'Space ranger reporting for awesomeness!'),
+    ...CHARACTER_SPEAK('robot', 'excited', 'BEEP BOOP — engaging fun mode!'),
   ],
   feedback: {
     title: '🛸 Generic Mission',
@@ -3875,6 +3894,7 @@ export const KNIGHT_SPACE_STAGE_3: Vignette[] = [
     },
   },
 
+  ...KNIGHT_SPACE_STAGE_2,  // Includes stage 1+2 vignettes as fallbacks
 ];
 
 // ─── STAGE 3 DEFAULT ────────────────────────────────────────────────────────
@@ -3912,6 +3932,10 @@ export const KNIGHT_SPACE_DEFAULT_3: Vignette = {
       ],
       delayAfter: 2.0,
     },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('engineer', 'excited', 'Science is amazing!'),
+    ...CHARACTER_SPEAK('robot', 'excited', 'Processing... excitement levels MAXIMUM!'),
+    ...CHARACTER_SPEAK('engineer', 'star_eyes', 'Blueprints to brilliance!'),
   ],
   feedback: {
     title: '🤔 Not a Secret Combo',

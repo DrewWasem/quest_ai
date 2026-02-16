@@ -1,4 +1,4 @@
-# How Claude Code Built Prompt Quest
+# How Claude Code Built Quest AI
 
 > A solo developer, 7 days, and 100+ hours of accumulated AI-developer collaboration — here's how Claude Code's extensibility features turned a hackathon sprint into a production-quality 3D game.
 

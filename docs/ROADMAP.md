@@ -1,4 +1,4 @@
-# Prompt Quest — Roadmap v3
+# Quest AI — Roadmap v3
 
 **Builder:** Drew (solo)
 **Started:** Feb 10, 2026 (Hackathon)
@@ -188,7 +188,28 @@ Puppeteer tests deferred (requires browser automation setup).
 
 ---
 
-## Phase 5: Final Polish (Priority: Low)
+## Phase 5: Game Engine Evolution (Post-Hackathon)
+
+> **Design note:** The game is intentionally easy right now — every kid should feel like a wizard on their first try. The focus going forward is making the engine more dynamic and expressive so all stages (Mad Libs, free text, full prompt) feel alive and responsive.
+
+### 5A. Physics & Navigation
+
+| Task | Notes |
+|------|-------|
+| Object avoidance / collision | Characters should walk around props, not through them. Basic navmesh or steering behavior so movement feels physical. |
+| Jump mechanic | Let characters jump — enables vertical exploration (stairs, platforms, rooftops). Triggered by movement templates or player-created scenes. |
+| Terrain interaction | Characters react to terrain type (splash in water, slip on ice, slow in sand). |
+
+### 5B. Dynamic Scene Engine
+
+| Task | Notes |
+|------|-------|
+| Procedural choreography | Engine generates movement patterns (circle, parade, chase) instead of only point-to-point moves. |
+| Multi-phase scenes | Scenes with branching moments — "what happens next?" choices mid-scene. |
+| Persistent scene state | Props and characters stay between prompts so kids can build up complex scenes iteratively. |
+| Difficulty scaling | Gradually raise the bar — more slots in Mad Libs, stricter matching, richer feedback — as kids demonstrate mastery. |
+
+### 5C. Polish & Platform
 
 | Task | Notes |
 |------|-------|

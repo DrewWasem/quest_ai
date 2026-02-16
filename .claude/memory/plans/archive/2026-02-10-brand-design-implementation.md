@@ -2,7 +2,7 @@
 
 **Created:** 2026-02-10
 **Status:** completed
-**Research:** docs/prompt-quest-brand-game-design-brief.html
+**Research:** docs/quest-ai-brand-game-design-brief.html
 
 ## Goal
 Align the codebase's visual theme with the brand & game design brief — colors, typography, sizing, animations, and component styling across 8 files.

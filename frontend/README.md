@@ -1,4 +1,4 @@
-# Prompt Quest — Frontend
+# Quest AI — Frontend
 
 React Three Fiber game client. See the [root README](../README.md) for project overview.
 

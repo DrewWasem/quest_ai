@@ -16,7 +16,7 @@
 ## Day 7: Demo Prep
 
 ### Code Polish
-- [x] Fixed package.json name: `myapp-frontend` → `prompt-quest`
+- [x] Fixed package.json name: `myapp-frontend` → `quest-ai`
 - [x] Added character counter to textarea (shows at 80%+ capacity)
 - [x] Character counter only appears when approaching limit (non-intrusive)
 

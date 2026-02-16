@@ -35,7 +35,7 @@ export default function LoadingScreen({ progress }: LoadingScreenProps) {
       className={`fixed inset-0 z-50 flex items-center justify-center transition-all duration-500 ${
         isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
       }`}
-      style={{ backgroundColor: '#0F0A1A' }}
+      style={{ backgroundColor: '#0A1628' }}
     >
       {/* Sparkle decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -56,21 +56,15 @@ export default function LoadingScreen({ progress }: LoadingScreenProps) {
 
       {/* Main content */}
       <div className="relative flex flex-col items-center gap-6 px-8">
-        {/* Title */}
-        <h1
-          className="font-display font-bold text-6xl text-center"
-          style={{
-            background: 'linear-gradient(135deg, #7C3AED 0%, #FF8C42 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-          }}
-        >
-          Quest AI
-        </h1>
+        {/* Logo */}
+        <span className="font-heading font-bold text-5xl drop-shadow-lg" style={{
+          background: 'linear-gradient(to right, #4A90D9, #FF8C42, #F5C842)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+        }}>QuestAI</span>
 
         {/* Subtitle */}
-        <p className="font-sans text-base" style={{ color: '#A99CC8' }}>
+        <p className="font-sans text-base" style={{ color: '#98AEBF' }}>
           Your words are your superpower.
         </p>
 
@@ -82,8 +76,8 @@ export default function LoadingScreen({ progress }: LoadingScreenProps) {
               className="h-full rounded-full transition-all duration-300"
               style={{
                 width: `${progress}%`,
-                background: 'linear-gradient(90deg, #7C3AED 0%, #FF8C42 100%)',
-                boxShadow: '0 0 12px rgba(124, 58, 237, 0.5)',
+                background: 'linear-gradient(90deg, #4A90D9 0%, #4ECDC4 100%)',
+                boxShadow: '0 0 12px rgba(74, 144, 217, 0.5)',
               }}
             />
           ) : (
@@ -92,7 +86,7 @@ export default function LoadingScreen({ progress }: LoadingScreenProps) {
               className="absolute inset-0 animate-shimmer"
               style={{
                 background:
-                  'linear-gradient(90deg, transparent, #7C3AED, #FF8C42, transparent)',
+                  'linear-gradient(90deg, transparent, #4A90D9, #4ECDC4, transparent)',
                 backgroundSize: '200% 100%',
               }}
             />
@@ -102,7 +96,7 @@ export default function LoadingScreen({ progress }: LoadingScreenProps) {
         {/* Loading message */}
         <p
           className="font-sans text-sm min-h-[20px] text-center transition-opacity duration-300"
-          style={{ color: '#7B6FA0' }}
+          style={{ color: '#6B8098' }}
         >
           {loadingMessages[messageIndex]}
         </p>

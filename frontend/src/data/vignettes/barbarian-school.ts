@@ -139,6 +139,8 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
         { action: 'spawn', asset: 'barrel', position: 'cs-right' },
         { action: 'react', effect: 'smoke', position: 'cs-center' },
       ], delayAfter: 0.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('robot', 'excited', 'Processing... excitement levels MAXIMUM!'),
     ],
     feedback: {
       title: '🤼 SEESAW SMASH!',
@@ -422,6 +424,8 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
         { action: 'react', effect: 'laugh-tears', position: 'cs-center' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 0.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('mage', 'excited', 'Spell-tacular!'),
       ...CROWD_CHEER(),
     ],
     feedback: {
@@ -641,6 +645,9 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
         { action: 'animate', character: 'clown', anim: 'get_bonked' },
         { action: 'react', effect: 'smoke', position: 'cs-right' },
       ], delayAfter: 0.3 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('clown', 'excited', 'Time for the big show!'),
+    ...CHARACTER_SPEAK('ninja', 'excited', 'Swift like the wind!'),
       ...CELEBRATION(['ninja']),
       ...CROWD_GASP(),
     ],
@@ -687,8 +694,9 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
         { action: 'react', effect: 'stars-spin', position: 'cs-right' },
         { action: 'sfx', sound: 'impact' },
       ], delayAfter: 0.4 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('knight', 'excited', 'For glory!'),
       ...CELEBRATION(['ninja']),
-      ...CROWD_CHEER(),
     ],
     feedback: {
       title: '🥋 ACROBATIC CHAMPION!',
@@ -947,6 +955,8 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
         { action: 'react', effect: 'glow-pulse', position: 'cs-left' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 0.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('barbarian', 'excited', 'Strongest move EVER!'),
       ...CROWD_CHEER(),
     ],
     feedback: {
@@ -1024,7 +1034,6 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
       ], delayAfter: 0.4 },
       ...WALK_TO('clown', 'ds-left'),
       ...CELEBRATION(['robot']),
-      ...CROWD_CHEER(),
     ],
     feedback: {
       title: '🚀 JET BOOST VICTORY!',
@@ -1202,8 +1211,9 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
         { action: 'react', effect: 'dust', position: 'cs-center' },
         { action: 'sfx', sound: 'impact' },
       ], delayAfter: 0.4 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('knight', 'excited', 'For glory!'),
       ...CELEBRATION(['caveman']),
-      ...CROWD_CHEER(),
     ],
     feedback: {
       title: '🦴 CAVEMAN STRENGTH!',
@@ -1229,10 +1239,6 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
       ], delayAfter: 0.3 },
       ...ENTER_FROM_RIGHT('caveman', 'cs-center'),
       ...EMOTE('caveman', 'focused'),
-      { parallel: [
-        { action: 'animate', character: 'caveman', anim: 'Idle_A' },
-        { action: 'sfx', sound: 'thud' },
-      ], delayAfter: 0.6 },
       ...CHARACTER_SPEAK('caveman', 'excited', "ME ROCK. NOT MOVE."),
       ...ENTER_FROM_LEFT('ninja', 'ds-left'),
       ...WALK_TO('ninja', 'cs-left'),
@@ -1280,6 +1286,8 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
         { action: 'animate', character: 'caveman', anim: 'Cheering' },
         { action: 'sfx', sound: 'coin' },
       ], delayAfter: 0.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('clown', 'excited', 'Comedy GOLD!'),
       ...CROWD_CHEER(),
     ],
     feedback: {
@@ -1406,6 +1414,8 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 0.5 },
       ...CROWD_GASP(),
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('clown', 'excited', 'HONK HONK! This is hilarious!'),
     ],
     feedback: {
       title: '🎪 TOTAL CHAOS!',
@@ -1443,6 +1453,8 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 0.5 },
       ...CROWD_GASP(),
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('barbarian', 'star_eyes', 'VICTORY SMASH!'),
     ],
     feedback: {
       title: '🤼 WRESTLING PILE!',
@@ -1486,6 +1498,8 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
         { action: 'react', effect: 'laugh-tears', position: 'ds-left' },
         { action: 'sfx', sound: 'fail' },
       ], delayAfter: 0.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('ninja', 'excited', 'Shadow strike ready!'),
     ],
     feedback: {
       title: '🙈 GROUP FAIL!',
@@ -1536,6 +1550,8 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
         { action: 'sfx', sound: 'impact' },
       ], delayAfter: 0.5 },
       ...CROWD_GASP(),
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('clown', 'excited', 'Comedy GOLD!'),
     ],
     feedback: {
       title: '🏁 FINISH LINE PILEUP!',
@@ -1585,6 +1601,8 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
         { action: 'react', effect: 'dust', position: 'wide' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 0.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('barbarian', 'star_eyes', 'VICTORY SMASH!'),
     ],
     feedback: {
       title: '🌍 EARTHQUAKE MODE!',
@@ -1625,6 +1643,8 @@ export const BARBARIAN_SCHOOL_STAGE_1: Vignette[] = [
         { action: 'react', effect: 'smoke', position: 'cs-center' },
         { action: 'sfx', sound: 'fail' },
       ], delayAfter: 0.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('robot', 'excited', 'BEEP BOOP — engaging fun mode!'),
     ],
     feedback: {
       title: '🧗 OVERLOAD!',
@@ -1651,10 +1671,6 @@ export const BARBARIAN_SCHOOL_DEFAULT: Vignette = {
     ], delayAfter: 0.3 },
     ...ENTER_FROM_LEFT('barbarian', 'cs-center'),
     ...CHARACTER_SPEAK('barbarian', 'happy', "PLAYGROUND TIME!"),
-    { parallel: [
-      { action: 'animate', character: 'barbarian', anim: 'Idle_A' },
-      { action: 'sfx', sound: 'footstep' },
-    ], delayAfter: 0.5 },
     { parallel: [
       { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
       { action: 'sfx', sound: 'success' },
@@ -1875,6 +1891,8 @@ export const BARBARIAN_SCHOOL_STAGE_3: Vignette[] = [
         { action: 'sfx', sound: 'whoosh' },
       ], delayAfter: 0.4 },
       ...CROWD_CHEER(),
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('robot', 'excited', 'Processing... excitement levels MAXIMUM!'),
       ...CELEBRATION(['barbarian', 'robot']),
     ],
     feedback: {
@@ -2013,6 +2031,8 @@ export const BARBARIAN_SCHOOL_STAGE_3: Vignette[] = [
       tip: 'Combining movement games with contact games creates wild new sports!',
     },
   },
+
+  ...BARBARIAN_SCHOOL_STAGE_2,  // Includes stage 1+2 vignettes as fallbacks
 ];
 
 export const BARBARIAN_SCHOOL_DEFAULT_3: Vignette = {
@@ -2041,6 +2061,8 @@ export const BARBARIAN_SCHOOL_DEFAULT_3: Vignette = {
       { action: 'react', effect: 'confetti-burst', position: 'cs-center' },
       { action: 'sfx', sound: 'success' },
     ], delayAfter: 0.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('ninja', 'excited', 'Swift like the wind!'),
   ],
   feedback: {
     title: '🎪 GAME MASHUP!',

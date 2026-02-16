@@ -9,15 +9,14 @@ export default function TitleScreen({ onSelectCharacter }: TitleScreenProps) {
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-quest-page-bg stars-bg-light px-6">
       {/* Logo */}
-      <div className="font-display text-6xl sm:text-7xl font-bold flex items-center gap-3 mb-2">
-        <span className="text-5xl sm:text-6xl animate-sparkle">{'\u{2728}'}</span>
-        <span className="bg-gradient-to-r from-quest-purple via-quest-orange to-quest-yellow bg-clip-text text-transparent">
-          Quest AI
-        </span>
-      </div>
+      <span className="font-heading font-bold text-6xl sm:text-7xl mb-2 drop-shadow-lg" style={{
+        background: 'linear-gradient(to right, #4A90D9, #FF8C42, #F5C842)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+      }}>QuestAI</span>
 
       <p className="font-heading text-lg text-quest-text-mid mb-8">
-        Learn to talk to AI through play
+        Your words are your superpower.
       </p>
 
       {/* Character Selection */}
@@ -73,7 +72,7 @@ export default function TitleScreen({ onSelectCharacter }: TitleScreenProps) {
 
       {/* Footer */}
       <p className="text-[11px] text-quest-text-muted mt-12">
-        Ages 8-10 {'\u{2022}'} Built for the Claude Code Hackathon 2026
+        Ages 7-11 {'\u{2022}'} Built for the Claude Code Hackathon 2026
       </p>
     </div>
   );

@@ -21,7 +21,7 @@ R3FGame.tsx
 | Time | Phase | What Happens |
 |------|-------|-------------|
 | 0-0.5s | **Fog wall** | Scene starts with extremely dense fog (near=0, far=3). Background color matches fog. Nothing visible. |
-| 0.5-2s | **Title** | "Prompt Quest" text fades in at center, semi-transparent white, floating in fog. Sparkles swirl around it. |
+| 0.5-2s | **Title** | "Quest AI" text fades in at center, semi-transparent white, floating in fog. Sparkles swirl around it. |
 | 2-3s | **Dissolve** | Text scales up 1.5x while opacity drops to 0 (disperses into fog). Camera begins pushing forward. |
 | 3-4.5s | **Reveal** | Fog clears (near→task_near, far→task_far). Camera moves from z=20 to z=8. Silhouette characters and env props become visible through thinning fog. |
 | 4.5-5s | **Settle** | Camera reaches final position. Fog at task-configured values. Characters visible in idle animation. Intro component unmounts. |
@@ -140,7 +140,7 @@ const TASK_HERO_CHARACTERS: Record<string, Array<{ id: string; characterId: Char
 ## Success Criteria
 
 - [x] Clicking a task card triggers fog intro animation (not instant switch)
-- [x] "Prompt Quest" text appears in fog, then disperses
+- [x] "Quest AI" text appears in fog, then disperses
 - [x] Camera pushes forward through thinning fog
 - [x] Characters emerge as silhouettes from the fog
 - [x] After intro, hero characters visible in idle animation (before prompt)

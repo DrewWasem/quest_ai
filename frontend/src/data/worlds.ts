@@ -26,7 +26,7 @@ export const WORLDS: Record<string, WorldConfig> = {
     id: 'skeleton-birthday',
     label: "Skeleton's Birthday Bash",
     emoji: '\u{1F480}',
-    color: '#7C3AED',
+    color: '#4A90D9',
     hook: "It's the Skeleton's birthday and nobody knows what to do! You're in charge!",
     placeholder: "What should happen at the skeleton's birthday party?",
     flavor: "Skeletons keep losing bones at the worst moment, presents explode, the cake is always in danger. Physical comedy!",
@@ -95,7 +95,7 @@ export const WORLDS: Record<string, WorldConfig> = {
     id: 'skeleton-pizza',
     label: 'Pizza Pandemonium',
     emoji: '\u{1F355}',
-    color: '#FBBF24',
+    color: '#F5C842',
     hook: "Orders are flying in and nobody can cook! Run this restaurant before it burns down!",
     placeholder: "How do you save the restaurant? Who cooks what?",
     flavor: "Kitchen disasters, dough flying everywhere, wrong ingredients, orders getting mixed up. Cooking show chaos!",
@@ -230,7 +230,7 @@ export function getWorldPrompt(zoneId: string): string {
     return getWorldPrompt('skeleton-birthday');
   }
 
-  return `You are the game engine for "Quest AI," a children's sandbox game (ages 7-11). You direct mini-plays — little 3D theater scenes with multiple characters acting out what the kid describes.
+  return `You are the game engine for "QuestAI," a children's sandbox game (ages 7-11). You direct mini-plays — little 3D theater scenes with multiple characters acting out what the kid describes.
 
 CURRENT WORLD: ${world.label}
 SCENARIO: ${world.hook}
@@ -284,7 +284,7 @@ ADVANCED — use these to make scenes come alive:
 { "type": "emote", "target": "character", "emoji": "😱", "text": "Oh no!", "delay_ms": 300 }
 { "type": "camera_shake", "intensity": 0.5, "duration": 0.5 }
 { "type": "text_popup", "text": "BOOM!", "position": "center", "size": "huge", "delay_ms": 200 }
-{ "type": "screen_flash", "color": "#FBBF24", "duration": 0.3 }
+{ "type": "screen_flash", "color": "#F5C842", "duration": 0.3 }
 { "type": "crowd_react", "characters": "all", "anim": "Cheering" }
 { "type": "spawn_rain", "asset": "cake", "count": 6, "area": "wide" }
 { "type": "grow", "target": "actor", "scale": 2.5, "duration_ms": 600 }

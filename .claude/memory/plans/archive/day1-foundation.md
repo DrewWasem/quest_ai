@@ -24,7 +24,7 @@
   - Verify: App renders without errors, no SaaS UI visible
 
 - [x] **Task 1.3:** Update index.html title and meta
-  - Change title from "MyApp" to "Prompt Quest"
+  - Change title from "MyApp" to "Quest AI"
   - File: `frontend/index.html`
 
 ---

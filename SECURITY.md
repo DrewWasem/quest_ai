@@ -2,7 +2,7 @@
 
 ## Kid Safety — By Design
 
-Prompt Quest is built for kids ages 7-11. Every design decision prioritizes their safety.
+Quest AI is built for kids ages 7-11. Every design decision prioritizes their safety.
 
 ### No Data Collection
 

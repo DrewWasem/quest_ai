@@ -1,6 +1,6 @@
 # Heuristics — Pattern-Matched Judgment
 
-## ZPD Calibration for Prompt Quest
+## ZPD Calibration for Quest AI
 
 ### The Sweet Spot
 ```
@@ -92,7 +92,7 @@ Total cycle: ~3-4 minutes. If any step takes longer, simplify.
 
 ## Learning Objective Identification
 
-### What Prompt Quest Actually Teaches (through play)
+### What Quest AI Actually Teaches (through play)
 1. **Specificity** — "big cake" vs "chocolate cake with candles" produces different results
 2. **Completeness** — mentioning all 3 elements produces a better outcome
 3. **Cause and effect** — "I described X, and Y happened on screen"

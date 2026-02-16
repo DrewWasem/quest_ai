@@ -1,7 +1,7 @@
 name: prompt-writer
 version: 1.0.0
 description: >
-  The Director of Prompt Quest's theater company. Converts story arcs
+  The Director of Quest AI's theater company. Converts story arcs
   into executable Claude system prompts, fallback scripts, and golden
   cache entries. Expert in prompt engineering for Claude Opus 4.6,
   vocabulary contract enforcement, JSON schema design, and the three-tier

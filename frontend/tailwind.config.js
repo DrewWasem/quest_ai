@@ -5,85 +5,86 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        heading: ['Fredoka', 'Nunito', 'system-ui', 'sans-serif'],
+        heading: ['Baloo 2', 'Fredoka', 'Nunito', 'system-ui', 'sans-serif'],
         body: ['Nunito', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
       },
       colors: {
         quest: {
-          // Primary Brand
-          purple: '#7C3AED',
-          'purple-deep': '#6D28D9',
-          'purple-light': '#A78BFA',
-          'purple-soft': '#C4B5FD',
+          // Primary Brand (Quest Blue — was purple)
+          purple: '#4A90D9',
+          'purple-deep': '#3A7BC8',
+          'purple-light': '#7DB8F0',
+          'purple-soft': '#B3D4F7',
           orange: '#FF8C42',
           'orange-deep': '#F97316',
           'orange-light': '#FDBA74',
           green: '#22C55E',
           'green-deep': '#16A34A',
           'green-light': '#86EFAC',
-          yellow: '#FBBF24',
-          'yellow-light': '#FDE68A',
-          blue: '#38BDF8',
-          'blue-deep': '#0EA5E9',
-          'blue-light': '#7DD3FC',
+          yellow: '#F5C842',
+          'yellow-light': '#FCE088',
+          blue: '#4ECDC4',
+          'blue-deep': '#3BADA5',
+          'blue-light': '#8BE0D9',
 
           // Supporting & Celebration
           pink: '#EC4899',
           'pink-light': '#F9A8D4',
-          violet: '#A78BFA',
+          violet: '#7DB8F0',
           peach: '#FDBA74',
           mint: '#86EFAC',
-          sunshine: '#FDE68A',
+          sunshine: '#FCE088',
 
-          // UI Backgrounds (Light Base)
-          'page-bg': '#FAF7FF',
+          // UI Backgrounds (Light Base — Cloud Gray)
+          'page-bg': '#EDF2F7',
           'card-bg': '#FFFFFF',
-          'panel-bg': '#F3EEFF',
-          'border': '#E9DFFF',
-          'border-light': '#F0EAFF',
+          'panel-bg': '#E8EFF7',
+          'border': '#D8E4F0',
+          'border-light': '#E4ECF5',
 
-          // Game Canvas (Dark Magic)
-          'canvas-void': '#0F0A1A',
-          'canvas-night': '#1A0F2E',
-          'canvas-card': '#231546',
-          'canvas-surface': '#2D1B69',
-          'canvas-border': '#3D2B7A',
-          'canvas-bg': '#1A0533',
+          // Game Canvas (Deep Ocean)
+          'canvas-void': '#0A1628',
+          'canvas-night': '#122240',
+          'canvas-card': '#1A3055',
+          'canvas-surface': '#234068',
+          'canvas-border': '#2E5078',
+          'canvas-bg': '#0D1B33',
 
           // Text
           text: {
-            dark: '#1E1337',
-            mid: '#4A3D6B',
-            light: '#7B6FA0',
-            muted: '#A99CC8',
+            dark: '#1A2332',
+            mid: '#3D5068',
+            light: '#6B8098',
+            muted: '#98AEBF',
             white: '#FFFFFF',
           },
 
           // Game States
           state: {
-            thinking: '#38BDF8',
-            animating: '#7C3AED',
+            thinking: '#4ECDC4',
+            animating: '#4A90D9',
             success: '#22C55E',
-            'funny-fail': '#FBBF24',
+            'funny-fail': '#F5C842',
             'try-again': '#FF8C42',
           },
 
-          // Legacy compat (remove after full migration)
-          bg: '#0F0A1A',
-          panel: '#1A0F2E',
-          card: '#231546',
-          surface: '#2D1B69',
-          accent: '#7C3AED',
-          glow: '#A78BFA',
-          gold: '#FBBF24',
+          // Legacy compat
+          bg: '#0A1628',
+          panel: '#122240',
+          card: '#1A3055',
+          surface: '#234068',
+          accent: '#4A90D9',
+          glow: '#7DB8F0',
+          gold: '#F5C842',
+          success: '#22C55E',
         },
       },
       boxShadow: {
-        'glow-purple': '0 0 24px rgba(124, 58, 237, 0.15), 0 0 60px rgba(124, 58, 237, 0.08)',
-        'glow-gold': '0 0 20px rgba(251, 191, 36, 0.15), 0 0 60px rgba(251, 191, 36, 0.08)',
+        'glow-purple': '0 0 24px rgba(74, 144, 217, 0.15), 0 0 60px rgba(74, 144, 217, 0.08)',
+        'glow-gold': '0 0 20px rgba(245, 200, 66, 0.15), 0 0 60px rgba(245, 200, 66, 0.08)',
         'glow-orange': '0 0 20px rgba(255, 140, 66, 0.15)',
         'glow-green': '0 0 20px rgba(34, 197, 94, 0.12)',
-        'glow-blue': '0 0 20px rgba(56, 189, 248, 0.12)',
+        'glow-blue': '0 0 20px rgba(78, 205, 196, 0.12)',
         'glow-pink': '0 0 20px rgba(236, 72, 153, 0.12)',
       },
       borderRadius: {
@@ -130,8 +131,8 @@ export default {
           '100%': { opacity: '1', transform: 'scale(1)' },
         },
         'glow-pulse': {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(124, 58, 237, 0.15)' },
-          '50%': { boxShadow: '0 0 30px rgba(124, 58, 237, 0.3), 0 0 60px rgba(124, 58, 237, 0.12)' },
+          '0%, 100%': { boxShadow: '0 0 20px rgba(74, 144, 217, 0.15)' },
+          '50%': { boxShadow: '0 0 30px rgba(74, 144, 217, 0.3), 0 0 60px rgba(74, 144, 217, 0.12)' },
         },
         'bounce-in': {
           '0%': { opacity: '0', transform: 'scale(0.3)' },

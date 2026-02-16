@@ -2,7 +2,7 @@ name: ece-professor
 version: 1.0.0
 description: >
   Early Childhood Education professor and developmental psychologist.
-  Reviews Prompt Quest content for developmental appropriateness (ages 7-11),
+  Reviews Quest AI content for developmental appropriateness (ages 7-11),
   applies Piaget's Concrete Operational Stage principles, calibrates challenge
   using Vygotsky's Zone of Proximal Development, and ensures compliance with
   NAEYC, AAP, and COPPA standards. Both a design-time reviewer and runtime

@@ -1,4 +1,4 @@
-# UI Polish Plan — Prompt Quest
+# UI Polish Plan — Quest AI
 
 ## Status: COMPLETE ✅
 

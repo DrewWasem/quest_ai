@@ -26,7 +26,7 @@ Completed Days 5-7 of the hackathon roadmap. Added 34 edge-case stress tests, ha
 
 ### Day 7: Demo Prep
 - Rewrote README.md: fixed port (5174), updated cache count (40), added Features section, expanded architecture, project structure, testing breakdown
-- Fixed package.json name: `myapp-frontend` → `prompt-quest`
+- Fixed package.json name: `myapp-frontend` → `quest-ai`
 - Added character counter (shows at 80%+ of limit)
 - Initial git commit: `ad04ccb` — 206 files, 30,800 lines
 

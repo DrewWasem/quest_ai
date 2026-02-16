@@ -12,7 +12,7 @@
 - **Metacognition emerging:** Kids are beginning to think about their own thinking. Feedback that says "you forgot to describe the walls" helps them reflect on what they DIDN'T think about — this is metacognition practice disguised as game advice.
 - **Sensitivity to age-appropriateness:** A 9-year-old will reject content they perceive as "for little kids." Visual design, language, and tone must feel peer-appropriate, never babyish.
 
-## The Prompt Quest Game Model
+## The Quest AI Game Model
 
 ### Core Loop
 ```

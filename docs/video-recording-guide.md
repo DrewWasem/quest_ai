@@ -1,4 +1,4 @@
-# Video Recording Guide — Prompt Quest Demo
+# Video Recording Guide — Quest AI Demo
 
 > **Target:** 3:00-3:15 video for hackathon submission
 > **Format:** Daughter plays the game (picture-in-picture webcam), Drew narrates via voiceover
@@ -127,7 +127,7 @@ Do one practice run **without recording** so your daughter knows the flow:
 **[Camera has landed in the skeleton-birthday zone. Input box is visible.]**
 
 **DREW (voiceover):**
-> "This is my daughter playing Prompt Quest — a game I built with Claude Opus 4.6. She types a description and the AI builds a 3D animated scene with characters, props, animations, and sound. But here's the twist — vague descriptions don't get error messages. They get something way better."
+> "This is my daughter playing Quest AI — a game I built with Claude Opus 4.6. She types a description and the AI builds a 3D animated scene with characters, props, animations, and sound. But here's the twist — vague descriptions don't get error messages. They get something way better."
 
 **ACTION:** While Drew talks, daughter looks at the zone. She can explore or wait for the cue to type.
 
@@ -201,7 +201,7 @@ Do one practice run **without recording** so your daughter knows the flow:
 
 **[Pause 2 seconds.]**
 
-> "This is Prompt Quest."
+> "This is Quest AI."
 
 **[Hold on village for 3 seconds. Stop recording.]**
 
@@ -241,7 +241,7 @@ Do one practice run **without recording** so your daughter knows the flow:
 
 1. Go to [studio.youtube.com](https://studio.youtube.com)
 2. Click **Create > Upload video**
-3. Title: `Prompt Quest — AI Game for Kids (Claude Code Hackathon Demo)`
+3. Title: `Quest AI — AI Game for Kids (Claude Code Hackathon Demo)`
 4. Visibility: **Unlisted** (only people with the link can see it)
 5. Wait for processing (usually 2-5 minutes for a 3-min video)
 6. Copy the link
@@ -268,7 +268,7 @@ This is every word Drew says in the video, in order. Print this or keep it on a 
 ```
 What happens when a kid describes a scene to an AI?
 
-This is my daughter playing Prompt Quest — a game I built with Claude
+This is my daughter playing Quest AI — a game I built with Claude
 Opus 4.6. She types a description and the AI builds a 3D animated scene
 with characters, props, animations, and sound. But here's the twist —
 vague descriptions don't get error messages. They get something way better.
@@ -303,7 +303,7 @@ The Claude Code setup includes seven domain-expert AI personas, a conductor
 workflow, and a persistent memory system that survived across 30 development
 sessions.
 
-This is Prompt Quest.
+This is Quest AI.
 ```
 
 **Total voiceover: ~220 words. At natural speaking pace, that's about 1:45 of Drew talking. The remaining ~1:30 is scene playback and daughter's reactions. Total: ~3:15.**

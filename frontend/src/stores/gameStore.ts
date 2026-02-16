@@ -92,6 +92,7 @@ interface GameState {
   introAnimation: string | null;
   introPlayerYaw: number | null;
   introPlayerPosition: [number, number, number] | null;
+  introSpeedMultiplier: number;
 
   // Actions
   setInput: (input: string) => void;
@@ -110,7 +111,9 @@ interface GameState {
   setSelectedCharacter: (id: CharacterKey) => void;
   setIntroAnimation: (anim: string | null, yaw?: number | null) => void;
   setIntroPlayerPosition: (pos: [number, number, number] | null) => void;
+  setIntroSpeedMultiplier: (speed: number) => void;
   advanceStage: (zoneId: string) => void;
+  setStage: (zoneId: string, stage: number) => void;
   completeStage: (zoneId: string, stageNumber: number) => void;
   recordDiscovery: (stageKey: string, vignetteId: string) => void;
   recordLevel4Success: (zoneId: string) => void;
@@ -144,10 +147,9 @@ export function getCompletedZoneCount(stageNumbers: Record<string, number>): num
     .length;
 }
 
-/** Check if a zone is locked (only free-play has a lock gate). */
-export function isZoneLocked(zoneId: string, stageNumbers: Record<string, number>): boolean {
-  if (zoneId !== 'free-play') return false;
-  return getCompletedZoneCount(stageNumbers) < 3;
+/** Check if a zone is locked — all zones are unlocked. */
+export function isZoneLocked(_zoneId: string, _stageNumbers: Record<string, number>): boolean {
+  return false;
 }
 
 // Intro scripts shown (and read aloud) when first entering a zone — derived from WORLDS hook
@@ -197,6 +199,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   introAnimation: null,
   introPlayerYaw: null,
   introPlayerPosition: null,
+  introSpeedMultiplier: 1.0,
 
   setInput: (input: string) => set({ userInput: input }),
 
@@ -265,6 +268,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   setSelectedCharacter: (id: CharacterKey) => set({ selectedCharacter: id }),
   setIntroAnimation: (anim, yaw) => set({ introAnimation: anim, introPlayerYaw: yaw ?? null }),
   setIntroPlayerPosition: (pos) => set({ introPlayerPosition: pos }),
+  setIntroSpeedMultiplier: (speed) => set({ introSpeedMultiplier: speed }),
 
   enterZone: (zoneId: string) => {
     const center = ZONE_CENTERS[zoneId];
@@ -389,6 +393,13 @@ export const useGameStore = create<GameState>((set, get) => ({
       lastScript: levelUpScript,
       vignetteSteps: null,
     });
+  },
+
+  setStage: (zoneId: string, stage: number) => {
+    const { stageNumbers, stageCompleted, discoveredVignettes, level4Successes, level5Unlocked } = get();
+    const updated = { ...stageNumbers, [zoneId]: stage };
+    saveLevels({ stageNumbers: updated, stageCompleted, discoveredVignettes, level4Successes, level5Unlocked });
+    set({ stageNumbers: updated, lastScript: null, vignetteSteps: null });
   },
 
   completeStage: (zoneId: string, stageNumber: number) => {

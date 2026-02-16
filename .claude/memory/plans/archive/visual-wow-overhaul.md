@@ -2,7 +2,7 @@
 
 **Created:** 2026-02-10
 **Status:** DRAFT — awaiting approval
-**Goal:** Transform Prompt Quest from "colored blocks on a purple screen" to a visually delightful kids' game that wows 8-year-olds
+**Goal:** Transform Quest AI from "colored blocks on a purple screen" to a visually delightful kids' game that wows 8-year-olds
 
 ---
 

@@ -1,10 +1,10 @@
 <!-- Uncomment when hero screenshot is captured:
 <p align="center">
-  <img src="docs/screenshots/hero.png" alt="Prompt Quest — A kid types a description and a 3D scene comes alive" width="720" />
+  <img src="docs/screenshots/hero.png" alt="Quest AI — A kid types a description and a 3D scene comes alive" width="720" />
 </p>
 -->
 
-<h1 align="center">Prompt Quest</h1>
+<h1 align="center">Quest AI</h1>
 
 <p align="center">
   <strong>AI-powered 3D game that teaches kids descriptive thinking through play.</strong><br/>

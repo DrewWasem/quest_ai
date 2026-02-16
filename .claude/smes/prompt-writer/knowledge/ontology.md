@@ -5,7 +5,7 @@
 ```
 System Prompt
 ├── 1. Game Context (2-3 lines)
-│   ├── "You are the game engine for Prompt Quest"
+│   ├── "You are the game engine for Quest AI"
 │   ├── Task name and premise
 │   └── Evaluation instruction
 ├── 2. JSON Format (exact schema with example)

@@ -110,7 +110,7 @@ export function QuestZoneCircle({ zoneId, position, color }: QuestZoneCircleProp
             <div style={{
               fontSize: '10px',
               color: '#999',
-              fontFamily: 'Fredoka, sans-serif',
+              fontFamily: 'Baloo 2, Fredoka, sans-serif',
               marginTop: '2px',
             }}>
               Complete 3 zones

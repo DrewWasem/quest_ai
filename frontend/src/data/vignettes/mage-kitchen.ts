@@ -35,7 +35,6 @@ import {
   NARRATOR,
   IMPACT,
   CELEBRATION,
-  DISAPPOINTMENT,
   DRAMATIC_PAUSE,
   CROWD_CHEER,
   CROWD_GASP,
@@ -106,11 +105,21 @@ const FIRE_VIGNETTES: Vignette[] = [
       // SETUP: Narrator + Scene + Props
       ...NARRATOR("The mage casts fire on a bubbling pot..."),
       ...OBJECT_SPIN_IN('stove', 'cs-center'),
-      ...OBJECT_DROP('pot', 'cs-center'),
+      ...OBJECT_DROP('pot', 'cs-center-high'),
       ...TELEPORT_IN('mage', 'ds-left'),
 
-      // INTENT: Character speaks/thinks
-      ...CHARACTER_EXCLAIM('mage', 'nervous', 'Maximum heat!'),
+      // INTENT: Character speaks + fire effects
+      { parallel: [
+        { action: 'animate', character: 'mage', anim: 'Cheering' },
+        { action: 'emote', character: 'mage', emoji: 'nervous', text: 'Maximum heat!' },
+        { action: 'react', effect: 'fire', position: 'ds-left' },
+        { action: 'react', effect: 'fire', position: 'cs-center' },
+        { action: 'sfx', sound: 'explosion' },
+        { action: 'camera_shake', intensity: 0.3, duration: 0.4 },
+      ], delayAfter: 2.0 },
+      { parallel: [
+        { action: 'animate', character: 'mage', anim: 'Idle_A' },
+      ], delayAfter: 0.3 },
       ...SPELL_CAST('mage', 'cs-center'),
 
       // ACTION: Main explosion sequence
@@ -122,19 +131,38 @@ const FIRE_VIGNETTES: Vignette[] = [
         { action: 'sfx', sound: 'explosion' },
         { action: 'camera_shake', intensity: 0.7, duration: 1.0 },
       ], delayAfter: 0.5 },
+      { parallel: [{ action: 'remove', asset: 'pot' }], delayAfter: 0.1 },
       ...FLASH('orange', 0.3),
       ...IMPACT(),
+      { parallel: [{ action: 'remove', asset: 'stove' }], delayAfter: 0.1 },
       ...OBJECT_RAIN('burger', 6, 'wide'),
 
       // CONSEQUENCE: Panic reactions
       ...CROWD_GASP([]),
       ...CHARGE_IN_RIGHT('cat', 'cs-right'),
       ...FLEE_LEFT('cat'),
-      ...EMOTIONAL_REACT('mage', 'shock-lines', 'ds-left'),
 
-      // RESOLUTION: Disappointment + Educational narrator
-      ...DISAPPOINTMENT(['mage']),
-      ...NARRATOR("Fire + explode = KABOOM! Too much heat caused chaos!"),
+      // RESOLUTION: Mage panics and runs in a circle
+      { parallel: [
+        { action: 'animate', character: 'mage', anim: 'Running_A' },
+        { action: 'react', effect: 'shock-lines', position: 'ds-left' },
+        { action: 'emote', character: 'mage', emoji: 'scared', text: 'What did I do?!' },
+      ], delayAfter: 0.3 },
+      { parallel: [
+        { action: 'move', character: 'mage', to: 'cs-left', style: 'linear' },
+      ], delayAfter: 0.4 },
+      { parallel: [
+        { action: 'move', character: 'mage', to: 'cs-center', style: 'linear' },
+      ], delayAfter: 0.4 },
+      { parallel: [
+        { action: 'move', character: 'mage', to: 'ds-right', style: 'linear' },
+      ], delayAfter: 0.4 },
+      { parallel: [
+        { action: 'move', character: 'mage', to: 'ds-left', style: 'linear' },
+        { action: 'react', effect: 'sad-cloud', position: 'ds-left' },
+        { action: 'sfx', sound: 'fail' },
+        { action: 'text_popup', text: 'Too much heat caused chaos!', position: 'center', size: 'large' },
+      ], delayAfter: 0.8 },
     ],
     feedback: {
       title: 'POT ROCKET',
@@ -1627,6 +1655,7 @@ const STAGE2_VIGNETTES: Vignette[] = [
 
 export const MAGE_KITCHEN_STAGE_2: Vignette[] = [
   ...STAGE2_VIGNETTES,
+  ...MAGE_KITCHEN_STAGE_1,  // Stage 1 vignettes work here — undefined trigger keys act as wildcards
 ];
 
 export const MAGE_KITCHEN_DEFAULT_2: Vignette = {
@@ -1809,11 +1838,6 @@ const STAGE3_COMBO_VIGNETTES: Vignette[] = [
         { action: 'sfx', sound: 'explosion' },
         { action: 'text_popup', text: 'VOLCANO!', position: 'center', size: 'huge' },
       ], delayAfter: 1.0 },
-      { parallel: [
-        { action: 'react', effect: 'smoke', position: 'wide' },
-        { action: 'animate', character: 'mage', anim: 'Cheering' },
-        { action: 'sfx', sound: 'success' },
-      ], delayAfter: 1.0 },
       ...CELEBRATION(['mage']),
     ],
     feedback: {
@@ -1903,6 +1927,7 @@ const STAGE3_COMBO_VIGNETTES: Vignette[] = [
 
 export const MAGE_KITCHEN_STAGE_3: Vignette[] = [
   ...STAGE3_COMBO_VIGNETTES,
+  ...MAGE_KITCHEN_STAGE_2,  // Includes stage 1+2 vignettes as fallbacks
 ];
 
 export const MAGE_KITCHEN_DEFAULT_3: Vignette = {

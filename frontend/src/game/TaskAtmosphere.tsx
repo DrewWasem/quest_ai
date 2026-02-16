@@ -1,5 +1,5 @@
 /**
- * TaskAtmosphere — Per-task atmospheric rendering for Quest AI.
+ * TaskAtmosphere — Per-task atmospheric rendering for QuestAI.
  *
  * Renders fog, lighting, particles, sky/environment, post-processing,
  * and ground plane — all configured per task for unique moods.
@@ -65,8 +65,8 @@ interface AtmosphereConfig {
 // ============================================================================
 
 const DEFAULT_CONFIG: AtmosphereConfig = {
-  background: '#1A0533',
-  fog: { color: '#1A0533', near: 14, far: 35 },
+  background: '#0D1B33',
+  fog: { color: '#0D1B33', near: 14, far: 35 },
   hemisphere: { sky: '#6633aa', ground: '#331155', intensity: 0.6 },
   directionalLight: { color: '#ffffff', intensity: 1.0, position: [5, 8, 5] },
   sparkles: { count: 60, color: '#aa88ff', size: 3, speed: 0.3, scale: [10, 5, 10] },
@@ -153,7 +153,7 @@ const TASK_CONFIGS: Record<string, Partial<AtmosphereConfig>> = {
     directionalLight: { color: '#ffffff', intensity: 0.5, position: [0, 6, 3] },
     sparkles: { count: 150, color: '#ff44ff', size: 4, speed: 0.6, scale: 8 },
     contactShadows: { opacity: 0.6, blur: 3, far: 4 },
-    ground: { color: '#0f0a1a', radius: 12 },
+    ground: { color: '#0A1628', radius: 12 },
     stars: { count: 200, radius: 30, factor: 2, speed: 0.3 },
     pointLights: [
       { color: '#ff4400', intensity: 3, distance: 10, position: [-4, 4, -2] },

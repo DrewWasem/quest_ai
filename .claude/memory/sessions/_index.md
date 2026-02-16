@@ -25,3 +25,9 @@ Auto-generated session summaries documenting work completed in each Claude Code 
 | [Phase 1F - Quality Polish Launch](2026-02-15-phase1f-quality-polish.md) | vignettes, quality-polish, sfx, dialogue, props, parallel-agents, phase-1f | 2026-02-15 | 2026-02-15 |
 | [Action Variety Uplift](2026-02-15-action-variety-uplift.md) | vignettes, action-variety, templates, uplift, movement-templates | 2026-02-15 | 2026-02-15 |
 | [Phase 2: Asset Utilization](2026-02-15-phase2-asset-utilization.md) | phase-2, asset-utilization, emotion-expansion, prop-diversification, auto-sfx, emoji-migration | 2026-02-15 | 2026-02-15 |
+| [Docs Update & Critical Bug Fixes](2026-02-15-docs-update-and-bugfixes.md) | bug-fixes, documentation, badges, emotes, stale-closure, mad-libs, roadmap | 2026-02-15 | 2026-02-15 |
+| [Demo Runner & Logo Processing](2026-02-16-demo-runner-and-logos.md) | session, demo, logo, image-processing, automation, video-recording | 2026-02-16 | 2026-02-16 |
+| [Vignette Timing Fixes & mk_fire_explode](2026-02-16-vignette-timing-fixes.md) | session, vignette, timing, debugging, scene-player, bug-fixes, scale | 2026-02-16 | 2026-02-16 |
+| [Development Story Rewrite](2026-02-16-development-story-rewrite.md) | session, documentation, narrative, development-story, voice | 2026-02-16 | 2026-02-16 |
+| [Demo Timing Fixes & FeedbackCard Compact](2026-02-16-demo-timing-and-feedback-compact.md) | session, demo-runner, timing, feedback-card, ui, bug-fixes | 2026-02-16 | 2026-02-16 |
+| [End Card Video Assembly](2026-02-16-end-card-video-assembly.md) | session, video, end-card, rendering, ffmpeg, chrome, hackathon | 2026-02-16 | 2026-02-16 |

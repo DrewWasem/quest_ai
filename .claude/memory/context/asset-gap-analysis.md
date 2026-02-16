@@ -69,4 +69,4 @@ Project has 1.32GB of downloaded 3D assets but only 0.63% (81 files) are actuall
 - `frontend/src/data/asset-manifest.ts` — Master vocabulary with unused FOOD_MODELS, ANIMAL_MODELS, CHRISTMAS_MODELS dicts
 - `frontend/public/assets/3d/` — All asset directories
 - `.claude/memory/context/asset-pack-locations.md` — Existing asset organization reference
-- `docs/prompt-quest-analysis.md` — Full analysis report
+- `docs/quest-ai-analysis.md` — Full analysis report

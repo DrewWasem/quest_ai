@@ -26,8 +26,9 @@ import { CHARACTERS, ANIMAL_MODELS, type CharacterKey } from '../data/asset-mani
 import { useGameStore, ZONE_CENTERS } from '../stores/gameStore'
 import { getEmojiBubblePath, getEmojiOutlinePath } from '../data/emoji-map'
 
-// Playback speed multiplier — 3x faster vignette/action execution
-const PLAYBACK_SPEED = 3
+// Timing tuning: minimize gaps between actions, but let actions play at full duration
+const GAP_SPEED = 6 // Divide inter-action/inter-step waits by this (raw script path)
+const VIGNETTE_GAP_SPEED = 2 // Vignettes: authored delays ÷ 2 (3x more breathing room than GAP_SPEED=6)
 
 // Compute character facing for a zone — face toward village center (0,0,0)
 let _zoneCharRotationCache: Record<string, [number, number, number]> | null = null
@@ -94,6 +95,11 @@ const LOCAL_POSITION_MAP: Record<string, [number, number, number]> = {
   'us-center':    [0, 0, -1.5],
   'us-right':     [2.0, 0, -1.5],
   'us-far-right': [4.5, 0, -1.5],
+
+  // Elevated positions (for stacking objects — pot on stove, item on table, etc.)
+  'cs-center-high': [0, 1.5, 0],
+  'cs-left-high':   [-2.0, 1.5, 0],
+  'cs-right-high':  [2.0, 1.5, 0],
 }
 
 /** Exported as STAGE_MARKS for use in blocking-templates.ts */
@@ -2506,7 +2512,7 @@ const PROP_SCALE: Record<string, number> = {
   sandwich: 3.0, teapot: 3.0, apple: 3.0, basket: 2.5, blanket: 3.0,
   bottle: 2.5, cup: 2.5, lunchbox: 2.5,
   // Kitchen
-  stove: 2.0, fridge: 2.0, pot: 2.5, pan: 2.5, oven: 2.0,
+  stove: 1.0, fridge: 1.2, pot: 2.5, pan: 2.5, oven: 1.0,
   // Restaurant food
   pizza: 2.5, pizza_pepperoni: 2.5, pizza_cheese: 2.5, plate: 2.5, plates: 2.0,
   // Park (Tiny Treats — roughly character-scale at 1.5x)
@@ -2559,8 +2565,8 @@ const PROP_SCALE: Record<string, number> = {
   egg: 3.0, milk: 2.5, cash_register: 2.5, mug_bakery: 2.5,
   // Outdoors
   rock: 1.5, fence: 1.5,
-  // Extended library — Animals (Quaternius animated — scale varies)
-  cat: 1.0, dog: 1.0, horse: 0.8, chicken: 1.0, deer: 0.8, penguin: 1.0, tiger: 0.8,
+  // Extended library — Animals (Quaternius animated — native ~0.3-0.5u, need 2-3x for visibility next to 2.6u characters)
+  cat: 2.5, dog: 2.5, horse: 2.0, chicken: 2.5, deer: 2.0, penguin: 2.5, tiger: 2.0,
   // Animals (Poly-Pizza static — generally small)
   bear: 1.5, fox: 1.5, rabbit: 1.5, sheep: 1.5, cow: 1.2, pig: 1.5,
   duck: 1.5, frog: 2.0, bird: 1.5, giraffe: 0.8, shark: 1.0, lizard: 2.0,
@@ -2870,8 +2876,34 @@ interface ActiveActor {
 }
 
 interface EffectParticle {
-  type: 'unicode' | 'image'
-  content: string // Unicode char or image path
+  type: 'unicode' | 'image' | 'css'
+  content: string // Unicode char, image path, or hex color for CSS orbs
+}
+
+// ─── CSS PARTICLE EFFECT CONFIG ───────────────────────────────────────────────
+// Per-effect animation: gravity (<0 = rise, >0 = fall), duration, base distance
+const EFFECT_ANIM_CONFIG: Record<string, { gravity: number; duration: number; distance: number }> = {
+  // Fire: rise upward
+  fire: { gravity: -45, duration: 2.0, distance: 35 },
+  'fire-sneeze': { gravity: -40, duration: 1.8, distance: 30 },
+  hot: { gravity: -35, duration: 2.0, distance: 30 },
+  // Smoke: rise slowly, spread wide
+  smoke: { gravity: -30, duration: 2.5, distance: 25 },
+  steam: { gravity: -35, duration: 2.2, distance: 20 },
+  dust: { gravity: -10, duration: 2.0, distance: 40 },
+  // Water: splash outward then fall
+  splash: { gravity: 35, duration: 1.8, distance: 45 },
+  bubbles: { gravity: -20, duration: 2.5, distance: 20 },
+  // Sparkle: gentle float
+  'sparkle-magic': { gravity: 5, duration: 2.2, distance: 45 },
+  magic_circle: { gravity: 0, duration: 2.5, distance: 35 },
+  'glow-pulse': { gravity: 5, duration: 2.0, distance: 40 },
+  'stars-spin': { gravity: 5, duration: 2.2, distance: 45 },
+  // Snow: drift downward
+  frozen: { gravity: 40, duration: 3.0, distance: 30 },
+  'snow-burst': { gravity: 40, duration: 3.0, distance: 30 },
+  // Lightning: fast flash
+  'lightning-burst': { gravity: 0, duration: 0.8, distance: 55 },
 }
 
 interface ActiveEffect {
@@ -2942,6 +2974,8 @@ function getEffectEmojis(effect: string): string[] {
     bubbles: ['🫧', '🫧', '🫧', '🫧', '🫧', '🫧'],
     'glow-pulse': ['✨', '💛', '✨', '💛', '✨', '💛'],
     'skull-burst': ['💀', '☠️', '💀', '☠️', '💀', '☠️'],
+    'snow-burst': ['❄️', '🌨️', '❄️', '🌨️', '❄️', '🌨️', '❄️'],
+    'lightning-burst': ['⚡', '💛', '⚡', '💛', '⚡', '💛', '⚡'],
     // ─── EMOTION EFFECTS ──────────────────────────────────
     angry: ['😤', '💢', '😡', '💢', '😤', '💢', '😡'],
     scared: ['😱', '💦', '😨', '💦', '😱', '💦', '😨'],
@@ -2967,8 +3001,38 @@ function getEffectEmojis(effect: string): string[] {
   return emojiMap[effect] || ['✨', '⭐', '💫', '✨', '⭐']
 }
 
-/** Enhanced particle system: pixel-art emoji images for select effects, Unicode fallback for rest */
+/** Enhanced particle system: CSS orbs for elemental effects, pixel-art for emotions, Unicode fallback */
 function getEffectParticles(effect: string): EffectParticle[] {
+  // ─── CSS GLOWING ORB PARTICLES (elemental effects — no emoji cards) ──────
+  const cssEffectColors: Record<string, string[]> = {
+    // Fire: orange/red/yellow
+    fire: ['#FF6B00', '#FF4500', '#FFD700', '#FF8C42', '#FF6B00', '#CC3700', '#FFA500', '#FF4500', '#FFD700', '#FF6B00'],
+    'fire-sneeze': ['#FF6B00', '#FF4500', '#FFD700', '#FF8C42', '#FF6B00', '#CC3700', '#FFA500', '#FF4500'],
+    hot: ['#FF4500', '#FF6B00', '#FFD700', '#FF4500', '#FF6B00', '#CC3700', '#FF4500'],
+    // Smoke: gray tones
+    smoke: ['#888888', '#666666', '#AAAAAA', '#777777', '#999999', '#888888', '#666666', '#AAAAAA'],
+    steam: ['#CCCCCC', '#BBBBBB', '#DDDDDD', '#CCCCCC', '#AAAAAA', '#BBBBBB', '#CCCCCC', '#DDDDDD'],
+    dust: ['#C4A882', '#B8976B', '#D4B896', '#C4A882', '#A88B6A', '#B8976B', '#C4A882', '#D4B896'],
+    // Water: blue shades
+    splash: ['#4A90D9', '#2563EB', '#87CEEB', '#1E90FF', '#4A90D9', '#60A5FA', '#2563EB', '#3B82F6', '#87CEEB', '#4A90D9'],
+    bubbles: ['#87CEEB', '#B8E4FF', '#60A5FA', '#87CEEB', '#ADD8E6', '#87CEEB', '#B8E4FF', '#60A5FA'],
+    // Sparkle: gold/white/purple
+    'sparkle-magic': ['#FFD700', '#FFFACD', '#FFA500', '#FFE066', '#FFD700', '#FFFACD', '#FFA500', '#FFD700'],
+    magic_circle: ['#9B59B6', '#E8D5F5', '#7C3AED', '#B794F6', '#9B59B6', '#E8D5F5', '#7C3AED', '#B794F6'],
+    'glow-pulse': ['#FFD700', '#FFFACD', '#FFA500', '#FFE066', '#FFD700', '#FFFACD', '#FFA500', '#FFE066'],
+    'stars-spin': ['#FFD700', '#FFFFFF', '#FFE066', '#FFFACD', '#FFD700', '#FFFFFF', '#FFE066', '#FFFACD'],
+    // Snow: white/ice-blue
+    frozen: ['#E8F4FF', '#B8E4FF', '#FFFFFF', '#87CEEB', '#E8F4FF', '#B8E4FF', '#FFFFFF', '#ADD8E6'],
+    'snow-burst': ['#E8F4FF', '#B8E4FF', '#FFFFFF', '#87CEEB', '#E8F4FF', '#B8E4FF', '#FFFFFF', '#ADD8E6'],
+    // Lightning: bright yellow/white flash
+    'lightning-burst': ['#FFE066', '#FFFFFF', '#FFD700', '#FFF8DC', '#FFE066', '#FFFFFF', '#FFD700', '#FFFACD'],
+  }
+  const cssColors = cssEffectColors[effect]
+  if (cssColors) {
+    return cssColors.map(color => ({ type: 'css' as const, content: color }))
+  }
+
+  // ─── PIXEL-ART EMOJI FACES (emotion/celebration effects) ────────────────
   // Effects that use pixel-art emoji faces for extra expressiveness
   const pixelArtEffects: Record<string, string[]> = {
     'confetti-burst': ['party', 'happy', 'star_eyes', 'excited', 'love_eyes', 'cool', 'laughing'],
@@ -3259,6 +3323,12 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
       return
     }
 
+    // If vignette steps are provided, let the vignette pipeline handle playback
+    // (vignette pipeline runs parallel actions properly; this flat pipeline serializes them)
+    if (vignetteSteps && vignetteSteps.length > 0) {
+      return
+    }
+
     // Intro scripts (empty actions) — display narration only, keep hero actors
     if (script.actions.length === 0) {
       playingRef.current = false
@@ -3277,22 +3347,8 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
     markOccupancy.current.clear()
     actorMarkRef.current.clear()
 
-    // Inject player knight into the scene (facing camera, with a reaction anim)
-    const playerKnight: ActiveActor = {
-      id: 'player-knight',
-      type: 'character',
-      characterId: 'knight',
-      position: zonePosition(currentZone, POSITION_MAP['bottom'] || [0, 0, 2]),
-      rotation: currentZone ? getZoneCharRotation(currentZone) : undefined,
-      animation: 'Idle_A',
-    }
-    setActors([playerKnight])
-    spawnedIds.current.add('player-knight')
-
-    // Pick a player animation based on success level
-    const playerAnim = script.success_level === 'FULL_SUCCESS' ? 'Cheering'
-      : script.success_level === 'PARTIAL_SUCCESS' ? 'Waving'
-      : 'Interact'
+    // Clear actors for fresh scene
+    setActors([])
 
     // Create abort controller for cleanup
     const abortController = new AbortController()
@@ -3306,11 +3362,6 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
     } else if (script.success_level === 'FUNNY_FAIL') {
       SoundManager3D.play('fail')
     }
-
-    // Animate the player knight after a brief delay
-    setTimeout(() => {
-      handleAnimate('player-knight', playerAnim)
-    }, 300)
 
     // Execute action queue
     executeActions(script.actions, abortController.signal)
@@ -3391,8 +3442,8 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
     for (const action of actions) {
       if (signal.aborted) break
 
-      // Delay before action
-      const delay = action.delay_ms || 0
+      // Delay before action (gap — minimized)
+      const delay = (action.delay_ms || 0) / GAP_SPEED
       if (delay > 0) {
         await sleep(delay, signal)
       }
@@ -3406,8 +3457,8 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
         console.warn('[ScenePlayer3D] Action failed (skipping):', action.type, err)
       }
 
-      // Duration after action (default 800ms), scaled by playback speed
-      const duration = ('duration_ms' in action ? action.duration_ms || 800 : 800) / PLAYBACK_SPEED
+      // Gap after action (minimized — just enough to see each action start)
+      const duration = ('duration_ms' in action ? action.duration_ms || 800 : 800) / GAP_SPEED
       await sleep(duration, signal)
     }
   }
@@ -3473,7 +3524,7 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
         break
 
       case 'spawn_rain':
-        handleSpawnRain(action as any, signal)
+        await handleSpawnRain(action as any, signal)
         break
 
       case 'grow':
@@ -3485,7 +3536,7 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
         break
 
       case 'delay':
-        await sleep(((action as any).duration_ms ?? 1000) / PLAYBACK_SPEED, signal)
+        await sleep(((action as any).duration_ms ?? 1000) / VIGNETTE_GAP_SPEED, signal)
         break
 
       default:
@@ -3498,8 +3549,16 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
   // ============================================================================
 
   async function executeVignetteSteps(steps: VignetteStep[], signal: AbortSignal) {
-    for (const step of steps) {
-      if (signal.aborted) break
+    console.log(`%c[Vignette] ▶ Starting ${steps.length} steps`, 'color: #7C3AED; font-weight: bold')
+    const vignetteStart = Date.now()
+
+    for (let si = 0; si < steps.length; si++) {
+      const step = steps[si]
+      if (signal.aborted) { console.log(`[Vignette] ✖ Aborted at step ${si + 1}`); break }
+
+      const stepStart = Date.now()
+      const actionSummary = step.parallel.map(a => `${a.action}(${a.character || a.asset || a.effect || a.text || a.sound || ''})`).join(' + ')
+      console.log(`%c[Vignette] Step ${si + 1}/${steps.length}: ${actionSummary}  (delayAfter=${step.delayAfter ?? 0.5}s)`, 'color: #38BDF8')
 
       // Execute all actions in parallel within a step
       const actionPromises = step.parallel.map(async (va) => {
@@ -3507,22 +3566,31 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
         try {
           // Convert VignetteAction to engine action inline
           const action = vignetteActionToEngineAction(va)
-          if (action) {
-            await executeAction(action, signal)
+          if (!action) {
+            console.warn(`[Vignette]   ⚠ No engine mapping for: ${va.action}`)
+            return
           }
+          const t0 = Date.now()
+          await executeAction(action, signal)
+          const dt = Date.now() - t0
+          if (dt > 50) console.log(`[Vignette]   ✓ ${va.action} took ${dt}ms`)
         } catch (err) {
-          console.warn('[ScenePlayer3D] Vignette action failed (skipping):', va.action, err)
+          console.error(`[Vignette]   ✖ ${va.action} FAILED:`, err)
         }
       })
 
       await Promise.all(actionPromises)
 
       // Delay before next step, scaled by playback speed
-      const delayMs = (step.delayAfter ?? 0.5) * 1000 / PLAYBACK_SPEED
+      const delayMs = (step.delayAfter ?? 0.5) * 1000 / VIGNETTE_GAP_SPEED
       if (delayMs > 0 && !signal.aborted) {
         await sleep(delayMs, signal)
       }
+      const stepTime = Date.now() - stepStart
+      if (stepTime > 200) console.log(`[Vignette]   ⏱ Step ${si + 1} total: ${stepTime}ms`)
     }
+
+    console.log(`%c[Vignette] ✔ Finished in ${((Date.now() - vignetteStart) / 1000).toFixed(1)}s`, 'color: #22C55E; font-weight: bold')
   }
 
   /** Convert a VignetteAction to a scene-engine Action for executeAction */
@@ -3616,7 +3684,12 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
       case 'delay':
         return {
           type: 'delay' as any,
-          duration_ms: (va.duration ?? 1) * 1000,
+          duration_ms: va.duration ?? 1000,  // Already in ms from DRAMATIC_PAUSE macro
+        }
+      case 'remove':
+        return {
+          type: 'remove',
+          target: (va.asset ?? va.character ?? '') as any,
         }
       default:
         return null
@@ -3680,7 +3753,7 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
         type: 'animal',
         modelPath: ANIMAL_MODELS[actorId] ?? ANIMAL_MODELS[baseId],
         position: pos,
-        scale: 0.8,
+        scale: resolvePropScale(actorId) || resolvePropScale(baseId) || 2.0,
       }
     } else if (isProcedural) {
       newActor = {
@@ -3700,11 +3773,26 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
       }
     }
 
-    setActors((prev) => {
-      // Replace if already exists
-      const filtered = prev.filter((a) => a.id !== actorId)
-      return [...filtered, newActor]
-    })
+    // Auto-suffix duplicate IDs so multiple props of the same type can coexist.
+    // e.g., spawning 'pot' when 'pot' already exists → 'pot__2', then 'pot__3', etc.
+    // Characters are always replaced (only one instance of each character).
+    let finalId = actorId
+    if (!isCharacter) {
+      setActors((prev) => {
+        if (prev.some(a => a.id === finalId)) {
+          let counter = 2
+          while (prev.some(a => a.id === `${actorId}__${counter}`)) counter++
+          finalId = `${actorId}__${counter}`
+          newActor = { ...newActor, id: finalId }
+        }
+        return [...prev, newActor]
+      })
+    } else {
+      setActors((prev) => {
+        const filtered = prev.filter((a) => a.id !== actorId)
+        return [...filtered, newActor]
+      })
+    }
 
     // Sound effect on spawn
     SoundManager3D.play('spawn')
@@ -3716,8 +3804,8 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
       }, 500)
     }
 
-    spawnedIds.current.add(actorId)
-    actorPositionsRef.current.set(actorId, pos)
+    spawnedIds.current.add(finalId)
+    actorPositionsRef.current.set(finalId, pos)
     if (!isWing) actorMarkRef.current.set(actorId, posKey)
     console.log(`[ScenePlayer3D] Spawned ${actorId} at ${position}${resolvedPosition ? ` [${resolvedPosition.join(', ')}]` : ''}`)
   }
@@ -3758,6 +3846,25 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
       }
     }
 
+    // Stale closure fix: actor was spawned (ref updated synchronously) but React
+    // state hasn't flushed yet, so actors.find() returns null. Build a synthetic
+    // reference from the ref-tracked position so the move proceeds correctly.
+    if (!currentActor && spawnedIds.current.has(target)) {
+      const refPos = actorPositionsRef.current.get(target) || zonePosition(currentZone, [0, 0, 0])
+      const characterId = resolveCharacterId(target)
+      if (characterId) {
+        currentActor = { id: target, type: 'character', characterId, position: refPos, animation: 'Idle_A' }
+      } else if (isAnimalModel(target) || isAnimalModel(target.replace(/_\d+$/, ''))) {
+        const baseId = target.replace(/_\d+$/, '')
+        currentActor = { id: target, type: 'animal', modelPath: ANIMAL_MODELS[target] ?? ANIMAL_MODELS[baseId], position: refPos, scale: resolvePropScale(target) || resolvePropScale(baseId) || 2.0 }
+      } else {
+        const propPath = resolvePropPath(target) ?? resolvePropPath(target.replace(/_\d+$/, ''))
+        if (propPath) {
+          currentActor = { id: target, type: 'prop', modelPath: propPath, position: refPos, scale: resolvePropScale(target) || 1 }
+        }
+      }
+    }
+
     if (!currentActor) {
       console.warn(`[ScenePlayer3D] Cannot move unknown actor "${target}" — skipping`)
       return Promise.resolve()
@@ -3766,11 +3873,11 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
     // Use ref for start position to avoid stale closure
     const startPos = actorPositionsRef.current.get(target) || currentActor.position || [0, 0, 0]
 
-    // Distance-based tween duration: ~4 units/sec, clamped 600-2500ms
+    // Distance-based tween duration: ~4 units/sec, clamped 600-2500ms, scaled by playback speed
     const dx = newPos[0] - startPos[0]
     const dz = newPos[2] - startPos[2]
     const distance = Math.sqrt(dx * dx + dz * dz)
-    const duration = durationMs || Math.round(Math.min(Math.max(distance / 4.0 * 1000, 600), 2500))
+    const duration = (durationMs || Math.round(Math.min(Math.max(distance / 4.0 * 1000, 600), 2500)))
 
     // Face movement direction + trigger walking animation for characters
     if (currentActor.type === 'character') {
@@ -3878,10 +3985,12 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
     // Sound effect
     SoundManager3D.play('react')
 
-    // Auto-remove after 2s
+    // Auto-remove after animation completes (duration + stagger + buffer)
+    const animCfg = EFFECT_ANIM_CONFIG[effect]
+    const removeDelay = ((animCfg?.duration ?? 1.8) + 0.7) * 1000
     setTimeout(() => {
       setEffects((prev) => prev.filter((e) => e.id !== effectId))
-    }, 2000)
+    }, removeDelay)
 
     console.log(`[ScenePlayer3D] React effect ${effect} at ${position}`)
   }
@@ -3906,12 +4015,14 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
       startTime: Date.now(),
     }
 
-    setEmotes((prev) => [...prev, newEmote])
+    // Dismiss any existing emote on the same actor to prevent stacking
+    setEmotes((prev) => [...prev.filter((e) => e.actorId !== target), newEmote])
 
-    // Auto-remove after 2s
+    // Speech bubbles (with text) dismiss faster so sequential speakers don't overlap
+    const duration = text ? 7000 : 6500
     setTimeout(() => {
       setEmotes((prev) => prev.filter((e) => e.id !== emoteId))
-    }, 2000)
+    }, duration)
 
     console.log(`[ScenePlayer3D] Emote on ${target}: ${emoji || text || '(none)'}`)
   }
@@ -3993,10 +4104,10 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
     }
     setTextPopups(prev => [...prev, popup])
 
-    // Auto-remove after duration
+    // Auto-remove after duration (scaled)
     setTimeout(() => {
       setTextPopups(prev => prev.filter(p => p.id !== popupId))
-    }, action.duration_ms ?? 2000)
+    }, (action.duration_ms ?? 2000))
 
     console.log(`[ScenePlayer3D] Text popup: "${action.text}" at ${action.position}`)
   }
@@ -4063,10 +4174,11 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
         type: 'prop',
         modelPath: propPath,
         position: worldPos,
-        scale: resolvePropScale(asset) * 0.6,
+        scale: resolvePropScale(asset),
       }
 
       setActors(prev => [...prev, actor])
+      SoundManager3D.play('spawn')
 
       // Tween down
       const endPos = zonePosition(currentZone, [xOffset, 0, startPos[2]])
@@ -4077,8 +4189,9 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
         endPos: endPos,
         style: 'bounce',
         startTime: Date.now(),
-        duration: 1000 + Math.random() * 500,
+        duration: (1000 + Math.random() * 500),
         resolve: () => {
+          SoundManager3D.play('thud')
           // Remove after settling
           setTimeout(() => {
             setActors(prev => prev.filter(a => a.id !== rainId))
@@ -4086,8 +4199,8 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
         },
       }])
 
-      // Stagger spawns
-      await sleep(80, signal).catch(() => {})
+      // Stagger spawns (scaled)
+      await sleep(80 / VIGNETTE_GAP_SPEED, signal).catch(() => {})
     }
 
     console.log(`[ScenePlayer3D] Spawn rain: ${count}x ${asset}`)
@@ -4102,8 +4215,8 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
       a.id === targetId ? { ...a, scale: 0.01 } : a
     ))
 
-    // Animate up over duration
-    const duration = action.duration_ms ?? 800
+    // Animate up over duration (scaled)
+    const duration = (action.duration_ms ?? 800)
     const startTime = Date.now()
     const growInterval = setInterval(() => {
       const elapsed = Date.now() - startTime
@@ -4123,7 +4236,7 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
 
   function handleShrinkPop(action: { target?: string; effect?: string; duration_ms?: number }) {
     const targetId = action.target ?? ''
-    const duration = action.duration_ms ?? 500
+    const duration = (action.duration_ms ?? 500)
     const startTime = Date.now()
 
     // Get current scale
@@ -4198,7 +4311,7 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
         type: 'animal',
         modelPath: ANIMAL_MODELS[targetKey],
         position,
-        scale: 0.8,
+        scale: resolvePropScale(targetKey) || 2.0,
       }
     }
 
@@ -4274,7 +4387,7 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
       <TweenRunner tweens={tweens} setActors={setActors} setTweens={setTweens} />
 
       {/* Stage floor — visible platform showing the 15-mark performance area */}
-      {currentZone && <StageFloor zoneId={currentZone} />}
+      {/* StageFloor hidden */}
 
       {/* Environment backdrop props (SafeModel prevents one bad load from crashing) */}
       {envProps.map((env) => (
@@ -4312,7 +4425,7 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
               <AnimalCharacter3D
                 modelPath={actor.modelPath}
                 position={actor.position}
-                scale={actor.scale || 0.8}
+                scale={actor.scale || 2.0}
                 animation={actor.animation}
               />
             </SafeModel>
@@ -4350,64 +4463,92 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
         return null
       })}
 
-      {/* Effects — enhanced particle burst with pixel-art emoji images */}
-      {effects.map((effect) => (
-        <Html key={effect.id} position={effect.position} center>
-          <div className="particle-burst select-none pointer-events-none" style={{ position: 'relative', width: 140, height: 140 }}>
-            {effect.particles.map((particle, i) => {
-              const count = effect.particles.length
-              const angle = (i / count) * 360 + (Math.random() * 15 - 7.5)
-              const distance = 35 + Math.random() * 25
-              const dx = Math.cos((angle * Math.PI) / 180) * distance
-              const dy = -Math.abs(Math.sin((angle * Math.PI) / 180) * distance) - 15
-              const gravity = 20 // drift down
-              const delay = i * 0.07
-              const rot = Math.random() * 360
-              return particle.type === 'image' ? (
-                <img
-                  key={i}
-                  src={particle.content}
-                  alt=""
-                  className="absolute"
-                  style={{
-                    width: 28, height: 28,
-                    imageRendering: 'pixelated',
-                    left: '50%', top: '50%',
-                    animation: `particle-pop 1.8s ease-out ${delay}s both`,
-                    ['--dx' as string]: `${dx}px`,
-                    ['--dy' as string]: `${dy}px`,
-                    ['--gravity' as string]: `${gravity}px`,
-                    ['--rot' as string]: `${rot}deg`,
-                  }}
-                />
-              ) : (
-                <span
-                  key={i}
-                  className="absolute text-2xl"
-                  style={{
-                    left: '50%', top: '50%',
-                    animation: `particle-pop 1.8s ease-out ${delay}s both`,
-                    ['--dx' as string]: `${dx}px`,
-                    ['--dy' as string]: `${dy}px`,
-                    ['--gravity' as string]: `${gravity}px`,
-                    ['--rot' as string]: `${rot}deg`,
-                  }}
-                >
-                  {particle.content}
-                </span>
-              )
-            })}
-          </div>
-          <style>{`
-            @keyframes particle-pop {
-              0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); opacity: 0; }
-              15% { transform: translate(-50%, -50%) scale(1.4) rotate(calc(var(--rot) * 0.3)); opacity: 1; }
-              50% { transform: translate(calc(-50% + var(--dx) * 0.6), calc(-50% + var(--dy) * 0.6)) scale(1.1) rotate(calc(var(--rot) * 0.7)); opacity: 1; }
-              100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy) + var(--gravity))) scale(0.3) rotate(var(--rot)); opacity: 0; }
-            }
-          `}</style>
-        </Html>
-      ))}
+      {/* Effects — CSS orbs for elemental, pixel-art for emotions, Unicode fallback */}
+      {effects.map((effect) => {
+        const animCfg = EFFECT_ANIM_CONFIG[effect.type]
+        const effectGravity = animCfg?.gravity ?? 25
+        const effectDuration = animCfg?.duration ?? 1.8
+        const effectDistance = animCfg?.distance ?? 50
+
+        return (
+          <Html key={effect.id} position={effect.position} center>
+            <div className="particle-burst select-none pointer-events-none" style={{ position: 'relative', width: 200, height: 200 }}>
+              {/* Double the particles for fuller bursts */}
+              {[...effect.particles, ...effect.particles].map((particle, i) => {
+                const count = effect.particles.length * 2
+                const angle = (i / count) * 360 + (Math.random() * 15 - 7.5)
+                const dist = effectDistance + Math.random() * 35
+                const dx = Math.cos((angle * Math.PI) / 180) * dist
+                const dy = -Math.abs(Math.sin((angle * Math.PI) / 180) * dist) - 15
+                const delay = i * 0.05
+                const rot = Math.random() * 360
+
+                const animStyle: Record<string, string | number> = {
+                  left: '50%', top: '50%',
+                  animation: `particle-pop ${effectDuration}s ease-out ${delay}s both`,
+                  ['--dx' as string]: `${dx}px`,
+                  ['--dy' as string]: `${dy}px`,
+                  ['--gravity' as string]: `${effectGravity}px`,
+                  ['--rot' as string]: `${rot}deg`,
+                }
+
+                // CSS glowing orb particles (elemental effects)
+                if (particle.type === 'css') {
+                  const size = 6 + (i % 4) * 3 // 6, 9, 12, 15px varied sizes
+                  return (
+                    <div
+                      key={i}
+                      className="absolute rounded-full"
+                      style={{
+                        width: size, height: size,
+                        background: `radial-gradient(circle at 30% 30%, white, ${particle.content})`,
+                        boxShadow: `0 0 ${6 + (i % 3) * 4}px ${2 + (i % 2) * 2}px ${particle.content}99`,
+                        ...animStyle,
+                      }}
+                    />
+                  )
+                }
+
+                // Pixel-art emoji image particles
+                if (particle.type === 'image') {
+                  return (
+                    <img
+                      key={i}
+                      src={particle.content}
+                      alt=""
+                      className="absolute"
+                      style={{
+                        width: 36, height: 36,
+                        imageRendering: 'pixelated',
+                        ...animStyle,
+                      }}
+                    />
+                  )
+                }
+
+                // Unicode emoji particles
+                return (
+                  <span
+                    key={i}
+                    className="absolute text-3xl"
+                    style={animStyle}
+                  >
+                    {particle.content}
+                  </span>
+                )
+              })}
+            </div>
+            <style>{`
+              @keyframes particle-pop {
+                0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); opacity: 0; }
+                15% { transform: translate(-50%, -50%) scale(1.4) rotate(calc(var(--rot) * 0.3)); opacity: 1; }
+                50% { transform: translate(calc(-50% + var(--dx) * 0.6), calc(-50% + var(--dy) * 0.6)) scale(1.1) rotate(calc(var(--rot) * 0.7)); opacity: 1; }
+                100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy) + var(--gravity))) scale(0.3) rotate(var(--rot)); opacity: 0; }
+              }
+            `}</style>
+          </Html>
+        )
+      })}
 
       {/* Emotes (speech bubbles above actors) — pixel-art bubble images with Unicode fallback */}
       {emotes.map((emote) => {
@@ -4418,21 +4559,21 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
         return (
           <Html key={emote.id} position={emotePos} center>
             <div
-              className="bg-white/90 rounded-full px-3 py-2 shadow-lg select-none pointer-events-none flex items-center gap-1"
-              style={{ animation: 'emote-pop 0.3s ease-out, emote-fade 2s ease-in-out' }}
+              className={`bg-white/90 shadow-lg select-none pointer-events-none flex items-center ${emote.text ? 'rounded-2xl px-6 py-4 gap-3' : 'rounded-full p-3 justify-center'}`}
+              style={{ border: '3px solid rgba(74, 144, 217, 0.3)', animation: `emote-pop 0.3s ease-out, emote-fade ${emote.text ? '6.5s' : '6s'} ease-in-out`, ...(emote.text ? { maxWidth: '960px', minWidth: '320px' } : {}) }}
             >
               {emote.emoji && (
                 emojiImagePath ? (
                   <img
                     src={emojiImagePath}
                     alt={emote.emoji}
-                    style={{ width: 48, height: 48, imageRendering: 'pixelated' }}
+                    style={emote.text ? { width: 80, height: 80, imageRendering: 'pixelated' } : { width: 56, height: 56, imageRendering: 'pixelated' }}
                   />
                 ) : (
-                  <span className="text-2xl">{emote.emoji}</span>
+                  <span className={emote.text ? 'text-4xl' : 'text-3xl'}>{emote.emoji}</span>
                 )
               )}
-              {emote.text && <span className="text-gray-800 font-semibold text-base">{emote.text}</span>}
+              {emote.text && <span className="text-gray-800 font-bold text-xl">{emote.text}</span>}
             </div>
             <style>{`
               @keyframes emote-pop {
@@ -4441,7 +4582,7 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
                 100% { transform: scale(1); }
               }
               @keyframes emote-fade {
-                0%, 70% { opacity: 1; }
+                0%, 80% { opacity: 1; }
                 100% { opacity: 0; }
               }
             `}</style>
@@ -4464,6 +4605,10 @@ export default function ScenePlayer3D({ script, vignetteSteps, taskId, onComplet
                 fontWeight: 'bold',
                 color: 'white',
                 textShadow: '0 2px 8px rgba(0,0,0,0.7), 0 0 20px rgba(255,255,255,0.3)',
+                background: 'rgba(30, 19, 55, 0.8)',
+                padding: '10px 24px',
+                borderRadius: '16px',
+                border: '2px solid rgba(124, 58, 237, 0.4)',
                 animation: 'text-popup-anim 2s ease-out forwards',
               }}
             >

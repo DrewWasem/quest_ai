@@ -56,7 +56,7 @@ Judges evaluate **three things** in this order:
 
 **Structure:**
 ```markdown
-# Prompt Quest
+# Quest AI
 
 > AI-powered 3D game that teaches kids descriptive thinking through play.
 > Built solo in 7 days for the Claude Code Hackathon.
@@ -118,7 +118,7 @@ MIT
 ```
 Draft:
 
-Prompt Quest is an AI-powered 3D game that teaches kids (ages 7-11)
+Quest AI is an AI-powered 3D game that teaches kids (ages 7-11)
 descriptive thinking through play. Instead of typing into a chatbot,
 kids describe scenes and watch them come alive in a medieval village
 world with 27 animated characters and thousands of 3D props.
@@ -127,7 +127,7 @@ world with 27 animated characters and thousands of 3D props.
 and abstract. Kids learn by doing, not by reading feedback about their
 "prompts."
 
-[Solution] In Prompt Quest, a kid might type "the skeleton tries to
+[Solution] In Quest AI, a kid might type "the skeleton tries to
 juggle three birthday cakes while riding a unicycle" and Claude Opus
 4.6 generates a scene script — spawning characters, placing props,
 triggering animations, and writing a funny narration. The 3D scene
@@ -314,9 +314,9 @@ This is unusual for a hackathon project and shows deep Claude Code expertise.
 **Voiceover:**
 > "Most AI tools for kids look like this — type something, read a wall of text back. But kids ages 7 to 11 don't learn from text. They learn from *doing* — from seeing their ideas come alive and trying again when something funny happens."
 >
-> "So I built Prompt Quest."
+> "So I built Quest AI."
 
-**Screen:** Cut to the Prompt Quest title screen — character selection visible.
+**Screen:** Cut to the Quest AI title screen — character selection visible.
 
 ---
 
@@ -409,7 +409,7 @@ This is unusual for a hackathon project and shows deep Claude Code expertise.
 >
 > *[Beat]*
 >
-> "This is Prompt Quest."
+> "This is Quest AI."
 
 **Screen:** Hold on the village overview for 2-3 seconds. End.
 

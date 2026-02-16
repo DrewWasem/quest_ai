@@ -1,4 +1,4 @@
-# Three.js 3D Migration Plan — Prompt Quest
+# Three.js 3D Migration Plan — Quest AI
 
 **Created:** 2026-02-10
 **Last Updated:** 2026-02-11

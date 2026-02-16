@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import R3FGame from './game/R3FGame';
 import ScenePlayer3D from './game/ScenePlayer3D';
 import PromptInput from './components/PromptInput';
@@ -9,19 +9,22 @@ import TitleScreen from './components/TitleScreen';
 import { useGameStore } from './stores/gameStore';
 import { preloadAllAnimations } from './game/AnimationController';
 import { SoundManager3D } from './game/SoundManager3D';
+import { signalVignetteComplete } from './utils/zone-demo-runner';
+import { signalShowcaseVignetteComplete } from './utils/demo-runner';
 import { useGLTF } from '@react-three/drei';
 import { CHARACTERS, ASSET_BASE } from './data/asset-manifest';
 import { PLAYER_CHARACTERS } from './data/player-characters';
 import { WORLDS } from './data/worlds';
+import { startPendingDemo } from './utils/demo-runner';
+import { startPendingZoneDemo } from './utils/zone-demo-runner';
 import { BADGES } from './services/badge-system';
-import { getQuestStage, getLevel4Stage, getLevel5Stage } from './data/quest-stages';
+import { getQuestStage, getQuestStages, getLevel4Stage, getLevel5Stage } from './data/quest-stages';
 import Level4Input from './components/Level4Input';
 import Level5Input from './components/Level5Input';
 import CameraControls from './components/CameraControls';
 import { Minimap } from './game/Minimap';
 import ControlsOverlay from './components/ControlsOverlay';
 import BadgeToast from './components/BadgeToast';
-import { CompassRose } from './game/CompassRose';
 import ScreenshotButton from './components/ScreenshotButton';
 import SettingsPanel from './components/SettingsPanel';
 
@@ -34,10 +37,21 @@ export default function App() {
   const isTransitioning = useGameStore((s) => s.isTransitioning);
   const badges = useGameStore((s) => s.badges);
   const [loading3D, setLoading3D] = useState(true);
-  const [expanded, setExpanded] = useState(false);
+  const [expanded] = useState(false);
   const setSelectedCharacter = useGameStore((s) => s.setSelectedCharacter);
-  const [started, setStarted] = useState(false);
+
+  // Auto-skip title screen and intro for any demo mode (?demo=showcase or ?demo=zone-name)
+  const isDemoMode = useMemo(() => !!new URLSearchParams(window.location.search).get('demo'), []);
+  const [started, setStarted] = useState(isDemoMode);
   const [playingIntro, setPlayingIntro] = useState(false);
+  const [demoWaitingForClick, setDemoWaitingForClick] = useState(isDemoMode);
+
+  const handleDemoStart = useCallback(() => {
+    SoundManager3D.unlockAudio();
+    setDemoWaitingForClick(false);
+    startPendingDemo();
+    startPendingZoneDemo();
+  }, []);
 
   // Get the current quest stage (if any) for Mad Libs mode
   const stageNumber = useGameStore(s => s.stageNumbers[s.currentZone ?? ''] ?? 1);
@@ -57,8 +71,24 @@ export default function App() {
     } catch {
       // Preload is best-effort
     }
+    // Demo mode: pick default character so village renders immediately
+    if (isDemoMode) {
+      setSelectedCharacter(PLAYER_CHARACTERS[0].id);
+    }
     const timer = setTimeout(() => setLoading3D(false), 2000);
     return () => clearTimeout(timer);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Listen for intro restart (from intro-runner.ts)
+  useEffect(() => {
+    const handleRestart = () => { setStarted(true); setPlayingIntro(true); };
+    const handleSkip = () => setPlayingIntro(false);
+    window.addEventListener('restart-intro', handleRestart);
+    window.addEventListener('skip-intro', handleSkip);
+    return () => {
+      window.removeEventListener('restart-intro', handleRestart);
+      window.removeEventListener('skip-intro', handleSkip);
+    };
   }, []);
 
   // Background music — play in village, stop in zones so SFX are clear
@@ -76,9 +106,33 @@ export default function App() {
 
   return (
     <ErrorBoundary>
+      {/* Demo mode: click-to-start overlay (unlocks browser audio) */}
+      {demoWaitingForClick && (
+        <div
+          onClick={handleDemoStart}
+          className="fixed inset-0 z-[9999] flex items-center justify-center cursor-pointer"
+          style={{ background: 'rgba(15, 10, 26, 0.7)', backdropFilter: 'blur(4px)' }}
+        >
+          <div className="text-center">
+            <div className="text-5xl mb-4" style={{
+              background: 'linear-gradient(to right, #4A90D9, #FF8C42, #F5C842)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontFamily: 'Fredoka, sans-serif',
+              fontWeight: 700,
+            }}>QuestAI</div>
+            <div className="text-white/90 text-xl font-heading animate-pulse">Click anywhere to start demo</div>
+          </div>
+        </div>
+      )}
+
       {/* TitleScreen overlays the canvas while world preloads behind it */}
       {!started && (
-        <TitleScreen onSelectCharacter={(id) => { setSelectedCharacter(id); setStarted(true); setPlayingIntro(true); }} />
+        <TitleScreen onSelectCharacter={(id) => {
+          setSelectedCharacter(id);
+          // Wait a frame so the character model swaps before the screen becomes visible
+          requestAnimationFrame(() => { setStarted(true); setPlayingIntro(true); });
+        }} />
       )}
 
       <div className={`flex flex-col h-screen bg-quest-page-bg stars-bg-light ${!started ? 'invisible' : ''}`}>
@@ -86,12 +140,11 @@ export default function App() {
         <header className={`relative px-5 py-3 flex items-center justify-between z-10 ${expanded || playingIntro ? 'hidden' : ''}`}>
           <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-quest-purple/30 to-transparent" />
 
-          <div className="font-display text-2xl font-bold flex items-center gap-2">
-            <span className="text-xl animate-sparkle">{'\u{2728}'}</span>
-            <span className="bg-gradient-to-r from-quest-purple via-quest-orange to-quest-yellow bg-clip-text text-transparent">
-              Quest AI
-            </span>
-          </div>
+          <span className="font-heading font-bold text-2xl" style={{
+            background: 'linear-gradient(to right, #4A90D9, #FF8C42, #F5C842)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}>QuestAI</span>
 
           <div className="flex items-center gap-3">
             {/* Badge tray — small icons showing earned badges */}
@@ -123,6 +176,28 @@ export default function App() {
             {world && (
               <span className="text-sm font-heading font-bold text-quest-text-dark bg-white/80 px-3 py-1.5 rounded-xl border border-quest-purple/20 flex items-center gap-2">
                 <span>{world.emoji} {world.label}</span>
+                {currentZone && (() => {
+                  const madLibStages = getQuestStages(currentZone).length;
+                  const totalStages = madLibStages + 2;
+                  const labels = [
+                    ...Array.from({ length: madLibStages }, (_, i) => `Lv${i + 1}`),
+                    'Free Text',
+                    'Full Prompt',
+                  ];
+                  return (
+                    <select
+                      value={stageNumber}
+                      onChange={(e) => useGameStore.getState().setStage(currentZone, Number(e.target.value))}
+                      className="text-xs bg-quest-purple/10 border border-quest-purple/30 rounded-lg px-2 py-0.5 text-quest-text-dark font-heading font-bold cursor-pointer hover:bg-quest-purple/20 focus:outline-none focus:ring-1 focus:ring-quest-purple/50"
+                    >
+                      {Array.from({ length: totalStages }, (_, i) => (
+                        <option key={i + 1} value={i + 1}>
+                          {labels[i]} {i + 1 === stageNumber ? '\u2022' : ''}
+                        </option>
+                      ))}
+                    </select>
+                  );
+                })()}
               </span>
             )}
           </div>
@@ -141,23 +216,14 @@ export default function App() {
                   script={lastScript}
                   vignetteSteps={vignetteSteps}
                   taskId={currentTask}
-                  onComplete={() => console.log('[App] Scene complete')}
+                  onComplete={() => { console.log('[App] Scene complete'); signalVignetteComplete(); signalShowcaseVignetteComplete(); }}
                 />
               </R3FGame>
               {!currentZone && !isTransitioning && !playingIntro && <CameraControls />}
               {!playingIntro && <Minimap />}
-              {!currentZone && !isTransitioning && !playingIntro && <CompassRose />}
               {!currentZone && !playingIntro && <ControlsOverlay />}
 
-              {/* Screenshot + Expand / Collapse toggle */}
               {!playingIntro && <ScreenshotButton />}
-              {!playingIntro && <button
-                onClick={() => setExpanded(e => !e)}
-                className="absolute top-2 right-2 z-20 bg-black/50 hover:bg-black/70 text-white rounded-lg px-2 py-1.5 text-sm backdrop-blur-sm transition-colors"
-                title={expanded ? 'Collapse' : 'Expand'}
-              >
-                {expanded ? '\u{2199}\u{FE0F}' : '\u{2197}\u{FE0F}'}
-              </button>}
             </div>
           </div>
 

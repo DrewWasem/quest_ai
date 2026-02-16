@@ -9,7 +9,7 @@ import { useGameStore } from '../stores/gameStore';
 import { useTTS } from '../hooks/useTTS';
 import type { Level4Stage, Vignette } from '../types/madlibs';
 import { buildVignetteScript, resolveLevel4Vignette } from '../services/vignette-resolver';
-import { parseLevel4Text } from '../services/text-parser';
+import { parseLevel4Text, extractValidTags } from '../services/text-parser';
 import { getLoadingVignette } from '../data/loading-vignettes';
 import FeedbackCard from './FeedbackCard';
 
@@ -54,8 +54,9 @@ export default function Level4Input({ stage }: Level4InputProps) {
     setVignetteSteps(loading.steps);
 
     try {
-      // Parse free text into tags via Haiku
-      const parsed = await parseLevel4Text(actionText, selectedCharacter);
+      // Parse free text into tags via Haiku (with quest-specific vocabulary)
+      const validTags = extractValidTags([...stage.vignettes, stage.defaultVignette]);
+      const parsed = await parseLevel4Text(actionText, selectedCharacter, validTags);
       setIsParsing(false);
 
       // Match to existing vignette

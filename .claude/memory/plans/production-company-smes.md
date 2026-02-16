@@ -1,4 +1,4 @@
-# Plan: Prompt Quest Production Company — SME Agent System
+# Plan: Quest AI Production Company — SME Agent System
 
 **Status:** COMPLETE — All 4 hackathon SMEs built + validated
 **Created:** 2026-02-11
@@ -8,7 +8,7 @@
 
 ## Vision
 
-Model Prompt Quest's content creation pipeline as a **theater production company**. Each agent is a specialist role in the company. Together they create, review, and iterate on game content — stories, characters, scenes, prompts, and educational scaffolding.
+Model Quest AI's content creation pipeline as a **theater production company**. Each agent is a specialist role in the company. Together they create, review, and iterate on game content — stories, characters, scenes, prompts, and educational scaffolding.
 
 **Theater ≠ Film**: The game is live, interactive, and repeatable. The audience (player) changes what happens on stage. Background actors exist independently of the plot. The set lives and breathes.
 

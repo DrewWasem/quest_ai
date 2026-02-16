@@ -15,3 +15,6 @@ Project architecture, domain knowledge, business logic, and reference material.
 | [Audio System Architecture](audio-system-architecture.md) | audio, sound, music, sfx, ogg, web-audio, kenney | 2026-02-14 | 2026-02-14 |
 | [Kenney All-in-1 Deployment](kenney-all-in-1-deployment.md) | assets, kenney, 3d, audio, deployment, glb, ogg | 2026-02-14 | 2026-02-15 |
 | [Level 4/5 Architecture](level-4-5-architecture.md) | architecture, levels, progression, free-text, api, haiku, sonnet, level-4, level-5 | 2026-02-14 | 2026-02-14 |
+| [Demo Runner System](demo-runner-system.md) | demo, vignettes, showcase, playback, automation, video-recording | 2026-02-16 | 2026-02-16 |
+| [Logo Files Inventory](logo-files.md) | logo, assets, branding, quest-ai, transparent-backgrounds | 2026-02-16 | 2026-02-16 |
+| [Video End Card Design](video-end-card-design.md) | video, end-card, layout, design, hackathon | 2026-02-16 | 2026-02-16 |

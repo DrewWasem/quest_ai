@@ -16,7 +16,7 @@ import {
   CHARACTER_SPEAK, CHARACTER_THINK, DIALOGUE, EMOTIONAL_REACT, CHARACTER_EXCLAIM,
   NARRATOR, IMPACT, CELEBRATION, DISAPPOINTMENT, DRAMATIC_PAUSE,
   DANCE, ANNOUNCE, FLASH, BOUNCE_ENTRANCE, CROWD_CHEER,
-} from '../movement-templates';
+GROUP_ENTER_LEFT, GROUP_ENTER_RIGHT, } from '../movement-templates';
 
 // ─── STAGE 1 VIGNETTES ──────────────────────────────────────────────────────
 
@@ -54,7 +54,7 @@ const CAKE_VIGNETTES: Vignette[] = [
         { action: 'sfx', sound: 'magic' },
         { action: 'camera_shake', intensity: 0.3, duration: 1.5 },
       ], delayAfter: 1.2 },
-      ...OBJECT_GROW_REVEAL('cake_birthday', 'cs-center'),
+      ...OBJECT_GROW_REVEAL('cake_birthday', 'us-center'),
       ...IMPACT('white', 0.6),
       { parallel: [
         { action: 'text_popup', text: 'MAGIC CAKE!', position: 'top', size: 'huge' },
@@ -62,8 +62,7 @@ const CAKE_VIGNETTES: Vignette[] = [
       ], delayAfter: 0.5 },
       // Beat 4: CONSEQUENCE — reactions
       ...EMOTIONAL_REACT('skeleton_warrior', 'celebrating', 'cs-left'),
-      ...ENTER_FROM_RIGHT('skeleton_minion', 'ds-right'),
-      ...ENTER_FROM_RIGHT('knight', 'ds-far-right'),
+      ...GROUP_ENTER_RIGHT([['skeleton_minion', 'ds-right'], ['knight', 'ds-far-right']]),
       // Beat 5: RESOLUTION — celebration + narrator
       ...CELEBRATION(['skeleton_warrior', 'mage', 'skeleton_minion', 'knight'], 'cs-center'),
       ...NARRATOR("You said CAKE and MAGIC SHOW — both details made this scene spectacular!"),
@@ -88,8 +87,8 @@ const CAKE_VIGNETTES: Vignette[] = [
       ...NARRATOR("Time to light the candles... but these aren't ordinary candles!"),
       ...ENTER_FROM_LEFT('skeleton_warrior', 'ds-center'),
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center' },
-        { action: 'spawn', asset: 'cake_birthday', position: 'cs-center' },
+        { action: 'spawn', asset: 'table_long', position: 'us-center' },
+        { action: 'spawn', asset: 'cake_birthday', position: 'us-center' },
         { action: 'spawn', asset: 'stars', position: 'top' },
         { action: 'spawn', asset: 'heart', position: 'us-left' },
         { action: 'spawn', asset: 'heart', position: 'us-right' },
@@ -143,17 +142,16 @@ const CAKE_VIGNETTES: Vignette[] = [
       // Beat 1: SETUP
       ...NARRATOR("The birthday cake has a special talent..."),
       ...ENTER_FROM_LEFT('skeleton_warrior', 'cs-center'),
-      ...OBJECT_GROW_REVEAL('cake_birthday', 'cs-center', 1.3),
+      ...OBJECT_GROW_REVEAL('cake_birthday', 'us-center', 1.3),
       ...OBJECT_GROW_REVEAL('present', 'cs-left'),
-      ...OBJECT_GROW_REVEAL('muffin', 'cs-right'),
-      ...OBJECT_GROW_REVEAL('macaron_blue', 'cs-far-left'),
-      ...OBJECT_GROW_REVEAL('macaron_yellow', 'cs-far-right'),
+      ...OBJECT_GROW_REVEAL('muffin', 'us-right'),
+      ...OBJECT_GROW_REVEAL('macaron_blue', 'us-far-left'),
+      ...OBJECT_GROW_REVEAL('macaron_yellow', 'us-far-right'),
       { parallel: [
         { action: 'sfx', sound: 'bell' },
       ], delayAfter: 0.5 },
       // Beat 2: INTENT
-      ...ENTER_FROM_RIGHT('skeleton_mage', 'ds-left'),
-      ...ENTER_FROM_RIGHT('skeleton_minion', 'ds-right'),
+      ...GROUP_ENTER_RIGHT([['skeleton_mage', 'ds-left'], ['skeleton_minion', 'ds-right']]),
       ...CHARACTER_SPEAK('skeleton_mage', 'musical', "Listen... the cake is SINGING!"),
       // Beat 3: ACTION
       { parallel: [
@@ -196,8 +194,8 @@ const CAKE_VIGNETTES: Vignette[] = [
       // Beat 1: SETUP
       ...NARRATOR("There's only ONE slice left... who gets it?!"),
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center' },
-        { action: 'spawn', asset: 'cake_birthday', position: 'cs-center' },
+        { action: 'spawn', asset: 'table_long', position: 'us-center' },
+        { action: 'spawn', asset: 'cake_birthday', position: 'us-center' },
       ], delayAfter: 0.5 },
       ...ENTER_FROM_LEFT('skeleton_warrior', 'cs-left'),
       ...ENTER_FROM_RIGHT('knight', 'cs-right'),
@@ -247,8 +245,8 @@ const CAKE_VIGNETTES: Vignette[] = [
       ...NARRATOR("The DJ puts on a beat and something magical happens..."),
       ...ENTER_FROM_LEFT('skeleton_warrior', 'ds-left'),
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center' },
-        { action: 'spawn', asset: 'cake_birthday', position: 'cs-center' },
+        { action: 'spawn', asset: 'table_long', position: 'us-center' },
+        { action: 'spawn', asset: 'cake_birthday', position: 'us-center' },
         { action: 'spawn', asset: 'chair', position: 'cs-left' },
         { action: 'spawn', asset: 'chair', position: 'cs-right' },
         { action: 'spawn', asset: 'banner_blue', position: 'top' },
@@ -297,16 +295,15 @@ const CAKE_VIGNETTES: Vignette[] = [
       // Beat 1: SETUP
       ...NARRATOR("Time for party games! But this one involves the CAKE..."),
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center' },
-        { action: 'spawn', asset: 'cake_birthday', position: 'cs-center' },
+        { action: 'spawn', asset: 'table_long', position: 'us-center' },
+        { action: 'spawn', asset: 'cake_birthday', position: 'us-center' },
         { action: 'spawn', asset: 'gem_blue', position: 'us-left' },
         { action: 'spawn', asset: 'gem_green', position: 'us-center' },
         { action: 'spawn', asset: 'gem_pink', position: 'us-right' },
         { action: 'spawn', asset: 'bench', position: 'ds-far-left' },
       ], delayAfter: 0.5 },
       ...ENTER_FROM_LEFT('skeleton_warrior', 'ds-center'),
-      ...ENTER_FROM_RIGHT('skeleton_minion', 'ds-left'),
-      ...ENTER_FROM_RIGHT('rogue', 'ds-right'),
+      ...GROUP_ENTER_RIGHT([['skeleton_minion', 'ds-left'], ['rogue', 'ds-right']]),
       // Beat 2: INTENT
       ...CHARACTER_SPEAK('skeleton_warrior', 'excited', "Pin the candle on the cake!"),
       ...CHARACTER_THINK('rogue', 'sneaky'),
@@ -358,8 +355,8 @@ const PIZZA_VIGNETTES: Vignette[] = [
       ...NARRATOR("The birthday skeleton is hungry... but there's only ONE pizza!"),
       ...ENTER_FROM_LEFT('skeleton_warrior', 'ds-center'),
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center' },
-        { action: 'spawn', asset: 'pizza', position: 'cs-center' },
+        { action: 'spawn', asset: 'table_long', position: 'us-center' },
+        { action: 'spawn', asset: 'pizza', position: 'us-center' },
         { action: 'spawn', asset: 'pancakes', position: 'us-left' },
         { action: 'spawn', asset: 'donut_sprinkles', position: 'us-right' },
         { action: 'spawn', asset: 'candy_pink', position: 'us-far-left' },
@@ -409,7 +406,7 @@ const PIZZA_VIGNETTES: Vignette[] = [
       ...NARRATOR("The knight brought a VERY special pizza... with explosive toppings!"),
       ...ENTER_FROM_LEFT('skeleton_warrior', 'ds-center'),
       { parallel: [
-        { action: 'spawn', asset: 'pizza', position: 'cs-center' },
+        { action: 'spawn', asset: 'pizza', position: 'us-center' },
         { action: 'sfx', sound: 'bell' },
       ], delayAfter: 0.5 },
       // Beat 2: INTENT
@@ -505,6 +502,9 @@ const PIZZA_VIGNETTES: Vignette[] = [
         { action: 'react', effect: 'hearts-float', position: 'center' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_minion', 'excited', 'Me too me too!'),
+    ...CHARACTER_SPEAK('clown', 'excited', 'Comedy GOLD!'),
       ...NARRATOR("Pizza + Music = total chaos! Sometimes wild combos create memorable madness!"),
     ],
     feedback: {
@@ -526,9 +526,9 @@ const PIZZA_VIGNETTES: Vignette[] = [
       // Beat 1: SETUP
       ...NARRATOR("Two warriors face off... and pizza starts flying!"),
       { parallel: [
-        { action: 'spawn', asset: 'pizza', position: 'cs-center' },
-        { action: 'spawn', asset: 'pizza', position: 'cs-left' },
-        { action: 'spawn', asset: 'pizza', position: 'cs-right' },
+        { action: 'spawn', asset: 'pizza', position: 'us-center' },
+        { action: 'spawn', asset: 'pizza', position: 'us-left' },
+        { action: 'spawn', asset: 'pizza', position: 'us-right' },
         { action: 'sfx', sound: 'bell' },
       ], delayAfter: 0.5 },
       ...ENTER_FROM_LEFT('skeleton_warrior', 'ds-left'),
@@ -563,6 +563,8 @@ const PIZZA_VIGNETTES: Vignette[] = [
         { action: 'react', effect: 'laugh-tears', position: 'center' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('clown', 'excited', 'Time for the big show!'),
       ...NARRATOR("Pizza + Combat = messy food war! Not every combo is elegant!"),
     ],
     feedback: {
@@ -585,8 +587,8 @@ const PIZZA_VIGNETTES: Vignette[] = [
       ...NARRATOR("The DJ spins a beat... time for the legendary PIZZA SHUFFLE!"),
       ...ENTER_FROM_LEFT('skeleton_warrior', 'cs-center'),
       { parallel: [
-        { action: 'spawn', asset: 'pizza', position: 'cs-left' },
-        { action: 'spawn', asset: 'pizza', position: 'cs-right' },
+        { action: 'spawn', asset: 'pizza', position: 'us-left' },
+        { action: 'spawn', asset: 'pizza', position: 'us-right' },
         { action: 'sfx', sound: 'bell' },
       ], delayAfter: 0.5 },
       // Beat 2: INTENT
@@ -595,9 +597,7 @@ const PIZZA_VIGNETTES: Vignette[] = [
       ...CHARACTER_SPEAK('clown', 'playful', "Everyone grab a pizza box and DANCE!"),
       // Beat 3: ACTION — dancing
       { parallel: [
-        { action: 'animate', character: 'skeleton_warrior', anim: 'Cheering' },
         { action: 'animate', character: 'skeleton_minion', anim: 'spin_attack' },
-        { action: 'animate', character: 'clown', anim: 'Cheering' },
         { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
         { action: 'text_popup', text: 'PIZZA SHUFFLE!', position: 'top', size: 'large' },
         { action: 'sfx', sound: 'magic' },
@@ -608,6 +608,9 @@ const PIZZA_VIGNETTES: Vignette[] = [
       // Beat 4: CONSEQUENCE
       ...EMOTIONAL_REACT('skeleton_warrior', 'celebrating', 'cs-center'),
       // Beat 5: RESOLUTION
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'My bones are rattling with excitement!'),
+    ...CHARACTER_SPEAK('skeleton_minion', 'excited', 'Rattle rattle!'),
       ...CELEBRATION(['skeleton_warrior', 'skeleton_minion', 'clown'], 'cs-center'),
       ...NARRATOR("Pizza + Dance = the ultimate food dance party! Mix creativity with fun!"),
     ],
@@ -675,7 +678,7 @@ const FEAST_VIGNETTES: Vignette[] = [
       // Beat 1: SETUP — narrator + entrances
       ...NARRATOR("The birthday skeleton wants a FEAST... the wizard will make it happen!"),
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center' },
+        { action: 'spawn', asset: 'table_long', position: 'us-center' },
         { action: 'spawn', asset: 'christmas_tree', position: 'us-far-left' },
         { action: 'spawn', asset: 'present_xmas', position: 'us-left' },
         { action: 'spawn', asset: 'serving_tray', position: 'us-right' },
@@ -697,9 +700,9 @@ const FEAST_VIGNETTES: Vignette[] = [
       ], delayAfter: 1.0 },
       ...OBJECT_RAIN('cake_birthday', 2, 'center'),
       ...OBJECT_RAIN('pizza', 3, 'wide'),
-      ...OBJECT_GROW_REVEAL('cupcake', 'cs-left', 1.2),
-      ...OBJECT_GROW_REVEAL('cupcake', 'cs-right', 1.2),
-      ...OBJECT_GROW_REVEAL('pie', 'ds-left'),
+      ...OBJECT_GROW_REVEAL('cupcake', 'us-left', 1.2),
+      ...OBJECT_GROW_REVEAL('cupcake', 'us-right', 1.2),
+      ...OBJECT_GROW_REVEAL('pie', 'us-left'),
       { parallel: [
         { action: 'text_popup', text: 'ENDLESS FEAST!', position: 'top', size: 'huge' },
         { action: 'sfx', sound: 'cooking' },
@@ -712,6 +715,8 @@ const FEAST_VIGNETTES: Vignette[] = [
       ...CHARACTER_EXCLAIM('skeleton_warrior', 'excited', "SO MUCH FOOD!"),
       ...BOUNCE_ENTRANCE('skeleton_minion', 'ds-right', 'right'),
       // Beat 5: RESOLUTION — celebration + narrator
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_minion', 'excited', 'Me too me too!'),
       ...CELEBRATION(['skeleton_warrior', 'mage'], 'cs-center'),
       ...NARRATOR("Feast + Magic Show = infinite food! Perfect details make perfect parties!"),
     ],
@@ -734,25 +739,24 @@ const FEAST_VIGNETTES: Vignette[] = [
       // Beat 1: SETUP — narrator + setup
       ...NARRATOR("The ULTIMATE birthday party... with a feast AND fireworks!"),
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center' },
-        { action: 'spawn', asset: 'table_long', position: 'cs-left' },
-        { action: 'spawn', asset: 'table_long', position: 'cs-right' },
+        { action: 'spawn', asset: 'table_long', position: 'us-center' },
+        { action: 'spawn', asset: 'table_long', position: 'us-left' },
+        { action: 'spawn', asset: 'table_long', position: 'us-right' },
         { action: 'spawn', asset: 'pastry_stand', position: 'us-left' },
         { action: 'spawn', asset: 'display_case', position: 'us-right' },
         { action: 'sfx', sound: 'bell' },
       ], delayAfter: 0.6 },
-      ...ENTER_FROM_LEFT('skeleton_warrior', 'ds-center'),
-      ...ENTER_FROM_LEFT('skeleton_mage', 'ds-left'),
+      ...GROUP_ENTER_LEFT([['skeleton_warrior', 'ds-center'], ['skeleton_mage', 'ds-left']]),
       ...CHARGE_IN_LEFT('knight', 'ds-right'),
       // Beat 2: INTENT — wizard prepares
       ...DROP_IN('mage', 'ds-far-right'),
       ...CHARACTER_SPEAK('mage', 'heroic', "Prepare for the LEGENDARY celebration!"),
       // Beat 3: ACTION — feast and fireworks
-      ...OBJECT_GROW_REVEAL('cake_birthday', 'cs-center', 1.5),
-      ...OBJECT_GROW_REVEAL('pizza', 'cs-left'),
-      ...OBJECT_GROW_REVEAL('pie', 'cs-right'),
-      ...OBJECT_GROW_REVEAL('cream_puff', 'cs-far-left'),
-      ...OBJECT_GROW_REVEAL('pretzel', 'cs-far-right'),
+      ...OBJECT_GROW_REVEAL('cake_birthday', 'us-center', 1.5),
+      ...OBJECT_GROW_REVEAL('pizza', 'us-left'),
+      ...OBJECT_GROW_REVEAL('pie', 'us-right'),
+      ...OBJECT_GROW_REVEAL('cream_puff', 'us-far-left'),
+      ...OBJECT_GROW_REVEAL('pretzel', 'us-far-right'),
       { parallel: [
         { action: 'text_popup', text: 'EPIC FEAST!', position: 'top', size: 'huge' },
         { action: 'sfx', sound: 'cooking' },
@@ -782,7 +786,11 @@ const FEAST_VIGNETTES: Vignette[] = [
       ...BOUNCE_ENTRANCE('clown', 'ds-far-left', 'left'),
       // Beat 5: RESOLUTION — ultimate celebration
       ...CROWD_CHEER([]),
-      ...CELEBRATION(['skeleton_warrior', 'skeleton_mage', 'knight', 'mage'], 'center'),
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'My bones are rattling with excitement!'),
+    ...CHARACTER_SPEAK('knight', 'excited', 'A knight never gives up!'),
+    ...CHARACTER_SPEAK('clown', 'excited', 'Time for the big show!'),
+      ...CELEBRATION(['skeleton_warrior', 'skeleton_mage', 'knight', 'mage', 'clown'], 'center'),
       ...NARRATOR("Feast + Fireworks = LEGENDARY! You mastered specificity — this is perfection!"),
     ],
     feedback: {
@@ -804,10 +812,10 @@ const FEAST_VIGNETTES: Vignette[] = [
       // Beat 1: SETUP
       ...NARRATOR("The feast table is set... and it's about to become an ORCHESTRA!"),
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center' },
-        { action: 'spawn', asset: 'cupcake', position: 'cs-left' },
-        { action: 'spawn', asset: 'pie', position: 'cs-right' },
-        { action: 'spawn', asset: 'ice_cream', position: 'cs-far-left' },
+        { action: 'spawn', asset: 'table_long', position: 'us-center' },
+        { action: 'spawn', asset: 'cupcake', position: 'us-left' },
+        { action: 'spawn', asset: 'pie', position: 'us-right' },
+        { action: 'spawn', asset: 'ice_cream', position: 'us-far-left' },
         { action: 'spawn', asset: 'sundae', position: 'cs-far-right' },
         { action: 'spawn', asset: 'guitar', position: 'us-left' },
         { action: 'spawn', asset: 'drums', position: 'us-right' },
@@ -867,9 +875,9 @@ const FEAST_VIGNETTES: Vignette[] = [
       // Beat 1: SETUP
       ...NARRATOR("Two hungry warriors face off... this feast is now a BATTLEGROUND!"),
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center' },
-        { action: 'spawn', asset: 'pizza', position: 'cs-left' },
-        { action: 'spawn', asset: 'cake_birthday', position: 'cs-right' },
+        { action: 'spawn', asset: 'table_long', position: 'us-center' },
+        { action: 'spawn', asset: 'pizza', position: 'us-left' },
+        { action: 'spawn', asset: 'cake_birthday', position: 'us-right' },
         { action: 'sfx', sound: 'bell' },
       ], delayAfter: 0.6 },
       ...ENTER_FROM_LEFT('skeleton_warrior', 'ds-left'),
@@ -923,8 +931,8 @@ const FEAST_VIGNETTES: Vignette[] = [
       // Beat 1: SETUP
       ...NARRATOR("The feast is ready... now it's time to DANCE around it!"),
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center' },
-        { action: 'spawn', asset: 'cake_birthday', position: 'cs-center' },
+        { action: 'spawn', asset: 'table_long', position: 'us-center' },
+        { action: 'spawn', asset: 'cake_birthday', position: 'us-center' },
         { action: 'sfx', sound: 'bell' },
       ], delayAfter: 0.5 },
       ...ENTER_FROM_LEFT('skeleton_warrior', 'ds-left'),
@@ -958,6 +966,8 @@ const FEAST_VIGNETTES: Vignette[] = [
         { action: 'react', effect: 'hearts-float', position: 'center' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'SKULL-tastic!'),
       ...NARRATOR("Feast + Dance = celebration around food! The party surrounds the feast!"),
     ],
     feedback: {
@@ -979,7 +989,7 @@ const FEAST_VIGNETTES: Vignette[] = [
       // Beat 1: SETUP
       ...NARRATOR("The feast is hidden... time for a TREASURE HUNT!"),
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center' },
+        { action: 'spawn', asset: 'table_long', position: 'us-center' },
         { action: 'spawn', asset: 'chest', position: 'cs-left' },
         { action: 'spawn', asset: 'chest', position: 'cs-right' },
         { action: 'sfx', sound: 'bell' },
@@ -999,7 +1009,7 @@ const FEAST_VIGNETTES: Vignette[] = [
         { action: 'animate', character: 'rogue', anim: 'interact' },
         { action: 'sfx', sound: 'click' },
       ], delayAfter: 0.4 },
-      ...OBJECT_GROW_REVEAL('pizza', 'cs-left'),
+      ...OBJECT_GROW_REVEAL('pizza', 'us-left'),
       { parallel: [
         { action: 'react', effect: 'stars-spin', position: 'cs-left' },
         { action: 'sfx', sound: 'coin' },
@@ -1009,7 +1019,7 @@ const FEAST_VIGNETTES: Vignette[] = [
         { action: 'animate', character: 'rogue', anim: 'interact' },
         { action: 'sfx', sound: 'click' },
       ], delayAfter: 0.4 },
-      ...OBJECT_GROW_REVEAL('cake_birthday', 'cs-right'),
+      ...OBJECT_GROW_REVEAL('cake_birthday', 'us-right'),
       // Beat 4: CONSEQUENCE — jackpot!
       { parallel: [
         { action: 'react', effect: 'sparkle-magic', position: 'cs-right' },
@@ -1128,6 +1138,9 @@ const FRUIT_VIGNETTES: Vignette[] = [
       ...FLASH('red', 0.4),
       ...BOUNCE_ENTRANCE('knight', 'ds-far-left', 'left'),
       ...CROWD_CHEER([]),
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('mage', 'excited', 'Spell-tacular!'),
+    ...CHARACTER_SPEAK('knight', 'excited', 'A knight never gives up!'),
       ...CELEBRATION(['skeleton_warrior', 'mage'], 'center'),
     ],
     feedback: {
@@ -1153,8 +1166,7 @@ const FRUIT_VIGNETTES: Vignette[] = [
       { parallel: [{ action: 'spawn', asset: 'peach', position: 'cs-far-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       ...ENTER_FROM_LEFT('skeleton_warrior', 'ds-center'),
       { parallel: [{ action: 'emote', character: 'skeleton_warrior', emoji: 'musical' }], delayAfter: 0.3 },
-      ...ENTER_FROM_RIGHT('skeleton_mage', 'ds-left'),
-      ...ENTER_FROM_RIGHT('skeleton_minion', 'ds-right'),
+      ...GROUP_ENTER_RIGHT([['skeleton_mage', 'ds-left'], ['skeleton_minion', 'ds-right']]),
       { parallel: [
         { action: 'animate', character: 'skeleton_warrior', anim: 'Hammering' },
         { action: 'animate', character: 'skeleton_mage', anim: 'interact' },
@@ -1171,6 +1183,8 @@ const FRUIT_VIGNETTES: Vignette[] = [
         { action: 'crowd_react', characters: 'all', anim: 'Cheering' },
         { action: 'react', effect: 'glow-pulse', position: 'center' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_minion', 'excited', 'Me too me too!'),
     ],
     feedback: {
       title: '🎵 Fruit Orchestra!',
@@ -1241,15 +1255,7 @@ const FRUIT_VIGNETTES: Vignette[] = [
       { parallel: [{ action: 'spawn', asset: 'banana', position: 'us-far-left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       ...ENTER_FROM_LEFT('skeleton_warrior', 'cs-center'),
       { parallel: [{ action: 'emote', character: 'skeleton_warrior', emoji: '💃' }], delayAfter: 0.3 },
-      ...ENTER_FROM_RIGHT('clown', 'ds-left'),
-      ...ENTER_FROM_RIGHT('ninja', 'ds-right'),
-      { parallel: [
-        { action: 'animate', character: 'skeleton_warrior', anim: 'Cheering' },
-        { action: 'animate', character: 'clown', anim: 'Cheering' },
-        { action: 'animate', character: 'ninja', anim: 'Cheering' },
-        { action: 'react', effect: 'sparkle-magic', position: 'us-left' },
-        { action: 'react', effect: 'sparkle-magic', position: 'us-right' },
-      ], delayAfter: 0.6 },
+      ...GROUP_ENTER_RIGHT([['clown', 'ds-left'], ['ninja', 'ds-right']]),
       ...DANCE('skeleton_warrior'),
       ...DANCE('clown'),
       { parallel: [
@@ -1259,6 +1265,9 @@ const FRUIT_VIGNETTES: Vignette[] = [
         { action: 'text_popup', text: '💃 DANCING FRUIT! 💃', position: 'top', size: 'large' },
       ], delayAfter: 0.5 },
       ...FLASH('green', 0.3),
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('clown', 'excited', 'Comedy GOLD!'),
+    ...CHARACTER_SPEAK('ninja', 'excited', 'Shadow strike ready!'),
       ...CELEBRATION(['skeleton_warrior', 'clown', 'ninja'], 'center'),
     ],
     feedback: {
@@ -1282,19 +1291,12 @@ const FRUIT_VIGNETTES: Vignette[] = [
       { parallel: [{ action: 'spawn', asset: 'apple', position: 'cs-center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       ...ENTER_FROM_LEFT('skeleton_warrior', 'ds-center'),
       { parallel: [{ action: 'emote', character: 'skeleton_warrior', emoji: '🎯' }], delayAfter: 0.3 },
-      ...ENTER_FROM_RIGHT('skeleton_minion', 'ds-left'),
-      ...ENTER_FROM_RIGHT('skeleton_mage', 'ds-right'),
+      ...GROUP_ENTER_RIGHT([['skeleton_minion', 'ds-left'], ['skeleton_mage', 'ds-right']]),
       { parallel: [
         { action: 'move', character: 'skeleton_minion', to: 'cs-left', style: 'straight', duration: 0.5 },
         { action: 'animate', character: 'skeleton_minion', anim: 'interact' },
         { action: 'react', effect: 'splash', position: 'cs-center' },
       ], delayAfter: 0.5 },
-      { parallel: [
-        { action: 'animate', character: 'skeleton_minion', anim: 'Cheering' },
-        { action: 'react', effect: 'stars-spin', position: 'cs-left' },
-        { action: 'text_popup', text: '🎯 GOT ONE! 🎯', position: 'center', size: 'large' },
-        { action: 'sfx', sound: 'success' },
-      ], delayAfter: 0.6 },
       ...CELEBRATION(['skeleton_warrior', 'skeleton_mage', 'skeleton_minion'], 'cs-center'),
     ],
     feedback: {
@@ -1405,15 +1407,14 @@ const CANDY_VIGNETTES: Vignette[] = [
     promptScore: 'perfect',
     steps: [
       ...NARRATOR("Candy wrappers make the sweetest music!"),
-      { parallel: [{ action: 'spawn', asset: 'cookie', position: 'cs-left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn', asset: 'cookie', position: 'cs-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'spawn', asset: 'cookie', position: 'us-left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'spawn', asset: 'cookie', position: 'us-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn', asset: 'candy_bucket', position: 'cs-far-left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn', asset: 'macaron', position: 'cs-far-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       { parallel: [{ action: 'spawn', asset: 'guitar', position: 'us-left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       ...ENTER_FROM_LEFT('skeleton_warrior', 'ds-center'),
       { parallel: [{ action: 'emote', character: 'skeleton_warrior', emoji: 'musical' }], delayAfter: 0.3 },
-      ...ENTER_FROM_RIGHT('skeleton_minion', 'ds-left'),
-      ...ENTER_FROM_RIGHT('clown', 'ds-right'),
+      ...GROUP_ENTER_RIGHT([['skeleton_minion', 'ds-left'], ['clown', 'ds-right']]),
       { parallel: [
         { action: 'animate', character: 'skeleton_warrior', anim: 'Hammering' },
         { action: 'animate', character: 'skeleton_minion', anim: 'interact' },
@@ -1427,6 +1428,9 @@ const CANDY_VIGNETTES: Vignette[] = [
         { action: 'react', effect: 'glow-pulse', position: 'center' },
         { action: 'sfx', sound: 'react' },
       ], delayAfter: 0.6 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_minion', 'excited', 'Rattle rattle!'),
+    ...CHARACTER_SPEAK('clown', 'excited', 'HONK HONK! This is hilarious!'),
       ...CELEBRATION(['skeleton_warrior', 'skeleton_minion', 'clown'], 'center'),
     ],
     feedback: {
@@ -1495,11 +1499,10 @@ const CANDY_VIGNETTES: Vignette[] = [
     promptScore: 'chaotic',
     steps: [
       ...NARRATOR("The candy gives everyone a wild sugar rush!"),
-      { parallel: [{ action: 'spawn', asset: 'cookie', position: 'cs-center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'spawn', asset: 'cookie', position: 'us-center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       ...ENTER_FROM_LEFT('skeleton_warrior', 'ds-left'),
       { parallel: [{ action: 'emote', character: 'skeleton_warrior', emoji: '💃' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.3 },
-      ...ENTER_FROM_RIGHT('clown', 'ds-center'),
-      ...ENTER_FROM_RIGHT('skeleton_minion', 'ds-right'),
+      ...GROUP_ENTER_RIGHT([['clown', 'ds-center'], ['skeleton_minion', 'ds-right']]),
       { parallel: [
         { action: 'animate', character: 'skeleton_warrior', anim: 'spin_attack' },
         { action: 'animate', character: 'clown', anim: 'jump_big' },
@@ -1521,6 +1524,9 @@ const CANDY_VIGNETTES: Vignette[] = [
         { action: 'sfx', sound: 'move' },
       ], delayAfter: 0.5 },
       ...FLASH('pink', 0.4),
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('clown', 'excited', 'Comedy GOLD!'),
+    ...CHARACTER_SPEAK('skeleton_minion', 'excited', 'Rattle rattle!'),
       ...CELEBRATION(['skeleton_warrior', 'clown', 'skeleton_minion'], 'center'),
     ],
     feedback: {
@@ -1540,9 +1546,9 @@ const CANDY_VIGNETTES: Vignette[] = [
     promptScore: 'perfect',
     steps: [
       ...NARRATOR("Pin the wrapper on the candy — but watch out, it's sticky!"),
-      { parallel: [{ action: 'spawn', asset: 'cookie', position: 'cs-center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn', asset: 'cookie', position: 'cs-left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
-      { parallel: [{ action: 'spawn', asset: 'cookie', position: 'cs-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'spawn', asset: 'cookie', position: 'us-center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'spawn', asset: 'cookie', position: 'us-left' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
+      { parallel: [{ action: 'spawn', asset: 'cookie', position: 'us-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       ...ENTER_FROM_LEFT('skeleton_warrior', 'ds-center'),
       { parallel: [{ action: 'emote', character: 'skeleton_warrior', emoji: '🎯' }], delayAfter: 0.3 },
       ...SNEAK_IN_LEFT('skeleton_minion', 'ds-left'),
@@ -1684,8 +1690,7 @@ const SOUP_VIGNETTES: Vignette[] = [
       { parallel: [{ action: 'spawn', asset: 'drums', position: 'us-right' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       ...ENTER_FROM_LEFT('skeleton_warrior', 'ds-center'),
       { parallel: [{ action: 'emote', character: 'skeleton_warrior', emoji: 'musical' }], delayAfter: 0.3 },
-      ...ENTER_FROM_RIGHT('skeleton_mage', 'ds-left'),
-      ...ENTER_FROM_RIGHT('skeleton_minion', 'ds-right'),
+      ...GROUP_ENTER_RIGHT([['skeleton_mage', 'ds-left'], ['skeleton_minion', 'ds-right']]),
       { parallel: [
         { action: 'animate', character: 'skeleton_warrior', anim: 'Hammering' },
         { action: 'animate', character: 'skeleton_mage', anim: 'interact' },
@@ -1770,8 +1775,7 @@ const SOUP_VIGNETTES: Vignette[] = [
       { parallel: [{ action: 'spawn', asset: 'barrel', position: 'cs-center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       ...ENTER_FROM_LEFT('skeleton_warrior', 'ds-left'),
       { parallel: [{ action: 'emote', character: 'skeleton_warrior', emoji: '💃' }, { action: 'sfx', sound: 'react' }], delayAfter: 0.3 },
-      ...ENTER_FROM_RIGHT('skeleton_mage', 'ds-right'),
-      ...ENTER_FROM_RIGHT('clown', 'ds-center'),
+      ...GROUP_ENTER_RIGHT([['skeleton_mage', 'ds-right'], ['clown', 'ds-center']]),
       { parallel: [
         { action: 'animate', character: 'skeleton_warrior', anim: 'spin_attack' },
         { action: 'animate', character: 'skeleton_mage', anim: 'jump_big' },
@@ -1790,6 +1794,8 @@ const SOUP_VIGNETTES: Vignette[] = [
         { action: 'sfx', sound: 'move' },
       ], delayAfter: 0.5 },
       ...FLASH('orange', 0.3),
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('clown', 'excited', 'HONK HONK! This is hilarious!'),
       ...CELEBRATION(['skeleton_warrior', 'skeleton_mage', 'clown'], 'center'),
     ],
     feedback: {
@@ -1916,8 +1922,7 @@ export const SKELETON_BIRTHDAY_STAGE_1: Vignette[] = [
       { parallel: [{ action: 'spawn', asset: 'chest_gold', position: 'cs-center' }, { action: 'sfx', sound: 'spawn' }], delayAfter: 0.5 },
       ...ENTER_FROM_LEFT('skeleton_warrior', 'ds-center'),
       { parallel: [{ action: 'emote', character: 'skeleton_warrior', emoji: '🎩' }], delayAfter: 0.3 },
-      ...ENTER_FROM_RIGHT('knight', 'ds-left'),
-      ...ENTER_FROM_RIGHT('mage', 'ds-right'),
+      ...GROUP_ENTER_RIGHT([['knight', 'ds-left'], ['mage', 'ds-right']]),
       { parallel: [
         { action: 'react', effect: 'sparkle-magic', position: 'cs-center' },
         { action: 'react', effect: 'glow-pulse', position: 'cs-center' },
@@ -1930,6 +1935,9 @@ export const SKELETON_BIRTHDAY_STAGE_1: Vignette[] = [
         { action: 'react', effect: 'sparkle-magic', position: 'center' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 2.0 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('knight', 'excited', 'By my sword — incredible!'),
+    ...CHARACTER_SPEAK('mage', 'excited', 'Spell-tacular!'),
     ],
     feedback: {
       title: '🎩 Fancy Vibes!',
@@ -2028,7 +2036,7 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
     promptScore: 'perfect',
     steps: [
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center', scale: 0.3 },
+        { action: 'spawn', asset: 'table_long', position: 'us-center', scale: 0.3 },
         { action: 'spawn_character', character: 'skeleton_warrior', position: 'off-left', anim: 'spawn_ground' },
         { action: 'sfx', sound: 'spawn' },
       ], delayAfter: 0.5 },
@@ -2046,7 +2054,7 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
         { action: 'sfx', sound: 'magic' },
       ], delayAfter: 0.6 },
       { parallel: [
-        { action: 'spawn', asset: 'cake_birthday', position: 'cs-center', scale: 0.2 },
+        { action: 'spawn', asset: 'cake_birthday', position: 'us-center', scale: 0.2 },
         { action: 'text_popup', text: 'tiny cake!', position: 'top', size: 'small' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 0.5 },
@@ -2078,7 +2086,7 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
       { parallel: [
         { action: 'spawn', asset: 'present', position: 'cs-left', scale: 0.2 },
         { action: 'spawn', asset: 'present', position: 'cs-right', scale: 0.2 },
-        { action: 'spawn', asset: 'donut_chocolate', position: 'cs-far-left', scale: 0.2 },
+        { action: 'spawn', asset: 'donut_chocolate', position: 'us-far-left', scale: 0.2 },
         { action: 'spawn', asset: 'popsicle', position: 'cs-far-right', scale: 0.2 },
         { action: 'spawn_character', character: 'skeleton_warrior', position: 'off-left', anim: 'spawn_ground' },
         { action: 'sfx', sound: 'spawn' },
@@ -2120,7 +2128,7 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
     promptScore: 'perfect',
     steps: [
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center', scale: 0.3 },
+        { action: 'spawn', asset: 'table_long', position: 'us-center', scale: 0.3 },
         { action: 'spawn_character', character: 'skeleton_warrior', position: 'cs-center', anim: 'spawn_ground' },
         { action: 'spawn_character', character: 'skeleton_mage', position: 'ds-left', anim: 'spawn_ground', scale: 0.4 },
       ], delayAfter: 0.5 },
@@ -2130,7 +2138,7 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
         { action: 'sfx', sound: 'react' },
       ], delayAfter: 0.6 },
       { parallel: [
-        { action: 'spawn', asset: 'pizza', position: 'cs-center', scale: 0.2 },
+        { action: 'spawn', asset: 'pizza', position: 'us-center', scale: 0.2 },
         { action: 'text_popup', text: '🎵 tiny pizza 🎵', position: 'top', size: 'small' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 0.5 },
@@ -2138,6 +2146,9 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
         { action: 'animate', character: 'skeleton_warrior', anim: 'wave' },
         { action: 'animate', character: 'skeleton_mage', anim: 'taunt' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'This is BONE-credible!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'That was un-BONE-lievably cool!'),
     ],
     feedback: {
       title: '🎵 Pocket Concert!',
@@ -2160,7 +2171,7 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
     promptScore: 'perfect',
     steps: [
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center', scale: 2.0 },
+        { action: 'spawn', asset: 'table_long', position: 'us-center', scale: 2.0 },
         { action: 'spawn', asset: 'waffle', position: 'cs-left', scale: 1.5 },
         { action: 'spawn', asset: 'pudding', position: 'cs-right', scale: 1.5 },
         { action: 'spawn_character', character: 'skeleton_warrior', position: 'ds-left', anim: 'spawn_ground' },
@@ -2193,6 +2204,10 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
         { action: 'animate', character: 'mage', anim: 'taunt' },
         { action: 'react', effect: 'confetti-burst', position: 'center' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'SKULL-tastic!'),
+    ...CHARACTER_SPEAK('mage', 'excited', 'Spell-tacular!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'No-BODY does it better!'),
     ],
     feedback: {
       title: '🎂 MEGA CAKE PARTY!',
@@ -2243,6 +2258,11 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
         { action: 'react', effect: 'confetti-burst', position: 'center' },
         { action: 'react', effect: 'sparkle-magic', position: 'top' },
       ], delayAfter: 2.0 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'My bones are rattling with excitement!'),
+    ...CHARACTER_SPEAK('knight', 'excited', 'For glory!'),
+    ...CHARACTER_SPEAK('mage', 'excited', 'Spell-tacular!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'That was un-BONE-lievably cool!'),
     ],
     feedback: {
       title: '🎆 ENORMOUS EPIC EXPLOSION!',
@@ -2265,9 +2285,9 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
     promptScore: 'perfect',
     steps: [
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center', scale: 2.5 },
+        { action: 'spawn', asset: 'table_long', position: 'us-center', scale: 2.5 },
         { action: 'spawn', asset: 'burger', position: 'cs-left', scale: 2.0 },
-        { action: 'spawn', asset: 'cake_birthday', position: 'cs-right', scale: 2.0 },
+        { action: 'spawn', asset: 'cake_birthday', position: 'us-right', scale: 2.0 },
         { action: 'sfx', sound: 'spawn' },
       ], delayAfter: 0.5 },
       { parallel: [
@@ -2293,6 +2313,11 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
       { parallel: [
         { action: 'crowd_react', characters: 'all', anim: 'jump_big' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'My bones are rattling with excitement!'),
+    ...CHARACTER_SPEAK('barbarian', 'excited', 'BARBARIAN SMASH!'),
+    ...CHARACTER_SPEAK('clown', 'excited', 'Comedy GOLD!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'That was un-BONE-lievably cool!'),
     ],
     feedback: {
       title: '🍖 GIANT WILD FEAST!',
@@ -2421,6 +2446,11 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
         { action: 'crowd_react', characters: 'all', anim: 'taunt_long' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'My bones are rattling with excitement!'),
+    ...CHARACTER_SPEAK('clown', 'excited', 'Time for the big show!'),
+    ...CHARACTER_SPEAK('ninja', 'excited', 'Shadow strike ready!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'That was un-BONE-lievably cool!'),
     ],
     feedback: {
       title: '💃 CHAOS DANCE!',
@@ -2491,13 +2521,13 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
     promptScore: 'perfect',
     steps: [
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center', scale: 2.0 },
+        { action: 'spawn', asset: 'table_long', position: 'us-center', scale: 2.0 },
         { action: 'spawn_character', character: 'skeleton_warrior', position: 'ds-left', anim: 'spawn_ground' },
         { action: 'spawn_character', character: 'barbarian', position: 'ds-right', anim: 'spawn_ground' },
         { action: 'sfx', sound: 'spawn' },
       ], delayAfter: 0.5 },
       { parallel: [
-        { action: 'spawn', asset: 'pizza', position: 'cs-center', scale: 3.0 },
+        { action: 'spawn', asset: 'pizza', position: 'us-center', scale: 3.0 },
         { action: 'camera_shake', intensity: 0.5, duration: 0.8 },
         { action: 'sfx', sound: 'thud' },
       ], delayAfter: 0.6 },
@@ -2537,7 +2567,7 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
         { action: 'sfx', sound: 'spawn' },
       ], delayAfter: 0.5 },
       { parallel: [
-        { action: 'spawn', asset: 'pizza', position: 'cs-center', scale: 0.1 },
+        { action: 'spawn', asset: 'pizza', position: 'us-center', scale: 0.1 },
         { action: 'text_popup', text: 'tiny pizza?', position: 'center', size: 'small' },
         { action: 'sfx', sound: 'spawn' },
       ], delayAfter: 0.6 },
@@ -2595,6 +2625,10 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
       { parallel: [
         { action: 'crowd_react', characters: 'all', anim: 'wave' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'SKULL-tastic!'),
+    ...CHARACTER_SPEAK('mage', 'excited', 'Spell-tacular!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'No-BODY does it better!'),
     ],
     feedback: {
       title: '🎂 CAKE SKYSCRAPER!',
@@ -2740,7 +2774,7 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
     promptScore: 'perfect',
     steps: [
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center' },
+        { action: 'spawn', asset: 'table_long', position: 'us-center' },
         { action: 'spawn', asset: 'bowl', position: 'cs-center' },
         { action: 'spawn_character', character: 'skeleton_warrior', position: 'ds-left', anim: 'spawn_ground' },
         { action: 'sfx', sound: 'spawn' },
@@ -2759,6 +2793,10 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
         { action: 'text_popup', text: 'soup & dance!', position: 'center', size: 'large' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'SKULL-tastic!'),
+    ...CHARACTER_SPEAK('clown', 'excited', 'HONK HONK! This is hilarious!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'That was un-BONE-lievably cool!'),
     ],
     feedback: {
       title: '🍲 Soup Dance Party!',
@@ -2849,6 +2887,10 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
         { action: 'crowd_react', characters: 'all', anim: 'spin_attack' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'This is BONE-credible!'),
+    ...CHARACTER_SPEAK('knight', 'excited', 'For glory!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'That was un-BONE-lievably cool!'),
     ],
     feedback: {
       title: '⚔️ ENORMOUS CHAOS BATTLE!',
@@ -2917,9 +2959,9 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
     promptScore: 'perfect',
     steps: [
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center', scale: 2.5 },
+        { action: 'spawn', asset: 'table_long', position: 'us-center', scale: 2.5 },
         { action: 'spawn', asset: 'burger', position: 'cs-left', scale: 2.0 },
-        { action: 'spawn', asset: 'cookie', position: 'cs-right', scale: 2.0 },
+        { action: 'spawn', asset: 'cookie', position: 'us-right', scale: 2.0 },
         { action: 'spawn', asset: 'bowl', position: 'cs-center', scale: 1.8 },
         { action: 'sfx', sound: 'spawn' },
       ], delayAfter: 0.5 },
@@ -3034,6 +3076,11 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
         { action: 'crowd_react', characters: 'all', anim: 'Cheering' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'My bones are rattling with excitement!'),
+    ...CHARACTER_SPEAK('clown', 'excited', 'HONK HONK! This is hilarious!'),
+    ...CHARACTER_SPEAK('ninja', 'excited', 'Shadow strike ready!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'No-BODY does it better!'),
     ],
     feedback: {
       title: '🍬 CANDY EXPLOSION!',
@@ -3079,6 +3126,10 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
       { parallel: [
         { action: 'crowd_react', characters: 'all', anim: 'sword_slash' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'SKULL-tastic!'),
+    ...CHARACTER_SPEAK('knight', 'excited', 'A knight never gives up!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'That was un-BONE-lievably cool!'),
     ],
     feedback: {
       title: '⚔️ Energetic Battle!',
@@ -3095,6 +3146,7 @@ const STAGE2_SIZE_MOOD_VIGNETTES: Vignette[] = [
 
 export const SKELETON_BIRTHDAY_STAGE_2: Vignette[] = [
   ...STAGE2_SIZE_MOOD_VIGNETTES,
+  ...SKELETON_BIRTHDAY_STAGE_1,  // Stage 1 vignettes work here — undefined trigger keys act as wildcards
 ];
 
 export const SKELETON_BIRTHDAY_DEFAULT_2: Vignette = {
@@ -3143,7 +3195,7 @@ const STAGE3_SECRET_COMBOS: Vignette[] = [
     promptScore: 'perfect',
     steps: [
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-center' },
+        { action: 'spawn', asset: 'table_long', position: 'us-center' },
         { action: 'spawn', asset: 'candy_cane', position: 'us-left' },
         { action: 'spawn', asset: 'lollipop_pink', position: 'us-right' },
         { action: 'spawn', asset: 'stocking', position: 'us-far-left' },
@@ -3179,6 +3231,10 @@ const STAGE3_SECRET_COMBOS: Vignette[] = [
       { parallel: [
         { action: 'crowd_react', characters: 'all', anim: 'Cheering' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'This is BONE-credible!'),
+    ...CHARACTER_SPEAK('mage', 'excited', 'My magic is TINGLING!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'No-BODY does it better!'),
     ],
     feedback: {
       title: '🪄 SECRET: SPELLWORK SPECTACULAR!',
@@ -3226,6 +3282,10 @@ const STAGE3_SECRET_COMBOS: Vignette[] = [
       { parallel: [
         { action: 'crowd_react', characters: 'all', anim: 'spin_attack' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'This is BONE-credible!'),
+    ...CHARACTER_SPEAK('knight', 'excited', 'A knight never gives up!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'No-BODY does it better!'),
     ],
     feedback: {
       title: '⚔️ SECRET: BATTLE DANCE!',
@@ -3273,6 +3333,10 @@ const STAGE3_SECRET_COMBOS: Vignette[] = [
       { parallel: [
         { action: 'crowd_react', characters: 'all', anim: 'taunt_long' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'This is BONE-credible!'),
+    ...CHARACTER_SPEAK('knight', 'excited', 'A knight never gives up!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'No-BODY does it better!'),
     ],
     feedback: {
       title: '💃 SECRET: DANCE BATTLE!',
@@ -3322,6 +3386,10 @@ const STAGE3_SECRET_COMBOS: Vignette[] = [
       { parallel: [
         { action: 'crowd_react', characters: 'all', anim: 'wave' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'SKULL-tastic!'),
+    ...CHARACTER_SPEAK('mage', 'excited', 'My magic is TINGLING!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'No-BODY does it better!'),
     ],
     feedback: {
       title: '🎵 SECRET: MUSICAL ENCHANTMENT!',
@@ -3369,6 +3437,11 @@ const STAGE3_SECRET_COMBOS: Vignette[] = [
       { parallel: [
         { action: 'crowd_react', characters: 'all', anim: 'jump_big' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'SKULL-tastic!'),
+    ...CHARACTER_SPEAK('clown', 'excited', 'HONK HONK! This is hilarious!'),
+    ...CHARACTER_SPEAK('ninja', 'excited', 'Swift like the wind!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'That was un-BONE-lievably cool!'),
     ],
     feedback: {
       title: '💥 SECRET: EXPLOSIVE GAMES!',
@@ -3387,8 +3460,8 @@ const STAGE3_SECRET_COMBOS: Vignette[] = [
     promptScore: 'perfect',
     steps: [
       { parallel: [
-        { action: 'spawn', asset: 'table_long', position: 'cs-left' },
-        { action: 'spawn', asset: 'table_long', position: 'cs-right' },
+        { action: 'spawn', asset: 'table_long', position: 'us-left' },
+        { action: 'spawn', asset: 'table_long', position: 'us-right' },
         { action: 'spawn_character', character: 'skeleton_warrior', position: 'ds-center', anim: 'spawn_ground' },
       ], delayAfter: 0.5 },
       { parallel: [
@@ -3412,6 +3485,11 @@ const STAGE3_SECRET_COMBOS: Vignette[] = [
       { parallel: [
         { action: 'crowd_react', characters: 'all', anim: 'Cheering' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'My bones are rattling with excitement!'),
+    ...CHARACTER_SPEAK('clown', 'excited', 'Time for the big show!'),
+    ...CHARACTER_SPEAK('robot', 'excited', 'Processing... excitement levels MAXIMUM!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'That was un-BONE-lievably cool!'),
     ],
     feedback: {
       title: '🎵 SECRET: MUSICAL CHAIR CHASE!',
@@ -3424,6 +3502,7 @@ const STAGE3_SECRET_COMBOS: Vignette[] = [
 
 export const SKELETON_BIRTHDAY_STAGE_3: Vignette[] = [
   ...STAGE3_SECRET_COMBOS,
+  ...SKELETON_BIRTHDAY_STAGE_2,  // Includes stage 1+2 vignettes as fallbacks
 ];
 
 export const SKELETON_BIRTHDAY_DEFAULT_3: Vignette = {
@@ -3457,6 +3536,9 @@ export const SKELETON_BIRTHDAY_DEFAULT_3: Vignette = {
       ],
       delayAfter: 2.0,
     },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'My bones are rattling with excitement!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'No-BODY does it better!'),
   ],
   feedback: {
     title: '🤷 Two Separate Things...',

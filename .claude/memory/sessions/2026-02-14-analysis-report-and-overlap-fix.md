@@ -28,8 +28,8 @@ Continued from compacted session. Fixed overlapping objects/characters in 3D vig
 
 ### 3. Comprehensive Analysis Report
 - Launched 3 parallel research agents: teaching methodology, agent/skill ecosystem, game architecture limits
-- Created docs/prompt-quest-analysis.html (dark-theme styled report with stat cards, tables, flow diagrams)
-- Created docs/prompt-quest-analysis.md (matching markdown version)
+- Created docs/quest-ai-analysis.html (dark-theme styled report with stat cards, tables, flow diagrams)
+- Created docs/quest-ai-analysis.md (matching markdown version)
 - Report covers 8 sections: teaching methodology, goals, 6 gaps, world limitations, 8 MVP improvements, missing agents/skills, agent collaboration improvements, final verdict
 
 ## Key Findings from Analysis
@@ -156,8 +156,8 @@ Adding Level 4 (Hybrid Guided Free Text) and Level 5 (Full Prompt Graduation) �
 - 7 zone expansion priorities identified
 
 ## Related
-- `docs/prompt-quest-analysis.html` — Full HTML report
-- `docs/prompt-quest-analysis.md` — Markdown version
+- `docs/quest-ai-analysis.html` — Full HTML report
+- `docs/quest-ai-analysis.md` — Markdown version
 - `frontend/src/game/ScenePlayer3D.tsx` — Auto-spread system implementation
 - `frontend/src/game/VillageWorld.tsx` — Village world with asset references
 - `frontend/tests/measure-assets.mjs` — Asset measurement utility

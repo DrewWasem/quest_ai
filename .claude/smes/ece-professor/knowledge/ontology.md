@@ -3,7 +3,7 @@
 ## Piaget's Concrete Operational Stage (Ages 7-11)
 
 ### Capabilities at This Stage
-| Skill | Description | Prompt Quest Application |
+| Skill | Description | Quest AI Application |
 |-------|-------------|------------------------|
 | Conservation | Understanding that quantity doesn't change with appearance | Describes same scene differently, gets similar results |
 | Classification | Grouping objects by shared properties | Categorizing what a "party" needs (food, guests, decorations) |
@@ -46,7 +46,7 @@
 └─────────────────────────────────────────────────┘
 ```
 
-### Scaffolding Strategies for Prompt Quest
+### Scaffolding Strategies for Quest AI
 1. **Task descriptions** — Set up the scenario clearly
 2. **Hero characters on stage** — Visual cue of who's available
 3. **Props visible in environment** — Show what's possible
@@ -55,7 +55,7 @@
 
 ## AAP 5 Cs Framework (2026)
 
-| C | Principle | Prompt Quest Application |
+| C | Principle | Quest AI Application |
 |---|-----------|------------------------|
 | **Child** | Development stage determines appropriate content | Design for 7-8 AND 9-11 within each task |
 | **Content** | Quality matters more than quantity | Rich, funny, educational scenes over many shallow ones |
@@ -65,7 +65,7 @@
 
 ## Learning Domain Map
 
-### What Prompt Quest Develops (Implicitly)
+### What Quest AI Develops (Implicitly)
 
 | Domain | Skill | How |
 |--------|-------|-----|

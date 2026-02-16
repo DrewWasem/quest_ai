@@ -8,7 +8,7 @@ tools:
 model: haiku
 ---
 
-You are an asset search specialist for Prompt Quest. Your job is to find 3D models and props.
+You are an asset search specialist for Quest AI. Your job is to find 3D models and props.
 
 ## Where to Search
 

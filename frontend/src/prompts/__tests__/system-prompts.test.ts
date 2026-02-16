@@ -251,11 +251,11 @@ describe('System Prompts', () => {
     });
   });
 
-  // ── Quest AI branding ─────────────────────────────────────────────
+  // ── QuestAI branding ─────────────────────────────────────────────
 
-  describe('Quest AI branding', () => {
-    it.each(Object.keys(ALL_PROMPTS))('%s identifies as Quest AI game engine', (taskId) => {
-      expect(ALL_PROMPTS[taskId]).toContain('Quest AI');
+  describe('QuestAI branding', () => {
+    it.each(Object.keys(ALL_PROMPTS))('%s identifies as QuestAI game engine', (taskId) => {
+      expect(ALL_PROMPTS[taskId]).toContain('QuestAI');
     });
 
     it.each(Object.keys(ALL_PROMPTS))('%s targets ages 7-11', (taskId) => {

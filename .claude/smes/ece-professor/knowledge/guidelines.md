@@ -2,7 +2,7 @@
 
 ## COPPA Compliance Checklist (Updated 2025)
 
-### Prompt Quest Must:
+### Quest AI Must:
 - [ ] Never collect personal information from users under 13
 - [ ] Never use behavioral advertising
 - [ ] Never require account creation to play
@@ -12,7 +12,7 @@
 - [ ] Provide clear privacy notice accessible to parents
 
 ### Expanded "Personal Information" (2025 Amendment)
-Now includes biometric data. For Prompt Quest:
+Now includes biometric data. For Quest AI:
 - Voice input feature (VoiceButton) processes speech-to-text LOCALLY
 - No voice recordings should be stored or transmitted
 - No facial recognition or biometric data collection
@@ -25,7 +25,7 @@ Now includes biometric data. For Prompt Quest:
 3. Technology use should be intentional, not incidental
 4. Support social interaction, not isolation
 
-### Prompt Quest Alignment
+### Quest AI Alignment
 - ✅ Active creation (kids write descriptions, watch results)
 - ✅ Problem-solving embedded in play (how to describe a better party)
 - ✅ Intentional design (each task teaches specificity through comedy)
@@ -39,7 +39,7 @@ Now includes biometric data. For Prompt Quest:
 - Recognizes diverse uses of screens (school, creativity, social)
 - Emphasizes family communication about media use
 
-### 5 Cs Applied to Prompt Quest
+### 5 Cs Applied to Quest AI
 
 **Child:**
 - Design accounts for developmental range (7-8 simpler, 9-11 more complex)

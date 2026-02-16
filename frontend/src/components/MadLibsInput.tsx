@@ -14,7 +14,7 @@ import { useGameStore } from '../stores/gameStore';
 import { useTTS } from '../hooks/useTTS';
 import type { QuestStage, SlotOption, Vignette } from '../types/madlibs';
 import { buildVignetteScript, resolveVignette } from '../services/vignette-resolver';
-import { generateSentenceTemplate } from '../services/sentence-generator';
+import { checkBadges, saveBadges } from '../services/badge-system';
 import FeedbackCard from './FeedbackCard';
 
 interface MadLibsInputProps {
@@ -31,6 +31,7 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
     completeStage,
     recordDiscovery,
     discoveredVignettes,
+    badges,
   } = useGameStore();
 
   const { speak } = useTTS();
@@ -50,9 +51,6 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
   // Which slot picker is currently open
   const [openSlot, setOpenSlot] = useState<string | null>(null);
 
-  // Loading state for sentence generation
-  const [isGenerating, setIsGenerating] = useState(false);
-
   // Feedback state after vignette plays
   const [feedback, setFeedback] = useState<{
     vignette: Vignette;
@@ -70,19 +68,9 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
   // Hint state for Level 3 combo hints
   const [hintIndex, setHintIndex] = useState(0);
 
-  // Generate fresh sentence template on mount
+  // Use hardcoded template — AI-generated templates produce incoherent fill-ins
   useEffect(() => {
-    let cancelled = false;
-    setIsGenerating(true);
-
-    generateSentenceTemplate(stage).then(sentence => {
-      if (!cancelled) {
-        setCurrentSentence(sentence);
-        setIsGenerating(false);
-      }
-    });
-
-    return () => { cancelled = true; };
+    setCurrentSentence(stage.template.sentence);
   }, [stage]);
 
   // Reset when stage changes
@@ -111,16 +99,7 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
     setOpenSlot(null);
   }, [stage, slotOptions]);
 
-  const handleRefreshSentence = useCallback(async () => {
-    setIsGenerating(true);
-    try {
-      const sentence = await generateSentenceTemplate(stage);
-      setCurrentSentence(sentence);
-    } catch {
-      // Keep current sentence
-    }
-    setIsGenerating(false);
-  }, [stage]);
+  // Sentence refresh removed — hardcoded templates only
 
   const handleGo = useCallback(async () => {
     // Check all slots have a selection
@@ -152,24 +131,27 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
       const newDiscovered = new Set([...discoveredIds, vignette.id]);
       // Don't count the default vignette
       const nonDefault = [...newDiscovered].filter(id => id !== stage.defaultVignette.id);
-      if (nonDefault.length >= stage.comboRequired) {
+      if (nonDefault.length >= 1) {
         completeStage(stage.questId, stage.stageNumber);
       }
     } else {
-      // Level 1/2: complete on ANY perfect vignette OR specific successTag combos.
-      // This way kids just need to find a good combo, not guess a magic one.
-      let completed = false;
-      if (vignette.promptScore === 'perfect') {
-        completed = true;
-      }
-      if (!completed && stage.successTags) {
-        const selectedValues = Object.values(selectedTags);
-        completed = stage.successTags.some(combo =>
-          combo.every(tag => selectedValues.includes(tag))
-        );
-      }
-      if (completed) {
+      // Level 1/2: complete on ANY non-default, non-funny_fail vignette.
+      // Kids should be rewarded for any creative combo that triggers a real scene.
+      const isDefault = vignette.id === stage.defaultVignette.id;
+      const isFail = vignette.promptScore === 'funny_fail';
+      if (!isDefault && !isFail) {
         completeStage(stage.questId, stage.stageNumber);
+      }
+    }
+
+    // Check for badge unlocks from vignette's synthesized prompt_analysis
+    if (script.prompt_analysis) {
+      const newBadgeIds = checkBadges(script.prompt_analysis, badges);
+      if (newBadgeIds.length > 0) {
+        const updatedBadges = { ...badges };
+        for (const id of newBadgeIds) updatedBadges[id] = true;
+        saveBadges(updatedBadges);
+        useGameStore.setState({ badges: updatedBadges, badgeUnlocks: newBadgeIds });
       }
     }
 
@@ -227,7 +209,7 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
             promptScore={feedback.vignette.promptScore}
             filledSentence={feedback.filledSentence}
             matchExplanation={feedback.matchExplanation}
-            discoveredCount={discoveredIds.size}
+            discoveredCount={[...discoveredIds].filter(id => id !== stage.defaultVignette.id).length}
             totalVignettes={stage.vignettes.length + 1}
             onTryAgain={handleTryAgain}
             onNextStage={
@@ -278,27 +260,6 @@ export default function MadLibsInput({ stage }: MadLibsInputProps) {
                 disabled:opacity-50 disabled:cursor-not-allowed font-heading font-semibold"
             >
               {'\u{1F3B2}'} Randomize
-            </button>
-
-            <button
-              onClick={handleRefreshSentence}
-              disabled={isPlaying || isGenerating}
-              className="btn-game text-sm px-4 py-2.5 rounded-xl border-2
-                bg-white/60 text-quest-text-mid border-quest-border
-                hover:border-quest-orange/50 hover:text-quest-text-dark
-                disabled:opacity-50 disabled:cursor-not-allowed font-heading font-semibold"
-            >
-              {isGenerating ? (
-                <span className="flex items-center gap-1.5">
-                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                  </svg>
-                  Loading...
-                </span>
-              ) : (
-                <>{'\u{1F504}'} New Sentence!</>
-              )}
             </button>
 
             {stage.comboHints && stage.comboHints.length > 0 && (

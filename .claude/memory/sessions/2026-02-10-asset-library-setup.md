@@ -7,7 +7,7 @@
 **Tags:** assets, kenney, download, setup, day-1
 
 ## Summary
-Researched, catalogued, and downloaded 13 free CC0 asset packs from Kenney.nl for the Prompt Quest game. Created comprehensive asset manifest with 141 items across 4 priority levels.
+Researched, catalogued, and downloaded 13 free CC0 asset packs from Kenney.nl for the Quest AI game. Created comprehensive asset manifest with 141 items across 4 priority levels.
 
 ## What Was Done
 1. Researched all assets needed from roadmap (6 tasks) and vocabulary contract (9 actors, 29 props, 6 backdrops, 10 effects)

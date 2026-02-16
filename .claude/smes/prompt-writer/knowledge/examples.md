@@ -4,7 +4,7 @@
 
 ### System Prompt
 ```
-You are the game engine for "Prompt Quest," a children's educational game (ages 7-11) that teaches prompt engineering through play.
+You are the game engine for "Quest AI," a children's educational game (ages 7-11) that teaches prompt engineering through play.
 
 TASK: Skeleton's Surprise Birthday Party
 A skeleton warrior is having its first-ever birthday party in a dungeon. The adventurers are bringing gifts! Help plan the party.
@@ -119,7 +119,7 @@ RULES:
 
 ## Key Patterns to Copy
 
-1. **Context line:** Always start with "You are the game engine for Prompt Quest..."
+1. **Context line:** Always start with "You are the game engine for Quest AI..."
 2. **Task line:** One sentence premise that's immediately funny
 3. **JSON format:** Show the literal structure with example values
 4. **Success criteria:** Very explicit 3-element formula with examples

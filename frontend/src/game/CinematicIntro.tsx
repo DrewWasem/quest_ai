@@ -72,7 +72,13 @@ const WAYPOINTS: [THREE.Vector3, THREE.Vector3][] = [
   [new THREE.Vector3(0, 145, 10),      new THREE.Vector3(0, 0, -2)],
 ]
 
-const TOTAL_DURATION = 22.0 // seconds
+const BASE_DURATION = 22.0 // seconds
+// Allow external speed override (store or window fallback)
+function getTotalDuration(): number {
+  const storeMult = useGameStore.getState().introSpeedMultiplier
+  const mult = storeMult !== 1.0 ? storeMult : ((window as any).__introSpeedMultiplier ?? 1.0)
+  return typeof mult === 'number' && mult > 0 ? BASE_DURATION / mult : BASE_DURATION
+}
 
 // Animation triggers: [normalized time, animation name, player yaw]
 const ANIM_TRIGGERS: [number, string, number][] = [
@@ -171,7 +177,7 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
     }
 
     elapsed.current += delta * speedMult
-    const t = Math.min(elapsed.current / TOTAL_DURATION, 1)
+    const t = Math.min(elapsed.current / getTotalDuration(), 1)
 
     // Ease: smooth start and end
     const eased = t * t * (3 - 2 * t)
@@ -246,10 +252,10 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
             flexDirection: 'column',
             alignItems: 'center',
             animation: 'intro-fade-in 1.5s ease-out',
-            filter: 'drop-shadow(0 0 30px rgba(124, 58, 237, 0.6)) drop-shadow(0 0 60px rgba(255, 140, 66, 0.3))',
+            filter: 'drop-shadow(0 0 30px rgba(74, 144, 217, 0.6)) drop-shadow(0 0 60px rgba(78, 205, 196, 0.3))',
           }}>
             <div style={{
-              fontFamily: 'Fredoka, sans-serif',
+              fontFamily: 'Baloo 2, Fredoka, sans-serif',
               fontSize: 80,
               fontWeight: 700,
               display: 'flex',
@@ -262,11 +268,11 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
                 animation: 'intro-sparkle 1.5s ease-in-out infinite',
               }}>{'\u2728'}</span>
               <span style={{
-                background: 'linear-gradient(to right, #7C3AED, #FF8C42, #FBBF24)',
+                background: 'linear-gradient(to right, #4A90D9, #FF8C42, #F5C842)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
               }}>
-                Quest AI
+                QuestAI
               </span>
             </div>
             <div style={{
@@ -276,7 +282,7 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
               marginTop: 4,
               letterSpacing: 1,
             }}>
-              Learn to talk to AI through play
+              Your words are your superpower.
             </div>
           </div>
         </Html>
@@ -291,7 +297,7 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
             color: 'white',
             padding: '10px 24px',
             borderRadius: 12,
-            fontFamily: 'Fredoka, sans-serif',
+            fontFamily: 'Baloo 2, Fredoka, sans-serif',
             fontSize: 18,
             whiteSpace: 'nowrap',
             animation: 'cinematic-pulse 2s ease-in-out infinite',

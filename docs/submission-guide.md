@@ -30,7 +30,7 @@
 | Claude Code showcase | DONE | `docs/claude-code-showcase.md` |
 | Open source compliance | DONE | All CC0/CC-BY, non-open assets removed |
 | Security & privacy | DONE | `SECURITY.md` at repo root |
-| Build passes | DONE | 0 TS errors, 679 modules |
+| Build passes | DONE | 0 TS errors, 676 modules, ~497 kB gzipped |
 
 ---
 
@@ -119,7 +119,7 @@ See **Video Script** below. This is the most important deliverable.
 
 ### SCENE 2: THE SETUP (0:10 - 0:30)
 
-> **Drew (voiceover):** "This is my daughter playing Prompt Quest — a game I built with Claude Opus 4.6. She types a description and the AI builds a 3D animated scene. But here's the twist — vague descriptions don't get error messages. They get something way better."
+> **Drew (voiceover):** "This is my daughter playing Quest AI — a game I built with Claude Opus 4.6. She types a description and the AI builds a 3D animated scene. But here's the twist — vague descriptions don't get error messages. They get something way better."
 
 *[She navigates to the village, clicks a glowing quest marker, camera flies in]*
 
@@ -173,7 +173,7 @@ See **Video Script** below. This is the most important deliverable.
 >
 > *[Beat]*
 >
-> "This is Prompt Quest."
+> "This is Quest AI."
 
 **Hold on village overview for 2-3 seconds. End.**
 

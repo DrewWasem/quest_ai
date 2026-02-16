@@ -1,4 +1,4 @@
-# Prompt Quest — Judge's Guide
+# Quest AI — Judge's Guide
 
 > Built solo in 7 days for the Claude Code Hackathon (Feb 10-16, 2026)
 > Live demo: [quest-ai-smoky.vercel.app](https://quest-ai-smoky.vercel.app/)
@@ -7,7 +7,7 @@
 
 ## What This Is
 
-Prompt Quest is an AI-powered 3D game that teaches kids (ages 7-11) descriptive thinking through play. A child types a description — *"the skeleton juggles birthday cakes while riding a unicycle"* — and Claude Opus 4.6 generates a 3D animated scene that plays out in the browser with characters, props, animations, sound effects, and a funny narration.
+Quest AI is an AI-powered 3D game that teaches kids (ages 7-11) descriptive thinking through play. A child types a description — *"the skeleton juggles birthday cakes while riding a unicycle"* — and Claude Opus 4.6 generates a 3D animated scene that plays out in the browser with characters, props, animations, sound effects, and a funny narration.
 
 Vague descriptions produce hilarious failures. Specific descriptions produce celebrations. Kids retry not because they're told to, but because they want to see what happens next.
 
@@ -116,14 +116,14 @@ Added the 8th zone (Creative Playground — sandbox unlocked after 3 quests). De
 
 ### Why Comedy-First Works
 
-Most educational software punishes mistakes. Prompt Quest makes them the best part.
+Most educational software punishes mistakes. Quest AI makes them the best part.
 
 When a kid types "have a party," the skeleton doesn't just stand there — it taunts the camera, pizza emojis rain from the sky, and laugh-tears float around. The narration reads: *"The skeleton starts a party... for one. It's awkward."*
 
 This is grounded in educational psychology:
 
 - **Growth mindset (Dweck, 2006):** When failure is funny instead of punitive, kids see it as information, not judgment. They try again because they're curious, not because they're corrected.
-- **Intrinsic motivation:** The comedy IS the reward. Kids don't need points or badges — they want to see what happens with a better description.
+- **Intrinsic motivation:** The comedy IS the reward. Kids want to see what happens with a better description. Badges unlock naturally as side effects of creative play — never as the primary goal.
 - **Zone of proximal development (Vygotsky):** The Mad Libs scaffold (Stages 1-3) provides structure. Free text (Stages 4-5) removes training wheels. Kids advance at their own pace.
 - **Concrete operational stage (Piaget):** Ages 7-11 think in concrete terms. Showing a 3D scene is more effective than explaining "your description lacked specificity." The scene IS the feedback.
 
@@ -242,7 +242,7 @@ Loading 665 OGG files at startup would be slow. Built a smart fallback: first pl
 
 | Metric | Value |
 |--------|-------|
-| Quest zones | 8 (7 themed + 1 sandbox) |
+| Quest zones | 8 (7 themed + 1 sandbox) on a medieval village circle |
 | Animated characters | 27 with shared skeleton rig |
 | Animation clips | 139 across 8 packs |
 | Registered props | 1,686 with fuzzy name resolution |
@@ -253,9 +253,11 @@ Loading 665 OGG files at startup would be slow. Built a smart fallback: first pl
 | Golden cache entries | 166 instant demo responses |
 | Fallback scripts | 8 (every zone covered) |
 | Named emotions | 61 semantic mappings to pixel-art emotes |
+| Achievement badges | 8 unlockable badges across all modes |
+| SFX categories | 24 with auto-trigger engine |
 | TypeScript errors | 0 |
 | Development time | 7 days, solo developer |
-| Build size | ~494 kB gzipped |
+| Build size | ~497 kB gzipped |
 
 ---
 
@@ -283,12 +285,26 @@ Loading 665 OGG files at startup would be slow. Built a smart fallback: first pl
 
 ## Roadmap: What's Next
 
-### Near-Term (Post-Hackathon)
+> **Design note:** The game is intentionally easy right now — every kid should feel like a wizard on their first try. The focus going forward is making the engine more dynamic and expressive so all stages feel alive and responsive.
 
-- **Performance:** Bundle optimization, lazy-loading asset packs, mobile responsive layout
-- **More zones:** The `/compose-task` command can generate a complete new zone in one session — story arc, characters, system prompt, cache entries, environment config
-- **Multiplayer viewing:** Multiple kids watch the same scene play out, take turns describing
-- **Progress persistence:** Local storage for stage completion, discovered vignettes, badges
+### Phase 5: Game Engine Evolution
+
+**Physics & Navigation:**
+- Object avoidance / collision — characters should walk around props, not through them
+- Jump mechanic — vertical exploration (stairs, platforms, rooftops)
+- Terrain interaction — characters react to terrain type (splash in water, slip on ice)
+
+**Dynamic Scene Engine:**
+- Procedural choreography — engine generates movement patterns (circle, parade, chase) instead of only point-to-point moves
+- Multi-phase scenes — branching moments where kids choose "what happens next?" mid-scene
+- Persistent scene state — props and characters stay between prompts for iterative scene-building
+- Difficulty scaling — gradually raise the bar as kids demonstrate mastery
+
+**Polish & Platform:**
+- Performance audit (bundle size, load times, memory)
+- Mobile layout check (touch controls, responsive canvas)
+- Neural TTS voice (ElevenLabs or OpenAI) for consistent narration across browsers
+- More zones via the `/compose-task` 7-SME pipeline
 
 ### How Opus 4.6 Continues to Help
 

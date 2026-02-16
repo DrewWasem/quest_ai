@@ -1,0 +1,34 @@
+Build passes. Here's what you've got — one demo per zone, plays every stage 1 vignette:                                      
+                                               
+  URL triggers (open in browser):                                                                                              
+  http://localhost:5175?demo=skeleton-birthday     # 40 vignettes
+  http://localhost:5175?demo=knight-space           # 31 vignettes                                                             
+  http://localhost:5175?demo=mage-kitchen           # 37 vignettes                                                             
+  http://localhost:5175?demo=barbarian-school       # 37 vignettes                                                             
+  http://localhost:5175?demo=dungeon-concert        # 37 vignettes
+  http://localhost:5175?demo=skeleton-pizza          # 31 vignettes
+  http://localhost:5175?demo=adventurers-picnic      # 37 vignettes
+
+  Console triggers:
+  window.__runZone('skeleton-birthday')   // start
+  window.__stopZone()                      // stop
+
+  Each zone plays all 30-40 stage 1 vignettes with 5-second pauses between them. Full zone playthrough runs ~20-40 minutes
+  depending on vignette complexity.
+                                                                                                                                 
+  - http://localhost:5175/?demo=mage-kitchen&list — prints the numbered list to console, doesn't play                                     
+  - http://localhost:5175/?demo=showcase&list — same for the showcase playlist                                                            
+                                                                                                                                          
+  Then pick a number and go to ?demo=mage-kitchen&start=5 to jump straight there.                                                       
+                                                                 
+
+URL:                                                                                                                                    
+  - http://localhost:5175/?intro=witch — runs intro with Witch at half speed (~44s)                                                       
+  - http://localhost:5175/?intro=witch&speed=0.3 — even slower (0.3x, ~73s)                                                               
+                                                                                                                                          
+  Console:                                                      
+  - window.__runIntro('witch') — half speed                                                                                               
+  - window.__runIntro('witch', 0.3) — custom speed
+  - window.__stopIntro() — skip to gameplay
+
+  Valid characters: knight, mage, barbarian, rogue, witch, skeleton_warrior, skeleton_mage, clown, ranger.

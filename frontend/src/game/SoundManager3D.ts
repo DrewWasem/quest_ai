@@ -122,6 +122,18 @@ class SoundManager3DClass {
     return this.ctx
   }
 
+  /** Call from a user gesture (click/tap) to unlock AudioContext for autoplay-blocked browsers */
+  unlockAudio() {
+    const ctx = this.getCtx()
+    if (ctx && ctx.state === 'suspended') {
+      ctx.resume().catch(() => {})
+    }
+    // Also unlock music element if it was blocked
+    if (this.musicElement && this.musicElement.paused) {
+      this.musicElement.play().then(() => this.fadeInMusic()).catch(() => {})
+    }
+  }
+
   setMuted(muted: boolean) {
     this.muted = muted
     if (this.musicElement) {

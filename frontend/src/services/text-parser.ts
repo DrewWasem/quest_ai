@@ -3,13 +3,20 @@
  *
  * Input: short text describing an action (1-6 words)
  * Output: Level4ParsedTags with action, modifier, vibe extracted
- * Fallback: if Haiku times out, uses first word as action tag
+ * Fallback: if Haiku times out, uses keyword matching against valid tags
  */
 
 import type { Level4ParsedTags } from '../types/madlibs';
 import { callClaude } from './claude';
 
-const PARSE_SYSTEM_PROMPT = `You extract tags from children's free text for a game.
+function buildParsePrompt(validTags?: Record<string, string[]>): string {
+  const tagSection = validTags
+    ? Object.entries(validTags)
+        .map(([slot, values]) => `  ${slot}: ${values.join(', ')}`)
+        .join('\n')
+    : '';
+
+  return `You extract tags from children's free text for a game.
 
 Input: Short text describing an action (1-6 words)
 Output: ONLY valid JSON, no markdown, no explanation:
@@ -22,29 +29,63 @@ Output: ONLY valid JSON, no markdown, no explanation:
 
 Rules:
 - action, modifier, vibe are all OPTIONAL (can be null)
-- Use simple lowercase single-word tags only
 - If text is vague ("do something"), set all to null
-- NEVER invent tags not implied by the text
+${validTags ? `- You MUST use tags from this vocabulary when possible:
+${tagSection}
+- Map the child's words to the CLOSEST matching tag (e.g. "freeze" -> "ice_spell", "cook" -> "cook_perfectly", "grow" -> "grow_spell", "burn" -> "fire_spell", "float" -> "levitate", "change" -> "transform", "shrink" -> "shrink_spell", "dance" -> "dance", "explode" -> "explode", "calm" -> "calm_down", "wild" -> "go_wild")
+- If no tag matches, set that field to null` : `- Use simple lowercase single-word tags only
+- NEVER invent tags not implied by the text`}
 
 Examples:
-"dance with a pizza" -> {"action": "dance", "modifier": null, "vibe": "silly"}
-"eat a GIANT cake" -> {"action": "eat", "modifier": "giant", "vibe": null}
-"jump around happily" -> {"action": "jump", "modifier": null, "vibe": "happy"}
-"do magic" -> {"action": "magic", "modifier": "magical", "vibe": null}
-"throw confetti everywhere" -> {"action": "throw", "modifier": null, "vibe": "excited"}
-"cook a spooky soup" -> {"action": "cook", "modifier": "spooky", "vibe": null}`;
+"freeze it with ice" -> {"action": "ice_spell", "modifier": null, "vibe": null}
+"cook it perfectly" -> {"action": "cook_perfectly", "modifier": null, "vibe": null}
+"make it grow giant" -> {"action": "grow_spell", "modifier": null, "vibe": null}
+"set it on fire" -> {"action": "fire_spell", "modifier": null, "vibe": null}
+"do something wild" -> {"action": null, "modifier": null, "vibe": "go_wild"}
+"dance with a pizza" -> {"action": "dance", "modifier": null, "vibe": null}`;
+}
+
+/**
+ * Extract valid tag vocabulary from a set of vignettes' triggers.
+ */
+export function extractValidTags(
+  vignettes: Array<{ trigger: Record<string, string> }>,
+): Record<string, string[]> {
+  const tagSets: Record<string, Set<string>> = {};
+
+  for (const v of vignettes) {
+    for (const [key, value] of Object.entries(v.trigger)) {
+      if (value === '*' || value === 'default') continue;
+      if (!tagSets[key]) tagSets[key] = new Set();
+      tagSets[key].add(value);
+    }
+  }
+
+  const result: Record<string, string[]> = {};
+  for (const [key, values] of Object.entries(tagSets)) {
+    result[key] = [...values].sort();
+  }
+  return result;
+}
 
 export async function parseLevel4Text(
   rawText: string,
   character: string,
+  validTags?: Record<string, string[]>,
 ): Promise<Level4ParsedTags> {
   const trimmed = rawText.trim();
   if (!trimmed) {
     return { character, rawText: trimmed };
   }
 
+  // Build flat list of all valid tag values for keyword fallback
+  const allValidValues = validTags
+    ? new Set(Object.values(validTags).flat())
+    : null;
+
   try {
-    const raw = await callClaude(PARSE_SYSTEM_PROMPT, trimmed, {
+    const prompt = buildParsePrompt(validTags);
+    const raw = await callClaude(prompt, trimmed, {
       model: 'claude-haiku-4-5-20251001',
       maxTokens: 200,
       timeoutMs: 4000,
@@ -65,10 +106,30 @@ export async function parseLevel4Text(
       vibe: parsed.vibe || undefined,
     };
   } catch (error) {
-    console.warn('[TextParser] Parse failed, using literal text:', error);
-    // Fallback: treat first content word as action (skip stop words)
-    const STOP_WORDS = new Set(['the', 'a', 'an', 'is', 'are', 'was', 'my', 'your', 'his', 'her', 'its', 'i', 'we', 'they', 'it', 'to', 'and', 'or', 'but', 'in', 'on', 'at', 'of', 'for', 'with', 'then', 'so', 'just', 'very', 'really']);
+    console.warn('[TextParser] Parse failed, using keyword matching:', error);
+    // Fallback: try to match words against valid tags
     const words = trimmed.toLowerCase().split(/\s+/);
+
+    if (allValidValues) {
+      // Try direct word matches against valid tag values
+      const matched = words.find(w => allValidValues.has(w));
+      if (matched) {
+        return { character, rawText: trimmed, action: matched };
+      }
+
+      // Try partial matches (e.g. "freeze" in "ice_spell" won't work,
+      // but "fire" in "fire_spell" will)
+      for (const word of words) {
+        for (const tag of allValidValues) {
+          if (tag.includes(word) || word.includes(tag.replace('_spell', ''))) {
+            return { character, rawText: trimmed, action: tag };
+          }
+        }
+      }
+    }
+
+    // Last resort: use first content word
+    const STOP_WORDS = new Set(['the', 'a', 'an', 'is', 'are', 'was', 'my', 'your', 'his', 'her', 'its', 'i', 'we', 'they', 'it', 'to', 'and', 'or', 'but', 'in', 'on', 'at', 'of', 'for', 'with', 'then', 'so', 'just', 'very', 'really']);
     const contentWord = words.find(w => !STOP_WORDS.has(w)) ?? words[0];
     return {
       character,

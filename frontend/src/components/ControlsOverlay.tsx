@@ -18,7 +18,7 @@ export default function ControlsOverlay() {
   if (!visible) return null;
 
   return (
-    <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none">
+    <div className="absolute inset-0 z-40 flex items-center justify-end pr-4 pointer-events-none">
       <div className="bg-black/60 backdrop-blur-sm text-white rounded-2xl px-6 py-5 max-w-xs text-center shadow-lg">
         <p className="font-heading font-bold text-lg mb-3">Controls</p>
         <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-sm">

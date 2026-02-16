@@ -1,5 +1,5 @@
 /**
- * Character3D — Reusable 3D character component for KayKit characters in Quest AI.
+ * Character3D — Reusable 3D character component for KayKit characters in QuestAI.
  *
  * Features:
  * - Loads character GLB from asset manifest
@@ -31,6 +31,7 @@ import {
   type AnimationPackKey,
 } from '../data/asset-manifest'
 import { useAnimationClips } from './AnimationController'
+import { useGameStore } from '../stores/gameStore'
 
 const DEFAULT_FADE_DURATION = 0.25
 const BREATHING_SCALE_MIN = 1.0
@@ -159,8 +160,9 @@ const Character3DInner = forwardRef<Character3DHandle, Character3DProps>(
     useFrame((_state, delta) => {
       if (!groupRef.current) return
 
-      // Update animation mixer
-      if (mixer) mixer.update(delta)
+      // Update animation mixer (apply intro speed multiplier when active)
+      const speedMult = useGameStore.getState().introSpeedMultiplier
+      if (mixer) mixer.update(delta * speedMult)
 
       // Breathing effect (subtle scale pulse)
       breathingPhaseRef.current += delta / BREATHING_PERIOD

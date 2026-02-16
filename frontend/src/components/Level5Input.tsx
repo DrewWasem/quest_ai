@@ -158,7 +158,7 @@ export default function Level5Input({ stage }: Level5InputProps) {
                 }
               }}
               placeholder={stage.promptPlaceholder}
-              maxLength={200}
+              maxLength={500}
               rows={3}
               disabled={isGenerating}
               className="input-magic w-full px-4 py-3 rounded-xl border-2 border-quest-border

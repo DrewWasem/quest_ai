@@ -958,6 +958,10 @@ const EVERYONE_VIGNETTES: Vignette[] = [
       { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'throw' }, { action: 'animate', character: 'clown', anim: 'throw' }, { action: 'animate', character: 'superhero', anim: 'spin_attack' }, { action: 'text_popup', text: '🍕 TOO MANY CHEFS! 🍕', position: 'top', size: 'huge' }, { action: 'camera_shake', intensity: 0.8, duration: 1.0 }], delayAfter: 0.6 },
       { parallel: [{ action: 'spawn_rain', asset: 'pizza_slice', quantity: 8, position: 'wide' }, { action: 'react', effect: 'explosion-cartoon', position: 'center' }], delayAfter: 0.5 },
       { parallel: [{ action: 'react', effect: 'laugh-tears', position: 'center' }, { action: 'text_popup', text: '🌪️ KITCHEN CHAOS! 🌪️', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'My bones are rattling with excitement!'),
+    ...CHARACTER_SPEAK('clown', 'excited', 'Time for the big show!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'No-BODY does it better!'),
     ],
     feedback: { title: '🌪️ Too Many Chefs!', message: "ALL the chefs tried to cook pizza at once! It's CHAOS! Maybe coordinate next time?", skillTaught: 'Specificity', tip: 'Too many chefs = kitchen chaos! Pick one chef for clearer results!' },
   },
@@ -973,6 +977,10 @@ const EVERYONE_VIGNETTES: Vignette[] = [
       { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'interact' }, { action: 'animate', character: 'clown', anim: 'throw' }, { action: 'animate', character: 'superhero', anim: 'cast_spell' }, { action: 'text_popup', text: '🍕 EVERYONE ADDING TOPPINGS! 🍕', position: 'top', size: 'large' }], delayAfter: 0.6 },
       { parallel: [{ action: 'spawn', asset: 'pizza_whole', position: 'cs-center' }, { action: 'react', effect: 'question-marks', position: 'cs-center' }, { action: 'text_popup', text: '❓ WEIRD COMBO! ❓', position: 'center', size: 'huge' }], delayAfter: 0.5 },
       { parallel: [{ action: 'react', effect: 'hearts-float', position: 'cs-center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'SKULL-tastic!'),
+    ...CHARACTER_SPEAK('clown', 'excited', 'HONK HONK! This is hilarious!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'No-BODY does it better!'),
     ],
     feedback: { title: '🍕 Combo Pizza!', message: "Every chef added their OWN toppings! It's a weird mix but... it works?", skillTaught: 'Specificity', tip: 'Multiple chefs = unpredictable results!' },
   },
@@ -988,6 +996,10 @@ const EVERYONE_VIGNETTES: Vignette[] = [
       { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'cast_spell' }, { action: 'animate', character: 'clown', anim: 'cast_long' }, { action: 'animate', character: 'superhero', anim: 'spin_attack' }, { action: 'text_popup', text: '🌊 EVERYONE STIRRING! 🌊', position: 'top', size: 'huge' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'splash', position: 'cs-center' }, { action: 'camera_shake', intensity: 0.7, duration: 0.8 }, { action: 'text_popup', text: '🌀 PASTA WHIRLPOOL! 🌀', position: 'center', size: 'huge' }], delayAfter: 0.5 },
       { parallel: [{ action: 'react', effect: 'stars-spin', position: 'cs-center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'SKULL-tastic!'),
+    ...CHARACTER_SPEAK('clown', 'excited', 'Comedy GOLD!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'No-BODY does it better!'),
     ],
     feedback: { title: '🌀 Pasta Whirlpool!', message: "All the chefs stirred together and made a PASTA TORNADO! Teamwork... sort of!", skillTaught: 'Specificity', tip: 'Everyone working together = big effects (and big mess)!' },
   },
@@ -1003,6 +1015,10 @@ const EVERYONE_VIGNETTES: Vignette[] = [
       { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'throw' }, { action: 'animate', character: 'clown', anim: 'throw' }, { action: 'animate', character: 'survivalist', anim: 'throw' }, { action: 'text_popup', text: '🍲 EVERYONE ADDING STUFF! 🍲', position: 'top', size: 'large' }], delayAfter: 0.6 },
       { parallel: [{ action: 'react', effect: 'steam', position: 'cs-center' }, { action: 'react', effect: 'question-marks', position: 'cs-center' }, { action: 'text_popup', text: '❓ MYSTERY SOUP! ❓', position: 'center', size: 'huge' }], delayAfter: 0.5 },
       { parallel: [{ action: 'react', effect: 'sparkle-magic', position: 'cs-center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'SKULL-tastic!'),
+    ...CHARACTER_SPEAK('clown', 'excited', 'Comedy GOLD!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'That was un-BONE-lievably cool!'),
     ],
     feedback: { title: '❓ Mystery Soup!', message: "Every chef added something DIFFERENT! Nobody knows what's in this soup!", skillTaught: 'Specificity', tip: 'Too many ingredients = mystery flavor!' },
   },
@@ -1018,6 +1034,10 @@ const EVERYONE_VIGNETTES: Vignette[] = [
       { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'interact' }, { action: 'animate', character: 'clown', anim: 'cast_spell' }, { action: 'animate', character: 'superhero', anim: 'cast_long' }, { action: 'react', effect: 'fire', position: 'cs-center' }, { action: 'text_popup', text: '🎂 TEAM BAKING! 🎂', position: 'top', size: 'large' }], delayAfter: 0.6 },
       { parallel: [{ action: 'spawn_rain', asset: 'cake_giant', quantity: 5, position: 'center' }, { action: 'text_popup', text: '🏔️ CAKE TOWER! 🏔️', position: 'center', size: 'huge' }], delayAfter: 0.5 },
       { parallel: [{ action: 'animate', character: 'skeleton_warrior', anim: 'Cheering' }, { action: 'animate', character: 'clown', anim: 'wave' }, { action: 'animate', character: 'superhero', anim: 'jump_big' }, { action: 'react', effect: 'glow-pulse', position: 'cs-center' }, { action: 'sfx', sound: 'success' }], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'This is BONE-credible!'),
+    ...CHARACTER_SPEAK('clown', 'excited', 'Time for the big show!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'That was un-BONE-lievably cool!'),
     ],
     feedback: { title: '🏔️ Cake Tower!', message: "Every chef made a layer and STACKED them! It's a giant cake tower! Perfect teamwork!", skillTaught: 'Specificity', tip: 'Everyone working together can create something HUGE!' },
   },
@@ -1034,6 +1054,10 @@ const EVERYONE_VIGNETTES: Vignette[] = [
       { parallel: [{ action: 'react', effect: 'explosion-cartoon', position: 'cs-center' }, { action: 'react', effect: 'smoke', position: 'cs-left' }, { action: 'react', effect: 'fire', position: 'cs-right' }, { action: 'camera_shake', intensity: 0.9, duration: 1.2 }], delayAfter: 0.8 },
       { parallel: [{ action: 'spawn_rain', asset: 'potion_mystery', quantity: 8, position: 'wide' }, { action: 'text_popup', text: '🌪️ TOTAL MYSTERY CHAOS! 🌪️', position: 'center', size: 'huge' }], delayAfter: 0.5 },
       { parallel: [{ action: 'react', effect: 'laugh-tears', position: 'center' }, { action: 'text_popup', text: '❓ NOBODY KNOWS WHAT HAPPENED! ❓', position: 'center', size: 'huge' }, { action: 'sfx', sound: 'fail' }], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'SKULL-tastic!'),
+    ...CHARACTER_SPEAK('clown', 'excited', 'Time for the big show!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'That was un-BONE-lievably cool!'),
     ],
     feedback: { title: '❓ Mystery Chaos!', message: "ALL chefs made MYSTERY dishes! The kitchen is total chaos! Nobody knows what ANY of it is!", skillTaught: 'Specificity', tip: 'Everyone + mystery = maximum chaos! Pick specific chefs and dishes!' },
   },
@@ -1812,6 +1836,10 @@ export const SKELETON_PIZZA_STAGE_2: Vignette[] = [
         ],
         delayAfter: 2.0,
       },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('skeleton_warrior', 'excited', 'This is BONE-credible!'),
+    ...CHARACTER_SPEAK('clown', 'excited', 'HONK HONK! This is hilarious!'),
+    ...CHARACTER_SPEAK('skeleton_warrior', 'star_eyes', 'No-BODY does it better!'),
     ],
     feedback: {
       title: '🎂 Team Success!',
@@ -2619,6 +2647,7 @@ export const SKELETON_PIZZA_STAGE_2: Vignette[] = [
     },
   },
 
+  ...SKELETON_PIZZA_STAGE_1,  // Stage 1 vignettes work here — undefined trigger keys act as wildcards
 ];
 
 // ─── STAGE 2 DEFAULT VIGNETTE ───────────────────────────────────────────────
@@ -3109,6 +3138,7 @@ export const SKELETON_PIZZA_STAGE_3: Vignette[] = [
     },
   },
 
+  ...SKELETON_PIZZA_STAGE_2,  // Includes stage 1+2 vignettes as fallbacks
 ];
 
 // ─── STAGE 3 DEFAULT VIGNETTE ───────────────────────────────────────────────

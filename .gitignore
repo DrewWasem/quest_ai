@@ -227,3 +227,9 @@ frontend/src/test-*.tsx
 
 # Context Session Transfer temp files
 .claude/context-session-transfer/temp/
+
+# Large media files (videos, raw audio)
+videos/
+*.mp4
+*.ogg
+questai-brand-brief.html

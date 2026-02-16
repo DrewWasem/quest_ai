@@ -18,7 +18,7 @@ A colorful single-screen overworld with 6 interactive zones. The kid sprite walk
 
 ```
 ┌──────────────────────────────────────────────┐
-│  "Prompt Quest"    ☆ Hub World ☆             │
+│  "Quest AI"    ☆ Hub World ☆             │
 │                                              │
 │   🎂 Monster     🧙 Wizard     🦕 Dino      │
 │   Party          Kitchen       School        │
@@ -91,7 +91,7 @@ Return to HubWorldScene (kid position preserved)
 - `preload()`: call `preloadGameAssets(this)` (reuse existing loader)
 - `create()`:
   - Draw a colorful gradient background (or reuse a backdrop)
-  - Add title text: "Prompt Quest" at top
+  - Add title text: "Quest AI" at top
   - Spawn kid sprite at center (512, 350) using PlayerController
   - Add instruction text: "Walk to a quest and press Enter!" at bottom
   - Emit `'scene-ready'` + `'hub-entered'` events
@@ -178,7 +178,7 @@ Return to HubWorldScene (kid position preserved)
 - When `isInHub`:
   - Show Phaser canvas (hub world is running)
   - Hide PromptInput
-  - Header shows "Prompt Quest" logo only (no "All Tasks" button)
+  - Header shows "Quest AI" logo only (no "All Tasks" button)
 - When `!isInHub`:
   - Show Phaser canvas (task scene is running)
   - Show PromptInput

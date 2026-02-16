@@ -27,7 +27,7 @@ import { ASSET_BASE } from '../data/asset-manifest'
 import { ZONE_CENTERS, ZONE_META } from '../stores/gameStore'
 import { registerCollision, unregisterCollision, getCollisionBoxes, getGeneration, type CollisionBox } from './collision-registry'
 import { QuestZoneCircle } from './QuestZoneCircle'
-import { StageFloor } from './ScenePlayer3D'
+
 
 // ============================================================================
 // HEX GRID HELPERS
@@ -1020,8 +1020,8 @@ function SpaceZone() {
       {/* Dome */}
       <Piece model="kaykit/packs/space_base/dome.gltf" position={[0, 0, -9]} scale={sp} />
       {/* Accent lights — raised and wider for bigger objects */}
-      <pointLight color="#38BDF8" intensity={3} distance={15} decay={2} position={[0, 5, 0]} />
-      <pointLight color="#7C3AED" intensity={2} distance={12} decay={2} position={[-6, 4, -5]} />
+      <pointLight color="#4ECDC4" intensity={3} distance={15} decay={2} position={[0, 5, 0]} />
+      <pointLight color="#4A90D9" intensity={2} distance={12} decay={2} position={[-6, 4, -5]} />
     </group>
   )
 }
@@ -1075,7 +1075,7 @@ function PizzaZone() {
       <Piece model={DECORATION.tent} position={[0, 0, -6]} scale={7.0} />
       {/* Warm pizza shop lighting — orange accent visible from afar */}
       <pointLight color="#FF8C42" intensity={4} distance={15} decay={2} position={[0, 5, 0]} />
-      <pointLight color="#FBBF24" intensity={2} distance={8} decay={2} position={[0, 2, 2]} />
+      <pointLight color="#F5C842" intensity={2} distance={8} decay={2} position={[0, 2, 2]} />
     </group>
   )
 }
@@ -1228,12 +1228,7 @@ function KitchenZone() {
       <Piece model={b + 'bread.gltf'} position={[-5, 0.9, 0.8]} noCollision />
       <Piece model={b + 'pie_apple.gltf'} position={[-5, 0.9, 2.8]} noCollision />
 
-      {/* ── CENTER ISLAND — magical prep table (focal point) ── */}
-      <Piece model={k + 'table_B.gltf'} position={[-1.5, 0, 1]} />
-      <Piece model={bi + 'mixing_bowl.gltf'} position={[-1.8, 0.9, 1.3]} noCollision />
-      <Piece model={k + 'spoon.gltf'} position={[-1.2, 0.9, 0.7]} noCollision />
-      <Piece model={b + 'cake_birthday.gltf'} position={[-1.5, 0.9, 1]} noCollision />
-      <Piece model={k + 'mug_yellow.gltf'} position={[-1, 0.9, 1.5]} noCollision />
+      {/* Center island removed — was blocking the stage area */}
 
       {/* ── MAGICAL FLOOR MESS (cooking gone wrong!) ── */}
       <Piece model={bi + 'flour_sack_open.gltf'} position={[-3.5, 0, -1]} rotation={[0, 0.5, 0]} noCollision />
@@ -1251,13 +1246,13 @@ function KitchenZone() {
 
       {/* ── MAGICAL KITCHEN ATMOSPHERE ── */}
       {/* Warm amber over cooking L-arm */}
-      <pointLight color="#FBBF24" intensity={5} distance={12} decay={2} position={[-3, 3, -3]} />
+      <pointLight color="#F5C842" intensity={5} distance={12} decay={2} position={[-3, 3, -3]} />
       {/* Purple magical glow from center island (the magic is loose!) */}
-      <pointLight color="#A855F7" intensity={6} distance={16} decay={2} position={[-1, 4, 1]} />
-      {/* Cool blue accent from the open side */}
-      <pointLight color="#38BDF8" intensity={3} distance={10} decay={2} position={[2, 3, 3]} />
+      <pointLight color="#7DB8F0" intensity={6} distance={16} decay={2} position={[-1, 4, 1]} />
+      {/* Cool teal accent from the open side */}
+      <pointLight color="#4ECDC4" intensity={3} distance={10} decay={2} position={[2, 3, 3]} />
       {/* Soft warm fill light overhead */}
-      <pointLight color="#FDE68A" intensity={2} distance={20} decay={2} position={[-2, 6, 0]} />
+      <pointLight color="#FCE088" intensity={2} distance={20} decay={2} position={[-2, 6, 0]} />
     </group>
   )
 }
@@ -1304,7 +1299,7 @@ function FreePlayZone() {
       <pointLight color="#F59E0B" intensity={5} distance={15} decay={2} position={[0, 4, 0]} />
       <pointLight color="#EC4899" intensity={3} distance={12} decay={2} position={[-4, 3, -2]} />
       <pointLight color="#8B5CF6" intensity={3} distance={12} decay={2} position={[4, 3, -2]} />
-      <pointLight color="#FBBF24" intensity={2} distance={18} decay={2} position={[0, 6, 2]} />
+      <pointLight color="#F5C842" intensity={2} distance={18} decay={2} position={[0, 6, 2]} />
     </group>
   )
 }
@@ -1882,13 +1877,8 @@ function DebugStageGrids() {
 
   if (!visible) return null
 
-  return (
-    <group name="debug-stage-grids">
-      {Object.keys(ZONE_CENTERS).map(zoneId => (
-        <StageFloor key={zoneId} zoneId={zoneId} />
-      ))}
-    </group>
-  )
+  // StageFloor hidden
+  return null
 }
 
 function DebugClearanceRings() {

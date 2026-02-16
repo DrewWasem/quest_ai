@@ -95,10 +95,6 @@ const RANGER_VIGNETTES: Vignette[] = [
 
       // ACTION: Nature dance
       ...WALK_TO('ranger', 'cs-center'),
-      { parallel: [
-        { action: 'animate', character: 'ranger', anim: 'Cheering' },
-        { action: 'sfx', sound: 'footstep' },
-      ], delayAfter: 0.8 },
 
       // CONSEQUENCE: Nature responds
       ...EMOTIONAL_REACT('ranger', 'hearts-float', 'cs-center'),
@@ -799,6 +795,9 @@ const BARBARIAN_VIGNETTES: Vignette[] = [
         { action: 'text_popup', text: '🪨 ROCK TRAP! 🪨', position: 'center', size: 'large' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('barbarian', 'excited', 'BARBARIAN SMASH!'),
+    ...CHARACTER_SPEAK('barbarian', 'star_eyes', 'VICTORY SMASH!'),
     ],
     feedback: {
       title: '🪨 BARBARIAN TRAP!',
@@ -1037,6 +1036,9 @@ const NINJA_VIGNETTES: Vignette[] = [
         { action: 'text_popup', text: '🥷 SILENT TRAP! 🥷', position: 'center', size: 'large' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('ninja', 'excited', 'Shadow strike ready!'),
+    ...CHARACTER_SPEAK('ninja', 'star_eyes', 'Silent but deadly!'),
     ],
     feedback: {
       title: '🥷 NINJA TRAP MASTER!',
@@ -1078,6 +1080,9 @@ const NINJA_VIGNETTES: Vignette[] = [
       ], delayAfter: 0.5 },
       ...OBJECT_SHRINK_POP('sandwich'),
       ...DANCE('ninja'),
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('ninja', 'excited', 'Swift like the wind!'),
+    ...CHARACTER_SPEAK('ninja', 'star_eyes', 'Silent but deadly!'),
     ],
     feedback: {
       title: '🥷 NINJA PICNIC!',
@@ -1261,6 +1266,9 @@ const ROGUE_VIGNETTES: Vignette[] = [
         { action: 'text_popup', text: '🪤 SNEAKY TRAP! 🪤', position: 'center', size: 'large' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('rogue', 'excited', 'Nobody saw THAT coming!'),
+    ...CHARACTER_SPEAK('rogue', 'star_eyes', 'Too fast for you!'),
     ],
     feedback: {
       title: '🪤 ROGUE TRAP MASTER!',
@@ -1379,6 +1387,9 @@ const WHOLE_PARTY_VIGNETTES: Vignette[] = [
         { action: 'spawn_rain', asset: 'coin', quantity: 15, position: 'wide' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 0.6 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('ranger', 'excited', 'Nature calls!'),
+    ...CHARACTER_SPEAK('rogue', 'excited', 'Sneaky and stylish!'),
       ...CROWD_CHEER([]),
       { parallel: [
         { action: 'crowd_react', characters: 'all', anim: 'wave' },
@@ -1513,6 +1524,10 @@ const WHOLE_PARTY_VIGNETTES: Vignette[] = [
         { action: 'text_popup', text: '🪤 MEGA TRAP! 🪤', position: 'center', size: 'huge' },
         { action: 'sfx', sound: 'success' },
       ], delayAfter: 1.5 },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('ranger', 'excited', 'Into the wild!'),
+    ...CHARACTER_SPEAK('rogue', 'excited', 'Nobody saw THAT coming!'),
+    ...CHARACTER_SPEAK('ninja', 'excited', 'Shadow strike ready!'),
     ],
     feedback: {
       title: '🪤 PARTY TRAP!',
@@ -1552,6 +1567,11 @@ const WHOLE_PARTY_VIGNETTES: Vignette[] = [
       ], delayAfter: 0.5 },
       ...OBJECT_SHRINK_POP('burger'),
       ...OBJECT_SHRINK_POP('pizza_full'),
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('ranger', 'excited', 'Into the wild!'),
+    ...CHARACTER_SPEAK('barbarian', 'excited', 'BARBARIAN SMASH!'),
+    ...CHARACTER_SPEAK('druid', 'excited', 'The earth speaks!'),
+    ...CHARACTER_SPEAK('rogue', 'excited', 'Nobody saw THAT coming!'),
       ...CROWD_CHEER([]),
       { parallel: [
         { action: 'react', effect: 'hearts-float', position: 'center' },
@@ -1634,6 +1654,9 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
         ],
         delayAfter: 2.0,
       },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('barbarian', 'excited', 'Strongest move EVER!'),
+    ...CHARACTER_SPEAK('barbarian', 'star_eyes', 'Barbarian power wins AGAIN!'),
     ],
     feedback: {
       title: '💥 RECKLESS CHARGE!',
@@ -2000,6 +2023,9 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
         ],
         delayAfter: 2.0,
       },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('druid', 'excited', 'The earth speaks!'),
+    ...CHARACTER_SPEAK('druid', 'star_eyes', 'Balance is restored!'),
     ],
     feedback: {
       title: '🌅 GOLDEN DAWN MAGIC!',
@@ -2177,6 +2203,9 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
         ],
         delayAfter: 2.0,
       },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('barbarian', 'excited', 'BARBARIAN SMASH!'),
+    ...CHARACTER_SPEAK('barbarian', 'star_eyes', 'VICTORY SMASH!'),
     ],
     feedback: {
       title: '💪 BOLD SMASH!',
@@ -2470,6 +2499,8 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
         ],
         delayAfter: 2.0,
       },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('druid', 'star_eyes', 'The grove celebrates!'),
     ],
     feedback: {
       title: '🌙 MIDNIGHT BOLDNESS!',
@@ -2844,6 +2875,11 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
         ],
         delayAfter: 2.0,
       },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('ranger', 'excited', 'Nature calls!'),
+    ...CHARACTER_SPEAK('barbarian', 'excited', 'Strongest move EVER!'),
+    ...CHARACTER_SPEAK('mage', 'excited', 'Spell-tacular!'),
+    ...CHARACTER_SPEAK('ranger', 'star_eyes', 'The forest provides!'),
     ],
     feedback: {
       title: '🌅 BOLD TEAMWORK!',
@@ -3046,6 +3082,7 @@ export const ADVENTURERS_PICNIC_STAGE_2: Vignette[] = [
     },
   },
 
+  ...ADVENTURERS_PICNIC_STAGE_1,  // Stage 1 vignettes work here — undefined trigger keys act as wildcards
 ];
 
 
@@ -3222,6 +3259,10 @@ export const ADVENTURERS_PICNIC_STAGE_3: Vignette[] = [
         ],
         delayAfter: 2.0,
       },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('rogue', 'excited', 'Sneaky and stylish!'),
+    ...CHARACTER_SPEAK('ranger', 'excited', 'Into the wild!'),
+    ...CHARACTER_SPEAK('rogue', 'star_eyes', 'Swiped the win!'),
     ],
     feedback: {
       title: '🎉 SECRET: PARTY TRAP!',
@@ -3344,6 +3385,10 @@ export const ADVENTURERS_PICNIC_STAGE_3: Vignette[] = [
         ],
         delayAfter: 2.0,
       },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('mage', 'excited', 'My magic is TINGLING!'),
+    ...CHARACTER_SPEAK('ranger', 'excited', 'Into the wild!'),
+    ...CHARACTER_SPEAK('mage', 'star_eyes', 'That was enchanting!'),
     ],
     feedback: {
       title: '✨🪤 SECRET: ENCHANTED TRAP!',
@@ -3467,6 +3512,7 @@ export const ADVENTURERS_PICNIC_STAGE_3: Vignette[] = [
     },
   },
 
+  ...ADVENTURERS_PICNIC_STAGE_2,  // Includes stage 1+2 vignettes as fallbacks
 ];
 
 export const ADVENTURERS_PICNIC_DEFAULT_3: Vignette = {
@@ -3547,6 +3593,9 @@ export const ADVENTURERS_PICNIC_DEFAULT: Vignette = {
       ],
       delayAfter: 2.0,
     },
+    // Dialogue fix: give silent characters a voice
+    ...CHARACTER_SPEAK('ranger', 'excited', 'Into the wild!'),
+    ...CHARACTER_SPEAK('druid', 'excited', 'The earth speaks!'),
   ],
   feedback: {
     title: '🏕️ Adventure Time!',

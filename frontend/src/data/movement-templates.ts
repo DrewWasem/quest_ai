@@ -47,6 +47,40 @@ export function ENTER_FROM_RIGHT(character: string, targetPos = 'cs-right'): Vig
   ]
 }
 
+/** Multiple characters walk in together from stage left (saves steps vs individual ENTER_FROM_LEFT) */
+export function GROUP_ENTER_LEFT(chars: Array<[string, string?]>): VignetteStep[] {
+  return [
+    { parallel: [
+      ...chars.map(([c]) => ({ action: 'spawn_character' as const, character: c, position: 'off-left' })),
+      ...chars.map(([c]) => ({ action: 'animate' as const, character: c, anim: 'Walking_A' })),
+      { action: 'sfx', sound: 'footstep' },
+    ], delayAfter: 0.3 },
+    { parallel: [
+      ...chars.map(([c, pos]) => ({ action: 'move' as const, character: c, to: pos ?? 'cs-left', style: 'linear' })),
+    ], delayAfter: 1.0 },
+    { parallel: [
+      ...chars.map(([c]) => ({ action: 'animate' as const, character: c, anim: 'Idle_A' })),
+    ], delayAfter: 0.3 },
+  ]
+}
+
+/** Multiple characters walk in together from stage right (saves steps vs individual ENTER_FROM_RIGHT) */
+export function GROUP_ENTER_RIGHT(chars: Array<[string, string?]>): VignetteStep[] {
+  return [
+    { parallel: [
+      ...chars.map(([c]) => ({ action: 'spawn_character' as const, character: c, position: 'off-right' })),
+      ...chars.map(([c]) => ({ action: 'animate' as const, character: c, anim: 'Walking_A' })),
+      { action: 'sfx', sound: 'footstep' },
+    ], delayAfter: 0.3 },
+    { parallel: [
+      ...chars.map(([c, pos]) => ({ action: 'move' as const, character: c, to: pos ?? 'cs-right', style: 'linear' })),
+    ], delayAfter: 1.0 },
+    { parallel: [
+      ...chars.map(([c]) => ({ action: 'animate' as const, character: c, anim: 'Idle_A' })),
+    ], delayAfter: 0.3 },
+  ]
+}
+
 /** Character sneaks in quietly from left */
 export function SNEAK_IN_LEFT(character: string, targetPos = 'cs-left'): VignetteStep[] {
   return [
@@ -545,7 +579,7 @@ export function NARRATOR(text: string, size: 'small' | 'large' | 'huge' = 'large
   return [
     { parallel: [
       { action: 'text_popup', text, position: 'center', size },
-    ], delayAfter: 2.5 },
+    ], delayAfter: 1.5 },
   ]
 }
 
@@ -758,7 +792,7 @@ export function ANNOUNCE(text: string, size: 'small' | 'large' | 'huge' = 'huge'
     { parallel: [
       { action: 'text_popup', text, position: 'center', size },
       { action: 'sfx', sound: 'react' },
-    ], delayAfter: 2.5 },
+    ], delayAfter: 1.5 },
   ]
 }
 
@@ -767,6 +801,22 @@ export function EMOTE(character: string, emoji: string, text?: string): Vignette
   return [
     { parallel: [
       { action: 'emote', character, emoji, ...(text ? { text } : {}) },
+    ], delayAfter: 1.5 },
+  ]
+}
+
+// ─── VIGNETTE OUTRO (auto-appended to short vignettes) ─────────────────────
+
+/** Celebration outro — confetti burst + crowd cheer. Auto-appended to vignettes with <6 steps. */
+export function VIGNETTE_OUTRO(): VignetteStep[] {
+  return [
+    { parallel: [
+      { action: 'react', effect: 'confetti-burst', position: 'cs-center' },
+      { action: 'crowd_react', characters: 'all', anim: 'Cheering' },
+      { action: 'sfx', sound: 'success' },
+    ], delayAfter: 0.5 },
+    { parallel: [
+      { action: 'react', effect: 'celebrating', position: 'cs-center' },
     ], delayAfter: 1.5 },
   ]
 }
